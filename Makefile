@@ -12,7 +12,7 @@
 
 NAME 	= 	42sh
 
-SRC 	= 	
+SRC 	= 	srcs/main.c
 
 INC 	= 	
 
