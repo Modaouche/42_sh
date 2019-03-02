@@ -20,7 +20,7 @@ static int		init_term(void)
 	if (!(term_type = getenv("TERM")))
 		return (-1);
 	ret = tgetent(NULL, term_type);
-	if (ret == 1 && ft_strcmp("dumb", term_type)
+	if (ret == 1 && ft_strcmp("dumb", term_type))
 		return (0);
 	g_errorno = (ret > 0 && ft_strcmp("dumb", term_type))
     ? ER_DBACCES : ER_DBINFO;
