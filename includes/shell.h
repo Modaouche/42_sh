@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/08 07:56:57 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/03/02 10:54:30 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,17 @@
 # define SHELL_H
 
 # include "../libft/libft.h"
-# include "../libft/ft_printf/includes/ft_printf.h"
 # include <sys/types.h>
 # include <sys/ioctl.h>
 # include <signal.h>
 # include <term.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <limits.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 # include <curses.h>
+//# include <stdio.h>
 
 unsigned int     g_errorno;
 

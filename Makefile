@@ -3,30 +3,38 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kicausse <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/07 23:49:44 by kicausse          #+#    #+#              #
-#    Updated: 2019/01/20 23:52:18 by kicausse         ###   ########.fr        #
+#    Updated: 2019/03/02 10:47:31 by modaouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 	= 	42sh
 
-SRC 	= 	srcs/main.c
+SRC 	=   srcs/main.c\
+		    srcs/tools_1.c\
+		    line_edition/set_terminal.c\
+		    line_edition/line_edition.c\
+		    line_edition/exit_le.c\
+		    line_edition/tools_le.c
 
-INC 	= 	
+INC 	= 	libft/libft.h
 
 CC		=	gcc
 
 OBJ 	= 	$(SRC:.c=.o)
 
-CFLAGS 	= 	-Wall -Wextra -Werror -Ilibft -Iincludes
+CFLAGS 	= 	-Wall -Wextra -Werror -Ilibft -Iincludes\
+		  -g -fsanitize=address\
+		  -fno-omit-frame-pointer\
+		  -fsanitize-address-use-after-scope
 
 all: $(NAME) libft/
 
 $(NAME): libft/ includes/ Makefile $(OBJ)
 	make -C libft
-	$(CC) $(CFLAGS) $(OBJ) libft/libft.a -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) libft/libft.a -o $(NAME) -lncurses
 
 %.o: %.c $(INC)
 	$(CC) $(CFLAGS) -o $@ -c $< 

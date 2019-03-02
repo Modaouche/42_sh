@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 17:03:29 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/08 07:49:16 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/03/02 11:02:00 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,10 @@ int         str_add(t_edit *line_e, const char to_add)
 void		putkey_in_line(t_edit *line_e, char *key)
 {
     if (!key)
-        return (ft_putendl_fd("error : key :null", STDERR_FILENO));
+    {
+        ft_putendl_fd("error : key :null", STDERR_FILENO);
+        return ;
+    }
     if (ft_strlen(key) <= 1 && ft_isprint(key[0]))
     {
         if (!(str_add(line_e, *key)))
@@ -88,8 +91,8 @@ void		putkey_in_line(t_edit *line_e, char *key)
         ft_putchar_fd(' ', STDERR_FILENO);
         cursor_reposition(ft_strlen(line_e->line + line_e->cursor_pos) + 1);
     }
-    // ft_putstr("key too long comming soon - ");
-}//in tabptrfct
+    //ft_putstr("unknow key or no managed");
+}//in tabptr de fct
 
 int     line_edition(t_edit *line_e)
 {
@@ -105,12 +108,7 @@ int     line_edition(t_edit *line_e)
         if (key[0] == 10 && !key[1])
             return (1) ;
         putkey_in_line(line_e, key);
-        // ft_putstr("[");
-        // ft_putstr(line_e->line);
-        // ft_putstr("]");
-        // ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico
-		// if ((long)key == S_KEY_END || ((long)key == S_KEY_RET)
-		// 	break ;
+        //ft_printf("[%s] ", line_e->line);
     }
     return (0);
 }

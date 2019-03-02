@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 08:56:41 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/06 12:26:11 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/03/02 10:50:59 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 #define SHELL_H
 
 #include "shell.h"
+/*
+* TabPtr de fonction à mettre en place
+*/
 
 static t_key_code	keytab[] = {
 		{S_KEY_ARW_LEFT, &key_arrow},
