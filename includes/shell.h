@@ -13,7 +13,7 @@
 #ifndef SHELL_H
 # define SHELL_H
 
-# include "../libft/libft.h"
+# include "libft.h"
 # include <sys/types.h>
 # include <sys/ioctl.h>
 # include <signal.h>

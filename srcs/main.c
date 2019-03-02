@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/shell.h"
+#include "shell.h"
 
 static int		init_term(void)
 {
@@ -19,10 +19,10 @@ static int		init_term(void)
 
 	if (!(term_type = getenv("TERM")))
 		return (-1);
-	ret = tgetent(NULL, getenv("TERM"));
-	if (ret == 1 && ft_strcmp("dumb", getenv("TERM")))
+	ret = tgetent(NULL, term_type);
+	if (ret == 1 && ft_strcmp("dumb", term_type)
 		return (0);
-	g_errorno = (ret > 0 && ft_strcmp("dumb", getenv("TERM")))
+	g_errorno = (ret > 0 && ft_strcmp("dumb", term_type))
     ? ER_DBACCES : ER_DBINFO;
 	return (-1);
 }
@@ -36,9 +36,9 @@ int main(int ac, char **av, char **envp)
 	(void)envp;
 	ft_bzero(&line_e, sizeof(line_e));
     line_e.tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps au cas ou TERM = (rien || dumb)
-	set_terminal(&line_e);
+	set_terminal(&line_e);  
 	//ft_signal_handle();
-	while ("42")
+	while (1)
 	{
 		line_e.len_max = BUFFER_LEN;
 		line_e.cursor_pos = 0;
