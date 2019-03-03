@@ -12,6 +12,8 @@
 
 #include "shell.h"
 
+int parser(char *str);
+
 static int		init_term(void)
 {
 	char		*term_type;
@@ -44,7 +46,7 @@ int main(int ac, char **av, char **envp)
 		line_e.cursor_pos = 0;
 		ft_putstr_fd("\e[1;32m42🐚\033[0m $> ", STDERR_FILENO);
 		line_edition(&line_e);
-		//parser();
+		parser(line_e.line);
 		//execution();
 		if (line_e.line && !ft_strcmp(line_e.line, "exit"))
 			break ;
