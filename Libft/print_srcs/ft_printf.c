@@ -15,6 +15,7 @@
 #include "colors.h"
 #include "specifiers.h"
 #include "function_pointers.h"
+#include "printf_buffer.h"
 
 int		print_format_content(const char *format, t_spec *spec,
 								const int formatlen, const int fd)
@@ -25,7 +26,7 @@ int		print_format_content(const char *format, t_spec *spec,
 	length = spec != 0 ? (spec->idx - idx) : (formatlen - idx);
 	if (idx >= 0 && idx < formatlen
 		&& putstr_color((char*)&format[idx], length, fd) == -1)
-		ft_putnstr_fd((char*)&format[idx], length, fd);
+		ft_putnstr_buffer((char*)&format[idx], length, fd);
 	idx += length;
 	if (spec != 0)
 		idx += spec->len;
@@ -38,7 +39,6 @@ int		ft_printf(const char *format, ...)
 {
 	va_list		args;
 	t_spec		*spec;
-	t_spec		*spec_start;
 	int			print_count;
 	const int	formatlen = ft_strlen(format);
 
@@ -50,16 +50,15 @@ int		ft_printf(const char *format, ...)
 		return (-1);
 	}
 	va_start(args, format);
-	spec_start = spec;
 	while (spec != NULL)
 	{
 		print_count += print_format_content(format, spec, formatlen, 1);
 		print_count += print_spec(spec, &args);
-		spec = spec->next;
+		spec = spec_lst_clear(spec);
 	}
 	print_count += print_format_content(format, NULL, formatlen, 1);
 	va_end(args);
-	spec_lst_clear(spec_start);
+	write_buffer(1, 0, -99);
 	return (print_count);
 }
 
@@ -67,7 +66,6 @@ int		ft_printf_fd(const int fd, const char *format, ...)
 {
 	va_list		args;
 	t_spec		*spec;
-	t_spec		*spec_start;
 	int			print_count;
 	const int	formatlen = ft_strlen(format);
 
@@ -79,15 +77,14 @@ int		ft_printf_fd(const int fd, const char *format, ...)
 		return (-1);
 	}
 	va_start(args, format);
-	spec_start = spec;
 	while (spec != NULL)
 	{
 		print_count += print_format_content(format, spec, formatlen, fd);
 		print_count += print_spec(spec, &args);
-		spec = spec->next;
+		spec = spec_lst_clear(spec);
 	}
 	print_count += print_format_content(format, NULL, formatlen, fd);
 	va_end(args);
-	spec_lst_clear(spec_start);
+	write_buffer(fd, 0, -99);
 	return (print_count);
 }

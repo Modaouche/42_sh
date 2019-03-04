@@ -30,7 +30,7 @@ SRC		=	ft_abs.c ft_adv_memcmp.c ft_atoi.c ft_atoi_base.c ft_bzero.c ft_ceil.c  \
 			ft_strnew.c ft_strnstr.c ft_strrchr.c ft_strsplit.c ft_strstr.c  \
 			ft_strsub.c ft_strtolower.c ft_strtoupper.c ft_strtrim.c ft_swap.c  \
 			ft_tolower.c ft_toupper.c read_memory_int.c read_memory_unsigned_int.c  \
-			charset_match.c ft_strlcpy.c ft_realloc.c \
+			charset_match.c ft_strlcpy.c ft_realloc.c \ ft_ccount.c \
 			unicode.c unicode_2.c nbrlen.c ft_cfind.c ft_free_tab.c ft_split.c \
 			print_srcs/colors.c print_srcs/flags.c print_srcs/flags_utils.c  \
 			print_srcs/ft_printf.c print_srcs/function_pointers.c  \
@@ -38,7 +38,8 @@ SRC		=	ft_abs.c ft_adv_memcmp.c ft_atoi.c ft_atoi_base.c ft_bzero.c ft_ceil.c  \
 			print_srcs/print_base.c print_srcs/print_floats.c  \
 			print_srcs/print_numbers.c print_srcs/print_numbers2.c  \
 			print_srcs/print_strings.c print_srcs/print_unicode_strings.c  \
-			print_srcs/specifiers.c print_srcs/utils.c get_next_line.c
+			print_srcs/specifiers.c print_srcs/utils.c get_next_line.c \
+			print_srcs/buffer.c
 
 OBJ 	= 	$(SRC:.c=.o)
 

@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "function_pointers.h"
 #include "libft.h"
+#include "printf_buffer.h"
+#include "function_pointers.h"
 
 int		print_unsigned_nbr(t_spec *spec, void *n)
 {
@@ -23,14 +24,14 @@ int		print_unsigned_nbr(t_spec *spec, void *n)
 	i = 30;
 	ft_memset(output, '\0', 32);
 	if (nbr == 0)
-		return (ft_putstr_fd("0", spec->fd));
+		return (ft_putstr_buffer("0", spec->fd));
 	while (nbr > 0)
 	{
 		output[i] = '0' + nbr % 10;
 		nbr /= 10;
 		i--;
 	}
-	return (ft_putstr_fd(&output[i + 1], spec->fd));
+	return (ft_putstr_buffer(&output[i + 1], spec->fd));
 }
 
 int		print_nbr(t_spec *spec, void *n)
@@ -48,7 +49,7 @@ int		print_nbr(t_spec *spec, void *n)
 	if (nbr < 0)
 		tmp = -nbr;
 	else if (nbr == 0)
-		return (ft_putstr_fd("0", spec->fd));
+		return (ft_putstr_buffer("0", spec->fd));
 	ft_memset(output, '\0', 32);
 	while (tmp > 0)
 	{
@@ -56,7 +57,7 @@ int		print_nbr(t_spec *spec, void *n)
 		tmp /= 10;
 		i--;
 	}
-	return (ft_putstr_fd(&output[i + 1], spec->fd));
+	return (ft_putstr_buffer(&output[i + 1], spec->fd));
 }
 
 int		ft_putllnbr(long long n, int fd)
@@ -68,7 +69,7 @@ int		ft_putllnbr(long long n, int fd)
 		n = -n;
 	if (n >= 10)
 		i += ft_putllnbr(n / 10, fd);
-	ft_putchar_fd('0' + n % 10, fd);
+	ft_putchar_buffer('0' + n % 10, fd);
 	return (i);
 }
 
@@ -88,5 +89,5 @@ int		print_nbr_base(unsigned long long nbr, char *base, int fd)
 		output[i--] = base[nbr % base_len];
 		nbr /= base_len;
 	}
-	return (ft_putstr_fd(&output[i + 1], fd));
+	return (ft_putstr_buffer(&output[i + 1], fd));
 }

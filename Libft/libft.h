@@ -60,6 +60,7 @@ size_t					ft_strclen(const char *s, char c);
 size_t					ft_strlen_if(const char *s, int (*f)(int));
 int						charset_match(char *charset, char *str);
 int						charset_unmatch(char *charset, char *str);
+size_t					ft_ccount(char *str, char c);
 
 /*
 ** Character comparisons

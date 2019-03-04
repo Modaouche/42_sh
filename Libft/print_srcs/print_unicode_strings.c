@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "specifiers.h"
 #include "libft.h"
+#include "specifiers.h"
+#include "printf_buffer.h"
 #include "function_pointers.h"
 #include <stdarg.h>
 
@@ -31,6 +32,6 @@ int		print_unicode_string(t_spec *spec, va_list *args)
 	get_padding(spec, len);
 	prnt_cnt += print_padding(spec);
 	prnt_cnt += ft_putnstr_uni_fd(string, len, spec->fd);
-	prnt_cnt += ft_print_char_fd(' ', spec->pad_right, spec->fd);
+	prnt_cnt += ft_print_char_buffer(' ', spec->pad_right, spec->fd);
 	return (prnt_cnt);
 }

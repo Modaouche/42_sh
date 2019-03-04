@@ -10,19 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdarg.h>
 #include "list.h"
 #include "libft.h"
 #include "flags.h"
 #include "utils.h"
+#include "printf_buffer.h"
+#include <stdarg.h>
 
 int		print_padding(t_spec *spec)
 {
 	int prnt_cnt;
 
 	prnt_cnt = 0;
-	prnt_cnt += ft_print_char_fd(' ', spec->pad, spec->fd);
-	prnt_cnt += ft_print_char_fd('0', spec->zeropad, spec->fd);
+	prnt_cnt += ft_print_char_buffer(' ', spec->pad, spec->fd);
+	prnt_cnt += ft_print_char_buffer('0', spec->zeropad, spec->fd);
 	return (prnt_cnt);
 }
 
@@ -59,9 +60,9 @@ int		print_char(t_spec *spec, va_list *args)
 		if (spec->option == 'C')
 			ft_putchar_uni(c);
 		else
-			ft_putchar_fd(c, spec->fd);
+			ft_putchar_buffer(c, spec->fd);
 	}
-	prnt_cnt += ft_print_char_fd(' ', spec->pad_right, spec->fd);
+	prnt_cnt += ft_print_char_buffer(' ', spec->pad_right, spec->fd);
 	return (prnt_cnt);
 }
 
@@ -81,9 +82,9 @@ int		print_string(t_spec *spec, va_list *args)
 	get_padding(spec, len);
 	prnt_cnt += print_padding(spec);
 	if (spec->option == 's')
-		prnt_cnt += ft_putnstr_fd(string, len, spec->fd);
+		prnt_cnt += ft_putnstr_buffer(string, len, spec->fd);
 	else
 		prnt_cnt += ft_putnstr_non_printable_fd(string, len, spec->fd);
-	prnt_cnt += ft_print_char_fd(' ', spec->pad_right, spec->fd);
+	prnt_cnt += ft_print_char_buffer(' ', spec->pad_right, spec->fd);
 	return (prnt_cnt);
 }

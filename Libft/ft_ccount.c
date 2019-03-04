@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_ccount.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/06 07:09:22 by kicausse          #+#    #+#             */
-/*   Updated: 2018/11/06 07:09:23 by kicausse         ###   ########.fr       */
+/*   Created: 2019/03/04 01:15:29 by kicausse          #+#    #+#             */
+/*   Updated: 2019/03/04 01:15:30 by kicausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <string.h>
 
-int		ft_strncmp(const char *str1, const char *str2, size_t num)
+size_t	ft_ccount(char *str, char c)
 {
-	unsigned int i;
+	size_t	count;
 
-	i = 0;
-	while ((unsigned int)(str1[i]) && i < num
-			&& (unsigned int)(str1[i]) == (unsigned int)(str2[i]))
-		i++;
-	if (i == num)
+	if (str == 0)
 		return (0);
-	return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+	count = 0;
+	while (*str)
+	{
+		if (*str == c)
+			++count;
+		++str;
+	}
+	return (count);
 }
