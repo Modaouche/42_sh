@@ -1,39 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list.h                                             :+:      :+:    :+:   */
+/*   printf_buffer.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/03 22:04:21 by kicausse          #+#    #+#             */
-/*   Updated: 2018/12/03 22:04:22 by kicausse         ###   ########.fr       */
+/*   Created: 2019/03/04 00:26:23 by kicausse          #+#    #+#             */
+/*   Updated: 2019/03/04 00:26:23 by kicausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIST_H
-# define LIST_H
+#ifndef PRINTF_BUFFER_H
+# define PRINTF_BUFFER_H
+# define PRINTF_BUFSIZE (2048)
 # include <string.h>
 
-typedef struct	s_spec
-{
-	char			option;
-	int				flag;
-	char			*minlen;
-	char			*maxlen;
-	int				idx;
-	int				len;
-	int				pad;
-	int				pad_right;
-	int				zeropad;
-	int				nbrneg;
-	int				print;
-	int				fd;
-	size_t			size;
-	struct s_spec	*next;
-}				t_spec;
-
-t_spec			*spec_lst_new(int idx);
-t_spec			*spec_lst_clear(t_spec *lst);
-void			spec_lst_push(t_spec **begin_list, t_spec *spec);
+void	write_buffer(int fd, char *str, int len);
+size_t	ft_putnstr_buffer(char *str, size_t n, int fd);
+size_t	ft_putstr_buffer(char *str, int fd);
+int		ft_putchar_buffer(char c, int fd);
+int		ft_print_char_buffer(char c, int count, int fd);
 
 #endif

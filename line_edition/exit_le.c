@@ -22,8 +22,6 @@ void	toexit(t_edit *line_e, char *str)
 		line_e->termiold->c_oflag |= (OPOST);
 		tcsetattr(STDERR_FILENO, TCSAFLUSH, line_e->termiold);
 	}
-	ft_putstr_fd("./ft_select : ", STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putendl_fd(" : failed", STDERR_FILENO);
+	ft_printf_fd(STDERR_FILENO, "./ft_select : %s : failed.\n", str, STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }

@@ -51,41 +51,24 @@ static int		copy_str(char **line, char **prevbuffer)
 	return (copy_rest(line, prevbuffer));
 }
 
-static char		*ft_strjoinfree2(char *source, char *concat)
-{
-	char	*tmp;
-
-	if (source == NULL)
-		tmp = ft_strdup(concat);
-	else
-		tmp = ft_strjoin(source, concat);
-	free(source);
-	if (tmp == NULL)
-		free(concat);
-	return (tmp);
-}
-
 int				get_next_line(const int fd, char **line)
 {
 	int				ret;
-	char			*buffer;
+	char			buffer[BUFF_SIZE + 1];
 	static char		*prevbuffer = NULL;
 
 	if (fd < 0 || line == 0 || BUFF_SIZE <= 0)
 		return (-1);
 	if ((!prevbuffer || ft_strchr(prevbuffer, '\n') == NULL) && (ret = 1))
 	{
-		buffer = ft_strnew(BUFF_SIZE);
-		while (buffer != NULL && ft_strchr(prevbuffer, '\n') == NULL && ret > 0)
+		while (ft_strchr(prevbuffer, '\n') == NULL && ret > 0)
 		{
 			ret = read(fd, buffer, BUFF_SIZE);
 			buffer[ft_floor(0, ret)] = '\0';
-			if (ret >= 0 && !(prevbuffer = ft_strjoinfree2(prevbuffer, buffer)))
+			if (ret >= 0 && !(prevbuffer = ft_strjoinfree(prevbuffer, buffer)))
 				return (-1);
 		}
-		if (buffer != NULL)
-			free(buffer);
-		if (ret == -1 || buffer == NULL)
+		if (ret == -1)
 		{
 			ft_strdel(&prevbuffer);
 			return (-1);

@@ -44,16 +44,13 @@ void	spec_lst_push(t_spec **begin_list, t_spec *spec)
 	}
 }
 
-void	spec_lst_clear(t_spec *lst)
+t_spec	*spec_lst_clear(t_spec *lst)
 {
-	t_spec	*tmp;
+	t_spec *tmp;
 
-	while (lst != NULL)
-	{
-		tmp = lst;
-		lst = lst->next;
-		ft_strdel(&(tmp->minlen));
-		ft_strdel(&(tmp->maxlen));
-		free(tmp);
-	}
+	tmp = lst->next;
+	ft_strdel(&(lst->minlen));
+	ft_strdel(&(lst->maxlen));
+	free(lst);
+	return (tmp);
 }

@@ -14,23 +14,24 @@
 #include "list.h"
 #include "libft.h"
 #include "function_pointers.h"
+#include "printf_buffer.h"
 
 int			print_invalid_floats(t_spec *spec, long double *nbr, int *prnt_cnt)
 {
 	if (!ft_adv_memcmp(nbr, "0000 0000 0000 0080 ff7f 0000 0100 0000"))
 	{
-		ft_putstr_fd(spec->option == 'F' ? "INF" : "inf", spec->fd);
+		ft_putstr_buffer(spec->option == 'F' ? "INF" : "inf", spec->fd);
 		*prnt_cnt += 3;
 	}
 	else if (!ft_adv_memcmp(nbr, "0000 0000 0000 0080 ffff 0000 0100 0000"))
 	{
-		ft_putstr_fd(spec->option == 'F' ? "-INF" : "-inf", spec->fd);
+		ft_putstr_buffer(spec->option == 'F' ? "-INF" : "-inf", spec->fd);
 		*prnt_cnt += 4;
 	}
 	else if (!ft_adv_memcmp(nbr, "0000 0000 0000 00c0 ff7f 0000 0100 0000")
 		|| !ft_adv_memcmp(nbr, "0000 0000 0000 00c0 ffff 0000 0100 0000"))
 	{
-		ft_putstr_fd(spec->option == 'F' ? "NAN" : "nan", spec->fd);
+		ft_putstr_buffer(spec->option == 'F' ? "NAN" : "nan", spec->fd);
 		*prnt_cnt += 3;
 	}
 	else
@@ -46,19 +47,19 @@ int			ft_print_float(long double nbr, int precision, int fd)
 	i = 0;
 	n = (long long)nbr;
 	if (nbr < 0 && ++i)
-		ft_putchar_fd('-', fd);
+		ft_putchar_buffer('-', fd);
 	i += ft_putllnbr(n, fd);
 	if (precision == 0)
 		return (i);
 	i += precision + 1;
-	ft_putchar_fd('.', fd);
+	ft_putchar_buffer('.', fd);
 	nbr -= (long long)nbr;
 	while (precision-- != 0)
 	{
 		nbr *= 10;
 		n = (long long)nbr % 10;
 		nbr -= (long long)nbr;
-		ft_putchar_fd('0' + ft_abs(n), fd);
+		ft_putchar_buffer('0' + ft_abs(n), fd);
 	}
 	return (i);
 }

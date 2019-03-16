@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "flags.h"
 #include "function_pointers.h"
+#include "printf_buffer.h"
 
 t_nbrbase_func g_base_func[BASE_SPECIFIER_COUNT] = {
 	{'x', "0123456789abcdef"},
@@ -80,19 +81,19 @@ int		print_hex_prefix(t_spec *spec, unsigned long long nbr)
 	if (spec->option == 'p')
 	{
 		prnt_cnt += 2;
-		ft_putstr_fd("0x", spec->fd);
+		ft_putstr_buffer("0x", spec->fd);
 	}
 	else if (spec->flag & FLAG_HEX && nbr > 0
 		&& charset_match_c("xX", spec->option))
 	{
-		ft_putstr_fd(spec->option == 'x' ? "0x" : "0X", spec->fd);
+		ft_putstr_buffer(spec->option == 'x' ? "0x" : "0X", spec->fd);
 		prnt_cnt += 2;
 	}
 	else if (charset_match_c("oO", spec->option) && spec->flag & FLAG_HEX
 		&& (nbr != 0 || (spec->maxlen != NULL
 		&& ft_atoi(spec->maxlen) == 0)))
 	{
-		ft_putchar_fd('0', spec->fd);
+		ft_putchar_buffer('0', spec->fd);
 		prnt_cnt++;
 	}
 	return (prnt_cnt);
@@ -103,9 +104,9 @@ int		print_hexnbr_padding(t_spec *spec, unsigned long long nbr)
 	int prnt_cnt;
 
 	prnt_cnt = 0;
-	prnt_cnt += ft_print_char_fd(' ', spec->pad, spec->fd);
+	prnt_cnt += ft_print_char_buffer(' ', spec->pad, spec->fd);
 	prnt_cnt += print_hex_prefix(spec, nbr);
-	prnt_cnt += ft_print_char_fd('0', spec->zeropad, spec->fd);
+	prnt_cnt += ft_print_char_buffer('0', spec->zeropad, spec->fd);
 	return (prnt_cnt);
 }
 
@@ -134,6 +135,6 @@ int		print_base(t_spec *spec, va_list *args)
 	{
 		prnt_cnt += print_nbr_base(nbr, g_base_func[i].base, spec->fd);
 	}
-	prnt_cnt += ft_print_char_fd(' ', spec->pad_right, spec->fd);
+	prnt_cnt += ft_print_char_buffer(' ', spec->pad_right, spec->fd);
 	return (prnt_cnt);
 }

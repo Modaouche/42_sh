@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "flags.h"
 #include "function_pointers.h"
+#include "printf_buffer.h"
 
 void		get_nbr_padding(t_spec *spec, int nbrlen, int nbrnull)
 {
@@ -48,11 +49,11 @@ void		get_nbr_padding(t_spec *spec, int nbrlen, int nbrnull)
 int			print_sign(t_spec *spec, int nbrneg)
 {
 	if (nbrneg)
-		ft_putchar_fd('-', spec->fd);
+		ft_putchar_buffer('-', spec->fd);
 	else if (flag(spec->flag, FLAG_PLUS))
-		ft_putchar_fd('+', spec->fd);
+		ft_putchar_buffer('+', spec->fd);
 	else if (flag(spec->flag, FLAG_SPACE))
-		ft_putchar_fd(' ', spec->fd);
+		ft_putchar_buffer(' ', spec->fd);
 	else
 		return (0);
 	return (1);
@@ -63,10 +64,10 @@ int			print_nbr_padding(t_spec *spec)
 	int prnt_cnt;
 
 	prnt_cnt = 0;
-	prnt_cnt += ft_print_char_fd(' ', spec->pad, spec->fd);
+	prnt_cnt += ft_print_char_buffer(' ', spec->pad, spec->fd);
 	if (spec->option != 'u' && spec->option != 'U' && spec->print)
 		prnt_cnt += print_sign(spec, spec->nbrneg);
-	prnt_cnt += ft_print_char_fd('0', spec->zeropad, spec->fd);
+	prnt_cnt += ft_print_char_buffer('0', spec->zeropad, spec->fd);
 	return (prnt_cnt);
 }
 
@@ -82,6 +83,6 @@ int			print_integer(t_spec *spec, va_list *args)
 	prnt_cnt += print_nbr_padding(spec);
 	if (spec->print)
 		prnt_cnt += print_nbr(spec, &nbr);
-	prnt_cnt += ft_print_char_fd(' ', spec->pad_right, spec->fd);
+	prnt_cnt += ft_print_char_buffer(' ', spec->pad_right, spec->fd);
 	return (prnt_cnt);
 }

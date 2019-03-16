@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "printf_buffer.h"
 #include <stdlib.h>
 
 int		find_next_end(char *str)
@@ -48,9 +49,9 @@ int		is_hexa(char *str, int end)
 
 void	put_color(char *str, int fd)
 {
-	ft_putstr_fd("\033[38;5;", fd);
+	ft_putstr_buffer("\033[38;5;", fd);
 	ft_putnbr_fd(ft_atoi_base(str, 16), fd);
-	ft_putchar_fd('m', fd);
+	ft_putchar_buffer('m', fd);
 }
 
 int		putstr_color(char *str, int maxlen, int fd)
@@ -66,9 +67,9 @@ int		putstr_color(char *str, int maxlen, int fd)
 		if (str[i] == '{' && (idx = find_next_end(&str[i])) > 1
 			&& is_hexa(str + i + 1, idx))
 		{
-			ft_putnstr_fd(str + last, i - last, fd);
+			ft_putnstr_buffer(str + last, i - last, fd);
 			if (str[i + 1] == 'R' || str[i + 1] == 'r')
-				ft_putstr_fd("\033[0m", fd);
+				ft_putstr_buffer("\033[0m", fd);
 			else
 				put_color(&str[i + 1], fd);
 			i += idx + 1;
@@ -78,6 +79,6 @@ int		putstr_color(char *str, int maxlen, int fd)
 			i++;
 	}
 	if (last != i)
-		ft_putnstr_fd(str + last, i - last, fd);
+		ft_putnstr_buffer(str + last, i - last, fd);
 	return (1);
 }

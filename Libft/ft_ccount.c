@@ -1,13 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools_1.c                                          :+:      :+:    :+:   */
+/*   ft_ccount.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/06 11:52:28 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/08 07:57:10 by modaouch         ###   ########.fr       */
+/*   Created: 2019/03/04 01:15:29 by kicausse          #+#    #+#             */
+/*   Updated: 2019/03/04 01:15:30 by kicausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shell.h"
+#include <string.h>
+
+size_t	ft_ccount(char *str, char c)
+{
+	size_t	count;
+
+	if (str == 0)
+		return (0);
+	count = 0;
+	while (*str)
+	{
+		if (*str == c)
+			++count;
+		++str;
+	}
+	return (count);
+}
