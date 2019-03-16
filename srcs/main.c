@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:16:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/03/02 11:08:05 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/03/02 18:47:22 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int main(int ac, char **av, char **envp)
     line_e.tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps au cas ou TERM = (rien || dumb)
 	set_terminal(&line_e);
 	//ft_signal_handle();
-	while ("42")
+	while (42)
 	{
 		line_e.len_max = BUFFER_LEN;
 		line_e.cursor_pos = 0;

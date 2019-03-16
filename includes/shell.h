@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/03/02 10:54:30 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/03/02 11:23:46 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <curses.h>
-//# include <stdio.h>
-
-unsigned int     g_errorno;
 
 # define ER_DBACCES	    	1
 # define ER_DBINFO	    	2
@@ -46,6 +43,8 @@ unsigned int     g_errorno;
 
 # define MAX_KEY_LEN		15
 # define BUFFER_LEN			255
+
+unsigned int     g_errorno;
 
 typedef struct			s_edit
 {
