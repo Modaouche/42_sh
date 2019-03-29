@@ -15,7 +15,7 @@ NAME 	= 	42sh
 SRC 	=   srcs/main.c \
 		    srcs/tools_1.c \
 		    srcs/parser.c \
-		    srcs/builtins.c \
+		    builtins/exit.c \
 		    line_edition/set_terminal.c\
 		    line_edition/line_edition.c\
 		    line_edition/exit_le.c\

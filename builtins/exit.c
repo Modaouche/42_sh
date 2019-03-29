@@ -1,9 +1,9 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.c                                         :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kicausse <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:16:46 by modaouch          #+#    #+#             */
 /*   Updated: 2019/03/16 19:02:38 by modaouch         ###   ########.fr       */
@@ -13,11 +13,9 @@
 #include "libft.h"
 #include <stdlib.h>
 
-# define HOME_VAR ""
-
 void	builtin_exit(char **args)
 {
-	unsigned char	returnValue;
+	unsigned char	retvalue;
 
 	if (args[0] == NULL)
 		exit(0);
@@ -30,7 +28,6 @@ void	builtin_exit(char **args)
 			ft_printf("exit: %s: numeric argument required", args[0]);
 			exit(-1);
 		}
-		returnValue = ft_atoi(args[0]);
-		exit(returnValue);
+		exit((unsigned char)ft_atoi(args[0]));
 	}
 }
