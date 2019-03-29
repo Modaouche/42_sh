@@ -74,6 +74,7 @@ int						ft_isascii(int c);
 int						ft_toupper(int c);
 int						ft_tolower(int c);
 int						ft_ishex(int c);
+int						ft_strisdigit(char *str);
 
 /*
 ** String manipulation / creation
