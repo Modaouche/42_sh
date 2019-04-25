@@ -29,7 +29,7 @@
       Lors du projet nous avons remarqué que notre parser du projet précédent etait vraiment insuffisant.
       C'est ainsi que nous avons décidé pour nous entraîner d'utiliser la grammaire d'un vrai shell.
       Nous avons ainsi implémenté un simple Parser LL(1) à partir de la grammaire du shell 
-      (LR que nous avons converti en LL cf. http://pubs.opengroup.org/onlinepubs/007904975/utilities/xcu_chap02.html).
+      (LR que nous avons converti en LL).*
       Ce dernier nous génére un AST qui permet d'éxecuter la commande de l'utilisateur proprement.
 
 
@@ -38,3 +38,5 @@
     - Nous avons pu avoir plus de connaissance dans le systeme UNIX.
     - Decouverte et apprentissage d'une analyse syntaxique (Lexing, Parsing, AST).
     - Connaissance en shell
+ 
+*http://pubs.opengroup.org/onlinepubs/007904975/utilities/xcu_chap02.html
