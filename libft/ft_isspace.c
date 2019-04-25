@@ -1,22 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools_1.c                                          :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: modaouch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/06 11:52:28 by modaouch          #+#    #+#             */
-/*   Updated: 2019/04/04 13:36:05 by modaouch         ###   ########.fr       */
+/*   Created: 2018/04/18 15:19:36 by modaouch          #+#    #+#             */
+/*   Updated: 2018/04/20 16:51:54 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/shell.h"
+#include "libft.h"
 
-void		init_line(t_edit *line_e)
+int		ft_isspace(int c)
 {
-	if (line_e->line)
-		ft_strdel(&line_e->line);
-	line_e->len_max = BUFFER_LEN;
-	line_e->cursor_pos = 0;
-	line_e->i = 0;
+	return ((c == ' ' || c == '\n' || c == '\t' || c == '\f' ||
+				c == '\r' || c == '\v') ? 1 : 0);
 }

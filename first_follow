@@ -1,0 +1,86 @@
+
+
+
+
+v1
+
+/*
+*
+* first :                                           follow:
+*
+* cmpt_cmd :  !, word, EMPTY                        cmpt_cmd:   EOF
+* list:       !, word                               list:       newline, EOF
+* list':      &, ;, EMPTY                           list':      newline, EOF
+* list'':     !, word, EMPTY                        list'':     newline, EOF
+* and_or:     !, word                               and_or:     &, ;, newline, EOF
+* and_or':    &&, ||, EMPTY                         and_or':    &, ;, newline, EOF
+* and_or_op:  &&, ||                                and_or_op:  newline, !, word
+* pipeline:   !, word                               pipeline:   &&, ||, &, ;, newline, EOF
+* bang_opt:   !, EMPTY                              bang_opt:   word
+* pipe_seq:   word                                  pipe_seq:   &&, ||, &, ;, newline, EOF
+* pipe_seq':  |, EMPTY                              pipe_seq':  &&, ||, &, ;, newline, EOF
+* command:    word                                  command:    |, &&, ||, &, ;, newline, EOF
+* linebreak:  newline, EMPTY                        linebreak:  word, !, EOF
+* separ_op:   &, ;                                  separ_op:   !, word, newline, EOF
+* newl_list:  newline                               newl_list:  word, !, EOF
+* newl_list'  newline, EMPTY                        newl_list': word, !, EOF
+*
+*/
+
+
+
+v2
+
+/*
+*
+* first :                                                                                   follow:
+*
+* cmpt_cmd :        !, word, <<- ,<<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word          cmpt_cmd:           EOF
+* list:             !, word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word          list:               newline, EOF
+* list':            &, ; , EMPTY                                                            list':              newline, EOF
+* list'':           !, word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word EMPTY    list'':             newline, EOF
+* and_or:           !, word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word          and_or:             &, ;, newline, EOF
+* and_or':          &&, ||, EMPTY                                                           and_or':            &, ;, newline, EOF
+* and_or_op:        &&, ||                                                                  and_or_op:          !, word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word, newline
+* pipeline:         !, word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word          pipeline:           &&, ||, &, ;, newline, EOF
+* bang_opt:         !, EMPTY                                                                bang_opt:           word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word
+* pipe_seq:         word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word             pipe_seq:           &&, ||, &, ;, newline, EOF
+* pipe_seq':        |, EMPTY                                                                pipe_seq':          &&, ||, &, ;, newline, EOF
+* command:          word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word             command:            |, &&, ||, &, ;, newline, EOF
+* command_suffix :  word, EMPTY                                                             command_suffix :    |, &&, ||, &, ;, newline, EOF
+* cmd_suffix_opt :  word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, EMPTY                   cmd_suffix_opt :    |, &&, ||, &, ;, newline, EOF
+* cmd_suffix' :     word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_number_opt                  cmd_suffix' :       |, &&, ||, &, ;, newline, EOF
+* cmd_suffix'' :    word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, EMPTY                   cmd_suffix'' :      |, &&, ||, &, ;, newline, EOF
+* cmd_prefix :      <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word                   cmd_prefix :        word, |, &&, ||, &, ;, newline, EOF
+* cmd_prefix' :     <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word, EMPTY            cmd_prefix' :       word, |, &&, ||, &, ;, newline, EOF
+* io_redirect :     <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb                                io_redirect :       word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word, |, &&, ||, &, ;, newline, EOF
+* io_number_opt :   io_nb, EMPTY                                                            io_number_opt :     <<-, <<, >|, <>, >>, >&, >, <&, <
+* io_kind :         <<-, <<, >|, <>, >>, >&, >, <&, <,                                      io_kind :           word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word, |, &&, ||, &, ;, newline, EOF
+* io_file :         >|, <>, >>, >&, >, <&, <,                                               io_file :           word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word, |, &&, ||, &, ;, newline, EOF
+* io_here :         <<-, <<                                                                 io_here :           word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word, |, &&, ||, &, ;, newline, EOF
+* linebreak:        newline, EMPTY                                                          linebreak:          !, word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word, EOF
+* separ_op:         &, ;                                                                    separ_op:           !, word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word, newline, EOF
+* newl_list:        newline                                                                 newl_list:          !, word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word ,EOF
+* newl_list'        newline, EMPTY                                                          newl_list':         !, word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word ,EOF
+*
+*
+*   $ALIAS
+*   {
+*       (AMPER      =>  '&'     ),
+*       (SEMI       =>  ';'     ),
+*       (AND_IF     =>  '&&'    ),
+*       (OR_IF      =>  '||'    ),
+*       (BANG       =>  '!'     ),
+*       (PIPE       =>  '|'     ),
+*       (LESS       =>  '<'     ),
+*       (LESSAND    =>  '<&'    ),
+*       (GREAT      =>  '>'     ),
+*       (GREATAND   =>  '>&'    ),
+*       (DGEART     =>  '>>'    ),
+*       (LESSGREAT  =>  '<>'    ),
+*       (CLOBBER    =>  '>|'    ),
+*       (DLESS      =>  '<<'    ),
+*       (DLESSDASH  =>  '<<-'   ),
+*   };
+*
+*/

@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 11:41:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/08 07:33:31 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/02/11 22:16:58 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,4 @@ void						set_terminal(t_edit *line_e)
 	line_e->len_max = BUFFER_LEN;
 	if (!isatty(STDERR_FILENO))
 		toexit(line_e, "isatty");
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
-		toexit(0, "tcsetattr");
 }

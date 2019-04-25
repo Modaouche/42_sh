@@ -1,0 +1,65 @@
+$EXTERN
+{
+    'shell.lex.h',
+};
+
+$PRODUCTION
+{
+    <complete_command>  ->  <list> <linebreak>
+                        |   $EMPTY
+                        ;
+
+    <list>              ->  <and_or> <list'>                            ;
+    <list'>             ->  <separator_op> <list''>
+                        |   $EMPTY
+                        ;
+
+    <list''>            ->  <and_or> <list'>
+                        |   $EMPTY
+                        ;
+
+    <and_or>            ->  <pipeline> <and_or'>                        ;
+    <and_or'>           ->  <and_or_op> <linebreak> <pipeline> <and_or'>
+                        |   $EMPTY
+                        ;
+
+    <and_or_op>         ->  '&&'
+                        |   '||'
+                        ;
+
+    <pipeline>          ->  <bang_opt> <pipe_sequence>                  ;
+    <bang_opt>          ->  '!'
+                        |   $EMPTY
+                        ;
+
+    <pipe_sequence>     ->  <command> <pipe_sequence'>                  ;
+    <pipe_sequence'>    ->  '|' <linebreak> <command> <pipe_sequence'>
+                        |   $EMPTY
+                        ;
+
+    <command>           ->  WORD                                        ;
+
+    <linebreak>         ->  <newline_list>
+                        |   $EMPTY
+                        ;
+            
+    <separator_op>      ->  '&'
+                        |   ';'
+                        ;
+
+    <newline_list>      ->  NEWLINE <newline_list'>                     ;
+    <newline_list'>     ->  NEWLINE <newline_list'>
+                        |   $EMPTY
+                        ;
+};
+
+$ALIAS
+{
+    (AMPER      =>  '&' ),
+    (SEMI       =>  ';' ),
+    (AND_IF     =>  '&&'),
+    (OR_IF      =>  '||'),
+    (BANG       =>  '!' ),
+    (PIPE       =>  '|' ),
+    (NEWLINE    =>  '\n' ),
+};

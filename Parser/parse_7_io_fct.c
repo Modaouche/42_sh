@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit_le.c                                          :+:      :+:    :+:   */
+/*   parse_7_io_fct.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/06 11:57:20 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/06 18:19:03 by modaouch         ###   ########.fr       */
+/*   Created: 2019/04/07 00:38:00 by modaouch          #+#    #+#             */
+/*   Updated: 2019/04/07 00:39:54 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-//cree une fct perror(int g_errorno) like 
-
-void	toexit(t_edit *line_e, char *str)
+void        io_redirect_fct()
 {
-	if (line_e && line_e->termiold)
-	{
-		line_e->termiold->c_lflag |= (ICANON | ECHO);
-		line_e->termiold->c_oflag |= (OPOST);
-		tcsetattr(STDERR_FILENO, TCSAFLUSH, line_e->termiold);
-	}
-	ft_putstr_fd("./ft_select : ", STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putendl_fd(" : failed", STDERR_FILENO);
-	exit(EXIT_FAILURE);
+    
+}
+
+void        io_number_opt_fct()
+{
+    
+}
+
+void        io_kind_fct()
+{
+
+}
+
+void        io_file()
+{
+
+}
+
+void        io_here()
+{
+
 }

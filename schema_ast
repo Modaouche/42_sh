@@ -1,0 +1,28 @@
+- !ls | cat && rm
+
+
+ 	      |
+	    /	\
+           ls	 &&
+         /       /  \
+       !      cat    rm
+ 
+
+
+
+- !ls | cat; env |grep && ls || pwd | less
+
+
+	|
+      /   \
+    ls      ;
+  /       /   \
+!       cat    |
+	      /  \
+           env    &&
+                 /   \
+              grep    ||
+                    /    \
+                   ls     |
+		        /   \
+		      pwd    less

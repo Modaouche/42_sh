@@ -6,7 +6,7 @@
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 07:09:22 by kicausse          #+#    #+#             */
-/*   Updated: 2018/11/06 07:09:23 by kicausse         ###   ########.fr       */
+/*   Updated: 2019/04/25 20:14:19 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int						ft_isdigit(int c);
 int						ft_isalnum(int c);
 int						ft_isprint(int c);
 int						ft_isascii(int c);
+int						ft_isspace(int c);
 int						ft_toupper(int c);
 int						ft_tolower(int c);
 int						ft_ishex(int c);
@@ -90,6 +91,7 @@ char					*ft_strjoin(char const *s1, char const *s2);
 char					*ft_strjoinfree(char *source, const char *concat);
 char					*ft_strjoinfree_both(char *source, char *concat);
 char					*ft_strjoinfree_last(const char *source, char *concat);
+char					*ft_strjoin_free(char *s1, char *s2, size_t bt);
 char					*ft_strjoin_if(char *source, char *concat,
 						int (*f)(int));
 char					*ft_strtrim(char const *s);
@@ -102,6 +104,7 @@ char					*ft_strnins(char *dest, const char *src,
 char					*ft_strins_malloc(char *dest, const char *src,
 						unsigned int pos);
 char					*ft_strdup(const char *s);
+char					*ft_strndup(const char *s, size_t n);
 char					*ft_strcdup(const char *s, char c);
 char					*ft_strdup_if(const char *s, int (*f)(int));
 char					*ft_strcpy(char *destination, const char *source);
@@ -120,8 +123,9 @@ void					ft_striteri(char *s, void (*f)(unsigned int, char *));
 char					*ft_strtolower(char *string);
 char					*ft_strtoupper(char *string);
 char					*ft_strcut(char *str, int start, int end);
-void					ft_free_tab(char **tab);
-char					**reverse_free_tab(char **tab, int size);
+void					ft_free_tab(char **tabb);
+char					**reverse_free_tab(char **tabb, int size);
+
 /*
 ** Printing functions
 */

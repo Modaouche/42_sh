@@ -1,0 +1,41 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Directives.drv                                     :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2019/01/22 06:23:55 by modaouch          #+#    #+#              #
+#    Updated: 2019/04/18 18:46:58 by modaouch         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+
+Pour le 21sh / 42sh:
+
+- Pour le ';' separateur de commande, ft_occur ne marchera plus si je dois gerer
+  les "" `` '' .
+
+- refaire le env en mode multiarg et pas en mode "key=value" plustot "key value"
+
+- refaire tout les builtin clean.
+
+- command v en priorite pour eviter que sa plante avec les unicode
+- ctrl c -> proteger les free si je le lance avec un built in
+- a gerer pour les pipe : base64 /dev/urandom | head -c 100
+- ls -R / | grep l
+- redirection ont des comportement differents en fonction de la commande
+  (maybe avec pipe aussi)
+- faire attention avec "dumb" << dans l'edition de ligne
+
+ctrl + d = EOF pour le read (donc T_EOF dois etre end of line T_EOL)
+
+skip_predicate evite les NEWLINE donc osef du FIRST(cmpt_cmd)
+
+
+<<<------------>>>>>
+
+
+il faudra finir les nvelle fct avec les firsts & follows, ensuite handle the nested prompt extension. 
+
+<<<------------>>>>>

@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 17:03:29 by modaouch          #+#    #+#             */
-/*   Updated: 2019/03/02 11:02:00 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/04/25 19:19:49 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ int         str_add(t_edit *line_e, const char to_add)
 
     if (!line_e->line)
     {
-        line_e->line = (char *)ft_memcpy(ft_memalloc(BUFFER_LEN + 1), &to_add, 1);
+        if (!(line_e->line = (char *)ft_memalloc(BUFFER_LEN + 1)))
+            return (0);
+        ft_memcpy(line_e->line, &to_add, 1);
         return (1);
     }
     if (ft_strlen(line_e->line) >= line_e->len_max)
@@ -43,10 +45,10 @@ int         str_add(t_edit *line_e, const char to_add)
 void		putkey_in_line(t_edit *line_e, char *key)
 {
     if (!key)
-    {
-        ft_putendl_fd("error : key :null", STDERR_FILENO);
+	{
+		ft_putendl_fd("error : key :null", STDERR_FILENO);
         return ;
-    }
+	}
     if (ft_strlen(key) <= 1 && ft_isprint(key[0]))
     {
         if (!(str_add(line_e, *key)))
@@ -71,9 +73,9 @@ void		putkey_in_line(t_edit *line_e, char *key)
             tputs(tgetstr("nd", NULL), 1, ft_puti);
         }
         if (key[2] == 65)
-           ft_putstr_fd("KEY top ", STDERR_FILENO);
+           ft_putstr_fd("              KEY top\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b", STDERR_FILENO);
         if (key[2] == 66)
-           ft_putstr_fd("KEY bot ", STDERR_FILENO);
+           ft_putstr_fd("              KEY bot\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b", STDERR_FILENO);
         return ;
     }
     if (line_e->cursor_pos && line_e->line && (key[0] == 127 && !key[1]))
@@ -91,24 +93,30 @@ void		putkey_in_line(t_edit *line_e, char *key)
         ft_putchar_fd(' ', STDERR_FILENO);
         cursor_reposition(ft_strlen(line_e->line + line_e->cursor_pos) + 1);
     }
-    //ft_putstr("unknow key or no managed");
-}//in tabptr de fct
+    // ft_putstr("key too long comming soon - ");
+}//in tabptrfct
 
 int     line_edition(t_edit *line_e)
 {
     int ret;
     char key[MAX_KEY_LEN];
 
-    while ("Line edition")
+    if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
+		toexit(0, "tcsetattr");
+    while ("Line edition loop")
     {
-		ft_bzero(key, MAX_KEY_LEN + 1);
-		ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
+	ft_bzero(key, MAX_KEY_LEN + 1);
+	ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
         if (ret == -1 || ret == 0)
             perror("ret chelou :");
         if (key[0] == 10 && !key[1])
-            return (1) ;
+        {
+            if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
+	        toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
+            return (1);
+        }    
         putkey_in_line(line_e, key);
-        //ft_printf("[%s] ", line_e->line);
+        // ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico
     }
     return (0);
 }
