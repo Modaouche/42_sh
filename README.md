@@ -1,7 +1,7 @@
 # 42-Sh
 
 42sh est le projet de fin de branche UNIX, il consiste à implémenter (à 4 ou 5) un shell complet, solide et utilisable.
- ### 1 - Ce dernier comporte une partie obligatoire pour un shell basique tel que :
+  ### 1 - Ce dernier comporte une partie obligatoire pour un shell basique tel que :
         - Exécution de commandes avec leurs paramètres et gestion du PATH.
         - Gestion des erreurs, sans utiliser errno, et de la valeur de retour des commandes.
         - ◦ Gestion correcte des espaces et des tabulations.
@@ -14,14 +14,16 @@
         - built-in cd, echo, exit, type, export, set, unset.
         - built-in avec options dictées par le standard POSIX, sauf set et unset.
         
-### 2 - Par la suite il y a la partie modulaire qui nous demande d'ajouter des fonctionnalité plus avancé.
+ ### 2 - Par la suite il y a la partie modulaire qui nous demande d'ajouter des fonctionnalité plus avancé.
         - Les inhibiteurs ” (double quote), ’ (simple quote) et \ (backslash)
         - • La gestion complète de l’historique
         - (d'autres a ajouter en fonction de l'avancement)...
         
         
-### 3 - Bonus :
+ ### 3 - Bonus :
         - Nous avons décidé en plus d'ajouter le fait de pouvoir faire des scripts shell.
+
+
 
 #### Remarque :
       Lors du projet nous avons remarqué que notre parser du projet précédent etait vraiment insuffisant.
