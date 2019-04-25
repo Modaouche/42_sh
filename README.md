@@ -4,8 +4,8 @@
   ### 1 - Ce dernier comporte une partie obligatoire pour un shell basique tel que :
         - Exécution de commandes avec leurs paramètres et gestion du PATH.
         - Gestion des erreurs, sans utiliser errno, et de la valeur de retour des commandes.
-        - ◦ Gestion correcte des espaces et des tabulations.
-        - ◦ Édition complète de la ligne de commande.
+        - Gestion correcte des espaces et des tabulations.
+        - Édition complète de la ligne de commande.
         - Les opérateurs de redirection et d’aggrégation (>, >>, <, <<, >&, <&).
         - Gestion des Pipe "|" et des separateurs ";".
         - Operateur && et ||.
@@ -16,7 +16,7 @@
         
  ### 2 - Par la suite il y a la partie modulaire qui nous demande d'ajouter des fonctionnalité plus avancé.
         - Les inhibiteurs ” (double quote), ’ (simple quote) et \ (backslash)
-        - • La gestion complète de l’historique
+        - La gestion complète de l’historique
         - (d'autres a ajouter en fonction de l'avancement)...
         
         
@@ -34,7 +34,8 @@
 
 
 ## Compétences :
-    - Ce projet nous à permis de travailler en groupe et de voir les différentes contraintes/avantage à travailler en groupe.
+    - Ce projet nous à permis de travailler en groupe et de voir les différentes
+      contraintes/avantage à travailler en groupe.
     - Nous avons pu avoir plus de connaissance dans le systeme UNIX.
     - Decouverte et apprentissage d'une analyse syntaxique (Lexing, Parsing, AST).
     - Connaissance en shell
