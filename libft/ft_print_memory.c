@@ -26,7 +26,7 @@ static void	print_hex_line(unsigned char *curr, unsigned char *end)
 	unsigned int i;
 
 	i = 0;
-	ft_print_hex((unsigned int)curr, 8);
+	ft_print_hex((size_t)curr, 8);
 	ft_putchar(':');
 	ft_putchar(' ');
 	while (i < 16)
