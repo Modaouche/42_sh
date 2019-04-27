@@ -26,7 +26,8 @@ int         str_add(t_edit *line_e, const char to_add)
     if (ft_strlen(line_e->line) >= line_e->len_max)
     {
         line_e->len_max += BUFFER_LEN;
-        new = (char *)ft_memalloc(line_e->len_max);
+        if (!(new = (char *)ft_memalloc(line_e->len_max)))
+            return (0);
         ft_memcpy(new, line_e->line, ft_strlen(line_e->line));
         ft_strdel(&(line_e->line));
         line_e->line = new;
@@ -105,8 +106,8 @@ int     line_edition(t_edit *line_e)
 		toexit(0, "tcsetattr");
     while ("Line edition loop")
     {
-	ft_bzero(key, MAX_KEY_LEN + 1);
-	ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
+	   ft_bzero(key, MAX_KEY_LEN + 1);
+	   ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
         if (ret == -1 || ret == 0)
             perror("ret chelou :");
         if (key[0] == 10 && !key[1])
