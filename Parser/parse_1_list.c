@@ -76,7 +76,7 @@ void					list_prime_fct(t_ast **ast, t_edit *line_e)
     }
 }
 
-void        list_dprime_fct(t_ast **ast, t_edit *line_e)
+void                    list_dprime_fct(t_ast **ast, t_edit *line_e)
 {
     ft_printf("--<list_dprime_fct>--\n");
     if (first_set(head_of_line(*ast), T_BANG, T_WORD, -1))

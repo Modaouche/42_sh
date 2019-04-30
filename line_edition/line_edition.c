@@ -63,30 +63,32 @@ void		putkey_in_line(t_edit *line_e, char *key)
     }
     if (is_arrow(key))
     {
-        if (line_e->line && key[2] == 68 && line_e->cursor_pos > 0)
+        if (line_e->line && key[2] == S_KEY_ARW_LEFT && line_e->cursor_pos > 0)
         {
             line_e->cursor_pos -= 1;
             tputs(tgetstr("le", NULL), 1, ft_puti);
         }
-        if (line_e->line && key[2] == 67 && line_e->cursor_pos < ft_strlen(line_e->line))
+        if (line_e->line && key[2] == S_KEY_ARW_RIGHT && line_e->cursor_pos < ft_strlen(line_e->line))
         {
             line_e->cursor_pos += 1;
             tputs(tgetstr("nd", NULL), 1, ft_puti);
         }
-        if (key[2] == 65)
+        if (key[2] == S_KEY_ARW_UP)
            ft_putstr_fd("              KEY top\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b", STDERR_FILENO);
-        if (key[2] == 66)
+        if (key[2] == S_KEY_ARW_DOWN)
            ft_putstr_fd("              KEY bot\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b", STDERR_FILENO);
         return ;
     }
-    if (line_e->cursor_pos && line_e->line && (key[0] == 127 && !key[1]))
+    if (line_e->cursor_pos && line_e->line && (key[0] == S_KEY_ARW_DEL && !key[1]))
     {
         line_e->cursor_pos -= 1;
         if (line_e->line[0])
+        {
             ft_memmove(line_e->line + (line_e->cursor_pos),\
-            line_e->line + (line_e->cursor_pos + 1),\
-            ft_strlen(line_e->line + (line_e->cursor_pos + 1)));
-        ft_bzero(line_e->line + ft_strlen(line_e->line) - 1, 1);
+                    line_e->line + (line_e->cursor_pos + 1),\
+                    ft_strlen(line_e->line + (line_e->cursor_pos + 1)));
+        }
+        line_e->line[ft_strlen(line_e->line) - 1] = '\0';
         tputs(tgetstr("le", NULL), 1, ft_puti);
         write(STDERR_FILENO, " ", 1);
         tputs(tgetstr("le", NULL), 1, ft_puti);
@@ -106,14 +108,14 @@ int     line_edition(t_edit *line_e)
 		toexit(0, "tcsetattr");
     while ("Line edition loop")
     {
-	   ft_bzero(key, MAX_KEY_LEN + 1);
+	   ft_bzero(key, MAX_KEY_LEN);
 	   ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
         if (ret == -1 || ret == 0)
             perror("ret chelou :");
-        if (key[0] == 10 && !key[1])
+        if (key[0] == S_KEY_RET && !key[1])
         {
             if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
-	        toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
+	           toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
             return (1);
         }    
         putkey_in_line(line_e, key);

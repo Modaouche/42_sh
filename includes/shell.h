@@ -32,15 +32,16 @@ typedef enum
 						ER_SYNTAX
 }						ERRORNO;
 
-// # define S_KEY_ARW_LEFT		0
-// # define S_KEY_ARW_RIGHT		0
-// # define S_KEY_ARW_BOT		0
-// # define S_KEY_ARW_TOP		0
+# define S_KEY_ARW_UP			65
+# define S_KEY_ARW_DOWN			66
+# define S_KEY_ARW_RIGHT		67
+# define S_KEY_ARW_LEFT			68
+# define S_KEY_ARW_DEL			127
 // # define S_KEY_ERASE			0
 // # define S_KEY_PRINTABLE		0
 // # define S_KEY_SPACE			0
 // # define S_KEY_ESC			27
-// # define S_KEY_RET			10
+# define S_KEY_RET			10
 // # define S_KEY_CTRL_D		4
 // # define S_KEY_END			1
 // # define S_KEY_NONE			0
