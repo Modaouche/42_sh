@@ -20,7 +20,7 @@ int         str_add(t_edit *line_e, const char to_add)
     {
         if (!(line_e->line = (char *)ft_memalloc(BUFFER_LEN + 1)))
             return (0);
-        ft_memcpy(line_e->line, &to_add, 1);
+        line_e->line[0] = to_add;
         return (1);
     }
     if (ft_strlen(line_e->line) >= line_e->len_max)
