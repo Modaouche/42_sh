@@ -36,7 +36,7 @@ typedef enum
 # define S_KEY_ARW_DOWN			66
 # define S_KEY_ARW_RIGHT		67
 # define S_KEY_ARW_LEFT			68
-# define S_KEY_ARW_DEL			127
+# define S_KEY_ARW_RET			127
 // # define S_KEY_ERASE			0
 // # define S_KEY_PRINTABLE		0
 // # define S_KEY_SPACE			0

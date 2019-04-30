@@ -18,7 +18,7 @@ int         str_add(t_edit *line_e, const char to_add)
 
     if (!line_e->line)
     {
-        if (!(line_e->line = (char *)ft_memalloc(BUFFER_LEN + 1)))
+        if (!(line_e->line = ft_strnew(BUFFER_LEN)))
             return (0);
         line_e->line[0] = to_add;
         return (1);
@@ -26,7 +26,7 @@ int         str_add(t_edit *line_e, const char to_add)
     if (ft_strlen(line_e->line) >= line_e->len_max)
     {
         line_e->len_max += BUFFER_LEN;
-        if (!(new = (char *)ft_memalloc(line_e->len_max)))
+        if (!(new = ft_strnew(line_e->len_max)))
             return (0);
         ft_memcpy(new, line_e->line, ft_strlen(line_e->line));
         ft_strdel(&(line_e->line));
@@ -68,18 +68,26 @@ void		putkey_in_line(t_edit *line_e, char *key)
             line_e->cursor_pos -= 1;
             tputs(tgetstr("le", NULL), 1, ft_puti);
         }
-        if (line_e->line && key[2] == S_KEY_ARW_RIGHT && line_e->cursor_pos < ft_strlen(line_e->line))
+        else if (line_e->line && key[2] == S_KEY_ARW_RIGHT && line_e->cursor_pos < ft_strlen(line_e->line))
         {
+            struct winsize size;
+            ioctl(0, TIOCGWINSZ, &size);
             line_e->cursor_pos += 1;
-            tputs(tgetstr("nd", NULL), 1, ft_puti);
+            if ((line_e->cursor_pos + 25) % size.ws_col == 0)
+            {
+                tputs(tgetstr("do", NULL), 1, ft_puti);
+                tputs(tgetstr("cr", NULL), 1, ft_puti);
+            }
+            else
+                tputs(tgetstr("nd", NULL), 1, ft_puti);
         }
-        if (key[2] == S_KEY_ARW_UP)
+        else if (key[2] == S_KEY_ARW_UP)
            ft_putstr_fd("              KEY top\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b", STDERR_FILENO);
-        if (key[2] == S_KEY_ARW_DOWN)
+        else if (key[2] == S_KEY_ARW_DOWN)
            ft_putstr_fd("              KEY bot\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b", STDERR_FILENO);
         return ;
     }
-    if (line_e->cursor_pos && line_e->line && (key[0] == S_KEY_ARW_DEL && !key[1]))
+    if (line_e->cursor_pos && line_e->line && (key[0] == S_KEY_ARW_RET && !key[1]))
     {
         line_e->cursor_pos -= 1;
         if (line_e->line[0])
