@@ -114,7 +114,6 @@ int     line_edition(t_edit *line_e)
 {
     int ret;
     char key[MAX_KEY_LEN];
-    int escape = 0;
 
 
     line_e->len = 0;
@@ -128,21 +127,19 @@ int     line_edition(t_edit *line_e)
             perror("ret chelou :");
         if (key[0] == S_KEY_ENTER && !key[1])
         {
-            if (escape == 0)
+            if (line_e->len >= 1 && line_e->line[line_e->len - 1] == '\\')
             {
-                if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
-	               toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
-                return (1);
-            }
-            else
-            {
+                line_e->line[--line_e->len] = '\0'; //Remove backslash
+                line_e->cursor_pos = 0;
                 //multi-line mode
             }
-        }    
-        if (key[0] == '\\' && !key[1] && escape == 0)
-            escape = 1;
-        else
-            escape = 0;
+            else 
+            {
+                if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
+                   toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
+                return (1);
+            }
+        }
         putkey_in_line(line_e, key);
         // ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico
     }
