@@ -13,15 +13,17 @@
 #include <stdarg.h>
 #include "../includes/shell.h"
 
-int	first_set(int kind, ...)//name tochange
+int	first_set(int kind, ...)//name tochange maybe in nextok
 {
     va_list tokens;
     int current_token;
 
     va_start(tokens, kind);
     while ((current_token = va_arg(tokens, int)) != -1) {
-        if (current_token == kind)
+        if (current_token == kind) {
+            va_end(tokens);
             return (1);
+        }
     }
     va_end(tokens);
     return (0);

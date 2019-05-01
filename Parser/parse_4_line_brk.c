@@ -19,7 +19,9 @@ void        line_break_fct(t_ast **ast, t_edit *line_e)
     {
         newline_list_fct(ast, line_e);
     }
-    else if (first_set(head_of_line(*ast), T_WORD, T_BANG, T_EOF, -1))
+    else if (first_set(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+        T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND, T_DLESSDASH, T_IO_NB,\
+        T_ASGMT_WRD, T_EOF, -1))
     {
         return ;
     }
@@ -29,7 +31,7 @@ void        line_break_fct(t_ast **ast, t_edit *line_e)
        	//let it//ast_insert_left(get_next_token(str_line), ast);//un nest matcher ??
         ft_putstr_fd("42sh syntax error.8\n", 2);//check si je rentre, peut etre que c'est inutile avec specifical message
         g_errorno = ER_SYNTAX;
-        return ;
+        return ;//maybe an exit with error
     }
 }
 
@@ -44,7 +46,7 @@ void        separator_op_fct(t_ast **ast, t_edit *line_e)
         //ast_insert_left(get_next_token(&(line_e->line), &(line_e->i)), ast);//un nest matcher ??
         ft_putstr_fd("42sh syntax error.9\n", 2);//check si je rentre, peut etre que c'est inutile avec specifical message
         g_errorno = ER_SYNTAX;
-        return ;
+        return ;//maybe an exit with error
     }
 }
 
@@ -63,7 +65,9 @@ void        newline_list_prime_fct(t_ast **ast, t_edit *line_e)
         ast_insert_left(get_next_token(&(line_e->line), &(line_e->i)), ast);
     if (first_set(head_of_line(*ast), T_NEWL, -1))
         newline_list_prime_fct(ast, line_e);
-    else if (first_set(head_of_line(*ast), T_WORD, T_BANG, T_EOF, -1))
+    else if (first_set(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+        T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND, T_DLESSDASH, T_IO_NB,\
+        T_ASGMT_WRD, T_EOF, -1))
     {
         return ;
     }
@@ -73,6 +77,6 @@ void        newline_list_prime_fct(t_ast **ast, t_edit *line_e)
         //ast_insert_left(get_next_token(str_line), ast);//un nest matcher ??
         ft_putstr_fd("42sh syntax error.10\n", 2);//check si je rentre, peut etre que c'est inutile avec specifical message
         g_errorno = ER_SYNTAX;
-        return ;
+        return ;//maybe an exit with error
     }
 }

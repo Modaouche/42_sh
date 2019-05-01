@@ -32,18 +32,19 @@ typedef enum
 						ER_SYNTAX
 }						ERRORNO;
 
-// # define S_KEY_ARW_LEFT		0
-// # define S_KEY_ARW_RIGHT		0
-// # define S_KEY_ARW_BOT		0
-// # define S_KEY_ARW_TOP		0
-// # define S_KEY_ERASE			0
+# define S_KEY_ARW_UP            65
+# define S_KEY_ARW_DOWN          66
+# define S_KEY_ARW_RIGHT         67
+# define S_KEY_ARW_LEFT          68
+# define S_KEY_RET		 10
+# define S_KEY_ERASE        	 127
 // # define S_KEY_PRINTABLE		0
 // # define S_KEY_SPACE			0
 // # define S_KEY_ESC			27
-// # define S_KEY_RET			10
 // # define S_KEY_CTRL_D		4
 // # define S_KEY_END			1
 // # define S_KEY_NONE			0
+
 
 # define MAX_KEY_LEN			15
 # define BUFFER_LEN				255
@@ -115,6 +116,17 @@ void					pipeline_fct(t_ast **tree, t_edit *line_e);
 void					pipe_sequence_fct(t_ast **tree, t_edit *line_e);
 void					pipe_sequence_prime_fct(t_ast **tree, t_edit *line_e);
 void					command_fct(t_ast **tree, t_edit *line_e);
+void					cmd_suffix_fct(t_ast **ast, t_edit *line_e);
+void					cmd_suffix_opt_fct(t_ast **ast, t_edit *line_e);
+void					cmd_suffix_prime_fct(t_ast **ast, t_edit *line_e);
+void					cmd_suffix_dprime_fct(t_ast **ast, t_edit *line_e);
+void					cmd_prefix_fct(t_ast **ast, t_edit *line_e);
+void					cmd_prefix_prime_fct(t_ast **ast, t_edit *line_e);
+void					io_redirect_fct(t_ast **ast, t_edit *line_e);
+void					io_number_opt_fct(t_ast **ast, t_edit *line_e);
+void					io_kind_fct(t_ast **ast, t_edit *line_e);
+void					io_file(t_ast **ast, t_edit *line_e);
+void					io_here(t_ast **ast, t_edit *line_e);
 void					line_break_fct(t_ast **tree, t_edit *line_e);
 void					separator_op_fct(t_ast **tree, t_edit *line_e);
 void					newline_list_fct(t_ast **tree, t_edit *line_e);

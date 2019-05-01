@@ -16,7 +16,8 @@ int			line_parser(t_ast **ast, t_edit *line_e)//maybe useless
 {
 	g_errorno = 0;
 	ast_insert_left(get_next_token(&(line_e->line), &(line_e->i)) , ast);
-	complet_cmd(ast, line_e);
+    if (!first_set(head_of_line(*ast), T_EOF, -1))	
+		complet_cmd(ast, line_e);
 	if (g_errorno == ER_SYNTAX)//to change maybe
 		return (0);
 	return (1);

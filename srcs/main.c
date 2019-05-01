@@ -38,7 +38,7 @@ int main(int ac, char **av, char **envp)
     	line_e.tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps
 	set_terminal(&line_e);
 	//ft_signal_handle();
-	while ("command loop")
+	while (1)
 	{
 		line_e.len_max = BUFFER_LEN;
 		line_e.cursor_pos = 0;

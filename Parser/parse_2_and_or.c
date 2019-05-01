@@ -16,7 +16,9 @@ void        and_or_fct(t_ast **ast, t_edit *line_e)
 {
     ft_printf("--<and_or_fct>--\n");
 
-    if (first_set(head_of_line(*ast), T_BANG, T_WORD, -1))
+    if (first_set(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+        T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND, T_DLESSDASH, T_IO_NB,\
+        T_ASGMT_WRD, -1))
     {
         pipeline_fct(ast, line_e);
         and_or_prime_fct(ast, line_e);
@@ -52,7 +54,7 @@ void        and_or_prime_fct(t_ast **ast, t_edit *line_e)
        //ast_insert_left(get_next_token(str_line), ast);//un nest matcher ??
         ft_putstr_fd("42sh syntax error.4\n", 2);//check si je rentre, peut etre que c'est inutile
         g_errorno = ER_SYNTAX;
-        return ;
+        return ;//maybe an exit with error
     }
 }
 

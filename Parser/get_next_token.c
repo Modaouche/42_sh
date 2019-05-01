@@ -19,7 +19,7 @@ t_token    *get_next_token(char **line, int *i)
 
     if (!(actual_token = (t_token*)ft_memalloc(sizeof(t_token))))
         return (0);
-    if (*line && line[0][*i] != '\n')//pb car si on a un space apres un '\n'// to check, not sur
+    if (*line && line[0][*i] != '\n')//pb car si on a un space apres un '\n'// yes confirmed FT_ISSPACE tochange
         skip_predicat(line, i, &ft_isspace);
     actual_token->lexeme = NULL;
     if (!*line || line[0][*i] == '\0')
@@ -45,7 +45,7 @@ t_token    *get_next_token(char **line, int *i)
     {
         actual_token->tokind = T_AMPER;
         actual_token->lexeme = ft_strdup("&");
-        if (line[0][*i] == '&'/* && line[0][*i + 1]*/)
+        if (line[0][*i] == '&'/* && line[0][*i + 1]*/)//mis en commentaire mais je crois que je le gere dans le parser ;) to check
         {
             ++(*i);
             actual_token->tokind = T_AND_IF;
@@ -70,6 +70,67 @@ t_token    *get_next_token(char **line, int *i)
         actual_token->tokind = T_BANG;
         actual_token->lexeme = ft_strdup("!");
         return (actual_token);
+    }
+    else if (c == '>')
+    {
+        actual_token->tokind = T_GREAT;
+        actual_token->lexeme = ft_strdup(">");
+        if (line[0][*i] == '>')
+        {
+            ++(*i);
+            actual_token->tokind = T_DGREAT;
+            actual_token->lexeme = ft_strjoin_free(actual_token->lexeme, ">", 1);
+        }
+        else if (line[0][*i] == '&')
+        {
+            ++(*i);
+            actual_token->tokind = T_GREATAND;
+            actual_token->lexeme = ft_strjoin_free(actual_token->lexeme, "&", 1);
+        }
+        else if (line[0][*i] == '|')
+        {
+            ++(*i);
+            actual_token->tokind = T_CLOBBER;
+            actual_token->lexeme = ft_strjoin_free(actual_token->lexeme, "|", 1);
+        }
+        return (actual_token);
+    }
+    else if (c == '<')
+    {
+        actual_token->tokind = T_LESS;
+        actual_token->lexeme = ft_strdup("<");
+        if (line[0][*i] == '<')
+        {
+            ++(*i);
+            actual_token->tokind = T_DLESS;
+            actual_token->lexeme = ft_strjoin_free(actual_token->lexeme, "<", 1);
+            if (line[0][*i] == '-')
+            {
+                ++(*i);
+                actual_token->tokind = T_DLESSDASH;
+                actual_token->lexeme = ft_strjoin_free(actual_token->lexeme, "-", 1);
+            }
+        }
+        else if (line[0][*i] == '&')
+        {
+            ++(*i);
+            actual_token->tokind = T_LESSAND;
+            actual_token->lexeme = ft_strjoin_free(actual_token->lexeme, "&", 1);
+        }
+        else if (line[0][*i] == '>')
+        {
+            ++(*i);
+            actual_token->tokind = T_LESSGREAT;
+            actual_token->lexeme = ft_strjoin_free(actual_token->lexeme, ">", 1);
+        }
+        return (actual_token);
+    }
+    else if (token_is_io_nb(c))
+    {
+        // skip_predicat(line, i, &token_is_io_nb);
+        // actual_token->tokind = T_IO_NB;
+        // actual_token->lexeme = ft_strndup(&(line[0][*i - 1]), wordlen(&(line[0][*i - 1])));
+        // return (actual_token);
     }
     else if (token_isword(c))
     {

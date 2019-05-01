@@ -49,7 +49,7 @@ v2
 * command:          word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word             command:            |, &&, ||, &, ;, newline, EOF
 * command_suffix :  word, EMPTY                                                             command_suffix :    |, &&, ||, &, ;, newline, EOF
 * cmd_suffix_opt :  word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, EMPTY                   cmd_suffix_opt :    |, &&, ||, &, ;, newline, EOF
-* cmd_suffix' :     word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_number_opt                  cmd_suffix' :       |, &&, ||, &, ;, newline, EOF
+* cmd_suffix' :     word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb                          cmd_suffix' :       |, &&, ||, &, ;, newline, EOF
 * cmd_suffix'' :    word, <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, EMPTY                   cmd_suffix'' :      |, &&, ||, &, ;, newline, EOF
 * cmd_prefix :      <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word                   cmd_prefix :        word, |, &&, ||, &, ;, newline, EOF
 * cmd_prefix' :     <<-, <<, >|, <>, >>, >&, >, <&, <, io_nb, assnmn_word, EMPTY            cmd_prefix' :       word, |, &&, ||, &, ;, newline, EOF

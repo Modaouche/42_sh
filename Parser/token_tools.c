@@ -17,6 +17,11 @@ int     token_isword(int c)
     //pour l'instant je le considere comme un alnum mais c'est a changer
     return(ft_isalnum(c));
 }
+int     token_is_io_nb(int c)
+{
+    //while ... check si c'est correct...
+    return (1);
+}
 
 void    skip_predicat(char **line, int *i, int (*pred)(int))
 {

@@ -15,7 +15,9 @@
 void        pipeline_fct(t_ast **ast, t_edit *line_e)
 {
     ft_printf("--<pipeline_fct>--\n");
-    if (first_set(head_of_line(*ast), T_BANG, T_WORD, -1))
+    if (first_set(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+        T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND, T_DLESSDASH, T_IO_NB,\
+        T_ASGMT_WRD, -1))
     {
         bang_fct(ast, line_e);
         pipe_sequence_fct(ast, line_e);
@@ -29,21 +31,23 @@ void        pipeline_fct(t_ast **ast, t_edit *line_e)
 	    ft_printf("|%d|\n", head_of_line(*ast));
         ft_putstr_fd("42sh syntax error.5\n", 2);//check si je rentre, peut etre que c'est inutile
         g_errorno = ER_SYNTAX;
-        return ;
+        return ;//maybe an exit with error
     }
 }
 
 void        bang_fct(t_ast **ast, t_edit *line_e)
 {
     ft_printf("--<bang_fct>--\n");
-    if (first_set(head_of_line(*ast), T_BANG, -1))
+    if (first_set(head_of_line(*ast), T_BANG, -1))//a voir si il faut faire un else
         ast_insert_left(get_next_token(&(line_e->line), &(line_e->i)), ast);
 }
 
 void        pipe_sequence_fct(t_ast **ast, t_edit *line_e)
 {
     ft_printf("--<pipe_sequence_fct>--\n");
-    if (first_set(head_of_line(*ast), T_WORD, -1))
+    if (first_set(head_of_line(*ast), T_WORD, T_GREAT, T_GREATAND, T_DGREAT,\
+        T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND, T_DLESSDASH, T_IO_NB,\
+        T_ASGMT_WRD, -1))
     {
         command_fct(ast, line_e);
         pipe_sequence_prime_fct(ast, line_e);
@@ -53,7 +57,7 @@ void        pipe_sequence_fct(t_ast **ast, t_edit *line_e)
 	    ft_printf("|%d|\n", head_of_line(*ast));
         ft_putstr_fd("42sh syntax error.6\n", 2);//OK maybe
         g_errorno = ER_SYNTAX;
-        return ;
+        return ;//maybe an exit with error
     }
 }
 
@@ -85,6 +89,6 @@ void        pipe_sequence_prime_fct(t_ast **ast, t_edit *line_e)
 	    ft_printf("|%d|\n", head_of_line(*ast));
         ft_putstr_fd("42sh syntax error.7\n", 2);//check si je rentre, peut etre que c'est inutile
         g_errorno = ER_SYNTAX;
-        return ;
+        return ;//maybe an exit with error
     }
 }

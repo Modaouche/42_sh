@@ -27,6 +27,8 @@ SRC =	srcs/main.c\
 		Parser/parse_3_pipe_seq.c\
 		Parser/parse_4_line_brk.c\
 		Parser/parse_5_cmd.c\
+		Parser/parse_6_cmd_prime.c\
+		Parser/parse_7_io_fct.c\
 		Parser/first_set.c
 
 OBJ = $(SRC:.c=.o)
