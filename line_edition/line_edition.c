@@ -73,7 +73,7 @@ void		putkey_in_line(t_edit *line_e, char *key)
             struct winsize size;
             ioctl(0, TIOCGWINSZ, &size);
             line_e->cursor_pos += 1;
-            if ((line_e->cursor_pos + 25) % size.ws_col == 0)
+            if ((line_e->cursor_pos + 26) % size.ws_col == 0)
             {
                 tputs(tgetstr("do", NULL), 1, ft_puti);
                 tputs(tgetstr("cr", NULL), 1, ft_puti);
