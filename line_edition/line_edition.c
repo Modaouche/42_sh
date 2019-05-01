@@ -21,14 +21,15 @@ int         str_add(t_edit *line_e, const char to_add)
         if (!(line_e->line = ft_strnew(BUFFER_LEN)))
             return (0);
         line_e->line[0] = to_add;
+        line_e->len = 1;
         return (1);
     }
-    if (ft_strlen(line_e->line) >= line_e->len_max)
+    if (line_e->len >= line_e->len_max)
     {
         line_e->len_max += BUFFER_LEN;
         if (!(new = ft_strnew(line_e->len_max)))
             return (0);
-        ft_memcpy(new, line_e->line, ft_strlen(line_e->line));
+        ft_memcpy(new, line_e->line, line_e->len);
         ft_strdel(&(line_e->line));
         line_e->line = new;
     }
@@ -37,9 +38,10 @@ int         str_add(t_edit *line_e, const char to_add)
     ft_memcpy(new, line_e->line, line_e->cursor_pos);
     new[line_e->cursor_pos] = to_add;
     ft_memcpy(new + (line_e->cursor_pos + 1), line_e->line\
-        + line_e->cursor_pos, ft_strlen(line_e->line + line_e->cursor_pos));
+        + line_e->cursor_pos, line_e->len - line_e->cursor_pos);
     ft_strdel(&(line_e->line));
     line_e->line = new;
+    line_e->len += 1;
     return (1);
 }
 
@@ -54,11 +56,11 @@ void		putkey_in_line(t_edit *line_e, char *key)
     {
         if (!(str_add(line_e, *key)))
             toexit(line_e, "malloc");
-        if (line_e->cursor_pos <= ft_strlen(line_e->line))
+        if (line_e->cursor_pos <= line_e->len)
             line_e->cursor_pos += 1;
         write(STDERR_FILENO, key, 1);
         ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-        cursor_reposition(ft_strlen(line_e->line + line_e->cursor_pos));
+        cursor_reposition(line_e->len - line_e->cursor_pos);
         return ;
     }
     else if (is_arrow(key))
@@ -68,7 +70,7 @@ void		putkey_in_line(t_edit *line_e, char *key)
             line_e->cursor_pos -= 1;
             tputs(tgetstr("le", NULL), 1, ft_puti);
         }
-        else if (line_e->line && key[2] == S_KEY_ARW_RIGHT && line_e->cursor_pos < ft_strlen(line_e->line))
+        else if (line_e->line && key[2] == S_KEY_ARW_RIGHT && line_e->cursor_pos < line_e->len)
         {
             struct winsize size;
             ioctl(0, TIOCGWINSZ, &size);
@@ -90,19 +92,20 @@ void		putkey_in_line(t_edit *line_e, char *key)
     else if (line_e->cursor_pos && line_e->line && (key[0] == S_KEY_ERASE && !key[1]))
     {
         line_e->cursor_pos -= 1;
+        line_e->len -= 1;
         if (line_e->line[0])
         {
             ft_memmove(line_e->line + (line_e->cursor_pos),\
                     line_e->line + (line_e->cursor_pos + 1),\
-                    ft_strlen(line_e->line + (line_e->cursor_pos + 1)));
+                    line_e->len - line_e->cursor_pos);
         }
-        line_e->line[ft_strlen(line_e->line) - 1] = '\0';
+        line_e->line[line_e->len] = '\0';
         tputs(tgetstr("le", NULL), 1, ft_puti);
         write(STDERR_FILENO, " ", 1);
         tputs(tgetstr("le", NULL), 1, ft_puti);
         ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
         ft_putchar_fd(' ', STDERR_FILENO);
-        cursor_reposition(ft_strlen(line_e->line + line_e->cursor_pos) + 1);
+        cursor_reposition(line_e->len - line_e->cursor_pos + 1);
     }
     // ft_putstr("key too long comming soon - ");
 }//in tabptrfct
@@ -113,6 +116,8 @@ int     line_edition(t_edit *line_e)
     char key[MAX_KEY_LEN];
     int escape = 0;
 
+
+    line_e->len = 0;
     if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");
     while (1)
@@ -134,7 +139,7 @@ int     line_edition(t_edit *line_e)
                 //multi-line mode
             }
         }    
-        if (key[0] == '\\' && !key[1])
+        if (key[0] == '\\' && !key[1] && escape == 0)
             escape = 1;
         else
             escape = 0;
