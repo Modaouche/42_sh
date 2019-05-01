@@ -61,7 +61,7 @@ void		putkey_in_line(t_edit *line_e, char *key)
         cursor_reposition(ft_strlen(line_e->line + line_e->cursor_pos));
         return ;
     }
-    if (is_arrow(key))
+    else if (is_arrow(key))
     {
         if (line_e->line && key[2] == S_KEY_ARW_LEFT && line_e->cursor_pos > 0)
         {
@@ -87,7 +87,7 @@ void		putkey_in_line(t_edit *line_e, char *key)
            ft_putstr_fd("              KEY bot\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b", STDERR_FILENO);
         return ;
     }
-    if (line_e->cursor_pos && line_e->line && (key[0] == S_KEY_ERASE && !key[1]))
+    else if (line_e->cursor_pos && line_e->line && (key[0] == S_KEY_ERASE && !key[1]))
     {
         line_e->cursor_pos -= 1;
         if (line_e->line[0])
@@ -111,6 +111,7 @@ int     line_edition(t_edit *line_e)
 {
     int ret;
     char key[MAX_KEY_LEN];
+    int escape = 0;
 
     if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");
@@ -120,12 +121,23 @@ int     line_edition(t_edit *line_e)
 	   ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
         if (ret == -1 || ret == 0)
             perror("ret chelou :");
-        if (key[0] == S_KEY_RET && !key[1])
+        if (key[0] == S_KEY_ENTER && !key[1])
         {
-            if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
-	           toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
-            return (1);
+            if (escape == 0)
+            {
+                if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
+	               toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
+                return (1);
+            }
+            else
+            {
+                //multi-line mode
+            }
         }    
+        if (key[0] == '\\' && !key[1])
+            escape = 1;
+        else
+            escape = 0;
         putkey_in_line(line_e, key);
         // ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico
     }
