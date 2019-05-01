@@ -96,6 +96,7 @@ void					prompt_extend(void);
 t_token					*get_next_token(char **line, int *i);
 int						line_lexer(t_edit *line_e);
 int     				token_isword(int c);
+int     				token_is_io_nb(int c);
 void					skip_predicat(char ** line, int *i, int (*pred)(int));
 int						wordlen(char *line);
 

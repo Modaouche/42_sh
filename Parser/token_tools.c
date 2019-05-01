@@ -14,13 +14,14 @@
 
 int     token_isword(int c)
 {
-    //pour l'instant je le considere comme un alnum mais c'est a changer
-    return(ft_isalnum(c));
+    //pour l'instant je le considere comme un alnum mais c'est a changer vite !
+    return(ft_isalnum(c));// je ne gere pas les option  d une cmd genre -lra ...^^^^^^
 }
 int     token_is_io_nb(int c)
 {
-    //while ... check si c'est correct...
-    return (1);
+    (void)c;//^^^^^
+    //while ... check si c'est correct... attention avec skip predicate des que tu arrive a la fin 
+    return (0);
 }
 
 void    skip_predicat(char **line, int *i, int (*pred)(int))
