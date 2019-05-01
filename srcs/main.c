@@ -35,13 +35,14 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)envp;
 	ft_bzero(&line_e, sizeof(line_e));
-    	line_e.tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps
+    line_e.tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps
 	set_terminal(&line_e);
 	//ft_signal_handle();
 	while (1)
 	{
 		line_e.len_max = BUFFER_LEN;
 		line_e.cursor_pos = 0;
+		line_e.len = 0;
 		ft_putstr_fd("\e[1;32m42sh (current path) 🐚\033[0m  $> ", STDERR_FILENO);
 		line_lexer(&line_e);
 		if (line_e.line && !ft_strcmp(line_e.line, "exit"))//to rm

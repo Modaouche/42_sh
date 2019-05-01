@@ -116,7 +116,7 @@ int     line_edition(t_edit *line_e)
     char key[MAX_KEY_LEN];
 
 
-    line_e->len = 0;
+    line_e->multiline = 0;
     if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");
     while (1)
@@ -130,7 +130,12 @@ int     line_edition(t_edit *line_e)
             if (line_e->len >= 1 && line_e->line[line_e->len - 1] == '\\')
             {
                 line_e->line[--line_e->len] = '\0'; //Remove backslash
-                line_e->cursor_pos = 0;
+                if (line_e->cursor_pos > line_e->len)
+                 line_e->cursor_pos = line_e->len;
+                line_e->multiline = 1;
+                ft_putstr_fd("\n", STDERR_FILENO);
+                tputs(tgetstr("cr", NULL), 1, ft_puti);
+                ft_putstr_fd("> ", STDERR_FILENO);
                 //multi-line mode
             }
             else 

@@ -56,6 +56,7 @@ typedef struct			s_edit
 	struct termios	*termios;
 	struct winsize	*wsize;
 	char			*line;
+	int				multiline;
 	int				i;
 	unsigned int	len;
 	unsigned int	cursor_pos;
