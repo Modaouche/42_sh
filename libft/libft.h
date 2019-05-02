@@ -17,6 +17,20 @@
 # define BASE_HEX ("0123456789ABCDEF")
 
 /*
+** Linked lists
+*/
+
+typedef struct	s_list
+{
+	char			*content;
+	struct s_list	*next;
+	size_t			content_size;
+}				t_list;
+
+t_list					*ft_list_create(char *content, size_t content_size);
+t_list					*ft_list_append(char *content, size_t content_size);
+
+/*
 ** Memory-related
 */
 

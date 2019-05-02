@@ -45,6 +45,21 @@ int         str_add(t_edit *line_e, const char to_add)
     return (1);
 }
 
+void    print_with_pad(char *str, int maxlen)
+{
+    unsigned int   i;
+    int            len;
+
+    len = ft_strlen(str);
+    write(0, str, len);
+    i = maxlen - len;
+    while (i > 0)
+    {
+        write(0, " ", 1);
+        --i;
+    }
+}
+
 void		putkey_in_line(t_edit *line_e, char *key)
 {
     if (!key)
@@ -65,7 +80,37 @@ void		putkey_in_line(t_edit *line_e, char *key)
     }
     else if (ft_strlen(key) <= 1 && key[0] == '\t')
     {
+        char *s[] = {"salut", "ls", "ls", "ls", "ls", "ls", "ls", "mdr", NULL};
+        tputs(tgetstr("sc", NULL), 1, ft_puti);
         //autocomplete
+        
+        //cursor positionning
+        tputs(tgetstr("do", NULL), 1, ft_puti);
+        tputs(tgetstr("cr", NULL), 1, ft_puti);
+        unsigned int max = 0;
+        int i = 0;
+        while (s[i])
+        {
+            if (ft_strlen(s[i]) > max)
+                max = ft_strlen(s[i]);
+            ++i;
+        }
+        struct winsize size;
+        ioctl(0, TIOCGWINSZ, &size);
+        int maxcol = size.ws_col / (max + 2);
+        i = 0;
+        while (s[i])
+        {
+            print_with_pad(s[i], max + 2);
+            ++i;
+            if (i % maxcol == 0)
+            {
+                tputs(tgetstr("do", NULL), 1, ft_puti);
+                tputs(tgetstr("cr", NULL), 1, ft_puti);    
+            }
+        }
+        //restore cursor pos
+        tputs(tgetstr("rc", NULL), 1, ft_puti);
     }
     else if (is_arrow(key))
     {

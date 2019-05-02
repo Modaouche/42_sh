@@ -34,6 +34,7 @@ struct termios				*term_raw(int bt)
 	{
 		if (tcgetattr(STDERR_FILENO, &termios) == -1)
 			toexit(0, "tcgetattr");
+		termios.c_lflag |= IEXTEN;
 		termios.c_lflag &= ~(ICANON | ECHO);
 		termios.c_oflag &= ~(OPOST);
 		termios.c_cc[VTIME] = 0;
