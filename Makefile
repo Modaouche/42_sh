@@ -46,7 +46,7 @@ DEPEN = $(INCLUDES) $(OBJ) Makefile libft/Makefile $(LIBFT)\
 
 CC = gcc
 
-CFLAGS +=  -Wall -Wextra -Werror\
+CFLAGS += -Wall -Wextra -Werror -Ilibft \
 		  -g -fsanitize=address\
 		  -fno-omit-frame-pointer\
 		  -fsanitize-address-use-after-scope

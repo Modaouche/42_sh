@@ -33,8 +33,8 @@ int main(int ac, char **av, char **envp)
 
 	(void)av;
 	(void)ac;
-	(void)envp;
 	ft_bzero(&line_e, sizeof(line_e));
+	line_e.env = envp;
     line_e.tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps
 	set_terminal(&line_e);
 	//ft_signal_handle();

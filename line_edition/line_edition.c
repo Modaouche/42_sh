@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
+#include "libft.h"
+#include <dirent.h>
 
 int         str_add(t_edit *line_e, const char to_add)
 {
@@ -60,6 +62,58 @@ void    print_with_pad(char *str, int maxlen)
     }
 }
 
+void    search_similar_files(t_list **list, char *path, char *str, int len)
+{
+    DIR             *d;
+    struct dirent   *f;
+
+    d = opendir(path);
+    if (!d)
+        return ;
+    while ((f = readdir(d)) != NULL)
+    {
+        if (ft_strncmp(f->d_name, str, len) == 0)
+        {
+            char *tmp = ft_strdup(f->d_name);
+            if (tmp)
+                ft_list_append(list, tmp, ft_strlen(f->d_name));
+        }
+    }
+}
+
+t_list  *build_completion_list(char *str, int len, char **env)
+{
+    t_list *list;
+
+    list = NULL;
+    if (env == NULL)
+        return (NULL);
+    while (ft_strncmp(*env, "PATH=", 5) != 0)
+        ++env;
+    if (*env == NULL)
+        return (NULL);
+    char *path = *env + 5;
+    while (*path != 0)
+    {
+        int i = 0;
+        while (path[i] != ':' && path[i] != '\0')
+            ++i;
+        if (path[i] == ':')
+        {
+            path[i] = '\0';
+            search_similar_files(&list, path, str, len);
+            path[i] = ':';
+            ++i;
+        }
+        else
+            search_similar_files(&list, path, str, len);
+        path += i;
+    }
+    (void)str;
+    (void)len;
+    return (list);
+}
+
 void		putkey_in_line(t_edit *line_e, char *key)
 {
     if (!key)
@@ -80,29 +134,41 @@ void		putkey_in_line(t_edit *line_e, char *key)
     }
     else if (ft_strlen(key) <= 1 && key[0] == '\t')
     {
-        char *s[] = {"salut", "ls", "ls", "ls", "ls", "ls", "ls", "mdr", NULL};
+        if (line_e->line == NULL)
+            return ;
+        t_list *list = NULL;
+        int str_start;
+        str_start = line_e->cursor_pos;
+        while (str_start > 0 && line_e->line[str_start] != ' ')
+            --str_start;        
+        list = build_completion_list(line_e->line + str_start,  line_e->cursor_pos - str_start, line_e->env);
+        unsigned int i = 0;
+        if (list == NULL)
+            return ;
+        line_e->autocompletion = 1;
         tputs(tgetstr("sc", NULL), 1, ft_puti);
         //autocomplete
-        
         //cursor positionning
         tputs(tgetstr("do", NULL), 1, ft_puti);
         tputs(tgetstr("cr", NULL), 1, ft_puti);
         unsigned int max = 0;
-        int i = 0;
-        while (s[i])
+        t_list *tmp = list;
+        while (tmp)
         {
-            if (ft_strlen(s[i]) > max)
-                max = ft_strlen(s[i]);
-            ++i;
+            if (tmp->content_size > max)
+                max = tmp->content_size;
+            tmp = tmp->next;
         }
         struct winsize size;
         ioctl(0, TIOCGWINSZ, &size);
         int maxcol = size.ws_col / (max + 2);
         i = 0;
-        while (s[i])
+        tmp = list;
+        while (tmp)
         {
-            print_with_pad(s[i], max + 2);
+            print_with_pad(tmp->content, max + 2);
             ++i;
+            tmp = tmp->next;
             if (i % maxcol == 0)
             {
                 tputs(tgetstr("do", NULL), 1, ft_puti);
@@ -183,6 +249,7 @@ int     line_edition(t_edit *line_e)
     char key[MAX_KEY_LEN];
 
     line_e->prompt_size = 26;
+    line_e->autocompletion = 0;
     if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");
     while (1)
@@ -195,10 +262,10 @@ int     line_edition(t_edit *line_e)
         {
             if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
                toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
-            return (1);
+            break ;
         }
         putkey_in_line(line_e, key);
         // ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico
     }
-    return (0);
+    return (1);
 }
