@@ -63,19 +63,41 @@ void		putkey_in_line(t_edit *line_e, char *key)
         cursor_reposition(line_e->len - line_e->cursor_pos);
         return ;
     }
+    else if (ft_strlen(key) <= 1 && key[0] == '\t')
+    {
+        //autocomplete
+    }
     else if (is_arrow(key))
     {
         if (line_e->line && key[2] == S_KEY_ARW_LEFT && line_e->cursor_pos > 0)
         {
+            struct winsize size;
+            ioctl(0, TIOCGWINSZ, &size);
             line_e->cursor_pos -= 1;
-            tputs(tgetstr("le", NULL), 1, ft_puti);
+            if (line_e->line[line_e->cursor_pos] == '\n'
+                || (line_e->cursor_pos + line_e->prompt_size + 1) % size.ws_col == 0)
+            {
+                tputs(tgetstr("up", NULL), 1, ft_puti);
+                unsigned int i = 0;
+                while (line_e->cursor_pos - i != 0)
+                {
+                    if(line_e->line[line_e->cursor_pos - i] == '\n')
+                        break ;
+                    ++i;
+                }
+                while ((i-- + line_e->prompt_size) > 0)
+                    tputs(tgetstr("nd", NULL), 1, ft_puti);
+            }
+            else
+                tputs(tgetstr("le", NULL), 1, ft_puti); 
         }
         else if (line_e->line && key[2] == S_KEY_ARW_RIGHT && line_e->cursor_pos < line_e->len)
         {
             struct winsize size;
             ioctl(0, TIOCGWINSZ, &size);
             line_e->cursor_pos += 1;
-            if ((line_e->cursor_pos + 26) % size.ws_col == 0)
+            if (line_e->line[line_e->cursor_pos] == '\n'
+                || (line_e->cursor_pos + line_e->prompt_size) % size.ws_col == 0)
             {
                 tputs(tgetstr("do", NULL), 1, ft_puti);
                 tputs(tgetstr("cr", NULL), 1, ft_puti);
@@ -115,8 +137,7 @@ int     line_edition(t_edit *line_e)
     int ret;
     char key[MAX_KEY_LEN];
 
-
-    line_e->multiline = 0;
+    line_e->prompt_size = 26;
     if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");
     while (1)
@@ -127,23 +148,9 @@ int     line_edition(t_edit *line_e)
             perror("ret chelou :");
         if (key[0] == S_KEY_ENTER && !key[1])
         {
-            if (line_e->len >= 1 && line_e->line[line_e->len - 1] == '\\')
-            {
-                line_e->line[--line_e->len] = '\0'; //Remove backslash
-                if (line_e->cursor_pos > line_e->len)
-                 line_e->cursor_pos = line_e->len;
-                line_e->multiline = 1;
-                ft_putstr_fd("\n", STDERR_FILENO);
-                tputs(tgetstr("cr", NULL), 1, ft_puti);
-                ft_putstr_fd("> ", STDERR_FILENO);
-                //multi-line mode
-            }
-            else 
-            {
-                if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
-                   toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
-                return (1);
-            }
+            if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
+               toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
+            return (1);
         }
         putkey_in_line(line_e, key);
         // ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico

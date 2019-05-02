@@ -56,11 +56,11 @@ typedef struct			s_edit
 	struct termios	*termios;
 	struct winsize	*wsize;
 	char			*line;
-	int				multiline;
 	int				i;
 	unsigned int	len;
 	unsigned int	cursor_pos;
 	unsigned int	len_max;
+	unsigned int	prompt_size;
 	char			tc_onoff;//for termcap like "dumb" , to have a usable shell
 }						t_edit;
 
