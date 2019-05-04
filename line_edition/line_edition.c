@@ -114,7 +114,7 @@ t_list  *build_completion_list(char *str, int len, char **env)
     return (list);
 }
 
-void		putkey_in_line(t_edit *line_e, char *key)
+void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 {
     if (!key)
 	{
@@ -136,14 +136,21 @@ void		putkey_in_line(t_edit *line_e, char *key)
     {
         if (line_e->line == NULL)
             return ;
-        t_list *list = NULL;
-        int str_start;
+        if (prevkey[0] == '\t' && ft_strlen(prevkey) <= 1 && line_e->autocompletion_list != NULL)
+        {
+            //autocompletion arrow mode
+            return ;
+        }
+        unsigned int str_start;
         str_start = line_e->cursor_pos;
         while (str_start > 0 && line_e->line[str_start] != ' ')
-            --str_start;        
-        list = build_completion_list(line_e->line + str_start,  line_e->cursor_pos - str_start, line_e->env);
+            --str_start;
+        if (str_start == line_e->cursor_pos)
+            return ;
+        ft_list_delete(&line_e->autocompletion_list);
+        line_e->autocompletion_list = build_completion_list(line_e->line + str_start, line_e->cursor_pos - str_start, line_e->env);
         unsigned int i = 0;
-        if (list == NULL)
+        if (line_e->autocompletion_list == NULL)
             return ;
         line_e->autocompletion = 1;
         tputs(tgetstr("sc", NULL), 1, ft_puti);
@@ -152,7 +159,7 @@ void		putkey_in_line(t_edit *line_e, char *key)
         tputs(tgetstr("do", NULL), 1, ft_puti);
         tputs(tgetstr("cr", NULL), 1, ft_puti);
         unsigned int max = 0;
-        t_list *tmp = list;
+        t_list *tmp = line_e->autocompletion_list;
         while (tmp)
         {
             if (tmp->content_size > max)
@@ -163,7 +170,7 @@ void		putkey_in_line(t_edit *line_e, char *key)
         ioctl(0, TIOCGWINSZ, &size);
         int maxcol = size.ws_col / (max + 2);
         i = 0;
-        tmp = list;
+        tmp = line_e->autocompletion_list;
         while (tmp)
         {
             print_with_pad(tmp->content, max + 2);
@@ -247,11 +254,13 @@ int     line_edition(t_edit *line_e)
 {
     int ret;
     char key[MAX_KEY_LEN];
+    char prevkey[MAX_KEY_LEN];
 
     line_e->prompt_size = 26;
     line_e->autocompletion = 0;
     if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");
+    ft_bzero(prevkey, MAX_KEY_LEN);
     while (1)
     {
 	   ft_bzero(key, MAX_KEY_LEN);
@@ -264,7 +273,8 @@ int     line_edition(t_edit *line_e)
                toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
             break ;
         }
-        putkey_in_line(line_e, key);
+        putkey_in_line(line_e, prevkey, key);
+        ft_memcpy(prevkey, key, MAX_KEY_LEN);
         // ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico
     }
     return (1);

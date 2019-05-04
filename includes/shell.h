@@ -57,8 +57,9 @@ typedef struct			s_edit
 	struct winsize	*wsize;
 	char			*line;
 	char			**env;
-	int				i;
+	t_list			*autocompletion_list;
 	int				autocompletion;	
+	int				i;
 	unsigned int	len;
 	unsigned int	cursor_pos;
 	unsigned int	len_max;
