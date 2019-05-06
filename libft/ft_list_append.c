@@ -12,14 +12,15 @@
 
 #include "libft.h"
 
-void	ft_list_append(t_list **list, char *content, size_t content_size)
+int		ft_list_append(t_list **list, char *content, size_t content_size)
 {
 	t_list *new;
 	t_list *tmp;
 
 	if (list == NULL)
-		return ;
-	new = ft_list_create(content, content_size);
+		return (0);
+	if ((new = ft_list_create(content, content_size)) == NULL)
+		return (0);
 	if (*list == NULL)
 		*list = new;
 	else
@@ -29,4 +30,5 @@ void	ft_list_append(t_list **list, char *content, size_t content_size)
 			tmp = tmp->next;
 		tmp->next = new;
 	}
+	return (1);
 }

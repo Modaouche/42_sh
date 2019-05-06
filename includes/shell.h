@@ -59,6 +59,8 @@ typedef struct			s_edit
 	char			**env;
 	t_list			*autocompletion_list;
 	int				autocompletion;	
+	unsigned int	autocompletion_idx;
+	unsigned int	autocompletion_size;
 	int				i;
 	unsigned int	len;
 	unsigned int	cursor_pos;

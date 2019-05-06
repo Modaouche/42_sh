@@ -28,7 +28,7 @@ typedef struct	s_list
 }				t_list;
 
 t_list					*ft_list_create(char *content, size_t content_size);
-void					ft_list_append(t_list **list, char *content,
+int						ft_list_append(t_list **list, char *content,
 										size_t content_size);
 void					ft_list_delete(t_list **list);
 

@@ -62,28 +62,33 @@ void    print_with_pad(char *str, int maxlen)
     }
 }
 
-void    search_similar_files(t_list **list, char *path, char *str, int len)
+unsigned int    search_similar_files(t_list **list, char *path, char *str, int len)
 {
     DIR             *d;
     struct dirent   *f;
+    unsigned int size;
 
     d = opendir(path);
     if (!d)
-        return ;
+        return (0);
+    size = 0;
     while ((f = readdir(d)) != NULL)
     {
         if (ft_strncmp(f->d_name, str, len) == 0)
         {
             char *tmp = ft_strdup(f->d_name);
-            if (tmp)
-                ft_list_append(list, tmp, ft_strlen(f->d_name));
+            if (tmp && ft_list_append(list, tmp, ft_strlen(f->d_name)))
+                ++size;
         }
     }
+    return (size);
 }
 
-t_list  *build_completion_list(char *str, int len, char **env)
+t_list  *build_completion_list(char *str, int len, char **env, unsigned int *list_size)
 {
-    t_list *list;
+    t_list  *list;
+    char    *path;
+    int     i;
 
     list = NULL;
     if (env == NULL)
@@ -92,26 +97,65 @@ t_list  *build_completion_list(char *str, int len, char **env)
         ++env;
     if (*env == NULL)
         return (NULL);
-    char *path = *env + 5;
+    path = *env + 5;
+    *list_size = 0;
     while (*path != 0)
     {
-        int i = 0;
+        i = 0;
         while (path[i] != ':' && path[i] != '\0')
             ++i;
         if (path[i] == ':')
         {
             path[i] = '\0';
-            search_similar_files(&list, path, str, len);
+            *list_size += search_similar_files(&list, path, str, len);
             path[i] = ':';
             ++i;
         }
         else
-            search_similar_files(&list, path, str, len);
+            *list_size += search_similar_files(&list, path, str, len);
         path += i;
     }
-    (void)str;
-    (void)len;
+    *list_size += search_similar_files(&list, ".", str, len);
     return (list);
+}
+
+void        print_autocompletion_list(t_list *list, int highlight)
+{
+    t_list          *tmp;
+    int             i;
+    unsigned int    max;
+    unsigned int    maxcol;
+    struct winsize  size;
+
+    max = 0;
+    tmp = list;
+    while (tmp)
+    {
+        if (tmp->content_size > max)
+            max = tmp->content_size;
+        tmp = tmp->next;
+    }
+    ioctl(0, TIOCGWINSZ, &size);
+    maxcol = size.ws_col / (max + 2);
+    i = 0;
+    while (list)
+    {
+        if (i == highlight)
+        {
+            tputs(tgetstr("mr", NULL), 1, ft_puti);
+            print_with_pad(list->content, max + 2);
+            tputs(tgetstr("me", NULL), 1, ft_puti);
+        }
+        else
+            print_with_pad(list->content, max + 2);
+        ++i;
+        list = list->next;
+        if (i % maxcol == 0)
+        {
+            tputs(tgetstr("do", NULL), 1, ft_puti);
+            tputs(tgetstr("cr", NULL), 1, ft_puti);    
+        }
+    }
 }
 
 void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
@@ -123,6 +167,8 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 	}
     if (ft_strlen(key) <= 1 && ft_isprint(key[0]))
     {
+        if (line_e->autocompletion == 2)
+            line_e->autocompletion = 1;
         if (!(str_add(line_e, *key)))
             toexit(line_e, "malloc");
         if (line_e->cursor_pos <= line_e->len)
@@ -132,13 +178,46 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
         cursor_reposition(line_e->len - line_e->cursor_pos);
         return ;
     }
+    else if (line_e->autocompletion == 2 && ft_strlen(key) == 3 && key[0] == 27 && key[1] == 91 && key[2] == 90) //shift+tab
+    {
+        if (line_e->autocompletion_idx == 0)
+            line_e->autocompletion_idx = line_e->autocompletion_size - 1;
+        else
+            --line_e->autocompletion_idx;
+        tputs(tgetstr("sc", NULL), 1, ft_puti); //save cursor
+        tputs(tgetstr("do", NULL), 1, ft_puti); //go down
+        tputs(tgetstr("cr", NULL), 1, ft_puti); //go to start of line
+        tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
+        print_autocompletion_list(line_e->autocompletion_list, line_e->autocompletion_idx);
+        tputs(tgetstr("rc", NULL), 1, ft_puti); //restore saved cursor
+    }
     else if (ft_strlen(key) <= 1 && key[0] == '\t')
     {
         if (line_e->line == NULL)
             return ;
+        if (line_e->autocompletion == 2)
+        {
+            if (++line_e->autocompletion_idx >= line_e->autocompletion_size)
+                line_e->autocompletion_idx = 0;
+            tputs(tgetstr("sc", NULL), 1, ft_puti); //save cursor
+            tputs(tgetstr("do", NULL), 1, ft_puti); //go down
+            tputs(tgetstr("cr", NULL), 1, ft_puti); //go to start of line
+            tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
+            print_autocompletion_list(line_e->autocompletion_list, line_e->autocompletion_idx);
+            tputs(tgetstr("rc", NULL), 1, ft_puti); //restore saved cursor
+            return ;
+        }
         if (prevkey[0] == '\t' && ft_strlen(prevkey) <= 1 && line_e->autocompletion_list != NULL)
         {
             //autocompletion arrow mode
+            line_e->autocompletion = 2;
+            line_e->autocompletion_idx = 0;
+            tputs(tgetstr("sc", NULL), 1, ft_puti); //save cursor
+            tputs(tgetstr("do", NULL), 1, ft_puti); //go down
+            tputs(tgetstr("cr", NULL), 1, ft_puti); //go to start of line
+            tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
+            print_autocompletion_list(line_e->autocompletion_list, 0);
+            tputs(tgetstr("rc", NULL), 1, ft_puti); //restore saved cursor
             return ;
         }
         unsigned int str_start;
@@ -148,40 +227,18 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
         if (str_start == line_e->cursor_pos)
             return ;
         ft_list_delete(&line_e->autocompletion_list);
-        line_e->autocompletion_list = build_completion_list(line_e->line + str_start, line_e->cursor_pos - str_start, line_e->env);
-        unsigned int i = 0;
+        line_e->autocompletion_list = build_completion_list(line_e->line + str_start, line_e->cursor_pos - str_start, line_e->env, &line_e->autocompletion_size);
         if (line_e->autocompletion_list == NULL)
             return ;
         line_e->autocompletion = 1;
         tputs(tgetstr("sc", NULL), 1, ft_puti);
+        //clear
         //autocomplete
         //cursor positionning
         tputs(tgetstr("do", NULL), 1, ft_puti);
         tputs(tgetstr("cr", NULL), 1, ft_puti);
-        unsigned int max = 0;
-        t_list *tmp = line_e->autocompletion_list;
-        while (tmp)
-        {
-            if (tmp->content_size > max)
-                max = tmp->content_size;
-            tmp = tmp->next;
-        }
-        struct winsize size;
-        ioctl(0, TIOCGWINSZ, &size);
-        int maxcol = size.ws_col / (max + 2);
-        i = 0;
-        tmp = line_e->autocompletion_list;
-        while (tmp)
-        {
-            print_with_pad(tmp->content, max + 2);
-            ++i;
-            tmp = tmp->next;
-            if (i % maxcol == 0)
-            {
-                tputs(tgetstr("do", NULL), 1, ft_puti);
-                tputs(tgetstr("cr", NULL), 1, ft_puti);    
-            }
-        }
+        tputs(tgetstr("cd", NULL), 1, ft_puti);
+        print_autocompletion_list(line_e->autocompletion_list, -1);
         //restore cursor pos
         tputs(tgetstr("rc", NULL), 1, ft_puti);
     }
