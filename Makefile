@@ -18,6 +18,7 @@ SRC =	srcs/main.c\
 		line_edition/line_edition.c\
 		line_edition/exit_le.c\
 		line_edition/tools_le.c\
+		line_edition/autocompletion.c\
 		Parser/get_next_token.c\
 		Parser/line_parser.c\
 		Parser/token_tools.c\

@@ -97,6 +97,15 @@ void					ft_nlcr(void);
 void					prompt_extend(void);
 
 /*
+**
+*/
+
+
+t_list					*build_completion_list(char *str, int len, char **env,
+						unsigned int *list_size);
+void					print_autocompletion_list(t_list *list, int highlight);
+
+/*
 ** Line Lexing
 */
 
