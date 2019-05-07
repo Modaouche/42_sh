@@ -60,7 +60,7 @@ void        print_autocompletion_list(t_list *list, int highlight)
             print_with_pad(list->content, max + 2);
         ++i;
         list = list->next;
-        if (i % maxcol == 0)
+        if (maxcol == 0 || i % maxcol == 0)
         {
             tputs(tgetstr("do", NULL), 1, ft_puti);
             tputs(tgetstr("cr", NULL), 1, ft_puti);    
