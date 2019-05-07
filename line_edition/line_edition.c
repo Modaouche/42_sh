@@ -93,6 +93,14 @@ void        cursor_end(t_edit *line_e)
             ++x;
         ++i;
     }
+    tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
+    while (x > 0)
+    {
+        --x;
+        tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
+    }
+    tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
+    tputs(tgetstr("ce", NULL), 1, ft_puti); //clear rest of line
     tputs(tgetstr("do", NULL), 1, ft_puti); //go down
     tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
 }
@@ -167,8 +175,6 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
         if (line_e->autocompletion_list == NULL)
             line_e->autocompletion = 1;
         tputs(tgetstr("sc", NULL), 1, ft_puti);
-
-        cursor_start(line_e);
         cursor_end(line_e);
         tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
         print_autocompletion_list(line_e->autocompletion_list, -1);
