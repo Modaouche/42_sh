@@ -272,5 +272,8 @@ int     line_edition(t_edit *line_e)
         ft_memcpy(prevkey, key, MAX_KEY_LEN);
         // ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico
     }
+    cursor_end(line_e);
+    tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
+    tputs(tgetstr("up", NULL), 1, ft_puti);
     return (1);
 }
