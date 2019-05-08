@@ -39,8 +39,8 @@ void        print_autocompletion_list(t_edit *line_e, int highlight)
     int             newlines;
 
     max = 0;
-    list = line_e->autocompletion_list;
     newlines = 0;
+    list = line_e->autocompletion_list;
     while (list)
     {
         if (list->content_size > max)
@@ -54,7 +54,7 @@ void        print_autocompletion_list(t_edit *line_e, int highlight)
     list = line_e->autocompletion_list;
     while (list)
     {
-        if (i == highlight)
+        if (i++ == highlight)
         {
             tputs(tgetstr("mr", NULL), 1, ft_puti);
             print_with_pad(list->content, max + 2);
@@ -62,14 +62,13 @@ void        print_autocompletion_list(t_edit *line_e, int highlight)
         }
         else
             print_with_pad(list->content, max + 2);
-        ++i;
-        list = list->next;
         if (maxcol == 0 || i % maxcol == 0)
         {
             ++newlines;
             tputs(tgetstr("do", NULL), 1, ft_puti);
             tputs(tgetstr("cr", NULL), 1, ft_puti);    
         }
+        list = list->next;
     }
     while (newlines >= 0)
     {

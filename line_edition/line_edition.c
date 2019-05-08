@@ -332,12 +332,13 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
                     line_e->len - line_e->cursor_pos);
         }
         line_e->line[line_e->len] = '\0';
-        tputs(tgetstr("le", NULL), 1, ft_puti);
-        write(STDERR_FILENO, " ", 1);
-        tputs(tgetstr("le", NULL), 1, ft_puti);
-        ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-        ft_putchar_fd(' ', STDERR_FILENO);
-        cursor_reposition(line_e->len - line_e->cursor_pos + 1);
+        write(STDERR_FILENO, "\b \b", 3);
+        if (line_e->cursor_pos != line_e->len)
+        {
+            ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
+            ft_putchar_fd(' ', STDERR_FILENO);
+            cursor_reposition(line_e->len - line_e->cursor_pos + 1);
+        }
     }
     // ft_putstr("key too long comming soon - ");
 }//in tabptrfct
