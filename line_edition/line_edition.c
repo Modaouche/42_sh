@@ -160,11 +160,17 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
             line_e->autocompletion_idx = line_e->autocompletion_size - 1;
         else
             --line_e->autocompletion_idx;
+        ft_strdel(&line_e->line);
+        if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
+            line_e->line = ft_strdup(ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
+        line_e->len = ft_strlen(line_e->line);
+        line_e->cursor_pos = line_e->len;
         cursor_end(line_e);
         tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
         print_autocompletion_list(line_e->autocompletion_list, line_e->autocompletion_idx);
         cursor_start(line_e);
-        cursor_actualpos(line_e);
+        tputs(tgetstr("ce", NULL), 1, ft_puti); //clear line and everything under
+        ft_putstr_fd(line_e->line, STDERR_FILENO);
     }
     else if (ft_strlen(key) <= 1 && key[0] == '\t')
     {
@@ -183,12 +189,14 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
             tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
             print_autocompletion_list(line_e->autocompletion_list, line_e->autocompletion_idx);
             cursor_start(line_e);
-            cursor_actualpos(line_e);
+            tputs(tgetstr("ce", NULL), 1, ft_puti); //clear line and everything under
+            ft_putstr_fd(line_e->line, STDERR_FILENO);
             return ;
         }
         if (prevkey[0] == '\t' && ft_strlen(prevkey) <= 1 && line_e->autocompletion_list != NULL)
         {
             //autocompletion arrow mode
+            ft_strdel(&line_e->line);
             line_e->line = ft_strdup(line_e->autocompletion_list->content);
             line_e->len = ft_strlen(line_e->line);
             line_e->cursor_pos = line_e->len;
@@ -196,9 +204,10 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
             line_e->autocompletion_idx = 0;
             cursor_end(line_e);
             tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
-            print_autocompletion_list(line_e->autocompletion_list, 0);
+            print_autocompletion_list(line_e->autocompletion_list, line_e->autocompletion_idx);
             cursor_start(line_e);
-            cursor_actualpos(line_e);
+            tputs(tgetstr("ce", NULL), 1, ft_puti); //clear line and everything under
+            ft_putstr_fd(line_e->line, STDERR_FILENO);
             return ;
         }
         unsigned int str_start;
@@ -215,7 +224,8 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
         tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
         print_autocompletion_list(line_e->autocompletion_list, -1);
         cursor_start(line_e);
-        cursor_actualpos(line_e);
+        tputs(tgetstr("ce", NULL), 1, ft_puti); //clear line and everything under
+        ft_putstr_fd(line_e->line, STDERR_FILENO);
     }
     else if (is_arrow(key))
     {
