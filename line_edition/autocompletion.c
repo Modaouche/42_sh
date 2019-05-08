@@ -36,9 +36,11 @@ void        print_autocompletion_list(t_list *list, int highlight)
     unsigned int    max;
     unsigned int    maxcol;
     struct winsize  size;
+    int             newlines;
 
     max = 0;
     tmp = list;
+    newlines = 0;
     while (tmp)
     {
         if (tmp->content_size > max)
@@ -62,9 +64,15 @@ void        print_autocompletion_list(t_list *list, int highlight)
         list = list->next;
         if (maxcol == 0 || i % maxcol == 0)
         {
+            ++newlines;
             tputs(tgetstr("do", NULL), 1, ft_puti);
             tputs(tgetstr("cr", NULL), 1, ft_puti);    
         }
+    }
+    while (newlines >= 0)
+    {
+        tputs(tgetstr("up", NULL), 1, ft_puti);
+        --newlines;
     }
 }
 
