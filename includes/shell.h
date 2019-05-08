@@ -61,6 +61,7 @@ typedef struct			s_edit
 	int				autocompletion;	
 	unsigned int	autocompletion_idx;
 	unsigned int	autocompletion_size;
+	unsigned int 	autocompletion_maxcol;
 	int				i;
 	unsigned int	len;
 	unsigned int	cursor_pos;
@@ -103,7 +104,7 @@ void					prompt_extend(void);
 
 t_list					*build_completion_list(char *str, int len, char **env,
 						unsigned int *list_size);
-void					print_autocompletion_list(t_list *list, int highlight);
+void					print_autocompletion_list(t_edit *line_e, int highlight);
 
 /*
 ** Line Lexing

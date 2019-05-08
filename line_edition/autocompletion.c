@@ -29,9 +29,9 @@ void    print_with_pad(char *str, int maxlen)
     }
 }
 
-void        print_autocompletion_list(t_list *list, int highlight)
+void        print_autocompletion_list(t_edit *line_e, int highlight)
 {
-    t_list          *tmp;
+    t_list          *list;
     int             i;
     unsigned int    max;
     unsigned int    maxcol;
@@ -39,17 +39,19 @@ void        print_autocompletion_list(t_list *list, int highlight)
     int             newlines;
 
     max = 0;
-    tmp = list;
+    list = line_e->autocompletion_list;
     newlines = 0;
-    while (tmp)
+    while (list)
     {
-        if (tmp->content_size > max)
-            max = tmp->content_size;
-        tmp = tmp->next;
+        if (list->content_size > max)
+            max = list->content_size;
+        list = list->next;
     }
     ioctl(0, TIOCGWINSZ, &size);
     maxcol = size.ws_col / (max + 2);
+    line_e->autocompletion_maxcol = maxcol;
     i = 0;
+    list = line_e->autocompletion_list;
     while (list)
     {
         if (i == highlight)
@@ -80,17 +82,17 @@ unsigned int    search_similar_files(t_list **list, char *path, char *str, int l
 {
     DIR             *d;
     struct dirent   *f;
-    unsigned int size;
+    unsigned int    size;
+    char            *tmp;
 
-    d = opendir(path);
-    if (!d)
+    if (!(d = opendir(path)))
         return (0);
     size = 0;
     while ((f = readdir(d)) != NULL)
     {
         if (ft_strncmp(f->d_name, str, len) == 0)
         {
-            char *tmp = ft_strdup(f->d_name);
+            tmp = ft_strdup(f->d_name);
             if (tmp && ft_list_append(list, tmp, ft_strlen(f->d_name)))
                 ++size;
         }
@@ -107,7 +109,7 @@ t_list  *build_completion_list(char *str, int len, char **env, unsigned int *lis
     list = NULL;
     if (env == NULL)
         return (NULL);
-    while (ft_strncmp(*env, "PATH=", 5) != 0)
+    while (*env != NULL && ft_strncmp(*env, "PATH=", 5) != 0)
         ++env;
     if (*env == NULL)
         return (NULL);
@@ -129,6 +131,5 @@ t_list  *build_completion_list(char *str, int len, char **env, unsigned int *lis
             *list_size += search_similar_files(&list, path, str, len);
         path += i;
     }
-    *list_size += search_similar_files(&list, ".", str, len);
     return (list);
 }
