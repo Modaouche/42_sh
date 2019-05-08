@@ -145,6 +145,11 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
         {
             if (++line_e->autocompletion_idx >= line_e->autocompletion_size)
                 line_e->autocompletion_idx = 0;
+            ft_strdel(&line_e->line);
+            if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
+                line_e->line = ft_strdup(ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
+            line_e->len = ft_strlen(line_e->line);
+            line_e->cursor_pos = line_e->len;
             tputs(tgetstr("sc", NULL), 1, ft_puti); //save cursor
             cursor_end(line_e);
             tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
@@ -155,6 +160,9 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
         if (prevkey[0] == '\t' && ft_strlen(prevkey) <= 1 && line_e->autocompletion_list != NULL)
         {
             //autocompletion arrow mode
+            line_e->line = ft_strdup(line_e->autocompletion_list->content);
+            line_e->len = ft_strlen(line_e->line);
+            line_e->cursor_pos = line_e->len;
             line_e->autocompletion = 2;
             line_e->autocompletion_idx = 0;
             tputs(tgetstr("sc", NULL), 1, ft_puti); //save cursor

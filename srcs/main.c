@@ -45,6 +45,8 @@ int main(int ac, char **av, char **envp)
 		line_e.len = 0;
 		ft_putstr_fd("\e[1;32m42sh (current path) 🐚\033[0m  $> ", STDERR_FILENO);
 		line_lexer(&line_e);
+		if (line_e.line && !ft_strcmp(line_e.line, "reset"))
+			tputs(tgetstr("cl", NULL), 1, ft_puti); 
 		if (line_e.line && !ft_strcmp(line_e.line, "exit"))//to rm
 			break ;//to rm
 		ft_putendl("");
