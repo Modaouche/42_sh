@@ -220,6 +220,13 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
         line_e->autocompletion_list = build_completion_list(line_e->line + str_start, line_e->cursor_pos - str_start, line_e->env, &line_e->autocompletion_size);
         if (line_e->autocompletion_list == NULL)
             line_e->autocompletion = 1;
+        if (line_e->autocompletion_size == 1)
+        {
+            replace_line(line_e, line_e->autocompletion_list->content);;
+            ft_list_delete(&line_e->autocompletion_list);
+            tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
+            return ;
+        }
         cursor_end(line_e);
         tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
         print_autocompletion_list(line_e, -1);
@@ -295,29 +302,39 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
         }
         else if (key[2] == S_KEY_ARW_UP)
         {
-            if ((int)line_e->autocompletion_idx - (int)line_e->autocompletion_maxcol < 0)
-                line_e->autocompletion_idx = 0;
-            else
-                line_e->autocompletion_idx -= line_e->autocompletion_maxcol;
-            if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
-                replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
-            cursor_end(line_e);
-            tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
-            print_autocompletion_list(line_e, line_e->autocompletion_idx);
-            cursor_actualpos(line_e);
+            if (line_e->autocompletion == 2)
+            {
+                if ((int)line_e->autocompletion_idx - (int)line_e->autocompletion_maxcol < 0)
+                {
+                    //ine_e->autocompletion_idx --;
+                }
+                else
+                    line_e->autocompletion_idx -= line_e->autocompletion_maxcol;
+                if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
+                    replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
+                cursor_end(line_e);
+                tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
+                print_autocompletion_list(line_e, line_e->autocompletion_idx);
+                cursor_actualpos(line_e);
+            }
         }
         else if (key[2] == S_KEY_ARW_DOWN)
         {
-            if (line_e->autocompletion_idx + line_e->autocompletion_maxcol >= line_e->autocompletion_size)
-                line_e->autocompletion_idx = line_e->autocompletion_size - 1;
-            else
-                line_e->autocompletion_idx += line_e->autocompletion_maxcol;
-            if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
-                replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
-            cursor_end(line_e);
-            tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
-            print_autocompletion_list(line_e, line_e->autocompletion_idx);
-            cursor_actualpos(line_e);
+            if (line_e->autocompletion == 2)
+            {
+                if (line_e->autocompletion_idx + line_e->autocompletion_maxcol >= line_e->autocompletion_size)
+                {
+                    //line_e->autocompletion_idx ++;
+                }
+                else
+                    line_e->autocompletion_idx += line_e->autocompletion_maxcol;
+                if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
+                    replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
+                cursor_end(line_e);
+                tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
+                print_autocompletion_list(line_e, line_e->autocompletion_idx);
+                cursor_actualpos(line_e);
+            }
         }
         return ;
     }

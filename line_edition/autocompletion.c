@@ -62,13 +62,13 @@ void        print_autocompletion_list(t_edit *line_e, int highlight)
         }
         else
             print_with_pad(list->content, max + 2);
-        if (maxcol == 0 || i % maxcol == 0)
+        list = list->next;
+        if ((maxcol == 0 || i % maxcol == 0) && list != NULL)
         {
             ++newlines;
             tputs(tgetstr("do", NULL), 1, ft_puti);
             tputs(tgetstr("cr", NULL), 1, ft_puti);    
         }
-        list = list->next;
     }
     while (newlines >= 0)
     {
