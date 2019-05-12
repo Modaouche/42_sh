@@ -127,8 +127,6 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		}
 		if (line_e->autocompletion_size == 1)
 		{
-			while (1)
-				;
 			replace_line(line_e, line_e->autocompletion_list->content);;
 			ft_list_delete(&line_e->autocompletion_list);
 			tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
