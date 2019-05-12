@@ -74,7 +74,7 @@ char	*ft_strins_malloc(char *dest, const char *src, unsigned int pos)
 	if (dest == NULL)
 		return (NULL);
 	if (src == NULL)
-		src = "";
+		return (ft_strdup(dest));
 	destlen = ft_strlen(dest);
 	srclen = ft_strlen(src);
 	tmp = ft_memalloc(destlen + srclen + 1);
