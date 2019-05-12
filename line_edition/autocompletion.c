@@ -53,39 +53,44 @@ void    print_with_pad(char *str, int maxlen)
     }
 }
 
+int         get_list_longest_word(t_list *list)
+{
+    unsigned int    longest;
+
+    longest = 0;
+    while (list)
+    {
+        if (list->content_size > longest)
+            longest = list->content_size;
+        list = list->next;
+    }
+    return (longest + 2);
+}
+
 void        print_autocompletion_list(t_edit *line_e, int highlight)
 {
     t_list          *list;
     int             i;
-    unsigned int    max;
-    unsigned int    maxcol;
-    struct winsize  size;
     int             newlines;
+    unsigned int    maxcol;
+    unsigned int    max;
+    struct winsize  size;
 
-    max = 0;
-    newlines = 0;
+    cursor_after(line_e);
+    tputs(tgetstr("cd", NULL), 1, ft_puti);
     list = line_e->autocompletion_list;
-    while (list)
-    {
-        if (list->content_size > max)
-            max = list->content_size;
-        list = list->next;
-    }
+    max = get_list_longest_word(list);
     ioctl(0, TIOCGWINSZ, &size);
-    maxcol = size.ws_col / (max + 2);
+    maxcol = size.ws_col / max;
     line_e->autocompletion_maxcol = maxcol;
     i = 0;
-    list = line_e->autocompletion_list;
+    newlines = 0;
     while (list)
     {
         if (i++ == highlight)
-        {
             tputs(tgetstr("mr", NULL), 1, ft_puti);
-            print_with_pad(list->content, max + 2);
-            tputs(tgetstr("me", NULL), 1, ft_puti);
-        }
-        else
-            print_with_pad(list->content, max + 2);
+        print_with_pad(list->content, max);
+        tputs(tgetstr("me", NULL), 1, ft_puti);
         list = list->next;
         if ((maxcol == 0 || i % maxcol == 0) && list != NULL)
         {
@@ -94,11 +99,9 @@ void        print_autocompletion_list(t_edit *line_e, int highlight)
             tputs(tgetstr("cr", NULL), 1, ft_puti);    
         }
     }
-    while (newlines >= 0)
-    {
+    while (newlines-- >= 0)
         tputs(tgetstr("up", NULL), 1, ft_puti);
-        --newlines;
-    }
+    cursor_actualpos(line_e);
 }
 
 unsigned int    search_similar_files(t_list **list, char *path, char *str, int len)

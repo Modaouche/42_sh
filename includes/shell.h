@@ -96,9 +96,13 @@ int						is_arrow(char *key);
 int						ft_puti(int i);
 void					ft_nlcr(void);
 void					prompt_extend(void);
+void					cursor_start(t_edit *line_e);
+void			        cursor_end(t_edit *line_e);
+void        			cursor_actualpos(t_edit *line_e);
+void					cursor_after(t_edit *line_e);
 
 /*
-**
+**  Line edition - Autocompletion
 */
 
 

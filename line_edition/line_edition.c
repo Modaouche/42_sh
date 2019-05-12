@@ -46,98 +46,6 @@ int         str_add(t_edit *line_e, const char to_add)
     return (1);
 }
 
-void        cursor_start(t_edit *line_e)
-{
-    unsigned int i;
-    unsigned int x;
-    struct winsize  size;
-
-    if (line_e->line == NULL)
-        return ;
-    i = 0;
-    x = line_e->prompt_size;
-    ioctl(0, TIOCGWINSZ, &size);
-    while (i < line_e->cursor_pos)
-    {
-        if (line_e->line[i] == '\n' || x >= size.ws_col)
-        {
-            x = 0;
-            tputs(tgetstr("up", NULL), 1, ft_puti); //go up
-        }
-        else
-            ++x;
-        ++i;
-    }
-    tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
-    i = 0;
-    while (i++ < line_e->prompt_size)
-        tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
-}
-
-void        cursor_actualpos(t_edit *line_e)
-{
-    unsigned int i;
-    unsigned int x;
-    struct winsize  size;
-
-    cursor_start(line_e);
-    i = 0;
-    x = line_e->prompt_size;
-    ioctl(0, TIOCGWINSZ, &size);
-    while (i < line_e->cursor_pos)
-    {
-        if (line_e->line[i] == '\n' || x >= size.ws_col)
-        {
-            x = 0;
-            tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-        }
-        else
-            ++x;
-        ++i;
-    }
-    tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
-    while (x > 0)
-    {
-        --x;
-        tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
-    }
-}
-
-void        cursor_end(t_edit *line_e)
-{
-    unsigned int i;
-    unsigned int x;
-    struct winsize  size;
-
-    if (line_e->line == NULL)
-        return ;
-    cursor_start(line_e);
-    i = 0;
-    x = line_e->prompt_size;
-    ioctl(0, TIOCGWINSZ, &size);
-    while (line_e->line[i])
-    {
-        if (line_e->line[i] == '\n' || x >= size.ws_col)
-        {
-            x = 0;
-            tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-        }
-        else
-            ++x;
-        ++i;
-    }
-    tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
-    while (x > 0)
-    {
-        --x;
-        tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
-    }
-    tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
-    tputs(tgetstr("ce", NULL), 1, ft_puti); //clear rest of line
-    tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-    tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
-}
-
 void    replace_line(t_edit *line_e, char *new)
 {
     if ((new = ft_strdup(new)) == NULL)
@@ -179,10 +87,7 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
             --line_e->autocompletion_idx;
         if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
             replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
-        cursor_end(line_e);
-        tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
         print_autocompletion_list(line_e, line_e->autocompletion_idx);
-        cursor_actualpos(line_e);
     }
     else if (ft_strlen(key) <= 1 && key[0] == '\t' && line_e->line)
     {
@@ -192,10 +97,7 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
                 line_e->autocompletion_idx = 0;
             if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
                 replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
-            cursor_end(line_e);
-            tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
             print_autocompletion_list(line_e, line_e->autocompletion_idx);
-            cursor_actualpos(line_e);
             return ;
         }
         if (prevkey[0] == '\t' && ft_strlen(prevkey) <= 1 && line_e->autocompletion_list != NULL)
@@ -204,10 +106,7 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
             line_e->autocompletion = 2;
             line_e->autocompletion_idx = 0;
             replace_line(line_e, line_e->autocompletion_list->content);
-            cursor_end(line_e);
-            tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
             print_autocompletion_list(line_e, line_e->autocompletion_idx);
-            cursor_actualpos(line_e);
             return ;
         }
         unsigned int str_start;
@@ -234,10 +133,7 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
             replace_line(line_e, tmp);
             free(tmp);
         }
-        cursor_end(line_e);
-        tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
         print_autocompletion_list(line_e, -1);
-        cursor_actualpos(line_e);
     }
     else if (is_arrow(key))
     {
@@ -251,10 +147,7 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
                     --line_e->autocompletion_idx;
                 if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
                     replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
-                cursor_end(line_e);
-                tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
                 print_autocompletion_list(line_e, line_e->autocompletion_idx);
-                cursor_actualpos(line_e);
             }
             else if (line_e->cursor_pos > 0)
             {
@@ -287,10 +180,7 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
                     line_e->autocompletion_idx = 0;
                 if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
                     replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
-                cursor_end(line_e);
-                tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
                 print_autocompletion_list(line_e, line_e->autocompletion_idx);
-                cursor_actualpos(line_e);
             }
             else if (line_e->cursor_pos < line_e->len)
             {
@@ -319,10 +209,7 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
                     line_e->autocompletion_idx -= line_e->autocompletion_maxcol;
                 if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
                     replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
-                cursor_end(line_e);
-                tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
                 print_autocompletion_list(line_e, line_e->autocompletion_idx);
-                cursor_actualpos(line_e);
             }
         }
         else if (key[2] == S_KEY_ARW_DOWN)
@@ -337,10 +224,7 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
                     line_e->autocompletion_idx += line_e->autocompletion_maxcol;
                 if (ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
                     replace_line(line_e, ft_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->content);
-                cursor_end(line_e);
-                tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
                 print_autocompletion_list(line_e, line_e->autocompletion_idx);
-                cursor_actualpos(line_e);
             }
         }
         return ;
@@ -394,11 +278,11 @@ int     line_edition(t_edit *line_e)
         ft_memcpy(prevkey, key, MAX_KEY_LEN);
         // ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico
     }
-    if (line_e->line)
+    if (line_e->line) //clear everything under the line we just sent, like autocompletion stuff
     {
-        cursor_end(line_e);
-        tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
-        tputs(tgetstr("up", NULL), 1, ft_puti); //go up
+        cursor_after(line_e);
+        tputs(tgetstr("cd", NULL), 1, ft_puti);
+        tputs(tgetstr("up", NULL), 1, ft_puti);
     }
     return (1);
 }
