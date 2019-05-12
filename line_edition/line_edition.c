@@ -227,6 +227,13 @@ void		putkey_in_line(t_edit *line_e, char *prevkey, char *key)
             tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
             return ;
         }
+        else if (line_e->autocompletion_size > 1)
+        {
+            int a = get_last_common_char(line_e->autocompletion_list);
+            char *tmp = ft_strsub(line_e->autocompletion_list->content, 0, a);
+            replace_line(line_e, tmp);
+            free(tmp);
+        }
         cursor_end(line_e);
         tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
         print_autocompletion_list(line_e, -1);

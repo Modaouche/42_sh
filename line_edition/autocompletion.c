@@ -14,6 +14,30 @@
 #include "libft.h"
 #include <dirent.h>
 
+int     get_last_common_char(t_list *list)
+{
+    int     last;
+    char    c;
+    t_list  *tmp;
+
+    if (list == NULL || list->content == NULL)
+        return (1);
+    last = 1;
+    while (list->content[last] != '\0')
+    {
+        tmp = list;
+        c = list->content[last];
+        while (tmp != NULL)
+        {
+            if (tmp->content == NULL || tmp->content[last] != c)
+                return (last);
+            tmp = tmp->next;
+        }
+        ++last;
+    }
+    return (last);  
+}
+
 void    print_with_pad(char *str, int maxlen)
 {
     unsigned int   i;
