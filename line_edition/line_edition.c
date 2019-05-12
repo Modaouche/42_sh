@@ -127,6 +127,7 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		}
 		if (line_e->autocompletion_size == 1)
 		{
+			line_e->autocompletion = 0;
 			replace_line(line_e, line_e->autocompletion_list->content);;
 			ft_list_delete(&line_e->autocompletion_list);
 			tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
@@ -250,7 +251,6 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		if (line_e->cursor_pos != line_e->len)
 		{
 			ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-			ft_putchar_fd(' ', STDERR_FILENO);
 			cursor_reposition(line_e->len - line_e->cursor_pos + 1);
 		}
 	}
