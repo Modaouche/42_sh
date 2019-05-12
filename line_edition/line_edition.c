@@ -50,13 +50,13 @@ void	replace_line(t_edit *line_e, char *new)
 {
 	if ((new = ft_strdup(new)) == NULL)
 		toexit(line_e, "malloc");
+	cursor_start(line_e);
 	ft_strdel(&line_e->line);
 	line_e->line = new;
 	line_e->len = ft_strlen(line_e->line);
 	line_e->cursor_pos = line_e->len;
-	cursor_start(line_e);
-	tputs(tgetstr("ce", NULL), 1, ft_puti); //clear line and everything under
 	ft_putstr_fd(line_e->line, STDERR_FILENO);
+	tputs(tgetstr("cd", NULL), 1, ft_puti);
 }
 
 void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
@@ -100,7 +100,7 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 			print_autocompletion_list(line_e, line_e->autocompletion_idx);
 			return ;
 		}
-		if (prevkey[0] == '\t' && ft_strlen(prevkey) <= 1 && line_e->autocompletion_list != NULL)
+		if (prevkey[0] == '\t' && prevkey[1] == '\0' && line_e->autocompletion_list != NULL)
 		{
 			//autocompletion arrow mode
 			line_e->autocompletion = 2;
@@ -127,6 +127,8 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		}
 		if (line_e->autocompletion_size == 1)
 		{
+			while (1)
+				;
 			replace_line(line_e, line_e->autocompletion_list->content);;
 			ft_list_delete(&line_e->autocompletion_list);
 			tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
