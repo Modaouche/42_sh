@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 00:36:50 by modaouch          #+#    #+#             */
-/*   Updated: 2019/04/07 00:38:16 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/11 14:31:39 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void        cmd_suffix_prime_fct(t_ast **ast, t_edit *line_e)
 {
     if (first_set(head_of_line(*ast), T_WORD, -1))
     {
-        ast_insert_left(get_next_token(&(line_e->line), &(line_e->i)), ast);
+        ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->i)), ast);
         cmd_suffix_dprime_fct(ast, line_e);
     }
     else if (first_set(head_of_line(*ast), T_GREAT, T_GREATAND,\
@@ -41,7 +41,7 @@ void        cmd_suffix_dprime_fct(t_ast **ast, t_edit *line_e)
 {
     if (first_set(head_of_line(*ast), T_WORD, -1))
     {
-        ast_insert_left(get_next_token(&(line_e->line), &(line_e->i)), ast);
+        ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->i)), ast);
         cmd_suffix_dprime_fct(ast, line_e);
     }
     else if (first_set(head_of_line(*ast), T_GREAT, T_GREATAND,\
@@ -57,7 +57,7 @@ void        cmd_prefix_fct(t_ast **ast, t_edit *line_e)
 {
     if (first_set(head_of_line(*ast), T_ASGMT_WRD, -1))
     {
-        ast_insert_left(get_next_token(&(line_e->line), &(line_e->i)), ast);
+        ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->i)), ast);
         cmd_prefix_prime_fct(ast, line_e);
     }
     else if (first_set(head_of_line(*ast), T_GREAT, T_GREATAND,\
@@ -81,7 +81,7 @@ void        cmd_prefix_prime_fct(t_ast **ast, t_edit *line_e)
 {
     if (first_set(head_of_line(*ast), T_ASGMT_WRD, -1))
     {
-        ast_insert_left(get_next_token(&(line_e->line), &(line_e->i)), ast);
+        ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->i)), ast);
         cmd_prefix_prime_fct(ast, line_e);
     }
     else if (first_set(head_of_line(*ast), T_GREAT, T_GREATAND,\

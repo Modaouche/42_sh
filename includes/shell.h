@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/04/25 19:18:02 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/11 17:57:30 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,28 @@ typedef enum
 
 typedef struct			s_edit
 {
-	struct termios	*termiold;
-	struct termios	*termios;
-	struct winsize	*wsize;
+	struct termios		*termiold;
+	struct termios		*termios;
+	struct winsize		*wsize;
 	char			*line;
 	char			**env;
 	t_list			*autocompletion_list;
-	int				autocompletion;	
-	unsigned int	autocompletion_idx;
-	unsigned int	autocompletion_size;
-	unsigned int 	autocompletion_maxcol;
-	int				i;
-	unsigned int	len;
-	unsigned int	cursor_pos;
-	unsigned int	len_max;
-	unsigned int	prompt_size;
-	char			tc_onoff;//for termcap like "dumb" , to have a usable shell
+	int			autocompletion;	
+	unsigned int		autocompletion_idx;
+	unsigned int		autocompletion_size;
+	unsigned int 		autocompletion_maxcol;
+	int					i;
+	unsigned int		len;
+	unsigned int		cursor_pos;
+	unsigned int		len_max;
+	unsigned int		prompt_size;
+	char				tc_onoff;//for termcap like "dumb" , to have a usable shell
 }						t_edit;
 
 typedef struct			s_key_code
 {
-	unsigned char	*key;
-	void			(*dump_key)(t_edit *line_e, char *buff);
+	unsigned char		*key;
+	void				(*dump_key)(t_edit *line_e, char *buff);
 }						t_key_code;
 
 /*
@@ -111,16 +111,35 @@ t_list					*build_completion_list(char *str, int len, char **env,
 void					print_autocompletion_list(t_edit *line_e, int highlight);
 int     				get_last_common_char(t_list *list);
 
+
 /*
 ** Line Lexing
 */
 
-t_token*				get_next_token(char **line, int *i);
+t_token*				get_next_token(const char **line, int *i);
 int						line_lexer(t_edit *line_e);
-int						token_isword(int c);
-int						token_is_io_nb(int c);
-void					skip_predicat(char ** line, int *i, int (*pred)(int));
+void					skip_predicat(const char ** line, int *i, int (*pred)(int));
 int						wordlen(char *line);
+void					fill_token_tab(void);
+void    				token_isword(t_token *actual_token, const char *line, int *i);
+void    				token_isio_nb(t_token *actual_token, const char *line, int *i);
+void    				token_iseof(t_token *actual_token, const char *line, int *i);
+void    				token_isnewl(t_token *actual_token, const char *line, int *i);
+void    				token_isbang(t_token *actual_token, const char *line, int *i);
+void    				token_issemi(t_token *actual_token, const char *line, int *i);
+void    				token_isamper(t_token *actual_token, const char *line, int *i);
+void    				token_isand(t_token *actual_token, int *i);
+void    				token_ispipe(t_token *actual_token, const char *line, int *i);
+void    				token_isor(t_token *actual_token, int *i);
+void    				token_isgreat(t_token *actual_token, const char *line, int *i);
+void    				token_isdgreat(t_token *actual_token, int *i);
+void    				token_isclobber(t_token *actual_token,  int *i);
+void    				token_isgreatand(t_token *actual_token, int *i);
+void    				token_isless(t_token *actual_token, const char *line, int *i);
+void    				token_isdless(t_token *actual_token, const char *line, int *i);
+void    				token_isdlessdash(t_token *actual_token, int *i);
+void    				token_islessgreat(t_token *actual_token, int *i);
+void    				token_islessand(t_token *actual_token, int *i);
 
 /*
 ** Parsing
@@ -166,6 +185,14 @@ void					ast_insert_right(t_token *tok, t_ast **root);
 void					infix_print_ast(t_ast *root);
 void					rm_last_leaf(t_ast **root);
 int						head_of_line(t_ast *ast);
+
+/*
+** Inhibitor
+*/
+
+int    					*ext_quotes(const char *line, char *word);
+int  					ft_isword(int c);
+char 					*get_word(const char *line);
 
 
 /*

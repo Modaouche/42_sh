@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 21:51:47 by modaouch          #+#    #+#             */
-/*   Updated: 2019/03/06 14:39:04 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/11 18:44:13 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 typedef enum
 {
+						T_NONE,
 						T_AMPER,
     					T_SEMI,
     					T_AND_IF,
@@ -50,5 +51,9 @@ typedef struct      s_ast
     struct s_ast    *right;
     struct s_ast    *left;
 }                   t_ast;
+
+typedef void	    	(*t_token_tab)(t_token *token, const char *line, int *i);
+
+extern t_token_tab g_token_tab[128];
 
 #endif

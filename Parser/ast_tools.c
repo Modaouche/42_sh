@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 03:36:28 by modaouch          #+#    #+#             */
-/*   Updated: 2019/04/06 14:42:30 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/13 19:45:58 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void		rm_last_leaf(t_ast **root)
 	tmp = *root;
 	if (!root || !*root)
 	{
-		ft_putendl_fd("root is NULL", 2);
+		ft_putendl_fd("root is NULL", 2);//to rm
 		return ;
 	}
 	while (tmp->right && tmp->right->right)

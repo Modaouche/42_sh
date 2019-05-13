@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:16:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/25 11:27:39 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/11 16:40:54 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	ft_bzero(&line_e, sizeof(line_e));
 	line_e.env = envp;
-    line_e.tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps
+	line_e.tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps
 	set_terminal(&line_e);
+	fill_token_tab();
 	//ft_signal_handle();
 	while (1)
 	{
@@ -46,7 +47,7 @@ int main(int ac, char **av, char **envp)
 		ft_putstr_fd("\e[1;32m42sh (current path) 🐚\033[0m  $> ", STDERR_FILENO);
 		line_lexer(&line_e);
 		if (line_e.line && !ft_strcmp(line_e.line, "reset"))
-			tputs(tgetstr("cl", NULL), 1, ft_puti); 
+			tputs(tgetstr("cl", NULL), 1, ft_puti);
 		if (line_e.line && !ft_strcmp(line_e.line, "exit"))//to rm
 			break ;//to rm
 		ft_putendl("");
@@ -59,19 +60,3 @@ int main(int ac, char **av, char **envp)
 		toexit(0, "tcsetattr");
     return (0);
 }
-
-
-
-
-	// char *line = "  |  || &&";
-	// t_token *next_token = NULL;
-	
-	// while ((next_token = get_next_token(&line)))
-	// {
-	// 	ft_printf("[%d]\n", next_token->tokind);
-	// 	if (next_token->tokind == T_EOF)
-	// 		break ;
-	// }
-	// exit(0);
-
-	/*------------------------------------------*/

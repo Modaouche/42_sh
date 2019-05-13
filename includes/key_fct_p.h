@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 08:56:41 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/11 21:55:10 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/11 13:21:53 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "shell.h"
 
-static t_key_code	keytab[] = {
+t_key_code	keytab[] = {
 		{S_KEY_ARW_LEFT, &key_arrow},
         {S_KEY_ARW_RIGHT, &key_arrow},
         //{S_KEY_ARW_BOT, &key_arrow},

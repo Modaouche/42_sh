@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 07:02:59 by modaouch          #+#    #+#             */
-/*   Updated: 2019/04/07 00:04:56 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/11 14:31:28 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void        bang_fct(t_ast **ast, t_edit *line_e)
 {
     ft_printf("--<bang_fct>--\n");
     if (first_set(head_of_line(*ast), T_BANG, -1))//a voir si il faut faire un else
-        ast_insert_left(get_next_token(&(line_e->line), &(line_e->i)), ast);
+        ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->i)), ast);
 }
 
 void        pipe_sequence_fct(t_ast **ast, t_edit *line_e)
@@ -66,16 +66,16 @@ void        pipe_sequence_prime_fct(t_ast **ast, t_edit *line_e)
     ft_printf("--<pipe_sequence_prime_fct>--\n");
     if (first_set(head_of_line(*ast), T_PIPE, -1))
     {
-        ast_insert_right(get_next_token(&(line_e->line), &(line_e->i)), ast);
+        ast_insert_right(get_next_token((const char **)&(line_e->line), &(line_e->i)), ast);
         line_break_fct(ast, line_e);
         if (first_set(head_of_line(*ast), T_EOF, -1))
         {
 		    rm_last_leaf(ast);
 		    init_line(line_e);
 		    prompt_extend();//to complete with nested prompt
-		    line_edition(line_e);
+		    line_edition(line_e);//to free avant l ancien line_e maybe
 		    ft_putendl("");
-    	    ast_insert_right(get_next_token(&(line_e->line), &(line_e->i)), ast);
+    	    ast_insert_right(get_next_token((const char **)&(line_e->line), &(line_e->i)), ast);
         }
 	    command_fct(ast, line_e);
         pipe_sequence_prime_fct(ast, line_e);

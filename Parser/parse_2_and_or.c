@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 07:02:47 by modaouch          #+#    #+#             */
-/*   Updated: 2019/04/07 00:06:14 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/13 19:59:11 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ void        and_or_prime_fct(t_ast **ast, t_edit *line_e)
     {
         and_or_op_fct(ast, line_e);
         line_break_fct(ast, line_e);
-        if (first_set(head_of_line(*ast), T_EOF, -1))
+        if (first_set(head_of_line(*ast), T_EOF, -1)) //while ??
         {
 	        rm_last_leaf(ast);
 	        init_line(line_e);
-	        prompt_extend();//to complete with nested prompt
+	        prompt_extend();//to complete with nested prompt maybe or not...
 	        line_edition(line_e);
 	        ft_putendl("");
-    	    ast_insert_right(get_next_token(&(line_e->line), &(line_e->i)), ast);
+    	    ast_insert_right(get_next_token((const char **)&(line_e->line), &(line_e->i)), ast);
         }
         pipeline_fct(ast, line_e);
         and_or_prime_fct(ast, line_e);
@@ -62,5 +62,5 @@ void        and_or_op_fct(t_ast **ast, t_edit *line_e)
 {
     ft_printf("--<and_or_op_fct>--\n");
     if (first_set(head_of_line(*ast), T_AND_IF, T_OR_IF, -1))//to rm ??
-	    ast_insert_right(get_next_token(&(line_e->line), &(line_e->i)), ast);
+	    ast_insert_right(get_next_token((const char **)&(line_e->line), &(line_e->i)), ast);
 }
