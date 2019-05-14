@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 17:03:29 by modaouch          #+#    #+#             */
-/*   Updated: 2019/04/25 19:19:49 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 01:48:52 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,6 @@ int		line_edition(t_edit *line_e)
 	char key[MAX_KEY_LEN];
 	char prevkey[MAX_KEY_LEN];
 
-	line_e->prompt_size = 26;
 	line_e->autocompletion = 0;
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");
@@ -273,7 +272,7 @@ int		line_edition(t_edit *line_e)
 	   ft_bzero(key, MAX_KEY_LEN);
 	   ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
 		if (ret == -1 || ret == 0)
-			perror("ret chelou :");
+			perror("key:");
 		if (key[0] == S_KEY_ENTER && !key[1])
 		{
 			if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
@@ -282,12 +281,12 @@ int		line_edition(t_edit *line_e)
 		}
 		putkey_in_line(line_e, prevkey, key);
 		ft_memcpy(prevkey, key, MAX_KEY_LEN);
-		// ft_printf("[%s]", line_e->line);//printf a revoir si il est clean , revoir sur le github de nico
 	}
 	if (line_e->line) //clear everything under the line we just sent
 	{
 		cursor_end(line_e);
 		tputs(tgetstr("cd", NULL), 1, ft_puti);
 	}
+	ft_putendl("");
 	return (1);
 }

@@ -6,13 +6,13 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 17:38:23 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/11 20:27:37 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 01:39:19 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-void    token_isword(t_token *actual_token, const char *line, int *i)
+void    token_isword(t_token *actual_token, const char *line, unsigned int *i)
 {
     char *word;
 
@@ -27,7 +27,7 @@ void    token_isword(t_token *actual_token, const char *line, int *i)
     }
 }
 
-void    token_isio_nb(t_token *actual_token, const char *line, int *i)
+void    token_isio_nb(t_token *actual_token, const char *line, unsigned int *i)
 {
     (void)line;
     (void)actual_token;

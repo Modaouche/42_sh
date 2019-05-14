@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:16:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/11 16:40:54 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 02:48:43 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,22 @@ int main(int ac, char **av, char **envp)
 	//ft_signal_handle();
 	while (1)
 	{
-		line_e.len_max = BUFFER_LEN;
-		line_e.cursor_pos = 0;
-		line_e.len = 0;
-		ft_putstr_fd("\e[1;32m42sh (current path) 🐚\033[0m  $> ", STDERR_FILENO);
+		// line_e.len_/max = BUFFER_LEN;
+		// line_e.cursor_pos = 0;
+		// line_e.len = 0;
+		init_line(&line_e);
+		while (!line_e.line)
+		{
+				line_e.prompt_size = print_prompt(0);
+				line_edition(&line_e);
+		}
 		line_lexer(&line_e);
-		if (line_e.line && !ft_strcmp(line_e.line, "reset"))
+		//execution de commande...
+		if (line_e.line && !ft_strcmp(line_e.line, "reset"))//buitin
 			tputs(tgetstr("cl", NULL), 1, ft_puti);
-		if (line_e.line && !ft_strcmp(line_e.line, "exit"))//to rm
+		if (line_e.line && !ft_strcmp(line_e.line, "exit"))//buitin
 			break ;//to rm
 		ft_putendl("");
-		init_line(&line_e);
-		//ft_strdel(&(line_e.line));
-		//line_e.i = 0;//
 	}
 	ft_strdel(&(line_e.line));
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e.termiold) == -1)

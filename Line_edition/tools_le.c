@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/07 11:00:19 by modaouch          #+#    #+#             */
-/*   Updated: 2019/04/04 16:53:08 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 02:28:51 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,33 @@ void        ft_nlcr(void)
 	tputs(tgetstr("cr", NULL), 1, ft_puti);
 }
 
-void		prompt_extend(void)
+size_t		print_prompt(unsigned int btn)
 {
-	ft_printf("extend $> ");
+    char *prompt;
+    size_t len;
+
+    if (btn == 0)
+        prompt = ft_strdup("\e[1;32m42sh (current path) 🐚\033[0m  $> ");//ajout du path soon
+    else if (btn == 1)
+	    prompt = ft_strdup("pipe $> ");
+    else if (btn == 2)
+	    prompt = ft_strdup("cmdandor $> ");
+    else if (btn == 3)
+	    prompt = ft_strdup("cmdor $> ");
+    else if (btn == 4)
+	    prompt = ft_strdup("quote $> ");
+    else if (btn == 5)
+	    prompt = ft_strdup("dquote $> ");
+    else if (btn == 6)
+	    prompt = ft_strdup("heredoc $> ");
+    else if (btn == 7)
+	    prompt = ft_strdup("$> ");
+//    else if (btn == 6)
+//	    prompt = ft_strdup("bquote $> ");//not sure
+    len = ft_strlen(prompt);
+    ft_putstr(prompt);
+    ft_strdel(&prompt);
+    return (len);
 }
 
 int             ft_puti(int i)

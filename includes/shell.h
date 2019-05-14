@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/11 17:57:30 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 02:18:29 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ typedef struct			s_edit
 	unsigned int		autocompletion_idx;
 	unsigned int		autocompletion_size;
 	unsigned int 		autocompletion_maxcol;
-	int					i;
 	unsigned int		len;
+	unsigned int					ofst;
 	unsigned int		cursor_pos;
 	unsigned int		len_max;
 	unsigned int		prompt_size;
@@ -95,7 +95,8 @@ void					cursor_reposition(size_t n);
 int						is_arrow(char *key);
 int						ft_puti(int i);
 void					ft_nlcr(void);
-void					prompt_extend(void);
+// void					prompt_extend(void);
+size_t					print_prompt(unsigned int btn);
 void					cursor_start(t_edit *line_e);
 void					cursor_end(t_edit *line_e);
 void					cursor_actualpos(t_edit *line_e);
@@ -116,30 +117,30 @@ int     				get_last_common_char(t_list *list);
 ** Line Lexing
 */
 
-t_token*				get_next_token(const char **line, int *i);
+t_token*				get_next_token(const char **line, unsigned int *i);
 int						line_lexer(t_edit *line_e);
-void					skip_predicat(const char ** line, int *i, int (*pred)(int));
+void					skip_predicat(const char ** line, unsigned int *i, int (*pred)(int));
 int						wordlen(char *line);
 void					fill_token_tab(void);
-void    				token_isword(t_token *actual_token, const char *line, int *i);
-void    				token_isio_nb(t_token *actual_token, const char *line, int *i);
-void    				token_iseof(t_token *actual_token, const char *line, int *i);
-void    				token_isnewl(t_token *actual_token, const char *line, int *i);
-void    				token_isbang(t_token *actual_token, const char *line, int *i);
-void    				token_issemi(t_token *actual_token, const char *line, int *i);
-void    				token_isamper(t_token *actual_token, const char *line, int *i);
-void    				token_isand(t_token *actual_token, int *i);
-void    				token_ispipe(t_token *actual_token, const char *line, int *i);
-void    				token_isor(t_token *actual_token, int *i);
-void    				token_isgreat(t_token *actual_token, const char *line, int *i);
-void    				token_isdgreat(t_token *actual_token, int *i);
-void    				token_isclobber(t_token *actual_token,  int *i);
-void    				token_isgreatand(t_token *actual_token, int *i);
-void    				token_isless(t_token *actual_token, const char *line, int *i);
-void    				token_isdless(t_token *actual_token, const char *line, int *i);
-void    				token_isdlessdash(t_token *actual_token, int *i);
-void    				token_islessgreat(t_token *actual_token, int *i);
-void    				token_islessand(t_token *actual_token, int *i);
+void    				token_isword(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_isio_nb(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_iseof(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_isnewl(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_isbang(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_issemi(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_isamper(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_isand(t_token *actual_token, unsigned int *i);
+void    				token_ispipe(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_isor(t_token *actual_token, unsigned int *i);
+void    				token_isgreat(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_isdgreat(t_token *actual_token, unsigned int *i);
+void    				token_isclobber(t_token *actual_token,  unsigned int *i);
+void    				token_isgreatand(t_token *actual_token, unsigned int *i);
+void    				token_isless(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_isdless(t_token *actual_token, const char *line, unsigned int *i);
+void    				token_isdlessdash(t_token *actual_token, unsigned int *i);
+void    				token_islessgreat(t_token *actual_token, unsigned int *i);
+void    				token_islessand(t_token *actual_token, unsigned int *i);
 
 /*
 ** Parsing

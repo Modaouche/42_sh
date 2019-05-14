@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 22:00:43 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/11 18:34:34 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 01:40:18 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void    fill_token_tab(void)
     }
 }
 
-void    skip_predicat(const char **line, int *i, int (*pred)(int))
+void    skip_predicat(const char **line, unsigned int *i, int (*pred)(int))
 {
     while ((*pred)(line[0][*i]))
         (*i)++;
