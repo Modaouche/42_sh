@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 22:00:43 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 01:40:18 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 11:35:54 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@ void    fill_token_tab(void)
         ++idx;
     }
 }
+int     ft_isspace_tok(int c)
+{
+	return ((c == ' '|| c == '\t' || c == '\f'\
+            || c == '\r' || c == '\v') ? 1 : 0);
+}
+
 
 void    skip_predicat(const char **line, unsigned int *i, int (*pred)(int))
 {

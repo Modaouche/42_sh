@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 02:18:29 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 11:58:02 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ void					cursor_reposition(size_t n);
 int						is_arrow(char *key);
 int						ft_puti(int i);
 void					ft_nlcr(void);
-// void					prompt_extend(void);
 size_t					print_prompt(unsigned int btn);
 void					cursor_start(t_edit *line_e);
 void					cursor_end(t_edit *line_e);
@@ -121,6 +120,7 @@ t_token*				get_next_token(const char **line, unsigned int *i);
 int						line_lexer(t_edit *line_e);
 void					skip_predicat(const char ** line, unsigned int *i, int (*pred)(int));
 int						wordlen(char *line);
+int						ft_isspace_tok(int c);
 void					fill_token_tab(void);
 void    				token_isword(t_token *actual_token, const char *line, unsigned int *i);
 void    				token_isio_nb(t_token *actual_token, const char *line, unsigned int *i);

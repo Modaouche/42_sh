@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 00:02:18 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 02:49:25 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 10:06:15 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,10 @@ void        command_fct(t_ast **ast, t_edit *line_e)
     else
     {
 	    ft_printf("|%d|\n", head_of_line(*ast));
-        //un nest matcher ??
         ft_putstr_fd("42sh syntax error.10\n", 2);//check si je rentre, peut etre que c'est inutile avec specifical message
         g_errorno = ER_SYNTAX;
-        return ;//maybe an exit with error
+        return ;
     }
-    //ft_printf("cmdfct|%d|\n", head_of_line(*ast));
 }
 
 void        cmd_suffix_fct(t_ast **ast, t_edit *line_e)
@@ -50,7 +48,7 @@ void        cmd_suffix_fct(t_ast **ast, t_edit *line_e)
         T_NEWL, T_EOF, -1))
     {
         return ;
-    }
+    }//a virer ?? les empty il n y a pas de gestion d'erreur ? genre c est quand il y a un unempty que l'on check ?
     else
     {
         ft_printf("|%d|\n", head_of_line(*ast));
@@ -58,7 +56,7 @@ void        cmd_suffix_fct(t_ast **ast, t_edit *line_e)
         ft_putstr_fd("42sh syntax error.11 (<< >> error maybe)\n", 2);//check si je rentre, peut etre que c'est inutile avec specifical message
         g_errorno = ER_SYNTAX;
         return ;//maybe an exit with error
-    }
+    }//a virer ?? les empty il n y a pas de gestion d'erreur ? genre c est quand il y a un unempty que l'on check ?
 }
 
 void        cmd_suffix_opt_fct(t_ast **ast, t_edit *line_e)
@@ -72,7 +70,7 @@ void        cmd_suffix_opt_fct(t_ast **ast, t_edit *line_e)
         T_NEWL, T_EOF, -1))
     {
         return ;
-    }
+    }//a virer ?? les empty il n y a pas de gestion d'erreur ? genre c est quand il y a un unempty que l'on check ?
     else
     {
         ft_printf("|%d|\n", head_of_line(*ast));
@@ -80,5 +78,5 @@ void        cmd_suffix_opt_fct(t_ast **ast, t_edit *line_e)
         ft_putstr_fd("42sh syntax error.12 (<< >> error maybe)\n", 2);//check si je rentre, peut etre que c'est inutile avec specifical message
         g_errorno = ER_SYNTAX;
         return ;//maybe an exit with error
-    }
+    }//a virer ?? les empty il n y a pas de gestion d'erreur ? genre c est quand il y a un unempty que l'on check ?
 }
