@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 11:58:02 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 12:34:07 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,8 @@ int     				get_last_common_char(t_list *list);
 ** Line Lexing
 */
 
-t_token*				get_next_token(const char **line, unsigned int *i);
+t_token					*get_next_token(const char **line, unsigned int *i);
+t_token					*get_heredoc(const char **line);
 int						line_lexer(t_edit *line_e);
 void					skip_predicat(const char ** line, unsigned int *i, int (*pred)(int));
 int						wordlen(char *line);
@@ -180,7 +181,7 @@ int						first_set(int kind, ...);//name tochange
 ** Abstract Syntax Tree
 */
 
-t_ast*					ast_new(t_token *tok);
+t_ast					*ast_new(t_token *tok);
 void					ast_insert_left(t_token *tok, t_ast **root);
 void					ast_insert_right(t_token *tok, t_ast **root);
 void					infix_print_ast(t_ast *root);

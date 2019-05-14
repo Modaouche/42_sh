@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 00:02:18 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 10:06:15 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 12:10:57 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void        command_fct(t_ast **ast, t_edit *line_e)
     ft_printf("--<command_fct>--\n");
     if (first_set(head_of_line(*ast), T_WORD, -1))
     {
-        ft_printf("[%s] nb> %d", line_e->line, line_e->ofst);
         ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);
         cmd_suffix_opt_fct(ast, line_e);
     }

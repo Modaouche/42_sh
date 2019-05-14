@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/09 08:50:32 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 11:47:53 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 12:34:08 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,16 @@ t_token *get_next_token(const char **line, unsigned int *i)
         skip_predicat(line, i, &ft_isspace_tok);
     if (g_token_tab[(unsigned int)line[0][*i]])
         (*g_token_tab[(unsigned int)line[0][*i]])(actual_token, *line, i);
+    return (actual_token);
+}
+
+t_token *get_heredoc(const char **line)
+{
+    t_token     *actual_token;
+
+    if (!(actual_token = (t_token*)ft_memalloc(sizeof(t_token))))
+        return (0);
+    actual_token->tokind = T_WORD;
+    actual_token->lexeme = ft_strdup(*line);
     return (actual_token);
 }
