@@ -35,11 +35,6 @@ $PRODUCTION
                         |   $EMPTY
                         ;
 
-
-
-
-
-
     <command>           ->  <cmd_prefix> <command_suffix>
                         |   WORD <cmd_suffix_opt>
                         ;
@@ -92,11 +87,6 @@ $PRODUCTION
     <io_here>           ->  '<<'  WORD
                         |   '<<-' WORD
                         ;
-
-
-
-
-
 
     <linebreak>         ->  <newline_list>
                         |   $EMPTY
