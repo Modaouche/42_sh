@@ -79,13 +79,13 @@ int 	caca(t_edit *line_e)
 	if (line_e->cursor_pos == 0)
 		return (0);
 	i = 0;
-	while (line_e->line[i])
+	while (line_e->line[i] && i <= line_e->cursor_pos)
 	{
 		if (line_e->line[i] != ' ')
 			break ;
 		++i;
 	}
-	if (line_e->line[i] == '\0')
+	if (i >= line_e->cursor_pos || line_e->line[i] == '\0')
 		return (0);
 	argument = 0;
 	i = line_e->cursor_pos;
