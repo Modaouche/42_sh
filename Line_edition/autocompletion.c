@@ -208,10 +208,22 @@ t_list			*build_completion_list_files(char *str, int len,
 				unsigned int *list_size)
 {
 	t_list	*list;
+	int 	last_slash;
+	int 	i;
 
+	i = len - 1;
+	while (i > 0 && str[i] != '/')
+		--i;
+	last_slash = (str[i] == '/' ? i : -1);
 	list = NULL;
-	(void)str;
-	(void)len;
-	(void)list_size;
+	*list_size = 0;
+	if (last_slash == -1)
+		*list_size += search_similar_files(&list, ".", str, len);
+	else
+	{
+		str[last_slash] = '\0';
+		*list_size += search_similar_files(&list, str, str + last_slash + 1, len - last_slash - 1);
+		str[last_slash] = '\\';
+	}
 	return (list);
 }
