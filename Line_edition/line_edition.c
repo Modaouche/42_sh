@@ -59,6 +59,42 @@ void	replace_line(t_edit *line_e, char *new)
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
 }
 
+int 	caca(t_edit *line_e)
+{
+	unsigned int firstword;
+	unsigned int i;
+	unsigned int tmp;
+
+	if (line_e->cursor_pos == 0)
+		return (0);
+	firstword = 0;
+	i = line_e->cursor_pos;
+	while (i > 0 && line_e->line[i] != ' ')
+		--i;
+	tmp = i;
+	while (tmp > 0 && line_e->line[tmp] == ' ')
+		--tmp;
+	firstword = (tmp == 0);
+	if (i < line_e->cursor_pos && line_e->line[i] == ' ')
+		++i;
+	if (line_e->line[i] == '/' || line_e->line[i] == '.')
+		firstword = 0;
+	if (firstword)
+	{
+		line_e->autocompletion_list = build_completion_list(line_e->line + i,
+									line_e->cursor_pos - i,
+									line_e->env,
+									&line_e->autocompletion_size);
+	}
+	else
+	{
+		line_e->autocompletion_list = build_completion_list_files(line_e->line + i,
+									line_e->cursor_pos - i,
+									&line_e->autocompletion_size);
+	}
+	return (1);
+}
+
 void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 {
 	if (!key)
@@ -109,14 +145,13 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 			print_autocompletion_list(line_e, line_e->autocompletion_idx);
 			return ;
 		}
-		unsigned int str_start;
-		str_start = line_e->cursor_pos;
-		while (str_start > 0 && line_e->line[str_start] != ' ')
-			--str_start;
-		if (str_start == line_e->cursor_pos)
+		if (caca(line_e) == 0)
+		{
+			cursor_end(line_e);
+			tputs(tgetstr("cd", NULL), 1, ft_puti);
+			cursor_actualpos(line_e);
 			return ;
-		ft_list_delete(&line_e->autocompletion_list);
-		line_e->autocompletion_list = build_completion_list(line_e->line + str_start, line_e->cursor_pos - str_start, line_e->env, &line_e->autocompletion_size);
+		}
 		if (line_e->autocompletion_list == NULL)
 		{
 			line_e->autocompletion = 0;
@@ -140,6 +175,7 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 			replace_line(line_e, tmp);
 			free(tmp);
 		}
+		line_e->autocompletion = 1;
 		print_autocompletion_list(line_e, -1);
 	}
 	else if (is_arrow(key))

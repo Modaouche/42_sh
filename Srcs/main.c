@@ -44,7 +44,7 @@ int main(int ac, char **av, char **envp)
 		init_line(&line_e);
 		while (!line_e.line)
 		{
-				line_e.prompt_size = print_prompt(0) - ft_strlen("\e[1;32m🐚\033[0m") + 2;
+				line_e.prompt_size = print_prompt(0) - ft_strlen("\e[1;32m🐚\033[0m") + 1;
 				line_edition(&line_e);
 		}
 		line_lexer(&line_e);

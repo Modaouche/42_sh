@@ -203,3 +203,15 @@ t_list			*build_completion_list(char *str, int len, char **env,
 	}
 	return (list);
 }
+
+t_list			*build_completion_list_files(char *str, int len,
+				unsigned int *list_size)
+{
+	t_list	*list;
+
+	list = NULL;
+	(void)str;
+	(void)len;
+	(void)list_size;
+	return (list);
+}
