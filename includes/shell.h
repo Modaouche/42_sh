@@ -111,8 +111,9 @@ t_list					*build_completion_list(char *str, int len, char **env,
 t_list					*build_completion_list_files(char *str, int len,
 						unsigned int *list_size);
 void					print_autocompletion_list(t_edit *line_e, int highlight);
-int     				get_last_common_char(t_list *list);
-
+int						get_last_common_char(t_list *list);
+void					replace_word(t_edit *line_e, char *new);
+int						caca(t_edit *line_e);
 
 /*
 ** Line Lexing

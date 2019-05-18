@@ -152,6 +152,8 @@ unsigned int	search_similar_files(t_list **list, char *path,
 	size = 0;
 	while ((f = readdir(d)) != NULL)
 	{
+		if (f->d_name[0] == '.' && (!len || str[0] != '.'))
+			continue ;
 		if (ft_strncmp(f->d_name, str, len) == 0)
 		{
 			tmp = ft_strnew(ft_strlen(f->d_name) + 1);
@@ -212,8 +214,8 @@ t_list			*build_completion_list(char *str, int len, char **env,
 /*
 **   build_completion_list_files
 **
-** - Builds the completion list by looking into a given path
-**   or starting from a partial file name
+** - Builds the completion list by looking by looking at the input
+**   and searching files based on current written path
 */
 
 t_list			*build_completion_list_files(char *str, int len,
@@ -237,4 +239,91 @@ t_list			*build_completion_list_files(char *str, int len,
 		str[last_slash] = '\\';
 	}
 	return (list);
+}
+
+/*
+**   replace_word
+**
+** - Replaces the word at the current cursor position with the
+**   given one.
+*/
+
+void	replace_word(t_edit *line_e, char *new)
+{
+	unsigned int	start;
+	char			*str;
+
+	start = line_e->cursor_pos;
+	while (start > 0 && line_e->line[start] != ' ')
+		--start;
+	if (start < line_e->cursor_pos && line_e->line[start] == ' ')
+		++start;
+	if (!(str = ft_strnew(start + ft_strlen(new))))
+		toexit(line_e, "Malloc");
+	ft_memcpy(str, line_e->line, start);
+	ft_strcpy(str + start, new);
+	cursor_start(line_e);
+	ft_strdel(&line_e->line);
+	line_e->line = str;
+	line_e->len = ft_strlen(line_e->line);
+	line_e->cursor_pos = line_e->len;
+	ft_putstr_fd(line_e->line, STDERR_FILENO);
+	tputs(tgetstr("cd", NULL), 1, ft_puti);
+}
+
+/*
+**   caca
+**
+** - The base of autocompletion, is what determines what is
+**   the words that needs to be autocompleted based on
+**   cursor position. Also determines whether it is
+**   autocompleting an argument or an executable name.
+*/
+
+int 	caca(t_edit *line_e)
+{
+	unsigned int	argument;
+	unsigned int	i;
+	int 			tmp;
+
+	if (line_e->cursor_pos == 0)
+		return (0);
+	i = 0;
+	while (line_e->line[i] && i <= line_e->cursor_pos)
+	{
+		if (line_e->line[i] != ' ')
+			break ;
+		++i;
+	}
+	if (i >= line_e->cursor_pos || line_e->line[i] == '\0')
+		return (0);
+	argument = 0;
+	i = line_e->cursor_pos;
+	while (i > 0 && line_e->line[i] != ' ')
+		--i;
+	tmp = i - 1;
+	while (tmp >= 0)
+	{
+		if (line_e->line[tmp] != ' ')
+			argument = 1;
+		--tmp;
+	}
+	if (i < line_e->cursor_pos && line_e->line[i] == ' ')
+		++i;
+	if (line_e->line[i] == '/' || line_e->line[i] == '.')
+		argument = 0;
+	if (argument == 0)
+	{
+		line_e->autocompletion_list = build_completion_list(line_e->line + i,
+									line_e->cursor_pos - i,
+									line_e->env,
+									&line_e->autocompletion_size);
+	}
+	else
+	{
+		line_e->autocompletion_list = build_completion_list_files(line_e->line + i,
+									line_e->cursor_pos - i,
+									&line_e->autocompletion_size);
+	}
+	return (1);
 }
