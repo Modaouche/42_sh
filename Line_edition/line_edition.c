@@ -48,11 +48,22 @@ int		str_add(t_edit *line_e, const char to_add)
 
 void	replace_line(t_edit *line_e, char *new)
 {
-	if ((new = ft_strdup(new)) == NULL)
-		toexit(line_e, "malloc");
+	unsigned int start;
+	char *str;
+
+	start = line_e->cursor_pos;
+	while (start > 0 && line_e->line[start] != ' ')
+		--start;
+	if (start < line_e->cursor_pos && line_e->line[start] == ' ')
+		++start;
+	if (!(str = ft_strnew(start + ft_strlen(new))))
+		toexit(line_e, "Malloc");
+	ft_memcpy(str, line_e->line, start);
+	ft_strcpy(str + start, new);
+
 	cursor_start(line_e);
 	ft_strdel(&line_e->line);
-	line_e->line = new;
+	line_e->line = str;
 	line_e->len = ft_strlen(line_e->line);
 	line_e->cursor_pos = line_e->len;
 	ft_putstr_fd(line_e->line, STDERR_FILENO);
