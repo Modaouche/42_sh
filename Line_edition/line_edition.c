@@ -181,8 +181,8 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		}
 		else if (line_e->autocompletion_size > 1)
 		{
-			int a = get_last_common_char(line_e->autocompletion_list);
-			char *tmp = ft_strsub(line_e->autocompletion_list->content, 0, a);
+			char *tmp = ft_strsub(line_e->autocompletion_list->content,
+				0, get_last_common_char(line_e->autocompletion_list));
 			replace_line(line_e, tmp);
 			free(tmp);
 		}

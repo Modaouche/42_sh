@@ -29,7 +29,7 @@ int				get_last_common_char(t_list *list)
 
 	if (list == NULL || list->content == NULL)
 		return (1);
-	last = 1;
+	last = 0;
 	while (list->content[last] != '\0')
 	{
 		tmp = list;
@@ -154,9 +154,14 @@ unsigned int	search_similar_files(t_list **list, char *path,
 	{
 		if (ft_strncmp(f->d_name, str, len) == 0)
 		{
-			tmp = ft_strdup(f->d_name);
+			tmp = ft_strnew(ft_strlen(f->d_name) + 1);
 			if (tmp && ft_list_append(list, tmp, ft_strlen(f->d_name)))
+			{
+				ft_strcpy(tmp, f->d_name);
+				if (f->d_type == DT_DIR)
+					tmp[ft_strlen(tmp)] = '/';
 				++size;
+			}
 		}
 	}
 	return (size);
@@ -204,25 +209,31 @@ t_list			*build_completion_list(char *str, int len, char **env,
 	return (list);
 }
 
+/*
+**   build_completion_list_files
+**
+** - Builds the completion list by looking into a given path
+**   or starting from a partial file name
+*/
+
 t_list			*build_completion_list_files(char *str, int len,
 				unsigned int *list_size)
 {
 	t_list	*list;
 	int 	last_slash;
-	int 	i;
 
-	i = len - 1;
-	while (i > 0 && str[i] != '/')
-		--i;
-	last_slash = (str[i] == '/' ? i : -1);
+	last_slash = len - 1;
+	while (last_slash >= 0 && str[last_slash] != '/')
+		--last_slash;
 	list = NULL;
 	*list_size = 0;
-	if (last_slash == -1)
+	if (last_slash < 0)
 		*list_size += search_similar_files(&list, ".", str, len);
 	else
 	{
 		str[last_slash] = '\0';
-		*list_size += search_similar_files(&list, str, str + last_slash + 1, len - last_slash - 1);
+		*list_size += search_similar_files(&list, str,
+						str + last_slash + 1, len - last_slash - 1);
 		str[last_slash] = '\\';
 	}
 	return (list);
