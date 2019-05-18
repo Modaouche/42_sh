@@ -72,25 +72,37 @@ void	replace_line(t_edit *line_e, char *new)
 
 int 	caca(t_edit *line_e)
 {
-	unsigned int firstword;
+	unsigned int argument;
 	unsigned int i;
-	unsigned int tmp;
+	int 		tmp;
 
 	if (line_e->cursor_pos == 0)
 		return (0);
-	firstword = 0;
+	i = 0;
+	while (line_e->line[i])
+	{
+		if (line_e->line[i] != ' ')
+			break ;
+		++i;
+	}
+	if (line_e->line[i] == '\0')
+		return (0);
+	argument = 0;
 	i = line_e->cursor_pos;
 	while (i > 0 && line_e->line[i] != ' ')
 		--i;
-	tmp = i;
-	while (tmp > 0 && line_e->line[tmp] == ' ')
+	tmp = i - 1;
+	while (tmp >= 0)
+	{
+		if (line_e->line[tmp] != ' ')
+			argument = 1;
 		--tmp;
-	firstword = (tmp == 0);
+	}
 	if (i < line_e->cursor_pos && line_e->line[i] == ' ')
 		++i;
 	if (line_e->line[i] == '/' || line_e->line[i] == '.')
-		firstword = 0;
-	if (firstword)
+		argument = 0;
+	if (argument == 0)
 	{
 		line_e->autocompletion_list = build_completion_list(line_e->line + i,
 									line_e->cursor_pos - i,
