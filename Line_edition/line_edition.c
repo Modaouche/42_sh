@@ -46,6 +46,15 @@ int		str_add(t_edit *line_e, const char to_add)
 	return (1);
 }
 
+void	cancel_autocompletion(t_edit *line_e)
+{
+	line_e->autocompletion = 0;
+	cursor_end(line_e);
+	tputs(tgetstr("cd", NULL), 1, ft_puti);
+	cursor_actualpos(line_e);
+	ft_file_list_delete(&line_e->autocompletion_list);
+}
+
 void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 {
 	if (!key)
@@ -106,15 +115,11 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		}
 		if (line_e->autocompletion_list == NULL)
 		{
-			line_e->autocompletion = 0;
-			cursor_end(line_e);
-			tputs(tgetstr("cd", NULL), 1, ft_puti);
-			cursor_actualpos(line_e);
+			cancel_autocompletion(line_e);
 			return ;
 		}
 		if (line_e->autocompletion_size == 1)
 		{
-			line_e->autocompletion = 0;
 			if (line_e->autocompletion_list->type == 4)
 			{
 				char *tmp = ft_strjoin(line_e->autocompletion_list->name, "/");
@@ -123,7 +128,7 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 			}
 			else
 				replace_word(line_e, line_e->autocompletion_list->name);
-			tputs(tgetstr("cd", NULL), 1, ft_puti); //clear line and everything under
+			cancel_autocompletion(line_e);
 			return ;
 		}
 		else if (line_e->autocompletion_size > 1)

@@ -58,10 +58,20 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 	unsigned int	i;
 
 	if (file->type == 4 && !selected)
-		ft_putstr_fd("\033[38;5;9m", 2);
+		ft_putstr_fd("\033[38;5;9m", 0);
+	else if ((file->type == 6 || file->type == 2) && !selected)
+		ft_putstr_fd("\033[38;5;11m", 0);
+	else if ((file->type == -2) && !selected)
+		ft_putstr_fd("\033[38;5;14m", 0);
 	write(0, file->name, file->len);
 	if (file->type == 4)
 		write(0, "\033[0m/", 5);
+	else if (file->type == 6)
+		write(0, "\033[0m%", 5);
+	else if (file->type == 2)
+		write(0, "\033[0m#", 5);
+	else if (file->type == -2)
+		write(0, "\033[0m@", 5);
 	i = minlen - file->len - (file->type != 0);
 	while (i > 0)
 	{
@@ -231,11 +241,19 @@ t_file			*build_completion_list_files(char *str, int len,
 	if (last_slash < 0)
 		*list_size += search_similar_files(&list, ".", str, len);
 	else
-	{	
-		str[last_slash] = '\0';
-		*list_size += search_similar_files(&list, str,
+	{
+		if (last_slash == 0)
+		{
+			*list_size += search_similar_files(&list, "/",
+						str + 1, len - 1);
+		}
+		else
+		{
+			str[last_slash] = '\0';
+			*list_size += search_similar_files(&list, str,
 						str + last_slash + 1, len - last_slash - 1);
-		str[last_slash] = '/';
+			str[last_slash] = '/';
+		}
 	}
 	return (list);
 }

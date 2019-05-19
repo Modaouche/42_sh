@@ -52,6 +52,7 @@ typedef enum
 typedef struct 			s_file
 {
 	char			*name;
+	char			*printed_name;
 	size_t			len;
 	int				type;
 	struct s_file	*next;

@@ -58,6 +58,7 @@ void		ft_file_list_delete(t_file **list)
 		tmp = *list;
 		*list = (*list)->next;
 		ft_strdel(&tmp->name);
+		ft_strdel(&tmp->printed_name);
 		free(tmp);
 	} 
 }
