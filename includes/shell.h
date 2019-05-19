@@ -71,6 +71,7 @@ typedef struct			s_edit
 	unsigned int		autocompletion_size;
 	unsigned int		autocompletion_point;
 	unsigned int 		autocompletion_maxcol;
+	unsigned int 		autocompletion_maxrow;
 	unsigned int		len;
 	unsigned int		ofst;
 	unsigned int		cursor_pos;

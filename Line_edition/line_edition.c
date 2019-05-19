@@ -167,10 +167,10 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocompletion == 2)
 			{
-				if (line_e->autocompletion_idx == 0)
-					line_e->autocompletion_idx = line_e->autocompletion_size - 1;
+				if (line_e->autocompletion_idx <= line_e->autocompletion_maxrow)
+					;
 				else
-					--line_e->autocompletion_idx;
+					line_e->autocompletion_idx -= line_e->autocompletion_maxrow + 1;
 				if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
 					replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
 				print_autocompletion_list(line_e, line_e->autocompletion_idx);
@@ -202,8 +202,10 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocompletion == 2)
 			{
-				if (++line_e->autocompletion_idx >= line_e->autocompletion_size)
-					line_e->autocompletion_idx = 0;
+				if (line_e->autocompletion_idx + (line_e->autocompletion_maxrow + 1) >= line_e->autocompletion_size)
+					;
+				else
+					line_e->autocompletion_idx += line_e->autocompletion_maxrow + 1;
 				if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
 					replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
 				print_autocompletion_list(line_e, line_e->autocompletion_idx);
@@ -227,12 +229,8 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocompletion == 2)
 			{
-				if ((int)line_e->autocompletion_idx - (int)line_e->autocompletion_maxcol < 0)
-				{
-					//ine_e->autocompletion_idx --;
-				}
-				else
-					line_e->autocompletion_idx -= line_e->autocompletion_maxcol;
+				if (line_e->autocompletion_idx-- == 0)
+					line_e->autocompletion_idx = line_e->autocompletion_size - 1;
 				if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
 					replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
 				print_autocompletion_list(line_e, line_e->autocompletion_idx);
@@ -242,12 +240,8 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocompletion == 2)
 			{
-				if (line_e->autocompletion_idx + line_e->autocompletion_maxcol >= line_e->autocompletion_size)
-				{
-					//line_e->autocompletion_idx ++;
-				}
-				else
-					line_e->autocompletion_idx += line_e->autocompletion_maxcol;
+				if (++line_e->autocompletion_idx > line_e->autocompletion_size)
+					line_e->autocompletion_idx = 0;
 				if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
 					replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
 				print_autocompletion_list(line_e, line_e->autocompletion_idx);

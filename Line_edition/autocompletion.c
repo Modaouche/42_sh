@@ -57,6 +57,8 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 {
 	unsigned int	i;
 
+	if (file == NULL)
+		return ;
 	if (file->type == 4 && !selected)
 		ft_putstr_fd("\033[38;5;9m", 0);
 	else if ((file->type == 6 || file->type == 2) && !selected)
@@ -112,35 +114,39 @@ void			print_autocompletion_list(t_edit *line_e, int highlight)
 {
 	t_file			*list;
 	int				i;
-	int				newlines;
+	int				column;
 	unsigned int	maxcol;
+	int				maxrow;
 	unsigned int	max;
 	struct winsize	size;
 
 	cursor_after(line_e);
-	tputs(tgetstr("cd", NULL), 1, ft_puti);
 	list = line_e->autocompletion_list;
 	max = get_list_longest_word(list);
 	ioctl(0, TIOCGWINSZ, &size);
 	maxcol = size.ws_col / max;
+	maxrow = (line_e->autocompletion_size / maxcol);
 	line_e->autocompletion_maxcol = maxcol;
-	i = 0;
-	newlines = 0;
-	while (list)
+	line_e->autocompletion_maxrow = maxrow;
+	column = 0;
+	while (column <= maxrow)
 	{
-		if (i == highlight)
-			tputs(tgetstr("mr", NULL), 1, ft_puti);
-		print_with_pad(list, max, i++ == highlight);
-		tputs(tgetstr("me", NULL), 1, ft_puti);
-		list = list->next;
-		if ((maxcol == 0 || i % maxcol == 0) && list != NULL)
+		i = column;
+		while ((list = ft_file_list_at(line_e->autocompletion_list, i)))
 		{
-			++newlines;
+			if (i == highlight)
+				tputs(tgetstr("mr", NULL), 1, ft_puti);
+			print_with_pad(list, max, i == highlight);
+			tputs(tgetstr("me", NULL), 1, ft_puti);	
+			i += maxrow + 1;
+		}
+		if (++column <= maxrow)
+		{
 			tputs(tgetstr("do", NULL), 1, ft_puti);
-			tputs(tgetstr("cr", NULL), 1, ft_puti);    
+			tputs(tgetstr("cr", NULL), 1, ft_puti); 
 		}
 	}
-	while (newlines-- >= 0)
+	while (--column >= 0)
 		tputs(tgetstr("up", NULL), 1, ft_puti);
 	cursor_actualpos(line_e);
 }

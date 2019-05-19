@@ -14,6 +14,25 @@
 #include "libft.h"
 
 /*
+**
+**  escape_name
+**
+**  - Escapes the name's special characters for proper autocompletion purposes.
+**  Escapes:
+**  *) Spaces
+**  *) Tilt
+**  *) Double/Single quotes
+**  *) Backslashes
+**  *) Exclamation marks
+**  *) Asterisks
+*/
+
+char	*escape_name(char *name)
+{
+	return (ft_strdup(name));
+}
+
+/*
 **  List functions made specifically for the autocompletion linked list
 **  Nothing particularly interesting happens here.
 */
@@ -24,7 +43,11 @@ t_file		*ft_file_list_create(char *name, int type)
 
 	if ((new = ft_memalloc(sizeof(t_file))) == NULL)
 		return (NULL);
-	new->name = ft_strdup(name);
+	if ((new->name = escape_name(name)) == NULL)
+	{
+		free(new);
+		return (NULL);
+	}
 	new->len = ft_strlen(name);
 	new->type = type;
 	return (new);
@@ -45,8 +68,9 @@ t_file		*ft_file_list_append(t_file **list, char *name, int type)
 	else
 	{
 		tmp = *list;
-		while (tmp->next != NULL)
+		while (tmp->next != NULL && ft_strcmp(name, tmp->next->name) >= 0)
 			tmp = tmp->next;
+		new->next = tmp->next;
 		tmp->next = new;
 	}
 	return (new);
