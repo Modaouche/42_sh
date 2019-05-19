@@ -21,22 +21,22 @@
 **   Useful for autocompletion purposes
 */
 
-int				get_last_common_char(t_list *list)
+int				get_last_common_char(t_file *list)
 {
 	int		last;
 	char	c;
-	t_list	*tmp;
+	t_file	*tmp;
 
-	if (list == NULL || list->content == NULL)
+	if (list == NULL || list->name == NULL)
 		return (1);
 	last = 0;
-	while (list->content[last] != '\0')
+	while (list->name[last] != '\0')
 	{
 		tmp = list;
-		c = list->content[last];
+		c = list->name[last];
 		while (tmp != NULL)
 		{
-			if (tmp->content == NULL || tmp->content[last] != c)
+			if (tmp->name == NULL || tmp->name[last] != c)
 				return (last);
 			tmp = tmp->next;
 		}
@@ -48,17 +48,21 @@ int				get_last_common_char(t_list *list)
 /*
 **   print_with_pad
 **
-** - Prints a string with padding if the string is too short
+** - Prints a string with padding if the string is too short.
+**   Also prints it's color and special character in case of
+**   an executable or folder.
 */
 
-void			print_with_pad(char *str, int minlen)
+void			print_with_pad(t_file *file, int minlen, int selected)
 {
 	unsigned int	i;
-	int				len;
 
-	len = ft_strlen(str);
-	write(0, str, len);
-	i = minlen - len;
+	if (file->type == 4 && !selected)
+		ft_putstr_fd("\033[38;5;9m", 2);
+	write(0, file->name, file->len);
+	if (file->type == 4)
+		write(0, "\033[0m/", 5);
+	i = minlen - file->len - (file->type != 0);
 	while (i > 0)
 	{
 		write(0, " ", 1);
@@ -72,15 +76,15 @@ void			print_with_pad(char *str, int minlen)
 ** - Gets the longest word in a list, required to have aligned columns
 */
 
-int     		get_list_longest_word(t_list *list)
+int     		get_list_longest_word(t_file *list)
 {
 	unsigned int	longest;
 
 	longest = 0;
 	while (list)
 	{
-		if (list->content_size > longest)
-			longest = list->content_size;
+		if (list->len + (list->type != 0) > longest)
+			longest = list->len + (list->type != 0);
 		list = list->next;
 	}
 	return (longest + 2);
@@ -96,7 +100,7 @@ int     		get_list_longest_word(t_list *list)
 
 void			print_autocompletion_list(t_edit *line_e, int highlight)
 {
-	t_list			*list;
+	t_file			*list;
 	int				i;
 	int				newlines;
 	unsigned int	maxcol;
@@ -114,9 +118,9 @@ void			print_autocompletion_list(t_edit *line_e, int highlight)
 	newlines = 0;
 	while (list)
 	{
-		if (i++ == highlight)
+		if (i == highlight)
 			tputs(tgetstr("mr", NULL), 1, ft_puti);
-		print_with_pad(list->content, max);
+		print_with_pad(list, max, i++ == highlight);
 		tputs(tgetstr("me", NULL), 1, ft_puti);
 		list = list->next;
 		if ((maxcol == 0 || i % maxcol == 0) && list != NULL)
@@ -139,13 +143,13 @@ void			print_autocompletion_list(t_edit *line_e, int highlight)
 **   in the given path.
 */
 
-unsigned int	search_similar_files(t_list **list, char *path,
+unsigned int	search_similar_files(t_file **list, char *path,
 				char *str, int len)
 {
 	DIR				*d;
 	struct dirent	*f;
 	unsigned int	size;
-	char			*tmp;
+	int				type;
 
 	if (!(d = opendir(path)))
 		return (0);
@@ -156,14 +160,9 @@ unsigned int	search_similar_files(t_list **list, char *path,
 			continue ;
 		if (ft_strncmp(f->d_name, str, len) == 0)
 		{
-			tmp = ft_strnew(ft_strlen(f->d_name) + 1);
-			if (tmp && ft_list_append(list, tmp, ft_strlen(f->d_name)))
-			{
-				ft_strcpy(tmp, f->d_name);
-				if (f->d_type == DT_DIR)
-					tmp[ft_strlen(tmp)] = '/';
+			type = 8 - f->d_type;
+			if (ft_file_list_append(list, f->d_name, type))
 				++size;
-			}
 		}
 	}
 	return (size);
@@ -176,10 +175,10 @@ unsigned int	search_similar_files(t_list **list, char *path,
 **   identifying each path and feeding them to the above function.
 */
 
-t_list			*build_completion_list(char *str, int len, char **env,
+t_file			*build_completion_list(char *str, int len, char **env,
 				unsigned int *list_size)
 {
-	t_list	*list;
+	t_file	*list;
 	char	*path;
 	int		i;
 
@@ -218,10 +217,10 @@ t_list			*build_completion_list(char *str, int len, char **env,
 **   and searching files based on current written path
 */
 
-t_list			*build_completion_list_files(char *str, int len,
+t_file			*build_completion_list_files(char *str, int len,
 				unsigned int *list_size)
 {
-	t_list	*list;
+	t_file	*list;
 	int 	last_slash;
 
 	last_slash = len - 1;

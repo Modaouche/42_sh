@@ -64,7 +64,7 @@ typedef struct			s_edit
 	struct winsize		*wsize;
 	char				*line;
 	char				**env;
-	t_list				*autocompletion_list;
+	t_file				*autocompletion_list;
 	int					autocompletion;	
 	unsigned int		autocompletion_idx;
 	unsigned int		autocompletion_size;
@@ -114,12 +114,12 @@ void					cursor_after(t_edit *line_e);
 */
 
 
-t_list					*build_completion_list(char *str, int len, char **env,
+t_file					*build_completion_list(char *str, int len, char **env,
 						unsigned int *list_size);
-t_list					*build_completion_list_files(char *str, int len,
+t_file					*build_completion_list_files(char *str, int len,
 						unsigned int *list_size);
 void					print_autocompletion_list(t_edit *line_e, int highlight);
-int						get_last_common_char(t_list *list);
+int						get_last_common_char(t_file *list);
 void					replace_word(t_edit *line_e, char *new);
 int						caca(t_edit *line_e);
 
@@ -128,8 +128,8 @@ int						caca(t_edit *line_e);
 */
 
 
-t_file		*ft_file_list_create(char *name);
-t_file		*ft_file_list_append(t_file **list, char *name);
+t_file		*ft_file_list_create(char *name, int type);
+t_file		*ft_file_list_append(t_file **list, char *name, int type);
 void		ft_file_list_delete(t_file **list);
 t_file		*ft_file_list_at(t_file *list, unsigned int idx);
 

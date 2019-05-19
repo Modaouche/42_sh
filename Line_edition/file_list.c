@@ -13,27 +13,27 @@
 #include "../includes/shell.h"
 #include "libft.h"
 
-t_file		*ft_file_list_create(char *name)
+t_file		*ft_file_list_create(char *name, int type)
 {
 	t_file *new;
 
 	if ((new = ft_memalloc(sizeof(t_file))) == NULL)
 		return (NULL);
-	ft_printf("%s\n", name);
 	new->name = ft_strdup(name);
 	new->len = ft_strlen(name);
+	new->type = type;
 	return (new);
 }
 
 
-t_file		*ft_file_list_append(t_file **list, char *name)
+t_file		*ft_file_list_append(t_file **list, char *name, int type)
 {
 	t_file *new;
 	t_file *tmp;
 
 	if (list == NULL)
 		return (0);
-	if ((new = ft_file_list_create(name)) == NULL)
+	if ((new = ft_file_list_create(name, type)) == NULL)
 		return (NULL);
 	if (*list == NULL)
 		*list = new;
