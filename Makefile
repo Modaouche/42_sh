@@ -21,6 +21,7 @@ SRC =	Srcs/main.c\
 		Line_edition/tools_le.c\
 		Line_edition/autocompletion.c\
 		Line_edition/cursor_movement.c\
+		Line_edition/file_list.c\
 		Lexer/get_next_token.c\
 		Lexer/token_tools.c\
 		Lexer/token_isother.c\

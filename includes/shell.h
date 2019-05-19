@@ -49,21 +49,29 @@ typedef enum
 # define MAX_KEY_LEN			15
 # define BUFFER_LEN				255
 
+typedef struct 			s_file
+{
+	char			*name;
+	size_t			len;
+	int				type;
+	struct s_file	*next;
+}						t_file;
 
 typedef struct			s_edit
 {
 	struct termios		*termiold;
 	struct termios		*termios;
 	struct winsize		*wsize;
-	char			*line;
-	char			**env;
-	t_list			*autocompletion_list;
-	int			autocompletion;	
+	char				*line;
+	char				**env;
+	t_list				*autocompletion_list;
+	int					autocompletion;	
 	unsigned int		autocompletion_idx;
 	unsigned int		autocompletion_size;
+	unsigned int		autocompletion_point;
 	unsigned int 		autocompletion_maxcol;
 	unsigned int		len;
-	unsigned int					ofst;
+	unsigned int		ofst;
 	unsigned int		cursor_pos;
 	unsigned int		len_max;
 	unsigned int		prompt_size;
@@ -114,6 +122,16 @@ void					print_autocompletion_list(t_edit *line_e, int highlight);
 int						get_last_common_char(t_list *list);
 void					replace_word(t_edit *line_e, char *new);
 int						caca(t_edit *line_e);
+
+/*
+**  Line dition - File list
+*/
+
+
+t_file		*ft_file_list_create(char *name);
+t_file		*ft_file_list_append(t_file **list, char *name);
+void		ft_file_list_delete(t_file **list);
+t_file		*ft_file_list_at(t_file *list, unsigned int idx);
 
 /*
 ** Line Lexing

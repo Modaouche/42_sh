@@ -232,11 +232,11 @@ t_list			*build_completion_list_files(char *str, int len,
 	if (last_slash < 0)
 		*list_size += search_similar_files(&list, ".", str, len);
 	else
-	{
+	{	
 		str[last_slash] = '\0';
 		*list_size += search_similar_files(&list, str,
 						str + last_slash + 1, len - last_slash - 1);
-		str[last_slash] = '\\';
+		str[last_slash] = '/';
 	}
 	return (list);
 }
@@ -250,18 +250,13 @@ t_list			*build_completion_list_files(char *str, int len,
 
 void	replace_word(t_edit *line_e, char *new)
 {
-	unsigned int	start;
 	char			*str;
 
-	start = line_e->cursor_pos;
-	while (start > 0 && line_e->line[start] != ' ')
-		--start;
-	if (start < line_e->cursor_pos && line_e->line[start] == ' ')
-		++start;
-	if (!(str = ft_strnew(start + ft_strlen(new))))
-		toexit(line_e, "Malloc");
-	ft_memcpy(str, line_e->line, start);
-	ft_strcpy(str + start, new);
+	str = ft_strnew(line_e->autocompletion_point + ft_strlen(new));
+	if (str == NULL)
+		toexit(line_e, "malloc");
+	ft_memcpy(str, line_e->line, line_e->autocompletion_point);
+	ft_strcpy(str + line_e->autocompletion_point, new);
 	cursor_start(line_e);
 	ft_strdel(&line_e->line);
 	line_e->line = str;
@@ -311,9 +306,10 @@ int 	caca(t_edit *line_e)
 	if (i < line_e->cursor_pos && line_e->line[i] == ' ')
 		++i;
 	if (line_e->line[i] == '/' || line_e->line[i] == '.')
-		argument = 0;
+		argument = 1;
 	if (argument == 0)
 	{
+		line_e->autocompletion_point = i;
 		line_e->autocompletion_list = build_completion_list(line_e->line + i,
 									line_e->cursor_pos - i,
 									line_e->env,
@@ -321,6 +317,17 @@ int 	caca(t_edit *line_e)
 	}
 	else
 	{
+		unsigned int last_slash;
+
+		last_slash = i;
+		tmp = i;
+		while (tmp < (int)line_e->cursor_pos)
+		{
+			if (line_e->line[tmp] == '/')
+				last_slash = tmp + 1;
+			++tmp;
+		}
+		line_e->autocompletion_point = last_slash;
 		line_e->autocompletion_list = build_completion_list_files(line_e->line + i,
 									line_e->cursor_pos - i,
 									&line_e->autocompletion_size);
