@@ -289,7 +289,9 @@ void	replace_word(t_edit *line_e, char *new)
 ** - The base of autocompletion, is what determines what is
 **   the words that needs to be autocompleted based on
 **   cursor position. Also determines whether it is
-**   autocompleting an argument or an executable name.
+**   autocompleting an argument or an executable name,
+**   and what part of the line is the autocompletion going to
+**   replace.
 */
 
 int 	caca(t_edit *line_e)
@@ -298,8 +300,6 @@ int 	caca(t_edit *line_e)
 	unsigned int	i;
 	int 			tmp;
 
-	if (line_e->cursor_pos == 0)
-		return (0);
 	i = 0;
 	while (line_e->line[i] && i <= line_e->cursor_pos)
 	{

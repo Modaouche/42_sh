@@ -13,6 +13,13 @@
 #include "../includes/shell.h"
 #include "libft.h"
 
+/*
+**  str_add
+**
+**  - Adds a character to the input line, and if necessary, reallocates the
+**  line to fit it's new size.
+*/
+
 int		str_add(t_edit *line_e, const char to_add)
 {
 	char    *new;
@@ -46,6 +53,12 @@ int		str_add(t_edit *line_e, const char to_add)
 	return (1);
 }
 
+/*
+**  cancel_autocompletion
+**
+**  - Hides and free the current autocompletion
+*/
+
 void	cancel_autocompletion(t_edit *line_e)
 {
 	line_e->autocompletion = 0;
@@ -54,6 +67,13 @@ void	cancel_autocompletion(t_edit *line_e)
 	cursor_actualpos(line_e);
 	ft_file_list_delete(&line_e->autocompletion_list);
 }
+
+/*
+**  putkey_in_line
+**
+**  - Event handler called whenever the user pressed a key.
+**  used to happen input to line or to react to special characters.
+*/
 
 void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 {
@@ -255,6 +275,13 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 	}
 	// ft_putstr("key too long comming soon - ");
 }//in tabptrfct
+
+/*
+**  line_edition
+**
+**  - Called to start the line edition, does not exit until the user
+**  pressed enter.
+*/
 
 int		line_edition(t_edit *line_e)
 {

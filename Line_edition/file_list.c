@@ -13,6 +13,11 @@
 #include "../includes/shell.h"
 #include "libft.h"
 
+/*
+**  List functions made specifically for the autocompletion linked list
+**  Nothing particularly interesting happens here.
+*/
+
 t_file		*ft_file_list_create(char *name, int type)
 {
 	t_file *new;
