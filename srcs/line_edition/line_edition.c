@@ -126,7 +126,7 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 			print_autocompletion_list(line_e, line_e->autocompletion_idx);
 			return ;
 		}
-		if (caca(line_e) == 0)
+		if (complete_from_word(line_e) == 0)
 		{
 			cursor_end(line_e);
 			tputs(tgetstr("cd", NULL), 1, ft_puti);

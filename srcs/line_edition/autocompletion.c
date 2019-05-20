@@ -17,8 +17,8 @@
 /*
 **   get_last_common_char
 **
-** - Gets the last common character from a list,
-**   Useful for autocompletion purposes
+** - Gets the last common character from a list.
+**   Useful for partial autocompletion.
 */
 
 int				get_last_common_char(t_file *list)
@@ -46,117 +46,10 @@ int				get_last_common_char(t_file *list)
 }
 
 /*
-**   print_with_pad
-**
-** - Prints a string with padding if the string is too short.
-**   Also prints it's color and special character in case of
-**   an executable or folder.
-*/
-
-void			print_with_pad(t_file *file, int minlen, int selected)
-{
-	unsigned int	i;
-
-	if (file == NULL)
-		return ;
-	if (file->type == 4 && !selected)
-		ft_putstr_fd("\033[38;5;9m", 0);
-	else if ((file->type == 6 || file->type == 2) && !selected)
-		ft_putstr_fd("\033[38;5;11m", 0);
-	else if ((file->type == -2) && !selected)
-		ft_putstr_fd("\033[38;5;14m", 0);
-	write(0, file->name, file->len);
-	if (file->type == 4)
-		write(0, "\033[0m/", 5);
-	else if (file->type == 6)
-		write(0, "\033[0m%", 5);
-	else if (file->type == 2)
-		write(0, "\033[0m#", 5);
-	else if (file->type == -2)
-		write(0, "\033[0m@", 5);
-	i = minlen - file->len - (file->type != 0);
-	while (i > 0)
-	{
-		write(0, " ", 1);
-		--i;
-	}
-}
-
-/*
-**   get_list_longest_word
-**
-** - Gets the longest word in a list, required to have aligned columns
-*/
-
-int     		get_list_longest_word(t_file *list)
-{
-	unsigned int	longest;
-
-	longest = 0;
-	while (list)
-	{
-		if (list->len + (list->type != 0) > longest)
-			longest = list->len + (list->type != 0);
-		list = list->next;
-	}
-	return (longest + 2);
-}
-
-/*
-**   print_autocompletion_list
-**
-** - Moves the cursor under the line edition, clears everything under
-**   the cursor and prints the list stored in autocompletion_list,
-**   then moves the cursor back to where it was.
-*/
-
-void			print_autocompletion_list(t_edit *line_e, int highlight)
-{
-	t_file			*list;
-	int				i;
-	int				column;
-	unsigned int	maxcol;
-	int				maxrow;
-	unsigned int	max;
-	struct winsize	size;
-
-	cursor_after(line_e);
-	list = line_e->autocompletion_list;
-	max = get_list_longest_word(list);
-	ioctl(0, TIOCGWINSZ, &size);
-	maxcol = size.ws_col / max;
-	maxrow = (line_e->autocompletion_size / maxcol);
-	line_e->autocompletion_maxcol = maxcol;
-	line_e->autocompletion_maxrow = maxrow;
-	column = 0;
-	while (column <= maxrow)
-	{
-		i = column;
-		while ((list = ft_file_list_at(line_e->autocompletion_list, i)))
-		{
-			if (i == highlight)
-				tputs(tgetstr("mr", NULL), 1, ft_puti);
-			print_with_pad(list, max, i == highlight);
-			tputs(tgetstr("me", NULL), 1, ft_puti);	
-			i += maxrow + 1;
-		}
-		if (++column <= maxrow)
-		{
-			tputs(tgetstr("do", NULL), 1, ft_puti);
-			tputs(tgetstr("cr", NULL), 1, ft_puti); 
-		}
-	}
-	while (--column >= 0)
-		tputs(tgetstr("up", NULL), 1, ft_puti);
-	cursor_actualpos(line_e);
-}
-
-/*
 **   search_similar_files
 **
-** - Looks out for files that start with 
-**   the same first [len] letters as the given string,
-**   in the given path.
+** - Looks out for files that start with  the same first [len]
+**   letters as the given string, in the given path.
 */
 
 unsigned int	search_similar_files(t_file **list, char *path,
@@ -185,6 +78,38 @@ unsigned int	search_similar_files(t_file **list, char *path,
 }
 
 /*
+**   search_similar_env_var
+**
+** - Builds the completion list by looking into the environment,
+**   specifically at the environment variables.
+*/
+
+int				search_similar_env_var(t_file **list, char *str, int len, char **env)
+{
+	int		size;
+	int		i;
+
+	size = 0;
+	while (*env != NULL)
+	{
+		if (ft_strncmp(*env, str, len) == 0)
+		{
+			i = 0;
+			while (env[0][i] != '=' && env[0][i])
+				++i;
+			if (env[0][i] == '\0' || i == 0)
+				continue ;
+			env[0][i + 1] = '\0';
+			ft_file_list_append(list, *env, 9);
+			env[0][i + 1] = '=';
+			++size;
+		}
+		++env;
+	}
+	return (size);
+}
+
+/*
 **   build_completion_list
 **
 ** - Builds the completion list by looking into the environment,
@@ -198,15 +123,15 @@ t_file			*build_completion_list(char *str, int len, char **env,
 	char	*path;
 	int		i;
 
-	list = NULL;
 	if (env == NULL)
 		return (NULL);
+	list = NULL;
+	*list_size = search_similar_env_var(&list, str, len, env);
 	while (*env != NULL && ft_strncmp(*env, "PATH=", 5) != 0)
 		++env;
 	if (*env == NULL)
 		return (NULL);
 	path = *env + 5;
-	*list_size = 0;
 	while (*path != 0)
 	{
 		i = 0;
@@ -290,7 +215,7 @@ void	replace_word(t_edit *line_e, char *new)
 }
 
 /*
-**   caca
+**   complete_from_word
 **
 ** - The base of autocompletion, is what determines what is
 **   the words that needs to be autocompleted based on
@@ -300,7 +225,7 @@ void	replace_word(t_edit *line_e, char *new)
 **   replace.
 */
 
-int 	caca(t_edit *line_e)
+int 	complete_from_word(t_edit *line_e)
 {
 	unsigned int	argument;
 	unsigned int	i;

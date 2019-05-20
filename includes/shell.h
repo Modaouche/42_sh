@@ -52,7 +52,6 @@ typedef enum
 typedef struct 			s_file
 {
 	char			*name;
-	char			*printed_name;
 	size_t			len;
 	int				type;
 	struct s_file	*next;
@@ -123,7 +122,7 @@ t_file					*build_completion_list_files(char *str, int len,
 void					print_autocompletion_list(t_edit *line_e, int highlight);
 int						get_last_common_char(t_file *list);
 void					replace_word(t_edit *line_e, char *new);
-int						caca(t_edit *line_e);
+int						complete_from_word(t_edit *line_e);
 
 /*
 **  Line dition - File list

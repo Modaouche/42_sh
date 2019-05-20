@@ -27,8 +27,9 @@
 **  *) Asterisks
 */
 
-char	*escape_name(char *name)
+char	*escape_name(char *name, int type)
 {
+	(void)type;
 	return (ft_strdup(name));
 }
 
@@ -43,7 +44,7 @@ t_file		*ft_file_list_create(char *name, int type)
 
 	if ((new = ft_memalloc(sizeof(t_file))) == NULL)
 		return (NULL);
-	if ((new->name = escape_name(name)) == NULL)
+	if ((new->name = escape_name(name, type)) == NULL)
 	{
 		free(new);
 		return (NULL);
@@ -86,8 +87,7 @@ void		ft_file_list_delete(t_file **list)
 	{
 		tmp = *list;
 		*list = (*list)->next;
-		ft_strdel(&tmp->name);
-		ft_strdel(&tmp->printed_name);
+		ft_strdel(&tmp->name);;
 		free(tmp);
 	} 
 }

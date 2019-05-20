@@ -20,6 +20,7 @@ SRC =	srcs/main/main.c\
 		srcs/line_edition/exit_le.c\
 		srcs/line_edition/tools_le.c\
 		srcs/line_edition/autocompletion.c\
+		srcs/line_edition/autocompletion_printing.c\
 		srcs/line_edition/cursor_movement.c\
 		srcs/line_edition/file_list.c\
 		srcs/lexer/get_next_token.c\
