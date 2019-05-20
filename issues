@@ -1,2 +1,0 @@
-Line Edition:
-	Issue when writing a text long enough to fit multiple lines then deleting it, the cursor skips deleting a character upon going to a previous line, and erase the space separating the prompt and the user input
