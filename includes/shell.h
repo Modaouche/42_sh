@@ -125,14 +125,20 @@ void					replace_word(t_edit *line_e, char *new);
 int						complete_from_word(t_edit *line_e);
 
 /*
-**  Line dition - File list
+**  Line edition - Autocompletion parser
+*/
+char					*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
+						unsigned int *autocompletion_point);
+
+/*
+**  Line edition - File list
 */
 
 
-t_file		*ft_file_list_create(char *name, int type);
-t_file		*ft_file_list_append(t_file **list, char *name, int type);
-void		ft_file_list_delete(t_file **list);
-t_file		*ft_file_list_at(t_file *list, unsigned int idx);
+t_file					*ft_file_list_create(char *name, int type);
+t_file					*ft_file_list_append(t_file **list, char *name, int type);
+void					ft_file_list_delete(t_file **list);
+t_file					*ft_file_list_at(t_file *list, unsigned int idx);
 
 /*
 ** Line Lexing

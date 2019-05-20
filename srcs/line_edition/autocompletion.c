@@ -84,7 +84,8 @@ unsigned int	search_similar_files(t_file **list, char *path,
 **   specifically at the environment variables.
 */
 
-int				search_similar_env_var(t_file **list, char *str, int len, char **env)
+int				search_similar_env_var(t_file **list, char *str, int len,
+				char **env)
 {
 	int		size;
 	int		i;
@@ -196,7 +197,7 @@ t_file			*build_completion_list_files(char *str, int len,
 **   given one.
 */
 
-void	replace_word(t_edit *line_e, char *new)
+void			replace_word(t_edit *line_e, char *new)
 {
 	char			*str;
 
@@ -225,60 +226,30 @@ void	replace_word(t_edit *line_e, char *new)
 **   replace.
 */
 
-int 	complete_from_word(t_edit *line_e)
+int 			complete_from_word(t_edit *line_e)
 {
+	char			*word;
 	unsigned int	argument;
-	unsigned int	i;
-	int 			tmp;
 
-	i = 0;
-	while (line_e->line[i] && i <= line_e->cursor_pos)
-	{
-		if (line_e->line[i] != ' ')
-			break ;
-		++i;
-	}
-	if (i >= line_e->cursor_pos || line_e->line[i] == '\0')
+	if ((word = get_autocompletion_word(line_e, &argument,
+				&line_e->autocompletion_point)) == NULL)
 		return (0);
-	argument = 0;
-	i = line_e->cursor_pos;
-	while (i > 0 && line_e->line[i] != ' ')
-		--i;
-	tmp = i - 1;
-	while (tmp >= 0)
-	{
-		if (line_e->line[tmp] != ' ')
-			argument = 1;
-		--tmp;
-	}
-	if (i < line_e->cursor_pos && line_e->line[i] == ' ')
-		++i;
-	if (line_e->line[i] == '/' || line_e->line[i] == '.')
+	if (word[0] == '/' || word[0] == '.')
 		argument = 1;
 	if (argument == 0)
 	{
-		line_e->autocompletion_point = i;
-		line_e->autocompletion_list = build_completion_list(line_e->line + i,
-									line_e->cursor_pos - i,
+		line_e->autocompletion_point = 0;
+		line_e->autocompletion_list = build_completion_list(word,
+									ft_strlen(word),
 									line_e->env,
 									&line_e->autocompletion_size);
 	}
 	else
 	{
-		unsigned int last_slash;
-
-		last_slash = i;
-		tmp = i;
-		while (tmp < (int)line_e->cursor_pos)
-		{
-			if (line_e->line[tmp] == '/')
-				last_slash = tmp + 1;
-			++tmp;
-		}
-		line_e->autocompletion_point = last_slash;
-		line_e->autocompletion_list = build_completion_list_files(line_e->line + i,
-									line_e->cursor_pos - i,
+		line_e->autocompletion_list = build_completion_list_files(word,
+									ft_strlen(word),
 									&line_e->autocompletion_size);
 	}
+	ft_strdel(&word);
 	return (1);
 }
