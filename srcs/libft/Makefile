@@ -48,9 +48,9 @@ CC = gcc
 
 CFLAGS 	=	-Wall -Wextra -Werror -Iincludes -I.
 
-all: $(NAME) includes/
+all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) Makefile
 	@ar rcs $(NAME) $^
 
 test: all

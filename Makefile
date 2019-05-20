@@ -12,58 +12,59 @@
 
 NAME = 42sh
 
-SRC =	Srcs/main.c\
-		Srcs/init.c\
-		Srcs/line_handling.c\
-		Line_edition/set_terminal.c\
-		Line_edition/line_edition.c\
-		Line_edition/exit_le.c\
-		Line_edition/tools_le.c\
-		Line_edition/autocompletion.c\
-		Line_edition/cursor_movement.c\
-		Line_edition/file_list.c\
-		Lexer/get_next_token.c\
-		Lexer/token_tools.c\
-		Lexer/token_isother.c\
-		Lexer/token_redirect_great.c\
-		Lexer/token_redirect_less.c\
-		Lexer/token_word.c\
-		Lexer/token_andor.c\
-		Parser/ast_tools.c\
-		Parser/parse_1_list.c\
-		Parser/parse_2_and_or.c\
-		Parser/parse_3_pipe_seq.c\
-		Parser/parse_4_line_brk.c\
-		Parser/parse_5_cmd.c\
-		Parser/parse_6_cmd_prime.c\
-		Parser/parse_7_io_fct.c\
-		Parser/first_set.c\
-		Inhibitor/inhibitors.c
+SRC =	srcs/main/main.c\
+		srcs/main/init.c\
+		srcs/main/line_handling.c\
+		srcs/line_edition/set_terminal.c\
+		srcs/line_edition/line_edition.c\
+		srcs/line_edition/exit_le.c\
+		srcs/line_edition/tools_le.c\
+		srcs/line_edition/autocompletion.c\
+		srcs/line_edition/cursor_movement.c\
+		srcs/line_edition/file_list.c\
+		srcs/lexer/get_next_token.c\
+		srcs/lexer/token_tools.c\
+		srcs/lexer/token_isother.c\
+		srcs/lexer/token_redirect_great.c\
+		srcs/lexer/token_redirect_less.c\
+		srcs/lexer/token_word.c\
+		srcs/lexer/token_andor.c\
+		srcs/parser/ast_tools.c\
+		srcs/parser/parse_1_list.c\
+		srcs/parser/parse_2_and_or.c\
+		srcs/parser/parse_3_pipe_seq.c\
+		srcs/parser/parse_4_line_brk.c\
+		srcs/parser/parse_5_cmd.c\
+		srcs/parser/parse_6_cmd_prime.c\
+		srcs/parser/parse_7_io_fct.c\
+		srcs/parser/first_set.c\
+		srcs/inhibitor/inhibitors.c
 
 OBJ = $(SRC:.c=.o)
-#OBJ = $(patsubst %.c,%.o, $(SRC))
 
-LIBFT = libft
+LIBFT = srcs/libft
 
-LIB = libft/libft.a
+LIB = $(LIBFT)/libft.a
 
-INCLUDES = includes libft
+HEADERS = includes/shell.h includes/token_and_ast.h
 
-DEPEN = $(INCLUDES) $(OBJ) Makefile libft/Makefile $(LIBFT)\
-		Line_edition Srcs Parser Lexer Inhibitor
+INCLUDES = -Iincludes -I$(LIBFT)
+
+DEPEN = $(OBJ) Makefile $(HEADERS)
 
 CC = gcc
 
-CFLAGS +=  -Wall -Wextra -Werror -Ilibft\
-			-g -fsanitize=address\
+CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)\
+	#		-g -fsanitize=address\
 			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 
-all: $(NAME)
+all: lib $(NAME)
 
 $(NAME): $(DEPEN)
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -lncurses
+lib:
 	make -C $(LIBFT) all
-	$(CC) $(CFLAGS) $(LIB) $(OBJ) libft/libft.a -o $(NAME) -lncurses
 
 clean:
 	make clean -C $(LIBFT)

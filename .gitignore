@@ -1,0 +1,9 @@
+.DS_Store
+*.dSYM
+*.swp
+*.swo
+*.o
+*.swn
+minishell
+21sh
+42sh

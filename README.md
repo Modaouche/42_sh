@@ -3,7 +3,7 @@
 42sh est le projet de fin de branche UNIX à 42, il consiste à implémenter (à 4 ou 5) un shell complet, solide et clairement utilisable.
 
   ### 1 - il dois comporter une partie obligatoire pour un shell basique tel que :
-        - Afichage d'un Promp + exécution de commandes avec leurs paramètres et gestion du PATH.
+        - Affichage d'un Promp + exécution de commandes avec leurs paramètres et gestion du PATH.
         - Gestion des erreurs, sans utiliser errno, et de la valeur de retour des commandes.
         - Gestion correcte des espaces et des tabulations.
         - Édition complète de la ligne de commande.
