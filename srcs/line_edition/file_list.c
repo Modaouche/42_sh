@@ -74,26 +74,26 @@ t_file		*ft_file_list_at(t_file *list, unsigned int idx)
 
 void    ft_list_sort(t_file **begin_list)
 {
-        t_file  *curr;
-        t_file	tmp;
+    t_file  *curr;
+    t_file	tmp;
 
-        if (begin_list == 0 || (curr = *begin_list) == 0)
-                return ;
-        while (curr->next != 0)
+    if (begin_list == 0 || (curr = *begin_list) == 0)
+            return ;
+    while (curr->next != 0)
+    {
+        while (ft_strcmp(curr->name, curr->next->name) > 0)
         {
-                while (ft_strcmp(curr->name, curr->next->name) > 0)
-                {
-                        tmp.name = curr->name;
-                        curr->name = curr->next->name;
-                        curr->next->name = tmp.name;
-                        tmp.len = curr->len;
-                        curr->len = curr->next->len;
-                        curr->next->len = tmp.len;
-                        tmp.type = curr->type;
-                        curr->type = curr->next->type;
-                        curr->next->type = tmp.type;
-                        curr = *begin_list;
-                }
-                curr = curr->next;
+            tmp.name = curr->name;
+            curr->name = curr->next->name;
+            curr->next->name = tmp.name;
+            tmp.len = curr->len;
+            curr->len = curr->next->len;
+            curr->next->len = tmp.len;
+            tmp.type = curr->type;
+            curr->type = curr->next->type;
+            curr->next->type = tmp.type;
+            curr = *begin_list;
         }
+        curr = curr->next;
+    }
 }

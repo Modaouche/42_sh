@@ -184,7 +184,6 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 	word_start = 0;
 	word_end = 0;
 	word_idx = 0;
-	line_e->autocomp_quote = 0;
 	while (i < line_e->cursor_pos)
 	{	
 		word_start = i;

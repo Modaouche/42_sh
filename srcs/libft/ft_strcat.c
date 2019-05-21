@@ -17,6 +17,8 @@ char			*ft_strcat(char *destination, const char *source)
 	int i;
 	int offset;
 
+	if (destination == NULL || source == NULL)
+		return (NULL);
 	offset = 0;
 	while (destination[offset] != '\0')
 		offset++;

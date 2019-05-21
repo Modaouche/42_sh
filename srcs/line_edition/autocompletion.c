@@ -32,16 +32,15 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 		return ;
 	}
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
-	ft_memcpy(str + line_e->autocomp_point, new, ft_strlen(new));
-	if (suffix)
-		ft_strcat(str + line_e->autocomp_point, suffix);
+	ft_strcat(str + line_e->autocomp_point, new);
+	ft_strcat(str + line_e->autocomp_point + length, suffix);
 	ft_strdel(&new);
 	cursor_start(line_e);
-	ft_strdel(&line_e->line);
+	ft_strdel(&(line_e->line));
 	line_e->line = str;
-	line_e->len = ft_strlen(line_e->line);
-	line_e->cursor_pos = line_e->len;
-	ft_putstr_fd(line_e->line, STDERR_FILENO);
+	line_e->len = ft_strlen(str);
+	line_e->cursor_pos = 0;
+	ft_putstr_fd(str, STDERR_FILENO);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
 }
 
@@ -83,7 +82,8 @@ int 	build_from_word(t_edit *line_e)
 	unsigned int	argument;
 
 	ft_file_list_delete(&line_e->autocomp_list);
-	ft_bzero(&line_e->autocomp_list, (size_t)&line_e->autocomp_quote - (size_t)&line_e->autocomp_list);
+	ft_bzero(&line_e->autocomp_list,
+		(size_t)&line_e->autocomp_quote - (size_t)&line_e->autocomp_list);
 	if ((word = get_autocompletion_word(line_e, &argument,
 				&line_e->autocomp_point)) == NULL)
 		return (0);

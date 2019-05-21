@@ -29,7 +29,7 @@ void    cursor_reposition(size_t n)
 
 void        ft_nlcr(void)
 {
-    ft_putendl_fd("", STDERR_FILENO);
+    tputs(tgetstr("do", NULL), 1, ft_puti);
 	tputs(tgetstr("cr", NULL), 1, ft_puti);
 }
 
