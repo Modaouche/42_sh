@@ -73,14 +73,14 @@ int     		get_list_longest_word(t_file *list)
 }
 
 /*
-**  print_autocompletion_list
+**  print_comp_list
 **
 **  - Moves the cursor under the line edition, clears everything under
-**    the cursor and prints the list stored in autocompletion_list,
+**    the cursor and prints the list stored in comp_list,
 **    then moves the cursor back to where it was.
 */
 
-void			print_autocompletion_list(t_edit *line_e, int highlight)
+void			print_comp_list(t_edit *line_e, int highlight)
 {
 	t_file			*list;
 	int				i;
@@ -91,18 +91,18 @@ void			print_autocompletion_list(t_edit *line_e, int highlight)
 	struct winsize	size;
 
 	cursor_after(line_e);
-	list = line_e->autocompletion_list;
+	list = line_e->autocomp_list;
 	max = get_list_longest_word(list);
 	ioctl(0, TIOCGWINSZ, &size);
 	maxcol = size.ws_col / max;
-	maxrow = (line_e->autocompletion_size / maxcol);
-	line_e->autocompletion_maxcol = maxcol;
-	line_e->autocompletion_maxrow = maxrow;
+	maxrow = (line_e->autocomp_size / maxcol);
+	line_e->autocomp_maxcol = maxcol;
+	line_e->autocomp_maxrow = maxrow;
 	column = 0;
 	while (column <= maxrow)
 	{
 		i = column;
-		while ((list = ft_file_list_at(line_e->autocompletion_list, i)))
+		while ((list = ft_file_list_at(line_e->autocomp_list, i)))
 		{
 			if (i == highlight)
 				tputs(tgetstr("mr", NULL), 1, ft_puti);

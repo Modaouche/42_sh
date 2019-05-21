@@ -47,13 +47,14 @@ int main(int ac, char **av, char **envp)
 				line_e.prompt_size = print_prompt(0) - ft_strlen("\e[1;32m🐚\033[0m") + 1;
 				line_edition(&line_e);
 		}
-		line_lexer(&line_e);
+		//line_lexer(&line_e);
 		//execution de commande...
 		if (line_e.line && !ft_strcmp(line_e.line, "reset"))//buitin
 			tputs(tgetstr("cl", NULL), 1, ft_puti);
 		if (line_e.line && !ft_strcmp(line_e.line, "exit"))//buitin
 			break ;//to rm
 		ft_putendl("");
+		ft_strdel(&line_e.line);
 	}
 	ft_strdel(&(line_e.line));
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e.termiold) == -1)

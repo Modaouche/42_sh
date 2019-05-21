@@ -64,13 +64,13 @@ typedef struct			s_edit
 	struct winsize		*wsize;
 	char				*line;
 	char				**env;
-	t_file				*autocompletion_list;
-	int					autocompletion;	
-	unsigned int		autocompletion_idx;
-	unsigned int		autocompletion_size;
-	unsigned int		autocompletion_point;
-	unsigned int 		autocompletion_maxcol;
-	unsigned int 		autocompletion_maxrow;
+	t_file				*autocomp_list;
+	int					autocomp;	
+	unsigned int		autocomp_idx;
+	unsigned int		autocomp_size;
+	unsigned int		autocomp_point;
+	unsigned int 		autocomp_maxcol;
+	unsigned int 		autocomp_maxrow;
 	unsigned int		len;
 	unsigned int		ofst;
 	unsigned int		cursor_pos;
@@ -126,10 +126,11 @@ t_file					*build_completion_list(char *str, int len, char **env,
 						unsigned int *list_size);
 t_file					*build_completion_list_files(char *str, int len,
 						unsigned int *list_size);
-void					print_autocompletion_list(t_edit *line_e, int highlight);
+void					print_comp_list(t_edit *line_e, int highlight);
 int						get_last_common_char(t_file *list);
-void					replace_word(t_edit *line_e, char *new);
 int						complete_from_word(t_edit *line_e);
+void					replace_word(t_edit *line_e, char *new, size_t length);
+void					replace_word_from_completion(t_edit *line_e);
 
 /*
 **  Line edition - Autocompletion parser

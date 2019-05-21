@@ -61,11 +61,11 @@ int		str_add(t_edit *line_e, const char to_add)
 
 void	cancel_autocompletion(t_edit *line_e)
 {
-	line_e->autocompletion = 0;
+	line_e->autocomp = 0;
 	cursor_end(line_e);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
 	cursor_actualpos(line_e);
-	ft_file_list_delete(&line_e->autocompletion_list);
+	ft_file_list_delete(&line_e->autocomp_list);
 }
 
 /*
@@ -84,8 +84,8 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 	}
 	if (ft_strlen(key) <= 1 && ft_isprint(key[0]))
 	{
-		if (line_e->autocompletion == 2)
-			line_e->autocompletion = 1;
+		if (line_e->autocomp == 2)
+			line_e->autocomp = 1;
 		if (!(str_add(line_e, *key)))
 			toexit(line_e, "malloc");
 		if (line_e->cursor_pos <= line_e->len)
@@ -95,35 +95,33 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		cursor_reposition(line_e->len - line_e->cursor_pos);
 		return ;
 	}
-	else if (line_e->autocompletion == 2 && ft_strlen(key) == 3 && key[0] == 27 && key[1] == 91 && key[2] == 90) //shift+tab
+	else if (line_e->autocomp == 2 && ft_strlen(key) == 3 && key[0] == 27 && key[1] == 91 && key[2] == 90) //shift+tab
 	{
-		if (line_e->autocompletion_idx == 0)
-			line_e->autocompletion_idx = line_e->autocompletion_size - 1;
+		if (line_e->autocomp_idx == 0)
+			line_e->autocomp_idx = line_e->autocomp_size - 1;
 		else
-			--line_e->autocompletion_idx;
-		if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
-			replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
-		print_autocompletion_list(line_e, line_e->autocompletion_idx);
+			--line_e->autocomp_idx;
+		replace_word_from_completion(line_e);
+		print_comp_list(line_e, line_e->autocomp_idx);
 	}
 	else if (ft_strlen(key) <= 1 && key[0] == '\t' && line_e->line)
 	{
-		if (line_e->autocompletion == 2)
+		if (line_e->autocomp == 2)
 		{
-			if (++line_e->autocompletion_idx >= line_e->autocompletion_size)
-				line_e->autocompletion_idx = 0;
-			if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
-				replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
-			print_autocompletion_list(line_e, line_e->autocompletion_idx);
+			if (++line_e->autocomp_idx >= line_e->autocomp_size)
+				line_e->autocomp_idx = 0;
+			replace_word_from_completion(line_e);
+			print_comp_list(line_e, line_e->autocomp_idx);
 			return ;
 		}
-		if (line_e->autocompletion != 0 && prevkey[0] == '\t' && prevkey[1] == '\0'
-			&& line_e->autocompletion_list != NULL)
+		if (line_e->autocomp != 0 && prevkey[0] == '\t' && prevkey[1] == '\0'
+			&& line_e->autocomp_list != NULL)
 		{
 			//autocompletion arrow mode
-			line_e->autocompletion = 2;
-			line_e->autocompletion_idx = 0;
-			replace_word(line_e, line_e->autocompletion_list->name);
-			print_autocompletion_list(line_e, line_e->autocompletion_idx);
+			line_e->autocomp = 2;
+			line_e->autocomp_idx = 0;
+			replace_word_from_completion(line_e);
+			print_comp_list(line_e, line_e->autocomp_idx);
 			return ;
 		}
 		if (complete_from_word(line_e) == 0)
@@ -133,48 +131,36 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 			cursor_actualpos(line_e);
 			return ;
 		}
-		if (line_e->autocompletion_list == NULL)
+		if (line_e->autocomp_list == NULL)
 		{
 			cancel_autocompletion(line_e);
 			return ;
 		}
-		if (line_e->autocompletion_size == 1)
+		if (line_e->autocomp_size == 1)
 		{
-			if (line_e->autocompletion_list->type == 4
-				|| line_e->autocompletion_list->type == 8)
-			{
-				char *tmp = ft_strjoin(line_e->autocompletion_list->name, "/");
-				replace_word(line_e, tmp);
-				ft_strdel(&tmp);
-			}
-			else
-				replace_word(line_e, line_e->autocompletion_list->name);
+			replace_word_from_completion(line_e);
 			cancel_autocompletion(line_e);
 			return ;
 		}
-		else if (line_e->autocompletion_size > 1)
+		else if (line_e->autocomp_size > 1)
 		{
-			char *tmp = ft_strsub(line_e->autocompletion_list->name,
-				0, get_last_common_char(line_e->autocompletion_list));
-			replace_word(line_e, tmp);
-			free(tmp);
+			replace_word(line_e, line_e->autocomp_list->name,
+				get_last_common_char(line_e->autocomp_list));
 		}
-		line_e->autocompletion = 1;
-		print_autocompletion_list(line_e, -1);
+		line_e->autocomp = 1;
+		print_comp_list(line_e, -1);
 	}
 	else if (is_arrow(key))
 	{
 		if (line_e->line && key[2] == S_KEY_ARW_LEFT)
 		{
-			if (line_e->autocompletion == 2)
+			if (line_e->autocomp == 2)
 			{
-				if (line_e->autocompletion_idx <= line_e->autocompletion_maxrow)
-					;
-				else
-					line_e->autocompletion_idx -= line_e->autocompletion_maxrow + 1;
-				if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
-					replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
-				print_autocompletion_list(line_e, line_e->autocompletion_idx);
+				if (line_e->autocomp_idx <= line_e->autocomp_maxrow)
+					return ;
+				line_e->autocomp_idx -= line_e->autocomp_maxrow + 1;
+				replace_word_from_completion(line_e);
+				print_comp_list(line_e, line_e->autocomp_idx);
 			}
 			else if (line_e->cursor_pos > 0)
 			{
@@ -201,15 +187,13 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		}
 		else if (line_e->line && key[2] == S_KEY_ARW_RIGHT)
 		{
-			if (line_e->autocompletion == 2)
+			if (line_e->autocomp == 2)
 			{
-				if (line_e->autocompletion_idx + (line_e->autocompletion_maxrow + 1) >= line_e->autocompletion_size)
-					;
-				else
-					line_e->autocompletion_idx += line_e->autocompletion_maxrow + 1;
-				if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
-					replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
-				print_autocompletion_list(line_e, line_e->autocompletion_idx);
+				if (line_e->autocomp_idx + (line_e->autocomp_maxrow + 1) >= line_e->autocomp_size)
+					return ;
+				line_e->autocomp_idx += line_e->autocomp_maxrow + 1;
+				replace_word_from_completion(line_e);
+				print_comp_list(line_e, line_e->autocomp_idx);
 			}
 			else if (line_e->cursor_pos < line_e->len)
 			{
@@ -228,24 +212,22 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		}
 		else if (key[2] == S_KEY_ARW_UP)
 		{
-			if (line_e->autocompletion == 2)
+			if (line_e->autocomp == 2)
 			{
-				if (line_e->autocompletion_idx-- == 0)
-					line_e->autocompletion_idx = line_e->autocompletion_size - 1;
-				if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
-					replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
-				print_autocompletion_list(line_e, line_e->autocompletion_idx);
+				if (line_e->autocomp_idx-- == 0)
+					line_e->autocomp_idx = line_e->autocomp_size - 1;
+				replace_word_from_completion(line_e);
+				print_comp_list(line_e, line_e->autocomp_idx);
 			}
 		}
 		else if (key[2] == S_KEY_ARW_DOWN)
 		{
-			if (line_e->autocompletion == 2)
+			if (line_e->autocomp == 2)
 			{
-				if (++line_e->autocompletion_idx > line_e->autocompletion_size)
-					line_e->autocompletion_idx = 0;
-				if (ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx))
-					replace_word(line_e, ft_file_list_at(line_e->autocompletion_list, line_e->autocompletion_idx)->name);
-				print_autocompletion_list(line_e, line_e->autocompletion_idx);
+				if (++line_e->autocomp_idx > line_e->autocomp_size)
+					line_e->autocomp_idx = 0;
+				replace_word_from_completion(line_e);
+				print_comp_list(line_e, line_e->autocomp_idx);
 			}
 		}
 		return ;
@@ -284,7 +266,7 @@ int		line_edition(t_edit *line_e)
 	char key[MAX_KEY_LEN];
 	char prevkey[MAX_KEY_LEN];
 
-	line_e->autocompletion = 0;
+	line_e->autocomp = 0;
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");
 	ft_bzero(prevkey, MAX_KEY_LEN);
@@ -308,7 +290,7 @@ int		line_edition(t_edit *line_e)
 		cursor_end(line_e);
 		tputs(tgetstr("cd", NULL), 1, ft_puti);
 	}
-	ft_file_list_delete(&line_e->autocompletion_list);
+	ft_file_list_delete(&line_e->autocomp_list);
 	ft_putendl("");
 	return (1);
 }
