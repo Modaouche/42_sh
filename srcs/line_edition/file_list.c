@@ -37,9 +37,7 @@ char	*escape_name(char *name)
 	x = 0;
 	while (name[i])
 	{
-		if (name[i] == ' ' || name[i] == '\\' || name[i] == '!'
-			|| name[i] == '*' || name[i] == '"' || name[i] == '\''
-			|| name[i] == '~')
+		if (ft_cfind(AUTOCOMP_ESCAPED_CHARS, name[i]) != -1)
 			++x;
 		++x;
 		++i;
@@ -49,9 +47,8 @@ char	*escape_name(char *name)
 	x = 0;
 	i = 0;
 	while (name[i])
-	{
-		if (name[i] == ' ' || name[i] == '\\' || name[i] == '!'
-			|| name[i] == '*' || name[i] == '"' || name[i] == '\'')
+	{ 
+		if (ft_cfind(AUTOCOMP_ESCAPED_CHARS, name[i]) != -1)
 			new[x++] = '\\';
 		new[x++] = name[i];
 		++i;

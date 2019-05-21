@@ -27,14 +27,14 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 
 	if (file == NULL)
 		return ;
-	if (file->type == 4 && !selected)
+	if ((file->type == 4 || file->type == 8) && !selected)
 		ft_putstr_fd("\033[38;5;9m", 0);
 	else if ((file->type == 6 || file->type == 2) && !selected)
 		ft_putstr_fd("\033[38;5;11m", 0);
 	else if ((file->type == -2) && !selected)
 		ft_putstr_fd("\033[38;5;14m", 0);
 	write(0, file->name, file->len);
-	if (file->type == 4)
+	if (file->type == 4 || file->type == 8)
 		write(0, "\033[0m/", 5);
 	else if (file->type == 6)
 		write(0, "\033[0m%", 5);

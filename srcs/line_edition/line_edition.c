@@ -140,7 +140,8 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 		}
 		if (line_e->autocompletion_size == 1)
 		{
-			if (line_e->autocompletion_list->type == 4)
+			if (line_e->autocompletion_list->type == 4
+				|| line_e->autocompletion_list->type == 8)
 			{
 				char *tmp = ft_strjoin(line_e->autocompletion_list->name, "/");
 				replace_word(line_e, tmp);
