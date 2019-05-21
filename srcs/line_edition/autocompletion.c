@@ -238,7 +238,6 @@ int 			complete_from_word(t_edit *line_e)
 		argument = 1;
 	if (argument == 0)
 	{
-		line_e->autocompletion_point = 0;
 		line_e->autocompletion_list = build_completion_list(word,
 									ft_strlen(word),
 									line_e->env,

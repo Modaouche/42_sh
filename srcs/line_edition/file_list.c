@@ -27,10 +27,36 @@
 **  *) Asterisks
 */
 
-char	*escape_name(char *name, int type)
+char	*escape_name(char *name)
 {
-	(void)type;
-	return (ft_strdup(name));
+	int x;
+	int i;
+	char *new;
+
+	i = 0;
+	x = 0;
+	while (name[i])
+	{
+		if (name[i] == ' ' || name[i] == '\\' || name[i] == '!'
+			|| name[i] == '*' || name[i] == '"' || name[i] == '\''
+			|| name[i] == '~')
+			++x;
+		++x;
+		++i;
+	}
+	if ((new = ft_strnew(x)) == NULL)
+		return (NULL);
+	x = 0;
+	i = 0;
+	while (name[i])
+	{
+		if (name[i] == ' ' || name[i] == '\\' || name[i] == '!'
+			|| name[i] == '*' || name[i] == '"' || name[i] == '\'')
+			new[x++] = '\\';
+		new[x++] = name[i];
+		++i;
+	}
+	return (new);
 }
 
 /*
@@ -44,12 +70,12 @@ t_file		*ft_file_list_create(char *name, int type)
 
 	if ((new = ft_memalloc(sizeof(t_file))) == NULL)
 		return (NULL);
-	if ((new->name = escape_name(name, type)) == NULL)
+	if ((new->name = escape_name(name)) == NULL)
 	{
 		free(new);
 		return (NULL);
 	}
-	new->len = ft_strlen(name);
+	new->len = ft_strlen(new->name);
 	new->type = type;
 	return (new);
 }

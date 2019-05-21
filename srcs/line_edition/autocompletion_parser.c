@@ -64,6 +64,7 @@ char	*parse_word(char *line, unsigned int end)
 		if (escape == 1)
 		{
 			str[x++] = line[i++];
+			escape = 0;
 			continue ;
 		}
 		if (line[i] == '\\')
@@ -75,6 +76,14 @@ char	*parse_word(char *line, unsigned int end)
 		str[x++] = line[i++];
 	}
 	return (str);
+}
+
+int		get_last_slash(char *line, unsigned int word_start,
+		unsigned int word_end)
+{
+	while (word_end > word_start && line[word_end] != '/')
+		--word_end;
+	return (word_end + 1);
 }
 
 char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
@@ -140,6 +149,6 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 		*argument = 1;
 		return (ft_strnew(0));
 	}
-	*autocompletion_point = word_start;
+	*autocompletion_point = get_last_slash(line_e->line, word_start, word_end + 1);
 	return (parse_word(line_e->line + word_start, word_end + 1));
 }
