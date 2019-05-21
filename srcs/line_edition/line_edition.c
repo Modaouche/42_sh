@@ -14,13 +14,13 @@
 #include "libft.h"
 
 /*
-**  str_add
+**  append_character
 **
 **  - Adds a character to the input line, and if necessary, reallocates the
 **  line to fit it's new size.
 */
 
-int		str_add(t_edit *line_e, const char to_add)
+int		append_character(t_edit *line_e, const char to_add)
 {
 	char    *new;
 
@@ -69,13 +69,13 @@ void	cancel_autocompletion(t_edit *line_e)
 }
 
 /*
-**  putkey_in_line
+**  on_key_press
 **
 **  - Event handler called whenever the user pressed a key.
 **    used to happen input to line or to react to special characters.
 */
 
-void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
+void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 {
 	if (!key)
 	{
@@ -86,7 +86,7 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 	{
 		if (line_e->autocomp == 2)
 			line_e->autocomp = 1;
-		if (!(str_add(line_e, *key)))
+		if (!(append_character(line_e, *key)))
 			toexit(line_e, "malloc");
 		if (line_e->cursor_pos <= line_e->len)
 			line_e->cursor_pos += 1;
@@ -124,7 +124,7 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 			print_comp_list(line_e, line_e->autocomp_idx);
 			return ;
 		}
-		if (complete_from_word(line_e) == 0)
+		if (build_from_word(line_e) == 0)
 		{
 			cursor_end(line_e);
 			tputs(tgetstr("cd", NULL), 1, ft_puti);
@@ -282,7 +282,7 @@ int		line_edition(t_edit *line_e)
 			   toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
 			break ;
 		}
-		putkey_in_line(line_e, prevkey, key);
+		on_key_press(line_e, prevkey, key);
 		ft_memcpy(prevkey, key, MAX_KEY_LEN);
 	}
 	if (line_e->line) //clear everything under the line we just sent

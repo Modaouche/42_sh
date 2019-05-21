@@ -128,7 +128,7 @@ t_file					*build_completion_list_files(char *str, int len,
 						unsigned int *list_size);
 void					print_comp_list(t_edit *line_e, int highlight);
 int						get_last_common_char(t_file *list);
-int						complete_from_word(t_edit *line_e);
+int						build_from_word(t_edit *line_e);
 void					replace_word(t_edit *line_e, char *new, size_t length);
 void					replace_word_from_completion(t_edit *line_e);
 
