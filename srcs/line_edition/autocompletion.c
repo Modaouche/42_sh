@@ -15,10 +15,10 @@
 #include <dirent.h>
 
 /*
-**   get_last_common_char
+**  get_last_common_char
 **
-** - Gets the last common character from a list.
-**   Useful for partial autocompletion.
+**  - Gets the last common character from a list.
+**    Useful for partial autocompletion.
 */
 
 int				get_last_common_char(t_file *list)
@@ -46,10 +46,10 @@ int				get_last_common_char(t_file *list)
 }
 
 /*
-**   search_similar_files
+**  search_similar_files
 **
-** - Looks out for files that start with  the same first [len]
-**   letters as the given string, in the given path.
+**  - Looks out for files that start with  the same first [len]
+**    letters as the given string, in the given path.
 */
 
 unsigned int	search_similar_files(t_file **list, char *path,
@@ -111,10 +111,10 @@ int				search_similar_env_var(t_file **list, char *str, int len,
 }
 
 /*
-**   build_completion_list
+**  build_completion_list
 **
-** - Builds the completion list by looking into the environment,
-**   identifying each path and feeding them to the above function.
+**  - Builds the completion list by looking into the environment,
+**    identifying each path and feeding them to the above function.
 */
 
 t_file			*build_completion_list(char *str, int len, char **env,
@@ -153,10 +153,10 @@ t_file			*build_completion_list(char *str, int len, char **env,
 }
 
 /*
-**   build_completion_list_files
+**  build_completion_list_files
 **
-** - Builds the completion list by looking by looking at the input
-**   and searching files based on current written path
+**  - Builds the completion list by looking by looking at the input
+**    and searching files based on current written path
 */
 
 t_file			*build_completion_list_files(char *str, int len,
@@ -191,10 +191,10 @@ t_file			*build_completion_list_files(char *str, int len,
 }
 
 /*
-**   replace_word
+**  replace_word
 **
-** - Replaces the word at the current cursor position with the
-**   given one.
+**  - Replaces the word at the current cursor position with the
+**    given one.
 */
 
 void			replace_word(t_edit *line_e, char *new)
@@ -216,14 +216,14 @@ void			replace_word(t_edit *line_e, char *new)
 }
 
 /*
-**   complete_from_word
+**  complete_from_word
 **
-** - The base of autocompletion, is what determines what is
-**   the words that needs to be autocompleted based on
-**   cursor position. Also determines whether it is
-**   autocompleting an argument or an executable name,
-**   and what part of the line is the autocompletion going to
-**   replace.
+**  - The base of autocompletion, is what determines what is
+**    the words that needs to be autocompleted based on
+**    cursor position. Also determines whether it is
+**    autocompleting an argument or an executable name,
+**    and what part of the line is the autocompletion going to
+**    replace.
 */
 
 int 			complete_from_word(t_edit *line_e)

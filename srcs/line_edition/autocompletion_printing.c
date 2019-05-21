@@ -14,11 +14,11 @@
 #include "libft.h"
 
 /*
-**   print_with_pad
+**  print_with_pad
 **
-** - Prints a string with padding if the string is too short.
-**   Also prints it's color and special character in case of
-**   an executable or folder.
+**  - Prints a string with padding if the string is too short.
+**    Also prints it's color and special character in case of
+**    an executable or folder.
 */
 
 void			print_with_pad(t_file *file, int minlen, int selected)
@@ -53,9 +53,9 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 }
 
 /*
-**   get_list_longest_word
+**  get_list_longest_word
 **
-** - Gets the longest word in a list, required to have aligned columns
+**  - Gets the longest word in a list, required to have aligned columns.
 */
 
 int     		get_list_longest_word(t_file *list)
@@ -73,11 +73,11 @@ int     		get_list_longest_word(t_file *list)
 }
 
 /*
-**   print_autocompletion_list
+**  print_autocompletion_list
 **
-** - Moves the cursor under the line edition, clears everything under
-**   the cursor and prints the list stored in autocompletion_list,
-**   then moves the cursor back to where it was.
+**  - Moves the cursor under the line edition, clears everything under
+**    the cursor and prints the list stored in autocompletion_list,
+**    then moves the cursor back to where it was.
 */
 
 void			print_autocompletion_list(t_edit *line_e, int highlight)

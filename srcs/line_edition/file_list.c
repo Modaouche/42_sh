@@ -18,13 +18,14 @@
 **  escape_name
 **
 **  - Escapes the name's special characters for proper autocompletion purposes.
-**  Escapes:
-**  *) Spaces
-**  *) Tilt
-**  *) Double/Single quotes
-**  *) Backslashes
-**  *) Exclamation marks
-**  *) Asterisks
+**
+**    Escapes:
+**    *) Spaces
+**    *) Tilt
+**    *) Double/Single quotes
+**    *) Backslashes
+**    *) Exclamation marks
+**    *) Asterisks
 */
 
 char	*escape_name(char *name)

@@ -20,10 +20,25 @@
 **  double quotes, escaping characters and spaces.
 */
 
+/*
+**	is_separator
+**
+**  - Determines whether the given character is an argument separator or not
+*/
+
 int		is_separator(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n');
 }
+
+/*
+**  quote_match
+**
+**  - Used during parsing when encountering a quote, it automatically skips
+**  to the matching closing quote. Required to avoid parsing special
+**  characters it may contain that could be considered as
+**  a separator for example.
+*/
 
 void	quote_match(char *line, unsigned int *i, unsigned int maxlen, char c)
 {
@@ -46,6 +61,15 @@ void	quote_match(char *line, unsigned int *i, unsigned int maxlen, char c)
 			return ;
 	}
 }
+
+/*
+**
+**  parse_word
+**
+**  - Takes a part of a line and converts it into a single string.
+**  It removes the quotes present in input while interpreting them.
+**  Required for accurate autocompletion using quotes.
+*/
 
 char	*parse_word(char *line, unsigned int end)
 {
@@ -119,6 +143,15 @@ char	*parse_word(char *line, unsigned int end)
 	return (str);
 }
 
+/*
+**
+**  get_last_slash
+**
+**  - Gets the position of the last / character.
+**  Used when autocompleting a file path containing a /, to avoid
+**  replacing the whole line and instead the last part of it.
+*/
+
 int		get_last_slash(char *line, unsigned int word_start,
 		unsigned int word_end)
 {
@@ -128,6 +161,15 @@ int		get_last_slash(char *line, unsigned int word_start,
 		++word_end;
 	return (word_end);
 }
+
+/*
+**
+**  get_autocompletion_word
+**
+**  - Finds the starting and ending point of the word at the current
+**  cursor position, then calls parse_word to creates the string
+**  containing the word and return it.
+*/
 
 char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 		unsigned int *autocompletion_point)

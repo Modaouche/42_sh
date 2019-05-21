@@ -116,6 +116,11 @@ void					cursor_after(t_edit *line_e);
 
 #define AUTOCOMP_ESCAPED_CHARS				("*\\'\"!? ~")
 #define AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE	("\\\"!")
+#define AUTOCOMP_TYPE_SYMLINK			-2
+#define AUTOCOMP_TYPE_CHARACTER_FILE	2
+#define AUTOCOMP_TYPE_FOLDER			4
+#define AUTOCOMP_TYPE_BLOCK_FILE		6
+#define AUTOCOMP_TYPE_FOLDER2			8
 
 t_file					*build_completion_list(char *str, int len, char **env,
 						unsigned int *list_size);

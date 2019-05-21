@@ -56,7 +56,7 @@ int		str_add(t_edit *line_e, const char to_add)
 /*
 **  cancel_autocompletion
 **
-**  - Hides and free the current autocompletion
+**  - Hides and free the current autocompletion.
 */
 
 void	cancel_autocompletion(t_edit *line_e)
@@ -72,7 +72,7 @@ void	cancel_autocompletion(t_edit *line_e)
 **  putkey_in_line
 **
 **  - Event handler called whenever the user pressed a key.
-**  used to happen input to line or to react to special characters.
+**    used to happen input to line or to react to special characters.
 */
 
 void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
@@ -275,7 +275,7 @@ void	putkey_in_line(t_edit *line_e, char *prevkey, char *key)
 **  line_edition
 **
 **  - Called to start the line edition, does not exit until the user
-**  pressed enter.
+**    pressed enter.
 */
 
 int		line_edition(t_edit *line_e)
