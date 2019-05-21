@@ -80,7 +80,7 @@ char	*parse_word(char *line, unsigned int end)
 				str[x++] = line[i++];
 			if (escape)
 				str[x++] = '\\';
-			if (i < end)
+			if (i < end && line[i])
 				++i;
 		}
 		if (line[i] == '"')
@@ -111,7 +111,7 @@ char	*parse_word(char *line, unsigned int end)
 			}
 			if (escape)
 				str[x++] = '\\';
-			if (i < end)
+			if (i < end && line[i])
 				++i;
 		}
 		str[x++] = line[i++];
