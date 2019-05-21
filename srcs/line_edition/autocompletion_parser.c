@@ -230,8 +230,6 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 		}
 		++word_idx;
 	}
-	ft_printf_fd(0, " - %d\n", line_e->autocomp_quote);
-	return (0);
 	*argument = word_idx > 1;
 	if (word_idx == 0 && word_start == word_end)
 		return (NULL);

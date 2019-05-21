@@ -38,22 +38,11 @@ t_file		*ft_file_list_create(char *name, int type)
 t_file		*ft_file_list_append(t_file **list, char *name, int type)
 {
 	t_file *new;
-	t_file *tmp;
 
-	if (list == NULL)
-		return (0);
-	if ((new = ft_file_list_create(name, type)) == NULL)
+	if (list == NULL || (new = ft_file_list_create(name, type)) == NULL)
 		return (NULL);
-	if (*list == NULL)
-		*list = new;
-	else
-	{
-		tmp = *list;
-		while (tmp->next != NULL && ft_strcmp(name, tmp->next->name) >= 0)
-			tmp = tmp->next;
-		new->next = tmp->next;
-		tmp->next = new;
-	}
+	new->next = *list;
+	*list = new;
 	return (new);
 }
 
@@ -81,4 +70,30 @@ t_file		*ft_file_list_at(t_file *list, unsigned int idx)
 		list = list->next;
 	}
 	return (NULL);
+}
+
+void    ft_list_sort(t_file **begin_list)
+{
+        t_file  *curr;
+        t_file	tmp;
+
+        if (begin_list == 0 || (curr = *begin_list) == 0)
+                return ;
+        while (curr->next != 0)
+        {
+                while (ft_strcmp(curr->name, curr->next->name) > 0)
+                {
+                        tmp.name = curr->name;
+                        curr->name = curr->next->name;
+                        curr->next->name = tmp.name;
+                        tmp.len = curr->len;
+                        curr->len = curr->next->len;
+                        curr->next->len = tmp.len;
+                        tmp.type = curr->type;
+                        curr->type = curr->next->type;
+                        curr->next->type = tmp.type;
+                        curr = *begin_list;
+                }
+                curr = curr->next;
+        }
 }

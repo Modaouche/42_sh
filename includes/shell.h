@@ -145,10 +145,11 @@ char					*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 */
 
 
-t_file					*ft_file_list_create(char *name, int type);
 t_file					*ft_file_list_append(t_file **list, char *name, int type);
-void					ft_file_list_delete(t_file **list);
 t_file					*ft_file_list_at(t_file *list, unsigned int idx);
+t_file					*ft_file_list_create(char *name, int type);
+void					ft_file_list_delete(t_file **list);
+void    				ft_list_sort(t_file **begin_list);
 
 /*
 ** Line Lexing

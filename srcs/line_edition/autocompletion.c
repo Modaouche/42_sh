@@ -52,31 +52,12 @@ void	replace_word(t_edit *line_e, char *new, size_t length)
 
 void	replace_word_from_completion(t_edit *line_e)
 {
-	char			*str;
-	char			*new;
 	t_file			*file;
 
 	file = ft_file_list_at(line_e->autocomp_list, line_e->autocomp_idx);
-	if (file == NULL || !(new = escape_name(file->name, AUTOCOMP_ESCAPED_CHARS)))
+	if (file == NULL)
 		return ;
-	if ((str = ft_strnew(line_e->autocomp_point + ft_strlen(new)
-		+ (file->type == 4 || file->type == 8))) == NULL)
-	{
-		ft_strdel(&new);
-		return ;
-	}
-	ft_memcpy(str, line_e->line, line_e->autocomp_point);
-	ft_strcpy(str + line_e->autocomp_point, new);
-	ft_strdel(&new);
-	if (file->type == 4 || file->type == 8)
-		ft_strcat(str, "/");
-	cursor_start(line_e);
-	ft_strdel(&line_e->line);
-	line_e->line = str;
-	line_e->len = ft_strlen(line_e->line);
-	line_e->cursor_pos = line_e->len;
-	ft_putstr_fd(line_e->line, STDERR_FILENO);
-	tputs(tgetstr("cd", NULL), 1, ft_puti);
+	replace_word(line_e, file->name, ft_strlen(file->name));
 }
 
 /*
@@ -95,6 +76,8 @@ int 	build_from_word(t_edit *line_e)
 	char			*word;
 	unsigned int	argument;
 
+	ft_file_list_delete(&line_e->autocomp_list);
+	ft_bzero(&line_e->autocomp_list, (size_t)&line_e->autocomp_quote - (size_t)&line_e->autocomp_list);
 	if ((word = get_autocompletion_word(line_e, &argument,
 				&line_e->autocomp_point)) == NULL)
 		return (0);
@@ -113,6 +96,7 @@ int 	build_from_word(t_edit *line_e)
 									ft_strlen(word),
 									&line_e->autocomp_size);
 	}
+	ft_list_sort(&line_e->autocomp_list);
 	ft_strdel(&word);
 	return (1);
 }
