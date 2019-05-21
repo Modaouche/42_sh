@@ -73,6 +73,47 @@ char	*parse_word(char *line, unsigned int end)
 			++i;
 			continue ;
 		}
+		if (line[i] == '\'')
+		{
+			++i;
+			while (i < end && line[i] != '\'')
+				str[x++] = line[i++];
+			if (escape)
+				str[x++] = '\\';
+			if (i < end)
+				++i;
+		}
+		if (line[i] == '"')
+		{
+			++i;
+			escape = 0;
+			while (i < end)
+			{
+				if (escape == 1)
+				{
+					if (ft_cfind(AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE, line[i]) == -1)
+						str[x++] = '\\';
+					else
+						str[x++] = line[i++];
+					escape = 0;
+					++i;
+					continue ;
+				}
+				if (line[i] == '"')
+					break ;
+				if (line[i] == '\\')
+				{
+					escape = 1;
+					++i;
+					continue ;
+				}
+				str[x++] = line[i++];
+			}
+			if (escape)
+				str[x++] = '\\';
+			if (i < end)
+				++i;
+		}
 		str[x++] = line[i++];
 	}
 	return (str);

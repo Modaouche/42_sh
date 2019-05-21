@@ -114,7 +114,8 @@ void					cursor_after(t_edit *line_e);
 **  Line edition - Autocompletion
 */
 
-#define AUTOCOMP_ESCAPED_CHARS	("*\\'\"!? ~")
+#define AUTOCOMP_ESCAPED_CHARS				("*\\'\"!? ~")
+#define AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE	("\\\"!")
 
 t_file					*build_completion_list(char *str, int len, char **env,
 						unsigned int *list_size);
