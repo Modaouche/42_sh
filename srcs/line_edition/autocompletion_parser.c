@@ -83,7 +83,9 @@ int		get_last_slash(char *line, unsigned int word_start,
 {
 	while (word_end > word_start && line[word_end] != '/')
 		--word_end;
-	return (word_end + 1);
+	if (line[word_end] == '/')
+		++word_end;
+	return (word_end);
 }
 
 char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
