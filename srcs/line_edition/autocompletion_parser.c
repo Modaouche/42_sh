@@ -59,7 +59,7 @@ char	*parse_word(char *line, unsigned int end)
 	i = 0;
 	x = 0;
 	escape = 0;
-	while (i < end)
+	while (i < end && line[i])
 	{
 		if (escape == 1)
 		{
@@ -76,7 +76,7 @@ char	*parse_word(char *line, unsigned int end)
 		if (line[i] == '\'')
 		{
 			++i;
-			while (i < end && line[i] != '\'')
+			while (i < end && line[i] != '\'' && line[i])
 				str[x++] = line[i++];
 			if (escape)
 				str[x++] = '\\';
@@ -87,14 +87,14 @@ char	*parse_word(char *line, unsigned int end)
 		{
 			++i;
 			escape = 0;
-			while (i < end)
+			while (i < end && line[i])
 			{
 				if (escape == 1)
 				{
 					if (ft_cfind(AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE, line[i]) == -1)
 						str[x++] = '\\';
 					else
-						str[x++] = line[i++];
+						str[x++] = line[i];
 					escape = 0;
 					++i;
 					continue ;
@@ -193,5 +193,5 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 		return (ft_strnew(0));
 	}
 	*autocompletion_point = get_last_slash(line_e->line, word_start, word_end + 1);
-	return (parse_word(line_e->line + word_start, word_end + 1));
+	return (parse_word(line_e->line + word_start, word_end - word_start + 1));
 }
