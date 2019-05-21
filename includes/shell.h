@@ -71,6 +71,7 @@ typedef struct			s_edit
 	unsigned int		autocomp_point;
 	unsigned int 		autocomp_maxcol;
 	unsigned int 		autocomp_maxrow;
+	unsigned int		autocomp_quote;
 	unsigned int		len;
 	unsigned int		ofst;
 	unsigned int		cursor_pos;
@@ -114,8 +115,8 @@ void					cursor_after(t_edit *line_e);
 **  Line edition - Autocompletion
 */
 
-#define AUTOCOMP_ESCAPED_CHARS				("*\\'\"!? ~")
-#define AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE	("\\\"!")
+#define AUTOCOMP_ESCAPED_CHARS				("*\\'\"!? ~$")
+#define AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE	("\\\"!$")
 #define AUTOCOMP_TYPE_SYMLINK			-2
 #define AUTOCOMP_TYPE_CHARACTER_FILE	2
 #define AUTOCOMP_TYPE_FOLDER			4
@@ -131,6 +132,7 @@ int						get_last_common_char(t_file *list);
 int						build_from_word(t_edit *line_e);
 void					replace_word(t_edit *line_e, char *new, size_t length);
 void					replace_word_from_completion(t_edit *line_e);
+char					*escape_name(char *name, char* escaped_chars);
 
 /*
 **  Line edition - Autocompletion parser

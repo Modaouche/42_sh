@@ -54,7 +54,6 @@ int main(int ac, char **av, char **envp)
 		if (line_e.line && !ft_strcmp(line_e.line, "exit"))//buitin
 			break ;//to rm
 		ft_putendl("");
-		ft_strdel(&line_e.line);
 	}
 	ft_strdel(&(line_e.line));
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e.termiold) == -1)

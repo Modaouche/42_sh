@@ -24,11 +24,16 @@ void	replace_word(t_edit *line_e, char *new, size_t length)
 {
 	char			*str;
 
-	str = ft_strnew(line_e->autocomp_point + length);
-	if (str == NULL)
-		toexit(line_e, "malloc");
+	if ((new = escape_name(new, AUTOCOMP_ESCAPED_CHARS)) == NULL)
+		return ;
+	if ((str = ft_strnew(line_e->autocomp_point + length)) == NULL)
+	{
+		ft_strdel(&new);
+		return ;
+	}
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
 	ft_memcpy(str + line_e->autocomp_point, new, length);
+	ft_strdel(&new);
 	cursor_start(line_e);
 	ft_strdel(&line_e->line);
 	line_e->line = str;
@@ -48,17 +53,21 @@ void	replace_word(t_edit *line_e, char *new, size_t length)
 void	replace_word_from_completion(t_edit *line_e)
 {
 	char			*str;
+	char			*new;
 	t_file			*file;
 
 	file = ft_file_list_at(line_e->autocomp_list, line_e->autocomp_idx);
-	if (file == NULL)
+	if (file == NULL || !(new = escape_name(file->name, AUTOCOMP_ESCAPED_CHARS)))
 		return ;
-	str = ft_strnew(line_e->autocomp_point + ft_strlen(file->name)
-		+ (file->type == 4 || file->type == 8));
-	if (str == NULL)
-		toexit(line_e, "malloc");
+	if ((str = ft_strnew(line_e->autocomp_point + ft_strlen(new)
+		+ (file->type == 4 || file->type == 8))) == NULL)
+	{
+		ft_strdel(&new);
+		return ;
+	}
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
-	ft_strcpy(str + line_e->autocomp_point, file->name);
+	ft_strcpy(str + line_e->autocomp_point, new);
+	ft_strdel(&new);
 	if (file->type == 4 || file->type == 8)
 		ft_strcat(str, "/");
 	cursor_start(line_e);
@@ -106,4 +115,41 @@ int 	build_from_word(t_edit *line_e)
 	}
 	ft_strdel(&word);
 	return (1);
+}
+
+/*
+**
+**  escape_name
+**
+**  - Escapes the name's special characters for proper autocompletion purposes.
+**    Escapes based on the given charset.
+*/
+
+char	*escape_name(char *name, char *escaped_chars)
+{
+	int x;
+	int i;
+	char *new;
+
+	i = 0;
+	x = 0;
+	while (name[i])
+	{
+		if (ft_cfind(escaped_chars, name[i]) != -1)
+			++x;
+		++x;
+		++i;
+	}
+	if ((new = ft_strnew(x)) == NULL)
+		return (NULL);
+	x = 0;
+	i = 0;
+	while (name[i])
+	{ 
+		if (ft_cfind(escaped_chars, name[i]) != -1)
+			new[x++] = '\\';
+		new[x++] = name[i];
+		++i;
+	}
+	return (new);
 }

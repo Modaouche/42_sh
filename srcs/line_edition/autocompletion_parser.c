@@ -184,10 +184,12 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 	word_start = 0;
 	word_end = 0;
 	word_idx = 0;
+	line_e->autocomp_quote = 0;
 	while (i < line_e->cursor_pos)
 	{	
 		word_start = i;
 		word_end = i;
+		line_e->autocomp_quote = 0;
 		while (is_separator(line_e->line[i]) && i < line_e->cursor_pos)
 			++i;
 		if (i >= line_e->cursor_pos)
@@ -213,18 +215,23 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 			{
 				quote_match(line_e->line, &i, line_e->cursor_pos, '"');
 				word_end = i;
+				line_e->autocomp_quote = 1;
 			}
 			else if (line_e->line[i] == '\'')
 			{
 				quote_match(line_e->line, &i, line_e->cursor_pos, '\'');
 				word_end = i;
+				line_e->autocomp_quote = 2;
 			}
-			if (is_separator(line_e->line[i]))
+			if (is_separator(line_e->line[i]) || i >= line_e->cursor_pos)
 				break ;
 			word_end = i++;
+			line_e->autocomp_quote = 0;
 		}
 		++word_idx;
 	}
+	ft_printf_fd(0, " - %d\n", line_e->autocomp_quote);
+	return (0);
 	*argument = word_idx > 1;
 	if (word_idx == 0 && word_start == word_end)
 		return (NULL);
