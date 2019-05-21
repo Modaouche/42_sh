@@ -20,19 +20,21 @@
 **    given one.
 */
 
-void	replace_word(t_edit *line_e, char *new, size_t length)
+void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 {
 	char			*str;
 
-	if ((new = escape_name(new, AUTOCOMP_ESCAPED_CHARS)) == NULL)
+	if ((new = escape_name(new, AUTOCOMP_ESCAPED_CHARS, length)) == NULL)
 		return ;
-	if ((str = ft_strnew(line_e->autocomp_point + length)) == NULL)
+	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix))))
 	{
 		ft_strdel(&new);
 		return ;
 	}
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
-	ft_memcpy(str + line_e->autocomp_point, new, length);
+	ft_memcpy(str + line_e->autocomp_point, new, ft_strlen(new));
+	if (suffix)
+		ft_strcat(str + line_e->autocomp_point, suffix);
 	ft_strdel(&new);
 	cursor_start(line_e);
 	ft_strdel(&line_e->line);
@@ -57,7 +59,11 @@ void	replace_word_from_completion(t_edit *line_e)
 	file = ft_file_list_at(line_e->autocomp_list, line_e->autocomp_idx);
 	if (file == NULL)
 		return ;
-	replace_word(line_e, file->name, ft_strlen(file->name));
+	if (line_e->autocomp_size == 1 && (file->type == AUTOCOMP_TYPE_FOLDER
+		|| file->type == AUTOCOMP_TYPE_FOLDER2))
+		replace_word(line_e, file->name, ft_strlen(file->name), "/");
+	else
+		replace_word(line_e, file->name, ft_strlen(file->name), NULL);
 }
 
 /*
@@ -109,15 +115,15 @@ int 	build_from_word(t_edit *line_e)
 **    Escapes based on the given charset.
 */
 
-char	*escape_name(char *name, char *escaped_chars)
+char	*escape_name(char *name, char *escaped_chars, unsigned int max)
 {
-	int x;
-	int i;
+	unsigned int x;
+	unsigned int i;
 	char *new;
 
 	i = 0;
 	x = 0;
-	while (name[i])
+	while (name[i] && i < max)
 	{
 		if (ft_cfind(escaped_chars, name[i]) != -1)
 			++x;
@@ -128,7 +134,7 @@ char	*escape_name(char *name, char *escaped_chars)
 		return (NULL);
 	x = 0;
 	i = 0;
-	while (name[i])
+	while (name[i] && i < max)
 	{ 
 		if (ft_cfind(escaped_chars, name[i]) != -1)
 			new[x++] = '\\';

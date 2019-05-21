@@ -145,7 +145,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		else if (line_e->autocomp_size > 1)
 		{
 			replace_word(line_e, line_e->autocomp_list->name,
-				get_last_common_char(line_e->autocomp_list));
+				get_last_common_char(line_e->autocomp_list), NULL);
 		}
 		line_e->autocomp = 1;
 		print_comp_list(line_e, -1);

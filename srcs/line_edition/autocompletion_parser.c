@@ -239,6 +239,7 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 		*argument = 1;
 		return (ft_strnew(0));
 	}
+	
 	*autocompletion_point = get_last_slash(line_e->line, word_start, word_end + 1);
 	return (parse_word(line_e->line + word_start, word_end - word_start + 1));
 }
