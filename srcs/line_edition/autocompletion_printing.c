@@ -90,8 +90,9 @@ void			print_comp_list(t_edit *line_e, int highlight)
 	unsigned int	max;
 	struct winsize	size;
 
+	if (line_e->autocomp_size <= 1 || !(list = line_e->autocomp_list))
+		return ;
 	cursor_after(line_e);
-	list = line_e->autocomp_list;
 	max = get_list_longest_word(list);
 	ioctl(0, TIOCGWINSZ, &size);
 	maxcol = size.ws_col / max;

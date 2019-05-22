@@ -76,7 +76,7 @@ void	replace_word_from_completion(t_edit *line_e)
 **    replace.
 */
 
-int 	build_from_word(t_edit *line_e)
+int 	build_list_from_word(t_edit *line_e)
 {
 	char			*word;
 	unsigned int	argument;
@@ -104,7 +104,7 @@ int 	build_from_word(t_edit *line_e)
 	}
 	ft_list_sort(&line_e->autocomp_list);
 	ft_strdel(&word);
-	return (1);
+	return (line_e->autocomp_list == NULL ? 0 : 1);
 }
 
 /*

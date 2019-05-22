@@ -97,10 +97,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	}
 	else if (line_e->autocomp == 2 && ft_strlen(key) == 3 && key[0] == 27 && key[1] == 91 && key[2] == 90) //shift+tab
 	{
-		if (line_e->autocomp_idx == 0)
+		if (line_e->autocomp_idx-- == 0)
 			line_e->autocomp_idx = line_e->autocomp_size - 1;
-		else
-			--line_e->autocomp_idx;
 		replace_word_from_completion(line_e);
 		print_comp_list(line_e, line_e->autocomp_idx);
 	}
@@ -117,21 +115,13 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		if (line_e->autocomp != 0 && prevkey[0] == '\t' && prevkey[1] == '\0'
 			&& line_e->autocomp_list != NULL)
 		{
-			//autocompletion arrow mode
 			line_e->autocomp = 2;
 			line_e->autocomp_idx = 0;
 			replace_word_from_completion(line_e);
 			print_comp_list(line_e, line_e->autocomp_idx);
 			return ;
 		}
-		if (build_from_word(line_e) == 0)
-		{
-			cursor_end(line_e);
-			tputs(tgetstr("cd", NULL), 1, ft_puti);
-			cursor_actualpos(line_e);
-			return ;
-		}
-		if (line_e->autocomp_list == NULL)
+		if (build_list_from_word(line_e) == 0)
 		{
 			cancel_autocompletion(line_e);
 			return ;
@@ -142,11 +132,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			cancel_autocompletion(line_e);
 			return ;
 		}
-		else if (line_e->autocomp_size > 1)
-		{
-			replace_word(line_e, line_e->autocomp_list->name,
+		replace_word(line_e, line_e->autocomp_list->name,
 				get_last_common_char(line_e->autocomp_list), NULL);
-		}
 		line_e->autocomp = 1;
 		print_comp_list(line_e, -1);
 	}
