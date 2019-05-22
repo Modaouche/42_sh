@@ -36,10 +36,10 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	ft_strcat(str + line_e->autocomp_point + length, suffix);
 	ft_strdel(&new);
 	cursor_start(line_e);
-	ft_strdel(&(line_e->line));
+	ft_strdel(&line_e->line);
 	line_e->line = str;
 	line_e->len = ft_strlen(str);
-	line_e->cursor_pos = 0;
+	line_e->cursor_pos = line_e->len;
 	ft_putstr_fd(str, STDERR_FILENO);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
 }
