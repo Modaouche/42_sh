@@ -121,12 +121,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			print_comp_list(line_e, line_e->autocomp_idx);
 			return ;
 		}
-		if (build_list_from_word(line_e) == 0)
-		{
-			cancel_autocompletion(line_e);
-			return ;
-		}
-		if (line_e->autocomp_size == 1)
+		if (build_list_from_word(line_e) == 0 || line_e->autocomp_size == 1)
 		{
 			replace_word_from_completion(line_e);
 			cancel_autocompletion(line_e);
@@ -151,11 +146,9 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			}
 			else if (line_e->cursor_pos > 0)
 			{
-				struct winsize size;
-				ioctl(0, TIOCGWINSZ, &size);
 				line_e->cursor_pos -= 1;
 				if (line_e->line[line_e->cursor_pos] == '\n'
-					|| (line_e->cursor_pos + line_e->prompt_size + 1) % size.ws_col == 0)
+					|| (line_e->cursor_pos + line_e->prompt_size + 1) % line_e->winsize_col == 0)
 				{
 					tputs(tgetstr("up", NULL), 1, ft_puti);
 					unsigned int i = 0;
@@ -184,11 +177,9 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			}
 			else if (line_e->cursor_pos < line_e->len)
 			{
-				struct winsize size;
-				ioctl(0, TIOCGWINSZ, &size);
 				line_e->cursor_pos += 1;
 				if (line_e->line[line_e->cursor_pos] == '\n'
-					|| (line_e->cursor_pos + line_e->prompt_size) % size.ws_col == 0)
+					|| (line_e->cursor_pos + line_e->prompt_size) % line_e->winsize_col == 0)
 				{
 					tputs(tgetstr("do", NULL), 1, ft_puti);
 					tputs(tgetstr("cr", NULL), 1, ft_puti);
@@ -252,7 +243,11 @@ int		line_edition(t_edit *line_e)
 	int ret;
 	char key[MAX_KEY_LEN];
 	char prevkey[MAX_KEY_LEN];
+	struct winsize size;
+	ioctl(0, TIOCGWINSZ, &size);
 
+	line_e->winsize_col = size.ws_col;
+	line_e->winsize_row = size.ws_row;
 	line_e->autocomp = 0;
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");

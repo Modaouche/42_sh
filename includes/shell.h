@@ -77,6 +77,8 @@ typedef struct			s_edit
 	unsigned int		cursor_pos;
 	unsigned int		len_max;
 	unsigned int		prompt_size;
+	unsigned int		winsize_col;
+	unsigned int		winsize_row;
 	char				tc_onoff;//for termcap like "dumb" , to have a usable shell
 }						t_edit;
 

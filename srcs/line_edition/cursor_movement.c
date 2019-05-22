@@ -24,16 +24,14 @@ void		cursor_start(t_edit *line_e)
 {
 	unsigned int	i;
 	unsigned int	x;
-	struct winsize	size;
 
 	if (line_e->line == NULL)
 		return ;
 	i = 0;
 	x = line_e->prompt_size;
-	ioctl(0, TIOCGWINSZ, &size);
 	while (i < line_e->cursor_pos)
 	{
-		if (line_e->line[i] == '\n' || x >= size.ws_col)
+		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
 		{
 			x = 0;
 			tputs(tgetstr("up", NULL), 1, ft_puti);
@@ -59,18 +57,16 @@ void		cursor_start(t_edit *line_e)
 void		cursor_end(t_edit *line_e)
 {
 	unsigned int	i;
-	int				x;
-	struct winsize	size;
+	unsigned int	x;
 
 	if (line_e->line == NULL)
 		return ;
 	cursor_start(line_e);
 	i = 0;
 	x = line_e->prompt_size;
-	ioctl(0, TIOCGWINSZ, &size);
 	while (line_e->line[i])
 	{
-		if (line_e->line[i] == '\n' || x >= size.ws_col)
+		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
 		{
 			x = 0;
 			tputs(tgetstr("do", NULL), 1, ft_puti); //go down
@@ -80,8 +76,11 @@ void		cursor_end(t_edit *line_e)
 		++i;
 	}
 	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
-	while (x-- >= 0)
+	while (x > 0)
+	{
 		tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
+		--x;
+	}
 }
 
 /*	
@@ -95,18 +94,16 @@ void		cursor_end(t_edit *line_e)
 void		cursor_after(t_edit *line_e)
 {
 	unsigned int	i;
-	int				x;
-	struct winsize	size;
+	unsigned int	x;
 
 	if (line_e->line == NULL)
 		return ;
 	cursor_start(line_e);
 	i = 0;
 	x = line_e->prompt_size;
-	ioctl(0, TIOCGWINSZ, &size);
 	while (line_e->line[i])
 	{
-		if (line_e->line[i] == '\n' || x >= size.ws_col)
+		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
 		{
 			x = 0;
 			tputs(tgetstr("do", NULL), 1, ft_puti); //go down
@@ -131,15 +128,13 @@ void        cursor_actualpos(t_edit *line_e)
 {
 	unsigned int	i;
 	unsigned int	x;
-	struct winsize	size;
 
 	cursor_start(line_e);
 	i = 0;
 	x = line_e->prompt_size;
-	ioctl(0, TIOCGWINSZ, &size);
 	while (i < line_e->cursor_pos)
 	{
-		if (line_e->line[i] == '\n' || x >= size.ws_col)
+		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
 		{
 			x = 0;
 			tputs(tgetstr("do", NULL), 1, ft_puti); //go down

@@ -88,14 +88,12 @@ void			print_comp_list(t_edit *line_e, int highlight)
 	unsigned int	maxcol;
 	int				maxrow;
 	unsigned int	max;
-	struct winsize	size;
 
 	if (line_e->autocomp_size <= 1 || !(list = line_e->autocomp_list))
 		return ;
 	cursor_after(line_e);
 	max = get_list_longest_word(list);
-	ioctl(0, TIOCGWINSZ, &size);
-	maxcol = size.ws_col / max;
+	maxcol = line_e->winsize_col / max;
 	maxrow = (line_e->autocomp_size / maxcol);
 	line_e->autocomp_maxcol = maxcol;
 	line_e->autocomp_maxrow = maxrow;
