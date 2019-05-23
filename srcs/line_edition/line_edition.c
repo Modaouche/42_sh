@@ -210,8 +210,14 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		}
 		return ;
 	}
-	else if (line_e->cursor_pos && line_e->line && (key[0] == S_KEY_ERASE && !key[1]))
+	else if (line_e->line && (key[0] == S_KEY_ERASE && !key[1]))
 	{
+		if (line_e->cursor_pos == 0 || line_e->line == NULL)
+		{
+			cancel_autocompletion(line_e);
+			return ;
+		}
+		line_e->autocomp = 0;
 		line_e->cursor_pos -= 1;
 		line_e->len -= 1;
 		if (line_e->line[0])
