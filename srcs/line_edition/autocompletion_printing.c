@@ -83,7 +83,7 @@ int     		get_list_longest_word(t_file *list)
 void			print_comp_list(t_edit *line_e, int highlight)
 {
 	t_file			*list;
-	unsigned int	i;
+	int				i;
 	unsigned int	column;
 	unsigned int	column_end;
 	unsigned int	maxcol;
@@ -122,12 +122,12 @@ void			print_comp_list(t_edit *line_e, int highlight)
 	while (column <= column_end)
 	{
 		i = column;
-		while (i < line_e->autocomp_size)
+		while (i < (int)line_e->autocomp_size)
 		{
 			list = ft_file_list_at(line_e->autocomp_list, i);
-			if (i == (uint)highlight)
+			if (i == highlight)
 				tputs(tgetstr("mr", NULL), 1, ft_puti);
-			print_with_pad(list, max_length, i == (uint)highlight);
+			print_with_pad(list, max_length, i == highlight);
 			i += maxrow + 1;
 		}
 		if (++column <= column_end)

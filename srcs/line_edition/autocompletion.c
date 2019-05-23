@@ -26,6 +26,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 
 	if ((new = escape_name(new, AUTOCOMP_ESCAPED_CHARS, length)) == NULL)
 		return ;
+	length = ft_strlen(new);
 	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix))))
 	{
 		ft_strdel(&new);
@@ -102,7 +103,7 @@ int 	build_list_from_word(t_edit *line_e)
 									ft_strlen(word),
 									&line_e->autocomp_size);
 	}
-	ft_file_list_sort(&line_e->autocomp_list);
+	line_e->autocomp_list = merge_sort(line_e->autocomp_list);
 	ft_strdel(&word);
 	return (line_e->autocomp_list == NULL ? 0 : 1);
 }

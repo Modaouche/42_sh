@@ -14,13 +14,13 @@
 #include "libft.h"
 
 /*
-**  append_character
+**  append_to_line
 **
 **  - Adds a character to the input line, and if necessary, reallocates the
 **  line to fit it's new size.
 */
 
-int		append_character(t_edit *line_e, const char to_add)
+int		append_to_line(t_edit *line_e, const char to_add)
 {
 	char    *new;
 
@@ -75,6 +75,35 @@ void	cancel_autocompletion(t_edit *line_e)
 **    used to happen input to line or to react to special characters.
 */
 
+void	insert_char(t_edit *line_e, char c)
+{
+	if (line_e->autocomp == 2)
+		line_e->autocomp = 0;
+	if (!(append_to_line(line_e, c)))
+		toexit(line_e, "malloc");
+	if (line_e->cursor_pos <= line_e->len)
+		line_e->cursor_pos += 1;
+	write(STDERR_FILENO, &c, 1);
+	ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
+	cursor_actualpos(line_e);
+}
+
+int		can_insert_tabs(t_edit *line_e)
+{
+	unsigned int i;
+
+	if (line_e->line == NULL || line_e->len == 0)
+		return (1);
+	i = 0;
+	while (i < line_e->cursor_pos)
+	{
+		if (line_e->line[i] != ' ' && line_e->line[i] != '\t')
+			return (0);
+		++i;
+	}
+	return (1);
+}	
+
 void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 {
 	if (!key)
@@ -84,15 +113,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	}
 	if (ft_strlen(key) <= 1 && ft_isprint(key[0]))
 	{
-		if (line_e->autocomp == 2)
-			line_e->autocomp = 0;
-		if (!(append_character(line_e, *key)))
-			toexit(line_e, "malloc");
-		if (line_e->cursor_pos <= line_e->len)
-			line_e->cursor_pos += 1;
-		write(STDERR_FILENO, key, 1);
-		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-		cursor_actualpos(line_e);
+		insert_char(line_e, *key);
 		return ;
 	}
 	else if (line_e->autocomp == 2 && ft_strlen(key) == 3 && key[0] == 27 && key[1] == 91 && key[2] == 90) //shift+tab
@@ -102,8 +123,15 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		replace_word_from_completion(line_e);
 		print_comp_list(line_e, line_e->autocomp_idx);
 	}
-	else if (ft_strlen(key) <= 1 && key[0] == '\t' && line_e->line)
+	else if (ft_strlen(key) <= 1 && key[0] == '\t')
 	{
+		if (can_insert_tabs(line_e))
+		{
+			insert_char(line_e, '\t');
+			return ;
+		}
+		if (line_e->line == NULL)
+			return ;
 		if (line_e->autocomp == 2)
 		{
 			if (++line_e->autocomp_idx >= line_e->autocomp_size)
@@ -116,7 +144,6 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			&& line_e->autocomp_list != NULL)
 		{
 			line_e->autocomp = 2;
-			line_e->autocomp_idx = 0;
 			replace_word_from_completion(line_e);
 			print_comp_list(line_e, line_e->autocomp_idx);
 			return ;

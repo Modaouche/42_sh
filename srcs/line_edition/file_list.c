@@ -72,28 +72,58 @@ t_file		*ft_file_list_at(t_file *list, unsigned int idx)
 	return (NULL);
 }
 
-void    	ft_file_list_sort(t_file **begin_list)
+t_file			*merge(t_file *a, t_file *b, t_file *head)
 {
-    t_file  *curr;
-    t_file	tmp;
+	t_file	**r;
 
-    if (begin_list == 0 || (curr = *begin_list) == 0)
-            return ;
-    while (curr->next != 0)
-    {
-        while (ft_strcmp(curr->name, curr->next->name) > 0)
-        {
-            tmp.name = curr->name;
-            curr->name = curr->next->name;
-            curr->next->name = tmp.name;
-            tmp.len = curr->len;
-            curr->len = curr->next->len;
-            curr->next->len = tmp.len;
-            tmp.type = curr->type;
-            curr->type = curr->next->type;
-            curr->next->type = tmp.type;
-            curr = *begin_list;
-        }
-        curr = curr->next;
-    }
+	r = &head;
+	if (a && b)
+	{
+		while (1)
+		{
+			if (ft_strcmp(a->name, b->name) <= 0 && (*r = a))
+			{
+				r = &a->next;
+				a = a->next;
+				if (!a)
+					break ;
+			}
+			else if ((*r = b) || 1)
+			{
+				r = &b->next;
+				b = b->next;
+				if (!b)
+					break ;
+			}
+		}
+	}
+	*r = (a == NULL) ? b : a;
+	return (head);
+}
+
+/*
+**
+** araout merge sort
+**
+*/
+
+t_file			*merge_sort(t_file *p)
+{
+	t_file	*a;
+	t_file	*b;
+	t_file	*last;
+
+	b = p;
+	a = b;
+	last = NULL;
+	while (a && a->next)
+	{
+		last = b;
+		b = b->next;
+		a = a->next->next;
+	}
+	if (last == NULL)
+		return (p);
+	last->next = NULL;
+	return (merge(merge_sort(p), merge_sort(b), NULL));
 }
