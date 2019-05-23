@@ -153,12 +153,47 @@ char	*parse_word(char *line, unsigned int end)
 */
 
 int		get_last_slash(char *line, unsigned int word_start,
-		unsigned int word_end)
+		unsigned int word_end, t_edit *line_e)
 {
+	unsigned int i;
+	unsigned int escape;
+
 	while (word_end > word_start && line[word_end] != '/')
 		--word_end;
 	if (line[word_end] == '/')
 		++word_end;
+	i = word_start;
+	escape = 0;
+	line_e->autocomp_quote = 0;
+	while (i < word_end)
+	{
+		if (escape)
+		{
+			escape = 0;
+			++i;
+			continue ;
+		}
+		if (line[i] == '\\')
+		{
+			escape = 1;
+			++i;
+			continue ;
+		}
+		if (line_e->line[i] == '"')
+		{
+			quote_match(line_e->line, &i, word_end, '"');
+			line_e->autocomp_quote = 1;
+		}
+		else if (line_e->line[i] == '\'')
+		{
+			quote_match(line_e->line, &i, word_end, '\'');
+			line_e->autocomp_quote = 2;
+		}
+		if (i >= word_end)
+			break ;
+		line_e->autocomp_quote = 0;
+		++i;
+	}
 	return (word_end);
 }
 
@@ -239,6 +274,6 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 		return (ft_strnew(0));
 	}
 	
-	*autocompletion_point = get_last_slash(line_e->line, word_start, word_end + 1);
+	*autocompletion_point = get_last_slash(line_e->line, word_start, word_end + 1, line_e);
 	return (parse_word(line_e->line + word_start, word_end - word_start + 1));
 }

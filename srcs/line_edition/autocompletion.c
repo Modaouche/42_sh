@@ -23,8 +23,15 @@
 void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 {
 	char			*str;
+	char			*escape_chars;
 
-	if ((new = escape_name(new, AUTOCOMP_ESCAPED_CHARS, length)) == NULL)
+	if (line_e->autocomp_quote == 2)
+		escape_chars = AUTOCOMP_ESCAPED_CHARS_IN_SGLQUOTE;
+	else if (line_e->autocomp_quote == 1)
+		escape_chars = AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE;
+	else
+		escape_chars = AUTOCOMP_ESCAPED_CHARS;
+	if ((new = escape_name(new, escape_chars, length)) == NULL)
 		return ;
 	length = ft_strlen(new);
 	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix))))
