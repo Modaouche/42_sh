@@ -26,7 +26,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 
 	if ((new = escape_name(new, AUTOCOMP_ESCAPED_CHARS, length)) == NULL)
 		return ;
-	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix))))
+	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix) + 1)))
 	{
 		ft_strdel(&new);
 		return ;

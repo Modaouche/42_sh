@@ -85,14 +85,14 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	if (ft_strlen(key) <= 1 && ft_isprint(key[0]))
 	{
 		if (line_e->autocomp == 2)
-			line_e->autocomp = 1;
+			line_e->autocomp = 0;
 		if (!(append_character(line_e, *key)))
 			toexit(line_e, "malloc");
 		if (line_e->cursor_pos <= line_e->len)
 			line_e->cursor_pos += 1;
 		write(STDERR_FILENO, key, 1);
 		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-		cursor_reposition(line_e->len - line_e->cursor_pos);
+		cursor_actualpos(line_e);
 		return ;
 	}
 	else if (line_e->autocomp == 2 && ft_strlen(key) == 3 && key[0] == 27 && key[1] == 91 && key[2] == 90) //shift+tab

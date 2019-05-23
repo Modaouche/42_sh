@@ -84,37 +84,62 @@ void			print_comp_list(t_edit *line_e, int highlight)
 {
 	t_file			*list;
 	int				i;
-	int				column;
+	unsigned int	column;
+	unsigned int	column_end;
 	unsigned int	maxcol;
-	int				maxrow;
-	unsigned int	max;
-
+	unsigned int	maxrow;
+	unsigned int	max_length;
+	unsigned int	page;
+	unsigned int	maxpage;
+	unsigned int	newlines;
+	unsigned int	window_maxrow;
+	
 	if (line_e->autocomp_size <= 1 || !(list = line_e->autocomp_list))
 		return ;
 	cursor_after(line_e);
-	max = get_list_longest_word(list);
-	maxcol = line_e->winsize_col / max;
+	max_length = get_list_longest_word(list);
+	maxcol = line_e->winsize_col / max_length;
 	maxrow = (line_e->autocomp_size / maxcol);
 	line_e->autocomp_maxcol = maxcol;
 	line_e->autocomp_maxrow = maxrow;
 	column = 0;
-	while (column <= maxrow)
+	column_end = maxrow;
+	page = 0;
+	newlines = 1;
+	if (maxrow >= line_e->winsize_row)
+	{
+		window_maxrow = (line_e->winsize_row - 3);
+		maxpage = maxrow / window_maxrow;
+		page = line_e->autocomp_idx / window_maxrow;
+		if (page > maxpage)
+			page = maxpage;
+		column = page * window_maxrow;
+		column_end = column + window_maxrow;
+		ft_printf_fd(0, "Page %d/%d\n", page + 1, maxpage + 1);
+		++newlines;
+		tputs(tgetstr("cr", NULL), 1, ft_puti); 
+	}
+	while (column <= column_end)
 	{
 		i = column;
 		while ((list = ft_file_list_at(line_e->autocomp_list, i)))
 		{
 			if (i == highlight)
 				tputs(tgetstr("mr", NULL), 1, ft_puti);
-			print_with_pad(list, max, i == highlight);
+			print_with_pad(list, max_length, i == highlight);
 			i += maxrow + 1;
 		}
-		if (++column <= maxrow)
+		if (++column <= column_end)
 		{
+			++newlines;
 			tputs(tgetstr("do", NULL), 1, ft_puti);
 			tputs(tgetstr("cr", NULL), 1, ft_puti); 
 		}
 	}
-	while (--column >= 0)
+	while (newlines > 0)
+	{
 		tputs(tgetstr("up", NULL), 1, ft_puti);
+		--newlines;	
+	}
 	cursor_actualpos(line_e);
 }
