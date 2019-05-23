@@ -78,10 +78,13 @@ void	cancel_autocompletion(t_edit *line_e)
 void	insert_char(t_edit *line_e, char c)
 {
 	if (line_e->autocomp == 2)
+	{
 		line_e->autocomp = 0;
+		print_comp_list(line_e, -1);
+	}
 	if (!(append_to_line(line_e, c)))
 		toexit(line_e, "malloc");
-	if (line_e->cursor_pos <= line_e->len)
+	if (line_e->cursor_pos < line_e->len)
 		line_e->cursor_pos += 1;
 	write(STDERR_FILENO, &c, 1);
 	ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
@@ -266,7 +269,11 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			cancel_autocompletion(line_e);
 			return ;
 		}
-		line_e->autocomp = 0;
+		if (line_e->autocomp > 0)
+		{
+			line_e->autocomp = 0;
+			print_comp_list(line_e, -1);
+		}
 		line_e->cursor_pos -= 1;
 		line_e->len -= 1;
 		if (line_e->line[0])
@@ -292,15 +299,15 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 **  line_edition
 **
 **  - Called to start the line edition, does not exit until the user
-**    pressed enter.
+**    presses enter.
 */
 
 int		line_edition(t_edit *line_e)
 {
-	int ret;
-	char key[MAX_KEY_LEN];
-	char prevkey[MAX_KEY_LEN];
-	struct winsize size;
+	int 	ret;
+	char 	key[MAX_KEY_LEN + 1];
+	char 	prevkey[MAX_KEY_LEN + 1];
+	struct 	winsize size;
 	ioctl(0, TIOCGWINSZ, &size);
 
 	line_e->winsize_col = size.ws_col;
@@ -308,10 +315,10 @@ int		line_edition(t_edit *line_e)
 	line_e->autocomp = 0;
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
 		toexit(0, "tcsetattr");
-	ft_bzero(prevkey, MAX_KEY_LEN);
+	ft_bzero(prevkey, MAX_KEY_LEN + 1);
 	while (1)
 	{
-	   ft_bzero(key, MAX_KEY_LEN);
+	   ft_bzero(key, MAX_KEY_LEN + 1);
 	   ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
 		if (ret == -1 || ret == 0)
 			perror("key:");

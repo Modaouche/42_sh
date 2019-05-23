@@ -20,6 +20,7 @@ void    extend_quotes(t_edit *line_e, char **word, unsigned int *i)
 
     qt = 1;
     offset = *i;
+    ret = 0;
     if (line_e->line[offset] == '\'')
         while (!(ret = quote_parser(line_e->line + offset, word, qt)))//pb du ret
         {
