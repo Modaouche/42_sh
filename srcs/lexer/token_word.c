@@ -23,7 +23,6 @@ void    token_isword(t_token *actual_token, const char *line, unsigned int *i)
         word = get_word(i);
         actual_token->tokind = T_WORD;
         actual_token->lexeme = word;
-        //skip_predicat(&line, i, &ft_isword);//check le isword
     }
 }
 
