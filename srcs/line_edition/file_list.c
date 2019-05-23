@@ -72,7 +72,7 @@ t_file		*ft_file_list_at(t_file *list, unsigned int idx)
 	return (NULL);
 }
 
-void    ft_list_sort(t_file **begin_list)
+void    	ft_file_list_sort(t_file **begin_list)
 {
     t_file  *curr;
     t_file	tmp;

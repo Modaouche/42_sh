@@ -102,7 +102,7 @@ int 	build_list_from_word(t_edit *line_e)
 									ft_strlen(word),
 									&line_e->autocomp_size);
 	}
-	ft_list_sort(&line_e->autocomp_list);
+	ft_file_list_sort(&line_e->autocomp_list);
 	ft_strdel(&word);
 	return (line_e->autocomp_list == NULL ? 0 : 1);
 }
