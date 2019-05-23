@@ -116,6 +116,28 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		insert_char(line_e, *key);
 		return ;
 	}
+	else if (ft_strlen(key) == 4 && key[0] == 27 && key[1] == 91 && key[2] == 53 && key[3] == 126)
+	{
+		if (line_e->autocomp == 2)
+			;
+		else
+		{
+			cursor_start(line_e);
+			line_e->cursor_pos = 0;
+		}
+		//pgup
+	}
+	else if (ft_strlen(key) == 4 && key[0] == 27 && key[1] == 91 && key[2] == 54 && key[3] == 126)
+	{
+		if (line_e->autocomp == 2)
+			;
+		else
+		{
+			cursor_end(line_e);
+			line_e->cursor_pos = line_e->len;
+		}
+		//pgdn
+	}
 	else if (line_e->autocomp == 2 && ft_strlen(key) == 3 && key[0] == 27 && key[1] == 91 && key[2] == 90) //shift+tab
 	{
 		if (line_e->autocomp_idx-- == 0)
@@ -254,7 +276,9 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					line_e->len - line_e->cursor_pos);
 		}
 		line_e->line[line_e->len] = '\0';
-		write(STDERR_FILENO, "\b \b", 3);
+        tputs(tgetstr("le", NULL), 1, ft_puti);
+        write(STDERR_FILENO, " ", 1);
+        tputs(tgetstr("le", NULL), 1, ft_puti);
 		if (line_e->cursor_pos != line_e->len)
 		{
 			ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);

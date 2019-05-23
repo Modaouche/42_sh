@@ -120,7 +120,7 @@ void		cursor_after(t_edit *line_e)
 **   cursor_actualpos
 **
 ** - Move the cursor to the cursor_pos
-**   To be used when the cursor is at the correct line but wrong column
+**   To be used when the cursor is at the correct line but wrong column.
 **
 */
 
