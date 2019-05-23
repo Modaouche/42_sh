@@ -34,7 +34,8 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	if ((new = escape_name(new, escape_chars, length)) == NULL)
 		return ;
 	length = ft_strlen(new);
-	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix))))
+	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix)
+		+ (line_e->autocomp_quote > 0))))
 	{
 		ft_strdel(&new);
 		return ;
@@ -42,6 +43,10 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
 	ft_strncat(str + line_e->autocomp_point, new, length);
 	ft_strcat(str + line_e->autocomp_point + length, suffix);
+	if (line_e->autocomp_quote == 1)
+		ft_strcat(str + line_e->autocomp_point + length, "\"");
+	else if (line_e->autocomp_quote == 2)
+		ft_strcat(str + line_e->autocomp_point + length, "'");
 	ft_strdel(&new);
 	cursor_start(line_e);
 	ft_strdel(&line_e->line);
@@ -95,7 +100,6 @@ int 	build_list_from_word(t_edit *line_e)
 	if ((word = get_autocompletion_word(line_e, &argument,
 				&line_e->autocomp_point)) == NULL)
 		return (0);
-	//ft_printf_fd(0, "[%s]\n", word);
 	if (word[0] == '/' || word[0] == '.')
 		argument = 1;
 	if (argument == 0)

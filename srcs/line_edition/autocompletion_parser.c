@@ -164,6 +164,10 @@ int		get_last_slash(char *line, unsigned int word_start,
 		--word_end;
 	if (line[word_end] == '/')
 		++word_end;
+	else if (line_e->autocomp_quote > 0)
+		return (word_end + 1);
+	else
+		return (word_end);
 	i = word_start;
 	escape = 0;
 	line_e->autocomp_quote = 0;
@@ -283,7 +287,6 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 		*argument = 1;
 		return (ft_strnew(0));
 	}
-	
 	*autocompletion_point = get_last_slash(line_e->line, word_start, word_end + 1, line_e);
 	return (parse_word(line_e->line + word_start, word_end - word_start + 1));
 }
