@@ -99,7 +99,11 @@ void			print_comp_list(t_edit *line_e, int highlight)
 	cursor_after(line_e);
 	max_length = get_list_longest_word(list);
 	maxcol = line_e->winsize_col / max_length;
+	if (maxcol == 0)
+		maxcol = 1;
 	maxrow = (line_e->autocomp_size / maxcol);
+	if (maxrow == 0)
+		maxrow = 1;
 	line_e->autocomp_maxcol = maxcol;
 	line_e->autocomp_maxrow = maxrow;
 	column = 0;
@@ -108,7 +112,12 @@ void			print_comp_list(t_edit *line_e, int highlight)
 	newlines = 1;
 	if (maxrow >= line_e->winsize_row)
 	{
-		window_maxrow = (line_e->winsize_row - 3);
+		if (line_e->winsize_row > 2)
+			window_maxrow = (line_e->winsize_row - 2);
+		else
+			window_maxrow = 1;
+		if (window_maxrow > get_line_height(line_e))
+			window_maxrow -= get_line_height(line_e);
 		maxpage = maxrow / window_maxrow;
 		page = (line_e->autocomp_idx % maxrow) / window_maxrow;
 		if (page > maxpage)

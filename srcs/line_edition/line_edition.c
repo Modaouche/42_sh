@@ -128,7 +128,6 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			cursor_start(line_e);
 			line_e->cursor_pos = 0;
 		}
-		//pgup
 	}
 	else if (ft_strlen(key) == 4 && key[0] == 27 && key[1] == 91 && key[2] == 54 && key[3] == 126)
 	{
@@ -139,7 +138,6 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			cursor_end(line_e);
 			line_e->cursor_pos = line_e->len;
 		}
-		//pgdn
 	}
 	else if (line_e->autocomp == 2 && ft_strlen(key) == 3 && key[0] == 27 && key[1] == 91 && key[2] == 90) //shift+tab
 	{

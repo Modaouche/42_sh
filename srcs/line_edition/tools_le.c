@@ -33,6 +33,29 @@ void        ft_nlcr(void)
 	tputs(tgetstr("cr", NULL), 1, ft_puti);
 }
 
+uint         get_line_height(t_edit *line_e)
+{
+    unsigned int i;
+    unsigned int x;
+    unsigned int height;
+
+    if (line_e->line == NULL)
+        return (0);
+    i = 0;
+    x = 0;
+    height = 1;
+    while (line_e->line[i])
+    {
+        if (line_e->line[i] == '\n' || ++x >= line_e->winsize_col)
+        {
+            x = 0;
+            ++height;
+        }
+        ++i;
+    }
+    return (height);
+}
+
 size_t		print_prompt(unsigned int btn)
 {
     char *prompt;
