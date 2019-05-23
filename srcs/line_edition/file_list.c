@@ -38,9 +38,20 @@ t_file		*ft_file_list_create(char *name, int type)
 t_file		*ft_file_list_append(t_file **list, char *name, int type)
 {
 	t_file *new;
+	t_file *tmp;
 
 	if (list == NULL || (new = ft_file_list_create(name, type)) == NULL)
 		return (NULL);
+	tmp = *list;
+	while (tmp != NULL)
+	{
+		if (ft_strcmp(name, tmp->name) == 0)
+		{
+			ft_file_list_delete(&new);
+			return (NULL);
+		}
+		tmp = tmp->next;
+	}
 	new->next = *list;
 	*list = new;
 	return (new);

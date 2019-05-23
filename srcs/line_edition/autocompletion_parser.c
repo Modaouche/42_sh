@@ -178,6 +178,7 @@ int		get_last_slash(char *line, unsigned int word_start,
 		if (line[i] == '\\')
 		{
 			escape = 1;
+			line_e->autocomp_quote = 0;
 			++i;
 			continue ;
 		}
@@ -249,19 +250,22 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 			{
 				escape = 1;
 				word_end = i++;
+				line_e->autocomp_quote = 0;
 				continue ;
 			}
 			if (line_e->line[i] == '"')
 			{
 				quote_match(line_e->line, &i, line_e->cursor_pos, '"');
-				word_end = i;
+				word_end = i++;
 				line_e->autocomp_quote = 1;
+				continue ;
 			}
 			else if (line_e->line[i] == '\'')
 			{
 				quote_match(line_e->line, &i, line_e->cursor_pos, '\'');
-				word_end = i;
+				word_end = i++;
 				line_e->autocomp_quote = 2;
+				continue ;
 			}
 			if (is_separator(line_e->line[i]) || i >= line_e->cursor_pos)
 				break ;
