@@ -23,8 +23,15 @@
 void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 {
 	char			*str;
+	char			*escape_chars;
 
-	if ((new = escape_name(new, AUTOCOMP_ESCAPED_CHARS, length)) == NULL)
+	if (line_e->autocomp_quote == 2)
+		escape_chars = "";
+	else if (line_e->autocomp_quote == 1)
+		escape_chars = AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE;
+	else
+		escape_chars = AUTOCOMP_ESCAPED_CHARS;
+	if ((new = escape_name(new, escape_chars, length)) == NULL)
 		return ;
 	length = ft_strlen(new);
 	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix))))
@@ -88,6 +95,7 @@ int 	build_list_from_word(t_edit *line_e)
 	if ((word = get_autocompletion_word(line_e, &argument,
 				&line_e->autocomp_point)) == NULL)
 		return (0);
+	//ft_printf_fd(0, "[%s]\n", word);
 	if (word[0] == '/' || word[0] == '.')
 		argument = 1;
 	if (argument == 0)
