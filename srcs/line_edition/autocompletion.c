@@ -26,7 +26,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	char			*escape_chars;
 
 	if (line_e->autocomp_quote == 2)
-		escape_chars = AUTOCOMP_ESCAPED_CHARS_IN_SGLQUOTE;
+		escape_chars = "";
 	else if (line_e->autocomp_quote == 1)
 		escape_chars = AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE;
 	else
