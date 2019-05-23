@@ -106,6 +106,7 @@ char	*parse_word(char *line, unsigned int end)
 				str[x++] = '\\';
 			if (i < end && line[i])
 				++i;
+			continue ;
 		}
 		if (line[i] == '"')
 		{
@@ -137,6 +138,7 @@ char	*parse_word(char *line, unsigned int end)
 				str[x++] = '\\';
 			if (i < end && line[i])
 				++i;
+			continue ;
 		}
 		str[x++] = line[i++];
 	}
@@ -183,11 +185,15 @@ int		get_last_slash(char *line, unsigned int word_start,
 		{
 			quote_match(line_e->line, &i, word_end, '"');
 			line_e->autocomp_quote = 1;
+			++i;
+			continue ;
 		}
 		else if (line_e->line[i] == '\'')
 		{
 			quote_match(line_e->line, &i, word_end, '\'');
 			line_e->autocomp_quote = 2;
+			++i;
+			continue ;
 		}
 		if (i >= word_end)
 			break ;

@@ -95,6 +95,7 @@ int 	build_list_from_word(t_edit *line_e)
 	if ((word = get_autocompletion_word(line_e, &argument,
 				&line_e->autocomp_point)) == NULL)
 		return (0);
+	//ft_printf_fd(0, "[%s]\n", word);
 	if (word[0] == '/' || word[0] == '.')
 		argument = 1;
 	if (argument == 0)
