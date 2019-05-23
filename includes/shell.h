@@ -27,6 +27,7 @@ unsigned int     g_errorno;
 
 typedef enum
 {
+						NO_ERROR,
 						ER_DBACCES,
 						ER_DBINFO,
 						ER_SYNTAX
@@ -48,6 +49,8 @@ typedef enum
 
 # define MAX_KEY_LEN			15
 # define BUFFER_LEN				255
+# define TOKEN_CMP				";\n&|!<>"
+# define DQUOTE_CMP				"\\$\""
 
 typedef struct 			s_file
 {
@@ -94,9 +97,10 @@ typedef struct			s_key_code
 
 void					set_terminal(t_edit *line_e);
 void					toexit(t_edit *line_e, char *str);
-struct termios*			term_backup(int bt);
-struct termios*			term_raw(int bt);
+struct termios*			term_backup(void);
+struct termios*			term_raw(void);
 void					init_line(t_edit *line_e);
+t_edit					*st_line(void);
 
 /*
 ** Line edition
@@ -233,10 +237,18 @@ int						head_of_line(t_ast *ast);
 ** Inhibitor
 */
 
-int    					*ext_quotes(const char *line, char *word);
-int  					ft_isword(int c);
-char 					*get_word(const char *line);
-
+char    				*get_word(unsigned int *i);
+int						ft_isquote_inhib(int c);
+int						ft_isspace_inhib(int c);
+int						for_end_word_inhib(int c);
+void					extend_quotes(t_edit *line_e, char **word, unsigned int *i);
+int						quote_parser(const char *line, char **word, unsigned int qt);
+int     				word_parser(const char *line, char **word, int qt);
+char    				*word_handling(const char *, unsigned int *, int);
+int    					word_handling_prime(const char *, char **, unsigned int *, int);
+void    				dollars_cmd(const char *, char **, unsigned int *);
+int    					backslash(const char *, char **, unsigned int *);
+void    				backslash_end(t_edit *);
 
 /*
 ** Tools & Co

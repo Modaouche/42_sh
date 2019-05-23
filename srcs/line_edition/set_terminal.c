@@ -12,41 +12,33 @@
 
 #include "shell.h"
 
-struct termios				*term_backup(int bt)
+struct termios				*term_backup(void)
 {
 	static struct termios	termiold;
 
-	if (bt == 0)
-	{
-		if (tcgetattr(STDERR_FILENO, &termiold) == -1)
-			toexit(0, "tcgetattr");
-		termiold.c_lflag |= (ICANON | ECHO);
-		termiold.c_oflag |= (OPOST);
-	}
+	if (tcgetattr(STDERR_FILENO, &termiold) == -1)
+		toexit(0, "tcgetattr");
 	return (&termiold);
 }
 
-struct termios				*term_raw(int bt)
+struct termios				*term_raw(void)
 {
 	static struct termios	termios;
 
-	if (bt == 0)
-	{
-		if (tcgetattr(STDERR_FILENO, &termios) == -1)
-			toexit(0, "tcgetattr");
-		termios.c_lflag |= IEXTEN;
-		termios.c_lflag &= ~(ICANON | ECHO);
-		termios.c_oflag &= ~(OPOST);
-		termios.c_cc[VTIME] = 0;
-		termios.c_cc[VMIN] = 1;
-	}
+	if (tcgetattr(STDERR_FILENO, &termios) == -1)
+		toexit(0, "tcgetattr");
+	termios.c_lflag |= IEXTEN;
+	termios.c_lflag &= ~(ICANON | ECHO);
+	termios.c_oflag &= ~(OPOST);
+	termios.c_cc[VTIME] = 0;
+	termios.c_cc[VMIN] = 1;
 	return (&termios);
 }
 
 void						set_terminal(t_edit *line_e)
 {
-	line_e->termiold = term_backup(0);
-	line_e->termios = term_raw(0);
+	line_e->termiold = term_backup();
+	line_e->termios = term_raw();
 	line_e->len_max = BUFFER_LEN;
 	if (!isatty(STDERR_FILENO))
 		toexit(line_e, "isatty");

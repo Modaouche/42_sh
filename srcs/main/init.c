@@ -21,3 +21,9 @@ void		init_line(t_edit *line_e)
 	line_e->ofst = 0;
 	line_e->len = 0;
 }
+
+t_edit	*st_line(void)
+{
+	static t_edit line_e;
+	return (&line_e);
+}

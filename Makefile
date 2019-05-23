@@ -25,7 +25,7 @@ SRC =	srcs/main/main.c\
 		srcs/line_edition/autocompletion_parser.c\
 		srcs/line_edition/cursor_movement.c\
 		srcs/line_edition/file_list.c\
-		srcs/lexer/get_next_token.c\
+		srcs/lexer/get_token.c\
 		srcs/lexer/token_tools.c\
 		srcs/lexer/token_isother.c\
 		srcs/lexer/token_redirect_great.c\
@@ -41,7 +41,10 @@ SRC =	srcs/main/main.c\
 		srcs/parser/parse_6_cmd_prime.c\
 		srcs/parser/parse_7_io_fct.c\
 		srcs/parser/first_set.c\
-		srcs/inhibitor/inhibitors.c
+		srcs/inhibitor/inhibitors.c\
+		srcs/inhibitor/quote_handling.c\
+		srcs/inhibitor/word_handling.c\
+		srcs/inhibitor/expanded_word.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -58,7 +61,7 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 CC = gcc
 
 CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)\
-	#		-g -fsanitize=address\
+#			-g -fsanitize=address\
 			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 

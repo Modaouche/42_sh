@@ -6,55 +6,63 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 15:48:28 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/11 18:35:16 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/23 09:43:32 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
-/*
-int     *ext_quotes(const char *line, char *word)
-{
-    static int var_ext[3] = {0};
 
-    if (*line == 39)
-    {
-        var_ext[0] = !var_ext[0] ? 1 : 0;
-        
-    }
-    else if (!var_ext[0] && *line == 34)
-        var_ext[1] = 1;
-    return (var_ext);
+void    extend_quotes(t_edit *line_e, char **word, unsigned int *i)
+{
+    unsigned int offset;
+    unsigned int ret;
+    unsigned int qt;
+
+    qt = 1;
+    offset = *i;
+    if (line_e->line[offset] == '\'')
+        while (!(ret = quote_parser(line_e->line + offset, word, qt)))//pb du ret
+        {
+            qt = 0;
+            offset = 0;
+            init_line(line_e);
+	        line_e->prompt_size = print_prompt(4);
+            line_edition(line_e);
+            if (!line_e->line)
+                line_e->line = ft_memalloc(1);
+        }
+    else if (line_e->line[offset] == '\"')
+        while (!(ret = word_parser(line_e->line + offset, word, qt)))//pb du ret
+        {
+            offset = 0;
+            qt = 2;
+            init_line(line_e);
+	        line_e->prompt_size = print_prompt(5);
+            line_edition(line_e);
+            if (!line_e->line)
+                line_e->line = ft_memalloc(1);
+        }
+    *i = offset + ret;
 }
-*//*
-        special :  |  &  ;  <  >  (  )  $  `  \  "  '  *   ?   [   #   ˜   =   %  !
-*/
 
-int     ft_isword(int c)
+char    *get_word(unsigned int *i)
 {
-    if ((ft_isalnum(c) || (c > 42 && c < 48)) || (c >= 93 && c <= 95))
-        return (1);
-    return (0);
-}
-
-char    *get_word(const char *line)
-{
-    size_t  i;
-    int     *var_ext;
     char    *word;
+    t_edit *line_e;
+    int ret;
 
-    i = 0;
+    line_e = st_line();
     word = NULL;
-    var_ext = NULL;
-    (void)var_ext;
-    while (line[i] && ft_isword(line[i]))
-        i++;
-    //if (i == 0 && (line[i] == 39 || (line[i] == 34 || line[i] == 96)))
-    //    var_ext = ext_quotes(line, word);
-    //else
-        word = ft_strndup(line, i);
-    /*while (var_ext && var_ext[0] && var_ext[1] && var_ext[2])
+    while (!for_end_word_inhib(line_e->line[*i]))
     {
-        var_ext = ext_quotes(line, word);
-    }*/
+        if (ft_isquote_inhib(line_e->line[*i]))
+            extend_quotes(line_e, &word, i);
+        else
+        {
+            while (line_e->line[0] && !(ret = word_parser(line_e->line + *i, &word, false)))
+                backslash_end(line_e);
+            *i += ret;
+        }
+    }
     return (word);
 }

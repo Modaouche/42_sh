@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 22:00:43 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 11:35:54 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/23 05:18:12 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,27 @@ void    fill_token_tab(void)
     size_t idx;
 
     idx = 33;
-    while (idx <= 126)
+    while (idx <= 127)
     {
-        if (ft_isword(idx))
+        if (!ft_strchr(TOKEN_CMP, idx))
             g_token_tab[idx] = &token_isword;
         ++idx;
     }
 }
-int     ft_isspace_tok(int c)
+
+int     for_end_word_inhib(int c)
 {
-	return ((c == ' '|| c == '\t' || c == '\f'\
-            || c == '\r' || c == '\v') ? 1 : 0);
+	return (ft_isspace_inhib(c) || (ft_strchr(TOKEN_CMP, c)));
+}
+
+int     ft_isspace_inhib(int c)
+{
+	return (c == ' ' || c == '\t');
+}
+
+int     ft_isquote_inhib(int c)
+{
+	return (c == '\'' || c == '\"');
 }
 
 

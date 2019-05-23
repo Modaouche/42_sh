@@ -31,6 +31,6 @@ int         line_lexer(t_edit *line_e)
 		if (line_parser(&ast, line_e) == 1)
 				infix_print_ast(ast);
 		else//maybe useless
-				ft_putstr_fd("42sh syntax error.0\n", 2);//maybe useless
+				ft_putstr_fd("42sh syntax error\n", 2);//maybe useless
     return (1);
 }

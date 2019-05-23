@@ -6,11 +6,11 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 03:36:28 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/13 19:45:58 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/23 04:29:45 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shell.h"
+#include "../includes/shell.h"
 
 t_ast       *ast_new(t_token *tok)
 {
@@ -66,14 +66,19 @@ void        infix_print_ast(t_ast *root)
 	infix_print_ast(root->left);
 	if (root->token->lexeme)
 	{
-	ft_putstr("{");
-	ft_putnbr(root->token->tokind);
-	ft_putstr("  ");
-	ft_putstr(root->token->lexeme);
-	ft_putstr("} ");
+		ft_putstr("{");
+		ft_putnbr(root->token->tokind);
+		ft_putstr("|");
+		ft_putstr(root->token->lexeme);
+		ft_putstr("|} ");
 	}
 	else
-		ft_putstr("{NO_THING}");
+	{
+		ft_putstr("{");
+		ft_putnbr(root->token->tokind);
+		ft_putstr(" ");
+		ft_putstr("NO_THING}\n");
+	}
 	infix_print_ast(root->right);
 	
 }

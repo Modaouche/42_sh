@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 21:51:47 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 02:48:16 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/05/23 02:16:52 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ typedef enum
 {
 						T_NONE,
 						T_AMPER,
-    					T_SEMI,
-    					T_AND_IF,
     					T_OR_IF,
+    					T_AND_IF,
+    					T_SEMI,
     					T_BANG,
     					T_PIPE,
                         T_WORD,

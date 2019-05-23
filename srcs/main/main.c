@@ -29,34 +29,35 @@ static int		init_term(void)
 
 int main(int ac, char **av, char **envp)
 {
-	t_edit line_e;
+	t_edit *line_e;
 
 	(void)av;
 	(void)ac;
-	ft_bzero(&line_e, sizeof(line_e));
-	line_e.env = envp;
-	line_e.tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps
-	set_terminal(&line_e);
+	line_e = st_line();
+	ft_bzero(line_e, sizeof(line_e));
+	line_e->env = envp;
+	line_e->tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps
+	set_terminal(line_e);
 	fill_token_tab();
 	//ft_signal_handle();
 	while (1)
 	{
-		init_line(&line_e);
-		while (!line_e.line)
+		init_line(line_e);
+		while (!line_e->line)
 		{
-				line_e.prompt_size = print_prompt(0) - ft_strlen("\e[1;32m🐚\033[0m") + 1;
-				line_edition(&line_e);
+				line_e->prompt_size = print_prompt(0) - ft_strlen("\e[1;32m🐚\033[0m") + 2;
+				line_edition(line_e);
 		}
-		//line_lexer(&line_e);
+		line_lexer(line_e);
 		//execution de commande...
-		if (line_e.line && !ft_strcmp(line_e.line, "reset"))//buitin
+		if (line_e->line && !ft_strcmp(line_e->line, "reset"))//buitin
 			tputs(tgetstr("cl", NULL), 1, ft_puti);
-		if (line_e.line && !ft_strcmp(line_e.line, "exit"))//buitin
+		if (line_e->line && !ft_strcmp(line_e->line, "exit"))//buitin
 			break ;//to rm
 		ft_putendl("");
 	}
-	ft_strdel(&(line_e.line));
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e.termiold) == -1)
+	ft_strdel(&(line_e->line));
+	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
 		toexit(0, "tcsetattr");
     return (0);
 }

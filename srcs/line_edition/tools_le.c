@@ -43,9 +43,9 @@ size_t		print_prompt(unsigned int btn)
     else if (btn == 1)
 	    prompt = ft_strdup("pipe $> ");
     else if (btn == 2)
-	    prompt = ft_strdup("cmdandor $> ");
-    else if (btn == 3)
 	    prompt = ft_strdup("cmdor $> ");
+    else if (btn == 3)
+	    prompt = ft_strdup("cmdand $> ");
     else if (btn == 4)
 	    prompt = ft_strdup("quote $> ");
     else if (btn == 5)
