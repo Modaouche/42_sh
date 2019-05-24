@@ -43,9 +43,9 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
 	ft_strncat(str + line_e->autocomp_point, new, length);
 	ft_strcat(str + line_e->autocomp_point + length, suffix);
-	if (line_e->autocomp_quote == 1)
+	if (line_e->autocomp_quote == 1 && length != 0)
 		ft_strcat(str + line_e->autocomp_point + length, "\"");
-	else if (line_e->autocomp_quote == 2)
+	else if (line_e->autocomp_quote == 2 && length != 0)
 		ft_strcat(str + line_e->autocomp_point + length, "'");
 	ft_strdel(&new);
 	cursor_start(line_e);

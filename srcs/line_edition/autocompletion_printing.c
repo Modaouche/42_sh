@@ -28,28 +28,28 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 	if (file == NULL)
 		return ;
 	if ((file->type == 4 || file->type == 8) && !selected)
-		ft_putstr_fd("\033[38;5;9m", 0);
+		ft_putstr_fd("\033[38;5;9m", STDERR_FILENO);
 	else if ((file->type == 6 || file->type == 2) && !selected)
-		ft_putstr_fd("\033[38;5;11m", 0);
+		ft_putstr_fd("\033[38;5;11m", STDERR_FILENO);
 	else if ((file->type == -2) && !selected)
-		ft_putstr_fd("\033[38;5;14m", 0);
-	write(0, file->name, file->len);
+		ft_putstr_fd("\033[38;5;14m", STDERR_FILENO);
+	write(STDERR_FILENO, file->name, file->len);
 	if (file->type == 4 || file->type == 8)
-		write(0, "\033[0m/", 5);
+		write(STDERR_FILENO, "\033[0m/", 5);
 	else if (file->type == 6)
-		write(0, "\033[0m%", 5);
+		write(STDERR_FILENO, "\033[0m%", 5);
 	else if (file->type == 2)
-		write(0, "\033[0m#", 5);
+		write(STDERR_FILENO, "\033[0m#", 5);
 	else if (file->type == -2)
-		write(0, "\033[0m@", 5);
+		write(STDERR_FILENO, "\033[0m@", 5);
 	i = minlen - file->len - (file->type != 0) - 2;
 	while (i > 0)
 	{
-		write(0, " ", 1);
+		write(STDERR_FILENO, " ", 1);
 		--i;
 	}
 	tputs(tgetstr("me", NULL), 1, ft_puti);	
-	write(0, "  ", 2);
+	write(STDERR_FILENO, "  ", 2);
 }
 
 /*
@@ -124,7 +124,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 			page = maxpage;
 		column = page * window_maxrow;
 		column_end = column + window_maxrow;
-		ft_printf_fd(0, "Page %d/%d\n", page + 1, maxpage + 1);
+		ft_printf_fd(STDERR_FILENO, "Page %d/%d\n", page + 1, maxpage + 1);
 		++newlines;
 		tputs(tgetstr("cr", NULL), 1, ft_puti);
 	}

@@ -24,6 +24,7 @@ SRC =	srcs/main/main.c\
 		srcs/line_edition/autocompletion_printing.c\
 		srcs/line_edition/autocompletion_parser.c\
 		srcs/line_edition/cursor_movement.c\
+		srcs/line_edition/quote_handler.c\
 		srcs/line_edition/file_list.c\
 		srcs/lexer/get_token.c\
 		srcs/lexer/token_tools.c\

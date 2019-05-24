@@ -144,8 +144,9 @@ char					*escape_name(char *name, char* escaped_chars, unsigned int length);
 /*
 **  Line edition - Autocompletion parser
 */
-char					*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
-						unsigned int *autocompletion_point);
+char					*get_autocompletion_word(t_edit *line_e, unsigned int *argument, unsigned int *autocompletion_point);
+int						quote_match(char *line, unsigned int *i, unsigned int maxlen, char c);
+int						get_idx_quote_type(char *line, unsigned int idx);
 
 /*
 **  Line edition - File list

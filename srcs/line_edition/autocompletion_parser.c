@@ -32,37 +32,6 @@ int		is_separator(char c)
 }
 
 /*
-**  quote_match
-**
-**  - Used during parsing when encountering a quote, it automatically skips
-**  to the matching closing quote. Required to avoid parsing special
-**  characters it may contain that could be considered as
-**  a separator for example.
-*/
-
-void	quote_match(char *line, unsigned int *i, unsigned int maxlen, char c)
-{
-	unsigned int escape;
-
-	escape = 0;
-	while (++(*i) < maxlen)
-	{
-		if (escape == 1)
-		{
-			escape = 0;
-			continue ;
-		}
-		if (line[*i] == '\\' && c == '"')
-		{
-			escape = 1;
-			continue ;
-		}
-		if (line[*i] == c)
-			return ;
-	}
-}
-
-/*
 **
 **  parse_word
 **
@@ -157,9 +126,6 @@ char	*parse_word(char *line, unsigned int end)
 int		get_last_slash(char *line, unsigned int word_start,
 		unsigned int word_end, t_edit *line_e)
 {
-	unsigned int i;
-	unsigned int escape;
-
 	while (word_end > word_start && line[word_end] != '/')
 		--word_end;
 	if (line[word_end] == '/')
@@ -168,43 +134,7 @@ int		get_last_slash(char *line, unsigned int word_start,
 		return (word_end + 1);
 	else
 		return (word_end);
-	i = word_start;
-	escape = 0;
-	line_e->autocomp_quote = 0;
-	while (i < word_end)
-	{
-		if (escape)
-		{
-			escape = 0;
-			++i;
-			continue ;
-		}
-		if (line[i] == '\\')
-		{
-			escape = 1;
-			line_e->autocomp_quote = 0;
-			++i;
-			continue ;
-		}
-		if (line_e->line[i] == '"')
-		{
-			quote_match(line_e->line, &i, word_end, '"');
-			line_e->autocomp_quote = 1;
-			++i;
-			continue ;
-		}
-		else if (line_e->line[i] == '\'')
-		{
-			quote_match(line_e->line, &i, word_end, '\'');
-			line_e->autocomp_quote = 2;
-			++i;
-			continue ;
-		}
-		if (i >= word_end)
-			break ;
-		line_e->autocomp_quote = 0;
-		++i;
-	}
+	line_e->autocomp_quote = get_idx_quote_type(line, word_end);
 	return (word_end);
 }
 
@@ -234,7 +164,6 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 	{	
 		word_start = i;
 		word_end = i;
-		line_e->autocomp_quote = 0;
 		while (is_separator(line_e->line[i]) && i < line_e->cursor_pos)
 			++i;
 		if (i >= line_e->cursor_pos)
@@ -254,30 +183,27 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 			{
 				escape = 1;
 				word_end = i++;
-				line_e->autocomp_quote = 0;
 				continue ;
 			}
 			if (line_e->line[i] == '"')
 			{
 				quote_match(line_e->line, &i, line_e->cursor_pos, '"');
 				word_end = i++;
-				line_e->autocomp_quote = 1;
 				continue ;
 			}
 			else if (line_e->line[i] == '\'')
 			{
 				quote_match(line_e->line, &i, line_e->cursor_pos, '\'');
 				word_end = i++;
-				line_e->autocomp_quote = 2;
 				continue ;
 			}
 			if (is_separator(line_e->line[i]) || i >= line_e->cursor_pos)
 				break ;
 			word_end = i++;
-			line_e->autocomp_quote = 0;
 		}
 		++word_idx;
 	}
+	line_e->autocomp_quote = get_idx_quote_type(line_e->line, word_end);
 	*argument = word_idx > 1;
 	if (word_idx == 0 && word_start == word_end)
 		return (NULL);
