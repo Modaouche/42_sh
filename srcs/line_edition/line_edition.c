@@ -69,10 +69,9 @@ void	cancel_autocompletion(t_edit *line_e)
 }
 
 /*
-**  on_key_press
+**  insert_char
 **
-**  - Event handler called whenever the user pressed a key.
-**    used to happen input to line or to react to special characters.
+**  - Called to insert a character to the line and update it visually
 */
 
 void	insert_char(t_edit *line_e, char c)
@@ -91,6 +90,12 @@ void	insert_char(t_edit *line_e, char c)
 	cursor_actualpos(line_e);
 }
 
+/*
+**  can_insert_tabs
+**
+**  - Function that determines whether the line is empty or not
+*/
+
 int		can_insert_tabs(t_edit *line_e)
 {
 	unsigned int i;
@@ -107,6 +112,107 @@ int		can_insert_tabs(t_edit *line_e)
 	return (1);
 }
 
+void	go_to_prev_word(t_edit *line_e)
+{
+	unsigned int i;
+	unsigned int word_start;
+	unsigned int last_word_start;
+	unsigned int escape;
+
+	i = 0;
+	escape = 0;
+	word_start = 0;
+	last_word_start = 0;
+	while (i < line_e->cursor_pos)
+	{
+		if (escape == 1)
+		{
+			escape = 0;
+			++i;
+			continue ;
+		}
+		if (line_e->line[i] == '\\')
+		{
+			escape = 1;
+			++i;
+			continue ;
+		}
+		if (line_e->line[i] == '"' || line_e->line[i] == '\'')
+		{
+			quote_match(line_e->line, &i, line_e->cursor_pos, line_e->line[i]);
+			if (i++ >= line_e->cursor_pos)
+				break ;
+		}
+		if (is_separator(line_e->line[i]))
+		{
+			while (is_separator(line_e->line[i]))
+				++i;
+			last_word_start = word_start;
+			word_start = i;
+			continue ;
+		}
+		++i;
+	}
+	cursor_start(line_e);
+	line_e->cursor_pos = last_word_start;
+	cursor_actualpos(line_e);
+}
+
+void	go_to_next_word(t_edit *line_e)
+{
+	unsigned int i;
+	unsigned int quote;
+	unsigned int escape;
+
+	i = line_e->cursor_pos;
+	quote = get_idx_quote_type(line_e->line, i);
+	if (quote)
+	{
+		quote_match(line_e->line, &i, line_e->len, "'\""[quote - 1]);
+		++i;
+	}
+	escape = 0;
+	while (i < line_e->len)
+	{
+		if (escape == 1)
+		{
+			escape = 0;
+			++i;
+			continue ;
+		}
+		if (line_e->line[i] == '\\')
+		{
+			escape = 1;
+			++i;
+			continue ;
+		}
+		if (line_e->line[i] == '"' || line_e->line[i] == '\'')
+		{
+			quote_match(line_e->line, &i, line_e->len, line_e->line[i]);
+			if (i < line_e->len)
+				++i;
+			continue ;
+		}
+		if (is_separator(line_e->line[i]))
+		{
+			while (is_separator(line_e->line[i]))
+				++i;
+			break ;
+		}
+		++i;
+	}
+	cursor_start(line_e);
+	line_e->cursor_pos = i;
+	cursor_actualpos(line_e);
+}
+
+/*
+**  on_key_press
+**
+**  - Event handler called whenever the user pressed a key.
+**    used to happen input to line or to react to special characters.
+*/
+
 void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 {
 	if (!key)
@@ -120,13 +226,9 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		return ;
 	}
 	else if (ft_strlen(key) == 6 && key[0] == 27 && key[1] == 91 && key[2] == 49 && key[3] == 59 && key[4] == 50 && key[5] == 68)
-	{
-		//shift + left
-	}
+		go_to_prev_word(line_e);
 	else if (ft_strlen(key) == 6 && key[0] == 27 && key[1] == 91 && key[2] == 49 && key[3] == 59 && key[4] == 50 && key[5] == 67)
-	{
-		//shift + right
-	}
+		go_to_next_word(line_e);
 	else if (ft_strlen(key) == 4 && key[0] == 27 && key[1] == 91 && key[2] == 53 && key[3] == 126)
 	{
 		if (line_e->autocomp == 2)

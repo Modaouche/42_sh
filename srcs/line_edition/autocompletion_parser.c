@@ -185,15 +185,9 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 				word_end = i++;
 				continue ;
 			}
-			if (line_e->line[i] == '"')
+			if (line_e->line[i] == '"' || line_e->line[i] == '\'')
 			{
-				quote_match(line_e->line, &i, line_e->cursor_pos, '"');
-				word_end = i++;
-				continue ;
-			}
-			else if (line_e->line[i] == '\'')
-			{
-				quote_match(line_e->line, &i, line_e->cursor_pos, '\'');
+				quote_match(line_e->line, &i, line_e->cursor_pos, line_e->line[i]);
 				word_end = i++;
 				continue ;
 			}

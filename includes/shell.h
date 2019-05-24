@@ -147,7 +147,7 @@ char					*escape_name(char *name, char* escaped_chars, unsigned int length);
 char					*get_autocompletion_word(t_edit *line_e, unsigned int *argument, unsigned int *autocompletion_point);
 int						quote_match(char *line, unsigned int *i, unsigned int maxlen, char c);
 int						get_idx_quote_type(char *line, unsigned int idx);
-
+int						is_separator(char c);
 /*
 **  Line edition - File list
 */
