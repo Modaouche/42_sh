@@ -73,7 +73,7 @@ void        io_here(t_ast **ast, t_edit *line_e)
 					line_e->prompt_size = print_prompt(6);
 					line_edition(line_e);
 				}
-				if (ft_strcmp(heredoc->lexeme, line_e->line))//it could be here
+				if (ft_strcmp(heredoc->lexeme, line_e->line))//it could be here, cmp with word
 					ast_insert_left(get_heredoc(line_e), ast);
 			}//gerer les heredocd (voir la doc opengrp)
 			ft_strdel(&line_e->line);

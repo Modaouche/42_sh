@@ -24,10 +24,10 @@ void    extend_quotes(t_edit *line_e, char **word, unsigned int *i)
     if (line_e->line[offset] == '\'')
         while (!(ret = quote_parser(line_e->line + offset, word, qt)))//pb du ret
         {
-            qt = 0;
+            qt = 2;
             offset = 0;
             init_line(line_e);
-	        line_e->prompt_size = print_prompt(4);
+	    line_e->prompt_size = print_prompt(4);
             line_edition(line_e);
             if (!line_e->line)
                 line_e->line = ft_memalloc(1);

@@ -14,16 +14,23 @@
 
 int     quote_parser(const char *line, char **word, unsigned int qt)
 {
-    if (!*word)
-    {    if (ft_strclen(line + qt, '\''))
-            *word = ft_strcdup(line + qt, '\'');
-    }
-    else
-        ft_strjoin_free(*word, ft_strcdup(line + qt, '\''), 3);
-    if (!ft_strchr(line + qt, '\''))
-    {
-        *word = (!*word) ? ft_strdup("\n") : ft_strjoin_free(*word, "\n", 1);        
-        return (0);
-    }
-    return (ft_strclen(line + qt, '\'') + 2);
+	if (qt == 2 || !qt)
+		qt = 0;
+	if (!*word)
+	{
+		if (ft_strclen(line + qt, '\''))
+			*word = ft_strcdup(line + qt, '\'');
+	}
+	else
+	{
+		if (ft_strclen(line + qt, '\''))
+			*word = ft_strjoin_free(*word, ft_strcdup(line + qt, '\''), 3);
+		getchar();
+	}
+	if (!ft_strchr(line + qt, '\''))
+	{
+		*word = (!*word) ? ft_strdup("\n") : ft_strjoin_free(*word, "\n", 1);        
+		return (0);
+	}
+	return (ft_strclen(line + qt, '\'') + 2);
 }
