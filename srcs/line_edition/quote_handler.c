@@ -45,6 +45,13 @@ int		quote_match(char *line, unsigned int *i, unsigned int maxlen, char c)
 	return (c == '"' ? 1 : 2);
 }
 
+/*
+**  get_idx_quote_type
+**
+**  - When given a position inside the given string, will determine
+**    whether this position is surrounded by single, double or no quotes.
+**    Very important for a lot of stuff concerning autocompletion with quotes.
+*/
 
 int		get_idx_quote_type(char *line, unsigned int idx)
 {
@@ -70,15 +77,9 @@ int		get_idx_quote_type(char *line, unsigned int idx)
 			quote = 0;
 			continue ;
 		}
-		if (line[i] == '"')
+		if (line[i] == '"' || line[i] == '\'')
 		{
-			quote = quote_match(line, &i, idx, '"');
-			++i;
-			continue ;
-		}
-		else if (line[i] == '\'')
-		{
-			quote = quote_match(line, &i, idx, '\'');
+			quote = quote_match(line, &i, idx, line[i]);
 			++i;
 			continue ;
 		}
