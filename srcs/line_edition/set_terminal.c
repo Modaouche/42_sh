@@ -17,7 +17,7 @@ struct termios				*term_backup(void)
 	static struct termios	termiold;
 
 	if (tcgetattr(STDERR_FILENO, &termiold) == -1)
-		toexit(0, "tcgetattr");
+		toexit(0, "tcgetattr", 1);
 	return (&termiold);
 }
 
@@ -26,7 +26,7 @@ struct termios				*term_raw(void)
 	static struct termios	termios;
 
 	if (tcgetattr(STDERR_FILENO, &termios) == -1)
-		toexit(0, "tcgetattr");
+		toexit(0, "tcgetattr", 1);
 	termios.c_lflag |= IEXTEN;
 	termios.c_lflag &= ~(ICANON | ECHO);
 	termios.c_oflag &= ~(OPOST);
@@ -41,5 +41,5 @@ void						set_terminal(t_edit *line_e)
 	line_e->termios = term_raw();
 	line_e->len_max = BUFFER_LEN;
 	if (!isatty(STDERR_FILENO))
-		toexit(line_e, "isatty");
+		toexit(line_e, "isatty", 1);
 }

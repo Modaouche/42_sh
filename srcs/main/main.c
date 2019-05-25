@@ -58,6 +58,6 @@ int main(int ac, char **av, char **envp)
 	}
 	ft_strdel(&(line_e->line));
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
-		toexit(0, "tcsetattr");
+		toexit(0, "tcsetattr", 1);
     return (0);
 }
