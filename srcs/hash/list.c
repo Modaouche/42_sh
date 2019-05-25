@@ -5,37 +5,59 @@
 
 #include "list.h"
 #define _FREE_NODE(_node, _dtor)    if (_dtor) (*(_dtor))((_node)->data);\
+                                    (_node)->next = (_node)->prev = NULL;\
                                     free((void*)(_node));
 
 list_t*
-make_list(_dtor dtor) {
+make_list(_destruct_t dtor, _duplicat_t dcpy) {
     list_t* list = (list_t*)malloc(sizeof(*list));
     if (!list)
-        { return (NULL); }
+        { return (_LIST_NULL); }
     (void)memset(list, 0, sizeof(*list));
     list->dtor = dtor;
-    list->curr = _FRONT;
+    list->dcpy = dcpy;
     return (list);
 }
 
 void
 free_list(list_t* list) {
     if (list) {
-        void** iter;
-        _LIST_INIT_ITER(list, iter, _FRONT);
-        while (_LIST_NEXT_ITER(list, iter))
-            { _FREE_NODE(_LIST_ITER_NODE(iter), list->dtor); }
+        iter_list_t iter;
+        init_iter_list(list, &iter, FORWARD);
+        element_t element;
+        while ((element = next_iter_list(&iter)))
+            { _FREE_NODE(_ELEMENT_NODE(element), list->dtor); }
         free((void*)list);
     }
 }
 
+list_t*
+copy_list(list_t const* list) {
+    if (!list)
+        { return (_LIST_NULL); }
+    list_t* new_list = make_list(list->dtor, list->dcpy);
+    if (!new_list)
+        { return (_LIST_NULL); }
+    iter_list_t iter;
+    init_iter_list(list, &iter, FORWARD);
+    element_t element;
+    while ((element = next_iter_list(&iter))) {
+        void* copy = *element;
+        if (list->dcpy)
+            { copy = (*list->dcpy)(*element); }
+        _LIST_PUSH_BACK(new_list, copy);
+    }
+    return (new_list);
+}
+
+
 static _node_t*
 _node_at_list(list_t const* list, size_t index) {
     if (!list)
-        { return (NULL); }
+        { return (_LIST_NULL); }
     else if (index >= list->size)
-        { return (NULL); }
-    _node_t* iter = NULL;
+        { return (_LIST_NULL); }
+    _node_t* iter = _LIST_NULL;
     if (index < (list->size >> 1)) {
         iter = list->head;
         while (index--)
@@ -48,26 +70,24 @@ _node_at_list(list_t const* list, size_t index) {
     return (iter);
 }
 
-bool
-at_list(list_t const* list, size_t index, void** _data) {
-    if (!_data)
-        { return (false); }
+void**
+at_list(list_t const* list, size_t index) {
     _node_t* node = _node_at_list(list, index);
     if (node)
-        { (*_data) = node->data; }
-    return ((bool)node);
+        { return (&node->data); }
+    return (_LIST_NULL);
 }
 
 list_t*
 insert_list(list_t* list, size_t index, size_t count, ...) {
     if (!list)
-        { return (NULL); }
+        { return (_LIST_NULL); }
     if (!count)
         { return (list); }
     size_t size_node = sizeof(_node_t) + ((count - 1) * sizeof(void*));
     _node_t* new_node = (_node_t*)malloc(size_node);
     if (!new_node)
-        { return (NULL); }
+        { return (_LIST_NULL); }
     (void)memset((void*)new_node, 0, size_node);
     va_list _start;
     va_start(_start, count);
@@ -77,7 +97,9 @@ insert_list(list_t* list, size_t index, size_t count, ...) {
         ++base_offset;
     }
     va_end(_start);
-    if (!list->head) {
+    if (!list->head || !list->tail) {
+        if (list->head || list->tail)
+            { return (_LIST_NULL); }
         list->head = new_node;
         list->tail = new_node;    
     } else {
@@ -106,7 +128,7 @@ insert_list(list_t* list, size_t index, size_t count, ...) {
 list_t*
 remove_list(list_t* list, size_t index) {
     if (!list)
-        { return (NULL); }
+        { return (_LIST_NULL); }
     if (!list->size)
         { return (list); }
     _node_t* target = _node_at_list(list, index);
@@ -127,25 +149,27 @@ remove_list(list_t* list, size_t index) {
 }
 
 list_t*
-_foreach_list(list_t* list, _iterator fiter, _direction dir) {
-    if (!list || !list->head)
-        { return (NULL); }
-    void** iter;
-    _LIST_INIT_ITER(list, iter, dir);
-    while (_LIST_NEXT_ITER(list, iter))
-        { (*fiter)(*iter); }
+_foreach_list(list_t* list, _iterator_t fiter, _direction direction) {
+    if (!list || !list->head || !list->tail)
+        { return (_LIST_NULL); }
+    iter_list_t iter;
+    init_iter_list(list, &iter, direction);
+    element_t element;
+    while ((element = next_iter_list(&iter)))
+        { (*fiter)(*element); }
     return (list);
 }
 
 list_t*
-_foreach_remove_list(list_t* list, _predicate pred, _direction dir) {
+_foreach_remove_list(list_t* list, _predicat_t pred, _direction direction) {
     if (!list || !pred)
-        { return (NULL); }
-    void** iter;
-    _LIST_INIT_ITER(list, iter, dir);
-    while (_LIST_NEXT_ITER(list, iter)) {
-        _node_t* parent = _LIST_ITER_NODE(iter);
-        if ((*pred)(*iter)) {
+        { return (_LIST_NULL); }
+    iter_list_t iter;
+    init_iter_list(list, &iter, direction);
+    element_t element;
+    while ((element = next_iter_list(&iter))) {
+        if ((*pred)(*element)) {
+            _node_t* parent = _ELEMENT_NODE(element);
             if (parent->prev)
                 { parent->prev->next = parent->next; }
             else
@@ -153,8 +177,9 @@ _foreach_remove_list(list_t* list, _predicate pred, _direction dir) {
             if (parent->next)
                 { parent->next->prev = parent->prev; }
             else
-                { list->tail = NULL; }
+                { list->tail = _LIST_NULL; }
             _FREE_NODE(parent, list->dtor);
+            --list->size;
         }
     }
     return (list);
@@ -163,12 +188,13 @@ _foreach_remove_list(list_t* list, _predicate pred, _direction dir) {
 list_t*
 reverse_list(list_t* list) {
     if (!list)
-        { return (NULL); }
-    iter_t iter;
-    _LIST_INIT_ITER(list, iter, _FRONT);
-    _node_t* before = NULL;
-    while (_LIST_NEXT_ITER(list, iter)) {
-        _node_t* current = _LIST_ITER_NODE(iter);
+        { return (_LIST_NULL); }
+    iter_list_t iter;
+    init_iter_list(list, &iter, FORWARD);
+    _node_t* before = _LIST_NULL;
+    element_t element;
+    while ((element = next_iter_list(&iter))) {
+        _node_t* current = _ELEMENT_NODE(element);
         current->prev = current->next;
         current->next = before;
         before = current;
@@ -180,25 +206,33 @@ reverse_list(list_t* list) {
 }
 
 void
-_init_iter_list(list_t* list, _direction dir) {
-    if (!list)
+init_iter_list(list_t const* list, iter_list_t* iter, _direction direction) {
+    if (!list || !iter)
         { return; }
-    list->curr = dir;
-    list->iter_node = NULL;
-    if (dir == _FRONT)
-        { list->iter_node = list->head; }
-    else if (dir == _BACK)
-        { list->iter_node = list->tail; }
+    if ((direction == FORWARD) || (direction == REVERSE)) {
+        iter->current = direction;
+        iter->element = _ELEMENT_NULL;
+        if (list->size) {
+            if (direction == FORWARD)
+                { iter->element = &list->head->data; }
+            else if (direction == REVERSE)
+                { iter->element = &list->tail->data; }
+        }
+    }
 }
 
-void**
-_next_iter_list(list_t* list) {
-    if (!list || !list->iter_node)
-        { return (NULL); }
-    void** data = &list->iter_node->data;
-    if (list->curr == _FRONT)
-        { list->iter_node = list->iter_node->next; }
-    else if (list->curr == _BACK)
-        { list->iter_node = list->iter_node->prev; }
+element_t
+next_iter_list(iter_list_t* iter) {
+    if (!iter || !iter->element)
+        { return (_ELEMENT_NULL); }
+    element_t data = iter->element;
+    _node_t* target = NULL;
+    if (iter->current == FORWARD)
+        { target = _ELEMENT_NODE(data)->next; }
+    else if (iter->current == REVERSE)
+        { target = _ELEMENT_NODE(data)->prev; }
+    iter->element = _ELEMENT_NULL;
+    if (target)
+        { iter->element = &target->data; }
     return (data);
 }
