@@ -49,7 +49,7 @@ int main(int ac, char **av, char **envp)
 				line_edition(line_e);
 		}
 		line_lexer(line_e);
-		//execution de commande...
+	//	execution();
 		if (line_e->line && !ft_strcmp(line_e->line, "reset"))//buitin
 			tputs(tgetstr("cl", NULL), 1, ft_puti);
 		if (line_e->line && !ft_strcmp(line_e->line, "exit"))//buitin

@@ -96,7 +96,7 @@ typedef struct			s_key_code
 */
 
 void					set_terminal(t_edit *line_e);
-void					toexit(t_edit *line_e, char *str);
+void					toexit(t_edit *line_e, char *str, int err);
 struct termios*			term_backup(void);
 struct termios*			term_raw(void);
 void					init_line(t_edit *line_e);

@@ -14,7 +14,7 @@
 
 //cree une fct perror(int g_errorno) like 
 
-void	toexit(t_edit *line_e, char *str)
+void	toexit(t_edit *line_e, char *str, int err)
 {
 	if (line_e && line_e->termiold)
 	{
@@ -22,8 +22,13 @@ void	toexit(t_edit *line_e, char *str)
 		line_e->termiold->c_oflag |= (OPOST);
 		tcsetattr(STDERR_FILENO, TCSAFLUSH, line_e->termiold);
 	}
-	ft_putstr_fd("./ft_select : ", STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putendl_fd(" : failed", STDERR_FILENO);
+	ft_putstr_fd("\n./42sh : ", STDERR_FILENO);
+	if (err)
+		perror(str);
+	else
+	{
+		ft_putstr_fd(str, STDERR_FILENO);
+		ft_putendl_fd(" : failed", STDERR_FILENO);
+	}
 	exit(EXIT_FAILURE);
 }
