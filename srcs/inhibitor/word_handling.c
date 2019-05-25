@@ -29,7 +29,7 @@ int    word_handling_prime(const char *line, char **word, unsigned int *i, int q
     }
     else if (line[*i] == '\\')
     {
-        if (!backslash(line, word, i))
+        if (!backslash(line, word, i, qt))
             return (0);
     }
     else if (line[*i] == '$')
