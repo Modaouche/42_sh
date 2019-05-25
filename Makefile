@@ -27,6 +27,7 @@ SRC =	srcs/main/main.c\
 		srcs/line_edition/quote_handler.c\
 		srcs/line_edition/file_list.c\
 		srcs/lexer/get_token.c\
+		srcs/lexer/get_heredoc.c\
 		srcs/lexer/token_tools.c\
 		srcs/lexer/token_isother.c\
 		srcs/lexer/token_redirect_great.c\
@@ -61,8 +62,8 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 
 CC = gcc
 
-CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
-	#		-g -fsanitize=address\
+CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)\
+			-g -fsanitize=address\
 			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 

@@ -65,9 +65,9 @@ void        infix_print_ast(t_ast *root)
 	  return ;
 	infix_print_ast(root->left);
 	if (root->token->lexeme)
-		ft_printf("{[%d]  [%s]}   ", root->token->tokind, root->token->lexeme);
+		ft_printf("- %d [%s] ", root->token->tokind, root->token->lexeme);
 	else
-		ft_printf("    {[%d]  [NO_THING]}   ", root->token->tokind);
+		ft_printf("- %d [NO_THING] -", root->token->tokind);
 	infix_print_ast(root->right);
 	
 }

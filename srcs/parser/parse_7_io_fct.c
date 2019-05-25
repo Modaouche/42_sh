@@ -54,31 +54,37 @@ void        io_file(t_ast **ast, t_edit *line_e)
 	}
 }
 
+
 void        io_here(t_ast **ast, t_edit *line_e)
 {
 	t_token *heredoc;
-	char *cpy;
+	char	*cpy;
+	t_token *to_cmp;
+	int	begin;
 
+	begin = 1;
 	if (first_set(head_of_line(*ast), T_DLESSDASH, T_DLESS, -1) && g_errorno != ER_SYNTAX)
 	{
 		heredoc = get_next_token((const char **)&(line_e->line), &(line_e->ofst));//leaks?
 		if (heredoc->tokind == T_WORD)
 		{
 			cpy = ft_strdup(&line_e->line[line_e->ofst]);
-			while (ft_strcmp(heredoc->lexeme, line_e->line))
+			while (begin || ft_strcmp(heredoc->lexeme, to_cmp->lexeme))
 			{
 				init_line(line_e);
-				while (!line_e->line)
-				{
-					line_e->prompt_size = print_prompt(6);
-					line_edition(line_e);
-				}
-				if (ft_strcmp(heredoc->lexeme, line_e->line))//it could be here, cmp with word
-					ast_insert_left(get_heredoc(line_e), ast);
-			}//gerer les heredocd (voir la doc opengrp)
+				line_e->prompt_size = print_prompt(6);
+				line_edition(line_e);
+				if (!line_e->line || !line_e->line[0])
+					line_e->line = ft_strdup_del("\n", line_e->line);
+				to_cmp = get_heredoc(line_e, &begin);
+				if (begin || ft_strcmp(heredoc->lexeme, to_cmp->lexeme))
+					ast_insert_left(to_cmp, ast);
+			}//gerer les heredocd (voir la doc opengrp) et and , once the ctrl v + j is set, go make a parser for \n.
 			ft_strdel(&line_e->line);
-			ft_strdel(&heredoc->lexeme);
+			ft_strdel(&(heredoc->lexeme));
+			ft_strdel(&(to_cmp->lexeme));
 			ft_memdel((void **)&heredoc);
+			ft_memdel((void **)&to_cmp);
 			line_e->line = cpy;
 			ast_insert_right(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);
 		}

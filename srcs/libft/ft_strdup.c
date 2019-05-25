@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_strdup_c_del.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -45,4 +45,10 @@ char	*ft_strcdup(const char *s, char c)
 	}
 	output[i] = '\0';
 	return (output);
+}
+
+char	*ft_strdup_del(const char *s, char *to_free)
+{
+	ft_strdel(&to_free);
+	return (ft_strdup(s));
 }

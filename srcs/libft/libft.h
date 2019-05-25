@@ -123,6 +123,7 @@ char					*ft_strdup(const char *s);
 char					*ft_strndup(const char *s, size_t n);
 char					*ft_strcdup(const char *s, char c);
 char					*ft_strdup_if(const char *s, int (*f)(int));
+char					*ft_strdup_del(const char *s, char *to_free);
 char					*ft_strcpy(char *destination, const char *source);
 char					*ft_strncpy(char *destination, const char *source,
 						size_t num);

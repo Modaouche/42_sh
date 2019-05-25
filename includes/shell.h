@@ -164,7 +164,7 @@ t_file					*merge_sort(t_file *p);
 */
 
 t_token					*get_next_token(const char **line, unsigned int *i);
-t_token					*get_heredoc();
+t_token					*get_heredoc(t_edit *line_e, int *begin);
 int						line_lexer(t_edit *line_e);
 void					skip_predicat(const char ** line, unsigned int *i, int (*pred)(int));
 int						wordlen(char *line);
