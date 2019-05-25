@@ -140,6 +140,7 @@ int						build_list_from_word(t_edit *line_e);
 void					replace_word(t_edit *line_e, char *new, size_t length, char *suffix);
 void					replace_word_from_completion(t_edit *line_e);
 char					*escape_name(char *name, char* escaped_chars, unsigned int length);
+char 					*escape_singlequote(char *name, unsigned int max);
 
 /*
 **  Line edition - Autocompletion parser
