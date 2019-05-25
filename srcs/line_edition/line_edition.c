@@ -82,7 +82,7 @@ void	insert_char(t_edit *line_e, char c)
 		print_comp_list(line_e, -1);
 	}
 	if (!(append_to_line(line_e, c)))
-		toexit(line_e, "malloc");
+		toexit(line_e, "malloc", 0);
 	if (line_e->cursor_pos < line_e->len)
 		line_e->cursor_pos += 1;
 	write(STDERR_FILENO, &c, 1);
@@ -436,18 +436,18 @@ int		line_edition(t_edit *line_e)
 	line_e->winsize_row = size.ws_row;
 	line_e->autocomp = 0;
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
-		toexit(0, "tcsetattr");
+		toexit(0, "tcsetattr", 1);
 	ft_bzero(prevkey, MAX_KEY_LEN + 1);
 	while (1)
 	{
 	   ft_bzero(key, MAX_KEY_LEN + 1);
 	   ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
 		if (ret == -1 || ret == 0)
-			perror("key:");
+			toexit(line_e, "key:", 1); 
 		if (key[0] == S_KEY_ENTER && !key[1])
 		{
 			if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
-			   toexit(0, "tcsetattr");//maybe just turn off termcap instead of exit
+			   toexit(line_e, "tcsetattr", 1);//maybe just turn off termcap instead of exit
 			break ;
 		}
 		on_key_press(line_e, prevkey, key);

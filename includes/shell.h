@@ -50,7 +50,7 @@ typedef enum
 # define MAX_KEY_LEN			15
 # define BUFFER_LEN				255
 # define TOKEN_CMP				";\n&|!<>"
-# define DQUOTE_CMP				"\\$\""
+# define BKSH_DQT_CMP				"\\$\""
 
 typedef struct 			s_file
 {
@@ -96,7 +96,7 @@ typedef struct			s_key_code
 */
 
 void					set_terminal(t_edit *line_e);
-void					toexit(t_edit *line_e, char *str);
+void					toexit(t_edit *line_e, char *str, int err);
 struct termios*			term_backup(void);
 struct termios*			term_raw(void);
 void					init_line(t_edit *line_e);
@@ -249,8 +249,8 @@ int     				word_parser(const char *line, char **word, int qt);
 char    				*word_handling(const char *, unsigned int *, int);
 int    					word_handling_prime(const char *, char **, unsigned int *, int);
 void    				dollars_cmd(const char *, char **, unsigned int *);
-int    					backslash(const char *, char **, unsigned int *);
-void    				backslash_end(t_edit *);
+int    					backslash(const char *, char **, unsigned int *, int qt);
+int	    				backslash_end(t_edit *, unsigned int *, int *);
 
 /*
 ** Tools & Co

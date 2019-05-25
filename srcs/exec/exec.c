@@ -12,23 +12,8 @@
 
 #include "shell.h"
 
-//cree une fct perror(int g_errorno) like 
+/*Debut de l'execution, des built-ins, | et redirections... , s'inspirer de minishell pour certains builtins*/
 
-void	toexit(t_edit *line_e, char *str, int err)
+... exec(t_ast..., t_edit *line_e)
 {
-	if (line_e && line_e->termiold)
-	{
-		line_e->termiold->c_lflag |= (ICANON | ECHO);
-		line_e->termiold->c_oflag |= (OPOST);
-		tcsetattr(STDERR_FILENO, TCSAFLUSH, line_e->termiold);
-	}
-	ft_putstr_fd("\n./42sh : ", STDERR_FILENO);
-	if (err)
-		perror(str);
-	else
-	{
-		ft_putstr_fd(str, STDERR_FILENO);
-		ft_putendl_fd(" : failed", STDERR_FILENO);
-	}
-	exit(EXIT_FAILURE);
-}
+}	

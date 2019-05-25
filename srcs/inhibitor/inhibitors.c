@@ -35,10 +35,10 @@ void    extend_quotes(t_edit *line_e, char **word, unsigned int *i)
     else if (line_e->line[offset] == '\"')
         while (!(ret = word_parser(line_e->line + offset, word, qt)))//pb du ret
         {
-            offset = 0;
             qt = 2;
+            offset = 0;
             init_line(line_e);
-	        line_e->prompt_size = print_prompt(5);
+	    line_e->prompt_size = print_prompt(5);
             line_edition(line_e);
             if (!line_e->line)
                 line_e->line = ft_memalloc(1);
@@ -60,8 +60,9 @@ char    *get_word(unsigned int *i)
             extend_quotes(line_e, &word, i);
         else
         {
-            while (line_e->line[0] && !(ret = word_parser(line_e->line + *i, &word, false)))
-                backslash_end(line_e);
+            while (line_e->line[0] && !(ret = word_parser(line_e->line + *i, &word, 0)))
+                if (!backslash_end(line_e, i, &ret))
+			break ;
             *i += ret;
         }
     }
