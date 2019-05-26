@@ -335,7 +335,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			{
 				line_e->cursor_pos -= 1;
 				if (line_e->line[line_e->cursor_pos] == '\n'
-					|| (line_e->cursor_pos + line_e->prompt_size + 1) % line_e->winsize_col == 0)
+					|| (line_e->cursor_pos + line_e->prompt_size + 1)% line_e->winsize_col == 0)
 				{
 					tputs(tgetstr("up", NULL), 1, ft_puti);
 					unsigned int i = 0;
@@ -356,7 +356,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocomp == 2)
 			{
-				if (line_e->autocomp_idx + (line_e->autocomp_maxrow + 1) >= line_e->autocomp_size)
+				if (line_e->autocomp_idx + (line_e->autocomp_maxrow + 1)
+					>= line_e->autocomp_size)
 					return ;
 				line_e->autocomp_idx += line_e->autocomp_maxrow + 1;
 				replace_word_from_completion(line_e);
@@ -379,8 +380,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocomp == 2)
 			{
-				if (line_e->autocomp_idx-- == 0)
-					line_e->autocomp_idx = line_e->autocomp_size - 1;
+				change_autocomp_idx(line_e, -1);
 				replace_word_from_completion(line_e);
 				print_comp_list(line_e, line_e->autocomp_idx);
 			}
@@ -389,8 +389,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocomp == 2)
 			{
-				if (++line_e->autocomp_idx > line_e->autocomp_size)
-					line_e->autocomp_idx = 0;
+				change_autocomp_idx(line_e, 1);
 				replace_word_from_completion(line_e);
 				print_comp_list(line_e, line_e->autocomp_idx);
 			}
@@ -399,10 +398,13 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	}
 	else if (line_e->line && (key[0] == S_KEY_ERASE && !key[1]))
 	{
-		if (line_e->cursor_pos == 0 || line_e->line == NULL)
+		if (line_e->line == NULL)
+			return ;
+		if (line_e->cursor_pos <= 1)
 		{
 			cancel_autocompletion(line_e);
-			return ;
+			if (line_e->cursor_pos == 0)
+				return ;
 		}
 		if (line_e->autocomp > 0)
 		{

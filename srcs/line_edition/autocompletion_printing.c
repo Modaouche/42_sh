@@ -92,7 +92,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 	unsigned int	maxpage;
 	unsigned int	newlines;
 	unsigned int	window_maxrow;
-	
+
 	if (line_e->autocomp_size <= 1 || line_e->autocomp_list == NULL)
 		return ;
 	cursor_after(line_e);
@@ -127,6 +127,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		++newlines;
 		tputs(tgetstr("cr", NULL), 1, ft_puti);
 	}
+	tputs(tgetstr("vi", NULL), 1, ft_puti); 
 	while (column <= column_end)
 	{
 		i = column;
@@ -138,17 +139,20 @@ void			print_comp_list(t_edit *line_e, int highlight)
 							max_length, i == highlight);
 			i += maxrow + 1;
 		}
+		tputs(tgetstr("ce", NULL), 1, ft_puti); 
 		if (++column <= column_end)
 		{
 			++newlines;
 			tputs(tgetstr("do", NULL), 1, ft_puti);
-			tputs(tgetstr("cr", NULL), 1, ft_puti); 
+			tputs(tgetstr("cr", NULL), 1, ft_puti);
 		}
 	}
+	tputs(tgetstr("cd", NULL), 1, ft_puti); 
 	while (newlines > 0)
 	{
 		tputs(tgetstr("up", NULL), 1, ft_puti);
 		--newlines;	
 	}
 	cursor_actualpos(line_e);
+	tputs(tgetstr("ve", NULL), 1, ft_puti);
 }
