@@ -86,8 +86,11 @@ void	insert_char(t_edit *line_e, char c)
 	if (line_e->cursor_pos < line_e->len)
 		line_e->cursor_pos += 1;
 	write(STDERR_FILENO, &c, 1);
-	ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-	cursor_actualpos(line_e);
+	if (line_e->cursor_pos != line_e->len)
+	{
+		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
+		cursor_reposition(line_e->len - line_e->cursor_pos);
+	}
 }
 
 /*
@@ -206,9 +209,23 @@ void	go_to_next_word(t_edit *line_e)
 	cursor_actualpos(line_e);
 }
 
+void	change_autocomp_idx(t_edit *line_e, int value)
+{
+	if (value < 0)
+	{
+		if ((uint)(-value) <= line_e->autocomp_idx)
+			line_e->autocomp_idx += value;
+		else
+			line_e->autocomp_idx = line_e->autocomp_size - 1;
+	}
+	else if ((line_e->autocomp_idx += (uint)value) >= line_e->autocomp_size)
+		line_e->autocomp_idx = 0;
+	replace_word_from_completion(line_e);
+	print_comp_list(line_e, line_e->autocomp_idx);
+}
+
 void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 {
-	(void)prevkey;
 	if (ft_strlen(key) == 6 && line_e->autocomp < 2
 		&& !ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5))
 	{
@@ -221,45 +238,29 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 	{
 		if (line_e->autocomp < 2)
 		{
-			if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4))
+			if (ft_memcmp(key, "\x1B\x5B\x36\x7E", 4))
 			{			
 				cursor_start(line_e);
 				line_e->cursor_pos = 0;
 			}
-			else if (ft_memcmp(key, "\x1B\x5B\x36\x7E", 4))
+			else if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4))
 			{
 				cursor_end(line_e);
 				line_e->cursor_pos = line_e->len;
 			}
+			return ;
 		}
-		else
-		{
-			if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4))
-			{
-				if (line_e->autocomp_idx -= line_e->winsize_row
-					>= line_e->autocomp_size)
-					line_e->autocomp_idx = line_e->autocomp_size - 1;
-			}
-			else if (ft_memcmp(key, "\x1B\x5B\x36\x7E", 4))
-			{
-
-				if (line_e->autocomp_idx += line_e->winsize_row
-					> line_e->autocomp_size)
-					line_e->autocomp_idx = 0;
-			}
-			else
-				return ;
-			replace_word_from_completion(line_e);
-			print_comp_list(line_e, line_e->autocomp_idx);
-		}
+		if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4) == 0)
+			change_autocomp_idx(line_e, -line_e->winsize_row);
+		else if (ft_memcmp(key, "\x1B\x5B\x36\x7E", 4) == 0)
+			change_autocomp_idx(line_e, line_e->winsize_row);
 	}
 	else if (ft_strlen(key) == 3 && !ft_memcmp(key, "\x1B\x5B\x5A", 3)
 		&& (line_e->autocomp == 2 || !ft_strcmp(prevkey, "\t")))
 	{
 		if (line_e->autocomp != 2)
 			line_e->autocomp = 2;
-		if (line_e->autocomp_idx-- == 0)
-			line_e->autocomp_idx = line_e->autocomp_size - 1;
+		change_autocomp_idx(line_e, -1);
 		replace_word_from_completion(line_e);
 		print_comp_list(line_e, line_e->autocomp_idx);
 
@@ -280,7 +281,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		ft_putendl_fd("error : key :null", STDERR_FILENO);
 		return ;
 	}
-	if (ft_strlen(key) <= 1 && ft_isprint(key[0]))
+	if (ft_strlen(key) <= 1 && (ft_isprint(key[0])
+		|| (can_insert_tabs(line_e) && key[0] == '\t')))
 	{
 		insert_char(line_e, *key);
 		return ;
@@ -288,11 +290,6 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	key_shortcut_handler(line_e, prevkey, key);
 	if (ft_strlen(key) <= 1 && key[0] == '\t')
 	{
-		if (can_insert_tabs(line_e))
-		{
-			insert_char(line_e, '\t');
-			return ;
-		}
 		if (line_e->line == NULL)
 			return ;
 		if (line_e->autocomp == 2)

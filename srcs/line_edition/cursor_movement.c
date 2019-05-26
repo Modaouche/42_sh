@@ -61,24 +61,23 @@ void		cursor_end(t_edit *line_e)
 
 	if (line_e->line == NULL)
 		return ;
-	cursor_start(line_e);
 	i = 0;
 	x = line_e->prompt_size;
 	while (line_e->line[i])
 	{
-		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
-		{
+		if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
 			x = 0;
-			tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-		}
 		else
 			++x;
-		++i;
 	}
-	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
+	i = get_line_height(line_e, line_e->len)
+		- get_line_height(line_e, line_e->cursor_pos);
+	while (i-- > 0)
+		tputs(tgetstr("do", NULL), 1, ft_puti);
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
 	while (x > 0)
 	{
-		tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
+		tputs(tgetstr("nd", NULL), 1, ft_puti);
 		--x;
 	}
 }
@@ -94,33 +93,23 @@ void		cursor_end(t_edit *line_e)
 void		cursor_after(t_edit *line_e)
 {
 	unsigned int	i;
-	unsigned int	x;
 
 	if (line_e->line == NULL)
 		return ;
-	cursor_start(line_e);
-	i = 0;
-	x = line_e->prompt_size;
-	while (line_e->line[i])
+	i = get_line_height(line_e, line_e->len) + 1;
+	i -= get_line_height(line_e, line_e->cursor_pos);
+	while (i != 0)
 	{
-		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
-		{
-			x = 0;
-			tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-		}
-		else
-			++x;
-		++i;
+		tputs(tgetstr("do", NULL), 1, ft_puti);
+		--i;
 	}
-	tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
 }
 
 /*	
 **   cursor_actualpos
 **
-** - Move the cursor to the cursor_pos
-**   To be used when the cursor is at the correct line but wrong column.
+** - Move the cursor to the cursor_pos.
 **
 */
 
@@ -129,6 +118,8 @@ void        cursor_actualpos(t_edit *line_e)
 	unsigned int	i;
 	unsigned int	x;
 
+	if (line_e->line == NULL)
+		return ;
 	cursor_start(line_e);
 	i = 0;
 	x = line_e->prompt_size;

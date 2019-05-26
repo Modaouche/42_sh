@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   quote_handler.c                                    :+:      :+:    :+:   */
+/*   line_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -70,14 +70,14 @@ int		get_idx_quote_type(char *line, unsigned int idx)
 			++i;
 			continue ;
 		}
-		if (line[i] == '\\')
+		else if (line[i] == '\\')
 		{
 			escape = 1;
-			++i;
 			quote = 0;
+			++i;
 			continue ;
 		}
-		if (line[i] == '"' || line[i] == '\'')
+		else if (line[i] == '"' || line[i] == '\'')
 		{
 			quote = quote_match(line, &i, idx, line[i]);
 			++i;

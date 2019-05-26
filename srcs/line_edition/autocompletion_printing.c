@@ -116,8 +116,8 @@ void			print_comp_list(t_edit *line_e, int highlight)
 			window_maxrow = (line_e->winsize_row - 2);
 		else
 			window_maxrow = 1;
-		if (window_maxrow > get_line_height(line_e))
-			window_maxrow -= get_line_height(line_e);
+		if (window_maxrow > get_line_height(line_e, -1))
+			window_maxrow -= get_line_height(line_e, -1);
 		maxpage = maxrow / window_maxrow;
 		page = (line_e->autocomp_idx % maxrow) / window_maxrow;
 		if (page > maxpage)
