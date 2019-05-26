@@ -118,6 +118,7 @@ void					cursor_end(t_edit *line_e);
 void					cursor_actualpos(t_edit *line_e);
 void					cursor_after(t_edit *line_e);
 uint					get_line_height(t_edit *line, unsigned int end);
+uint					get_position_x_index(t_edit *line_e, unsigned int pos);
 /*
 **  Line edition - Autocompletion
 */
