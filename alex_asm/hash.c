@@ -61,15 +61,18 @@ copy_hash(hash_t const* hash) {
 }
 
 static size_t
-#if defined(__i386__) || defined(__x86_64__)
+#ifdef _ASSEMBLY
 __attribute__((naked))
-#endif /* defined(__i386__) || defined(__x86_64__) */
+#endif /* _ASSEMBLY */
 _round_up(
-#if defined(__i386__) || defined(__x86_64__)
+#ifdef _ASSEMBLY
 __attribute__((unused))
-#endif /* defined(__i386__) || defined(__x86_64__) */
+#endif /* _ASSEMBLY */
 size_t _dummy) {
-    #if defined(__i386__) || defined(__x86_64__)
+    #ifdef _ASSEMBLY
+        #if (!defined(__x86_64__)) && (!defined(__i386__))
+            #error "UNABLE TO TARGET AN ARCHITECTURE"
+        #endif /* !defined(__x86_64__) && !defined(__i386__) */
         __asm__("xorl %edx, %edx");
         #if defined(__i386__)   // cdecl
             __asm__("bsrl dword ptr [%esp+0x04], %ecx");
@@ -81,11 +84,11 @@ size_t _dummy) {
         __asm__("xorl %eax, %eax");
         __asm__("incl %eax");
         __asm__("shll %cl, %eax");
-        #if defined(__x86_64__)
+        #if defined(__x86_64__) // system v
             __asm__("movq $0x20, %rdi");
             __asm__("bzhiq %rdi, %rax, %rax");
             __asm__("retq");
-        #else
+        #else                   // cdecl
             __asm__("retd");
         #endif /* defined(__i386__) */
     #else
@@ -97,7 +100,7 @@ size_t _dummy) {
             }
         }
         return (1 << placeholder);
-    #endif /* defined(__i386__) || defined(__x86_64__) */
+    #endif /* _ASSEMBLY */
 }
 
 static int
@@ -105,7 +108,7 @@ _expand_hash(hash_t* hash) {
     size_t new_size = _round_up(hash->allc);
     _bucket_t new_bucket = (_bucket_t)malloc(sizeof(*hash->bucket) * new_size);
     if (!new_bucket)
-        { return (EXIT_FAILURE); }
+        { return (-1); }
     (void)memset((void*)new_bucket, 0, new_size);
     iter_hash_t iter;
     init_iter_hash(hash, &iter);
@@ -130,7 +133,7 @@ _expand_hash(hash_t* hash) {
     free((void*)hash->bucket);
     hash->size = new_size;
     hash->bucket = new_bucket;
-    return (EXIT_SUCCESS);
+    return (0);
 }
 
 hash_t*
@@ -167,7 +170,7 @@ _insert_varg_hash(hash_t* hash, size_t count, size_t apply, va_list _start) {
     if ((hash->climit) && (hash->collid >= hash->climit)) {
         hash->climit <<= 1;
         hash->collid = 0;
-        if (_expand_hash(hash) == EXIT_FAILURE)
+        if (_expand_hash(hash))
             { return (_HASH_NULL); }
     }
     return (hash);

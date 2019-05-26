@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include "runtime.h"
 
 static void
@@ -71,7 +72,7 @@ environment_hash(char const* envp[]) {
             success = false;
             break;
         }
-        if ((lvalue && rvalue) && !insert_hash(hash, 2, 0, (void*)lvalue, (void*)rvalue)) {
+        if ((lvalue && rvalue) && (!insert_hash(hash, 2, 0, (void*)lvalue, (void*)rvalue))) {
             free((void*)lvalue);
             free((void*)rvalue);
             success = false;
@@ -89,14 +90,16 @@ static bool
 _compare_environment(_variable_env_t* element, char const* env_line) {
     char const* split = strchr(env_line, '=');
     if (!split)
-        { return (false); }
-    return (!strncmp(element->lvalue, env_line, (split - env_line)));
+        { return (!strncmp(element->lvalue, env_line, (split - env_line))); }
+    return (!strcmp(element->lvalue, env_line));
 }
 
 hash_t*
 set_environment_hash(hash_t* hash, char const* env_line, bool* use_path) {
     if (!hash)
         { return (_HASH_NULL); }
+    if (!env_line || !strchr(env_line, '='))
+        { return (hash); }
     element_t element = lookup_hash(hash,   (_elt_comp_t)&_compare_environment,
                                             (generic_t)env_line);
     char* lvalue;
@@ -121,4 +124,144 @@ set_environment_hash(hash_t* hash, char const* env_line, bool* use_path) {
             { (*use_path) = true; }
     }
     return (hash);
+}
+
+static size_t
+#ifdef _ASSEMBLY
+__attribute__((naked))
+#endif /* _ASSEMBLY */
+_count_occurence(
+#ifdef _ASSEMBLY
+__attribute__((unused))
+#endif /* _ASSEMBLY */
+char const* line,
+#ifdef _ASSEMBLY
+__attribute__((unused))
+#endif /* _ASSEMBLY */
+char const* sep) {
+    #ifdef _ASSEMBLY
+        #if defined(__x86_64__) // system v
+            __asm__("xchgq   %rdi, %rsi");
+            __asm__("xorb    %al, %al");
+            __asm__("xorq    %rcx, %rcx");
+            __asm__("notq    %rcx");
+            __asm__("movq    %rdi, %r8");
+            __asm__("cld");
+            __asm__("repnz   scasb");
+            __asm__("incq    %rcx"); 
+            __asm__("notq    %rcx");
+            __asm__("movq    %rcx, %rdx");
+            __asm__("xorb    %r9b, %r9b");
+            __asm__(".BEG:");
+            __asm__("movb    (%rsi), %al");
+            __asm__("testb   %al, %al");
+            __asm__("jz      .END");
+            __asm__("movq    %r8, %rdi");
+            __asm__("movq    %rdx, %rcx");
+            __asm__("repnz   scasb");
+            __asm__("setzb   %al");
+            __asm__("addb    %al, %r9b");
+            __asm__("incq    %rsi");
+            __asm__("jmp     .BEG");
+            __asm__(".END:");
+            __asm__("movzx   %r9b, %rax");
+            __asm__("retq");
+        #elif defined(__i386__) // cdecl
+            // TODO
+        #else
+            #error "UNABLE TO TARGET AN ARCHITECTURE"
+        #endif  /* defined(__x86_64__) */
+    #else
+        size_t count = 0;
+        for (size_t i = 0; line[i]; ++i) {
+            for (size_t j = 0; sep[j]; ++j) {
+                if (line[i] == sep[j]) {
+                    ++count;
+                    break;
+                }
+            }
+        }
+        return (count);
+    #endif /* _ASSEMBLY */
+}
+
+static int
+_fill_entry(char** array, size_t index, char const* last, char const* iter) {
+    size_t size_str = iter - last;
+    array[index] = (char*)malloc(sizeof(*array[index]) * (size_str + 1));
+    if (!array[index]) {
+        for (size_t i = 0; i < index; ++i)
+            { free((void*)array[i]); }
+        free((void*)array);
+        return (-1);
+    }
+    array[index][size_str] = '\0';
+    (void)memcpy((void*)array[index], (void*)last, size_str);
+    return (0);
+}
+
+static char**
+_split_array(char const* line, char const* sep) {
+    if (!line || !sep)
+        { return (NULL); }
+    size_t count = _count_occurence(line, sep);
+    size_t size = (count) ? (strlen(line) - count) : (1);
+    char** array = (char**)malloc(sizeof(*array) * (size + 1));
+    if (!array)
+        { return (NULL); }
+    (void)memset((void*)array, 0, sizeof(*array) * (size + 1));
+    char const* last = line;
+    char const* iter;
+    size_t index = 0;
+    while ((iter = strpbrk(line, sep))) {
+        if (last != iter) {
+            if (_fill_entry(array, index, last, iter))
+                { return (NULL); }
+            ++index;
+        }
+        line = iter + 1;
+        last = line;
+    }
+    line = strchr(line, '\0');
+    if (*last && _fill_entry(array, index, last, line))
+        { return (NULL); }
+    return (array);
+}
+
+hash_t*
+recompute_hash(hash_t const* envp) {
+    if (!envp)
+        { return (_HASH_NULL); }
+    element_t element = lookup_hash(envp, (_elt_comp_t)&_compare_environment, "PATH");
+    if (!element)
+        { return (_HASH_NULL); }
+    char const* path_value = ((_variable_env_t*)element)->rvalue;
+    if (!path_value || !*path_value)
+        { return (_HASH_NULL); }
+    char** target_dir = _split_array(path_value, ":");
+    if (!target_dir)
+        { return (_HASH_NULL); }
+    for (size_t i = 0; target_dir[i]; ++i) {
+        DIR* directory;
+        struct dirent* entry;
+        directory = opendir(target_dir[i]);
+        if (!directory)
+            { break; }
+        while ((entry = readdir(directory))) {
+
+        }
+        closedir(directory);
+    }
+    for (size_t i = 0; target_dir[i]; ++i)
+        { free((void*)target_dir[i]); }
+    free((void*)target_dir);
+    return (_HASH_NULL);
+}
+
+exit_statut
+exec_command(char const* command, list_t const* params, hash_t const* envp, 
+                                  char const* path_val, hash_t* cpath) {
+    if (!command)
+        { return (EXIT_FAILURE); }
+    return (EXIT_SUCCESS);
 }

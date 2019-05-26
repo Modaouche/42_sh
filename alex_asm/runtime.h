@@ -17,9 +17,8 @@ typedef int exit_statut;
 
 hash_t*     environment_hash(char const*[]);
 hash_t*     set_environment_hash(hash_t*, char const*, bool*);
-
-exit_statut exec_command(char const*, list_t const*, hash_t const*, hash_t*);
-void        set_variable(hash_t*, char const*, char const*);
+hash_t*     recompute_hash(hash_t const*);
+exit_statut exec_command(char const*, list_t const*, hash_t const*, char const*, hash_t*);
 void        call_function(hash_t*, char const*, list_t const*);
 
 #endif /* _RUNTIME_H */
