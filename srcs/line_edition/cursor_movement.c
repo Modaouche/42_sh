@@ -61,15 +61,7 @@ void		cursor_end(t_edit *line_e)
 
 	if (line_e->line == NULL)
 		return ;
-	i = 0;
-	x = line_e->prompt_size;
-	while (line_e->line[i])
-	{
-		if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
-			x = 0;
-		else
-			++x;
-	}
+	x = get_position_x_index(line_e, line_e->len);
 	i = get_line_height(line_e, line_e->len)
 		- get_line_height(line_e, line_e->cursor_pos);
 	while (i-- > 0)
