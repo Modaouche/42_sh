@@ -46,11 +46,13 @@ uint         get_line_height(t_edit *line_e, unsigned int end)
     height = 1;
     while (i < end && line_e->line[i])
     {
-        if (line_e->line[i++] == '\n' || x++ >= line_e->winsize_col)
+        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
         {
             x = 0;
             ++height;
         }
+        else
+            ++x;
     }
     return (height);
 }
@@ -66,8 +68,10 @@ uint         get_position_x_index(t_edit *line_e, unsigned int pos)
     x = line_e->prompt_size;
     while (i < pos && line_e->line[i])
     {
-        if (line_e->line[i++] == '\n' || x++ >= line_e->winsize_col)
+        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
             x = 0;
+        else
+            ++x;
     }
     return (x);
 }

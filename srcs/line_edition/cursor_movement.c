@@ -31,15 +31,16 @@ void		cursor_start(t_edit *line_e)
 	x = line_e->prompt_size;
 	while (i < line_e->cursor_pos)
 	{
-		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
+		if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
 		{
 			x = 0;
 			tputs(tgetstr("up", NULL), 1, ft_puti);
 		}
 		else
 			++x;
-		++i;
 	}
+	if (x == line_e->winsize_col && line_e->cursor_pos != line_e->len)
+			tputs(tgetstr("up", NULL), 1, ft_puti);
 	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
 	i = 0;
 	while (i++ < line_e->prompt_size)
@@ -117,14 +118,13 @@ void        cursor_actualpos(t_edit *line_e)
 	x = line_e->prompt_size;
 	while (i < line_e->cursor_pos)
 	{
-		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
+		if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
 		{
 			x = 0;
 			tputs(tgetstr("do", NULL), 1, ft_puti); //go down
 		}
 		else
 			++x;
-		++i;
 	}
 	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
 	while (x > 0)
