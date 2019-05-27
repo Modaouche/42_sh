@@ -4,6 +4,8 @@
 #include <stdarg.h>
 
 #include "list.h"
+#include "utils.h"
+
 #define _FREE_NODE(_node, _dtor)    if (_dtor) (*(_dtor))((_node)->data)        ;\
                                     (_node)->next = (_node)->prev = _NODE_NULL  ;\
                                     free((void*)(_node)->data)                  ;\

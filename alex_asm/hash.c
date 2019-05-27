@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
+
 #include "hash.h"
+#include "utils.h"
 
 static hash_t*
 _make_hash_size(size_t allc) {
@@ -13,7 +15,7 @@ _make_hash_size(size_t allc) {
         free((void*)hash);
         return (_HASH_NULL);
     }
-    (void)memset(hash->bucket, 0, _HASH_DEFAULT);
+    (void)memset(hash->bucket, 0, sizeof(*hash->bucket) * allc);
     return (hash);
 }
 
@@ -60,56 +62,13 @@ copy_hash(hash_t const* hash) {
     return (new_hash);
 }
 
-static size_t
-#ifdef _ASSEMBLY
-__attribute__((naked))
-#endif /* _ASSEMBLY */
-_round_up(
-#ifdef _ASSEMBLY
-__attribute__((unused))
-#endif /* _ASSEMBLY */
-size_t _dummy) {
-    #ifdef _ASSEMBLY
-        #if (!defined(__x86_64__)) && (!defined(__i386__))
-            #error "UNABLE TO TARGET AN ARCHITECTURE"
-        #endif /* !defined(__x86_64__) && !defined(__i386__) */
-        __asm__("xorl %edx, %edx");
-        #if defined(__i386__)   // cdecl
-            __asm__("bsrl dword ptr [%esp+0x04], %ecx");
-        #else                   // system v
-            __asm__("bsrq %rdi, %rcx");
-        #endif /* defined(__i386__) */
-        __asm__("cmovzl %edx, %ecx");
-        __asm__("incb %cl");
-        __asm__("xorl %eax, %eax");
-        __asm__("incl %eax");
-        __asm__("shll %cl, %eax");
-        #if defined(__x86_64__) // system v
-            __asm__("movq $0x20, %rdi");
-            __asm__("bzhiq %rdi, %rax, %rax");
-            __asm__("retq");
-        #else                   // cdecl
-            __asm__("retd");
-        #endif /* defined(__i386__) */
-    #else
-        size_t placeholder = 0;
-        for (int i = sizeof(size_t) - 1; i >= 0; --i) {
-            if ((_dummy >> i) & 1) {
-                placeholder = i + 1;
-                break;
-            }
-        }
-        return (1 << placeholder);
-    #endif /* _ASSEMBLY */
-}
-
 static int
 _expand_hash(hash_t* hash) {
-    size_t new_size = _round_up(hash->allc);
+    size_t new_size = round_up(hash->allc);
     _bucket_t new_bucket = (_bucket_t)malloc(sizeof(*hash->bucket) * new_size);
     if (!new_bucket)
         { return (-1); }
-    (void)memset((void*)new_bucket, 0, new_size);
+    (void)memset((void*)new_bucket, 0, sizeof(*hash->bucket) * new_size);
     iter_hash_t iter;
     init_iter_hash(hash, &iter);
     element_t* element;
@@ -226,17 +185,3 @@ next_iter_hash(iter_hash_t* iter) {
     }
     return (element);
 }
-
-size_t
-hash_string(char const* string) {
-    if (!string)
-        { return (0); }
-    size_t hash = 0;
-    size_t mult = 1;
-    for (size_t i = 0; string[i]; ++i) {
-        hash += string[i] * mult;
-        mult *= 0x100;
-    }
-    return (hash);
-}
-

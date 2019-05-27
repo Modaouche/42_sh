@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+
 #include "runtime.h"
+#include "utils.h"
 
 static void
 _del_variable_env(element_t variable_env_t) {
@@ -248,7 +250,7 @@ recompute_hash(hash_t const* envp) {
         if (!directory)
             { break; }
         while ((entry = readdir(directory))) {
-
+            /* TODO */
         }
         closedir(directory);
     }
@@ -256,6 +258,28 @@ recompute_hash(hash_t const* envp) {
         { free((void*)target_dir[i]); }
     free((void*)target_dir);
     return (_HASH_NULL);
+}
+
+char const*
+expand_variable(char const* target, hash_t const* env) {
+    // TODO
+    /*
+    bool dquote = false;
+    bool squote = false;
+    bool escape = false;
+    for (size_t i = 0; target[i]; ++i) {
+        if (!escape) {
+            if (target[i] == "\\")
+            if ((target[i] == "\"") && (!squote))
+                { dquote ~= dquote; }
+            else if ((target[i] == "'") && (!dquote))
+                { squote ~= squote; }
+            else if ((target[i] == "$") && (dquote)) {
+                
+            }
+        }
+    }
+    */
 }
 
 exit_statut

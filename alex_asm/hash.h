@@ -40,6 +40,5 @@ void        remove_hash(hash_t*, void*)                              __attribute
 element_t   lookup_hash(hash_t const*, _elt_comp_t, generic_t)       __attribute__((nothrow));
 void        init_iter_hash(hash_t const*, iter_hash_t*)              __attribute__((nothrow));
 element_t*  next_iter_hash(iter_hash_t*)                             __attribute__((nothrow));
-size_t      hash_string(char const*)                                 __attribute__((nothrow));
 
 #endif /* _HASH_H */
