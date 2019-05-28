@@ -112,13 +112,16 @@ void					cursor_reposition(size_t n);
 int						is_arrow(char *key);
 int						ft_puti(int i);
 void					ft_nlcr(void);
-size_t					print_prompt(unsigned int btn);
+size_t					print_prompt(uint btn);
 void					cursor_start(t_edit *line_e);
 void					cursor_end(t_edit *line_e);
-void					cursor_actualpos(t_edit *line_e);
 void					cursor_after(t_edit *line_e);
-uint					get_line_height(t_edit *line, unsigned int end);
-uint					get_position_x_index(t_edit *line_e, unsigned int pos);
+void					cursor_move_to(t_edit *line_e, uint pos);
+void					cursor_reset_x_pos(t_edit *line_e);
+uint					get_line_height(t_edit *line, uint end);
+uint					get_position_x_index(t_edit *line_e, uint pos);
+uint					get_cursor_x_pos(t_edit *line_e, uint pos);
+
 /*
 **  Line edition - Autocompletion
 */

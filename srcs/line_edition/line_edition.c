@@ -63,8 +63,6 @@ void	cancel_autocompletion(t_edit *line_e)
 {
 	unsigned int x;
 
-	if (line_e->autocomp == 0)
-		return ;
 	line_e->autocomp = 0;
 	cursor_after(line_e);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
@@ -72,9 +70,7 @@ void	cancel_autocompletion(t_edit *line_e)
 		- get_line_height(line_e, line_e->cursor_pos) + 1;
 	while (x-- > 0)
 		tputs(tgetstr("up", NULL), 1, ft_puti);
-	x = get_position_x_index(line_e, line_e->cursor_pos);
-	while (x-- > 0)
-		tputs(tgetstr("nd", NULL), 1, ft_puti);
+	cursor_reset_x_pos(line_e);
 	ft_file_list_delete(&line_e->autocomp_list);
 }
 
@@ -96,6 +92,8 @@ void	insert_char(t_edit *line_e, char c)
 	if (line_e->cursor_pos < line_e->len)
 		line_e->cursor_pos += 1;
 	write(STDERR_FILENO, &c, 1);
+	if (c == '\n')
+		tputs(tgetstr("cr", NULL), 1, ft_puti);
 	if (line_e->cursor_pos != line_e->len)
 	{
 		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
@@ -166,9 +164,7 @@ void	go_to_prev_word(t_edit *line_e)
 		}
 		++i;
 	}
-	cursor_start(line_e);
-	line_e->cursor_pos = last_word_start;
-	cursor_actualpos(line_e);
+	cursor_move_to(line_e, last_word_start);
 }
 
 void	go_to_next_word(t_edit *line_e)
@@ -214,9 +210,7 @@ void	go_to_next_word(t_edit *line_e)
 		}
 		++i;
 	}
-	cursor_start(line_e);
-	line_e->cursor_pos = i;
-	cursor_actualpos(line_e);
+	cursor_move_to(line_e, i);
 }
 
 void	change_autocomp_idx(t_edit *line_e, int value)
@@ -273,7 +267,6 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 		change_autocomp_idx(line_e, -1);
 		replace_word_from_completion(line_e);
 		print_comp_list(line_e, line_e->autocomp_idx);
-
 	}
 }
 
@@ -294,6 +287,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	if (ft_strlen(key) <= 1 && (ft_isprint(key[0])
 		|| (can_insert_tabs(line_e) && key[0] == '\t')))
 	{
+		if (*key == '+')
+			*key = '\n';
 		insert_char(line_e, *key);
 		return ;
 	}
@@ -336,25 +331,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					change_autocomp_idx(line_e, -(line_e->autocomp_maxrow + 1));
 			}
 			else if (line_e->cursor_pos > 0)
-			{
-				line_e->cursor_pos -= 1;
-				if (line_e->line[line_e->cursor_pos] == '\n'
-					|| (line_e->cursor_pos + line_e->prompt_size + 1)% line_e->winsize_col == 0)
-				{
-					tputs(tgetstr("up", NULL), 1, ft_puti);
-					unsigned int i = 0;
-					while (line_e->cursor_pos - i != 0)
-					{
-						if(line_e->line[line_e->cursor_pos - i] == '\n')
-							break ;
-						++i;
-					}
-					while ((i-- + line_e->prompt_size) > 0)
-						tputs(tgetstr("nd", NULL), 1, ft_puti);
-				}
-				else
-					tputs(tgetstr("le", NULL), 1, ft_puti); 
-			}
+				cursor_move_to(line_e, line_e->cursor_pos - 1);
 		}
 		else if (line_e->line && key[2] == S_KEY_ARW_RIGHT)
 		{
@@ -365,17 +342,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					change_autocomp_idx(line_e, line_e->autocomp_maxrow + 1);
 			}
 			else if (line_e->cursor_pos < line_e->len)
-			{
-				line_e->cursor_pos += 1;
-				if (line_e->line[line_e->cursor_pos] == '\n'
-					|| (line_e->cursor_pos + line_e->prompt_size) % line_e->winsize_col == 0)
-				{
-					tputs(tgetstr("do", NULL), 1, ft_puti);
-					tputs(tgetstr("cr", NULL), 1, ft_puti);
-				}
-				else
-					tputs(tgetstr("nd", NULL), 1, ft_puti);
-			}
+				cursor_move_to(line_e, line_e->cursor_pos + 1);
 		}
 		else if (key[2] == S_KEY_ARW_UP)
 		{
@@ -420,6 +387,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
         ft_putstr_fd(line_e->line, STDERR_FILENO);
 		tputs(tgetstr("cd", NULL), 1, ft_puti); 
         cursor_reposition(line_e->len - line_e->cursor_pos);
+        cursor_reset_x_pos(line_e);
 	}
 	// ft_putstr("key too long comming soon - ");
 }//in tabptrfct

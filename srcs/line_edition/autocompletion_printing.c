@@ -153,10 +153,6 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		tputs(tgetstr("up", NULL), 1, ft_puti);
 		--newlines;	
 	}
-	unsigned int x;
-	tputs(tgetstr("cr", NULL), 1, ft_puti); 
-	x = get_position_x_index(line_e, line_e->cursor_pos);
-	while (x-- > 0)
-		tputs(tgetstr("nd", NULL), 1, ft_puti);
+	cursor_reset_x_pos(line_e);
 	tputs(tgetstr("ve", NULL), 1, ft_puti);
 }
