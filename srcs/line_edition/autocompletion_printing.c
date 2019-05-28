@@ -118,14 +118,15 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		if (window_maxrow > get_line_height(line_e, -1))
 			window_maxrow -= get_line_height(line_e, -1);
 		maxpage = maxrow / window_maxrow;
-		page = (line_e->autocomp_idx % maxrow) / window_maxrow;
+		page = (line_e->autocomp_idx % (maxrow +1 )) / window_maxrow;
 		if (page > maxpage)
 			page = maxpage;
 		column = page * window_maxrow;
 		column_end = column + window_maxrow;
-		ft_printf_fd(STDERR_FILENO, "Page %d/%d\n", page + 1, maxpage + 1);
+		ft_printf_fd(STDERR_FILENO, "Page %d/%d", page + 1, maxpage + 1);
 		++newlines;
-		tputs(tgetstr("cr", NULL), 1, ft_puti);
+		tputs(tgetstr("ce", NULL), 1, ft_puti);
+		ft_nlcr();
 	}
 	tputs(tgetstr("vi", NULL), 1, ft_puti); 
 	while (column <= column_end)
@@ -139,12 +140,11 @@ void			print_comp_list(t_edit *line_e, int highlight)
 							max_length, i == highlight);
 			i += maxrow + 1;
 		}
-		tputs(tgetstr("ce", NULL), 1, ft_puti); 
+		tputs(tgetstr("ce", NULL), 1, ft_puti);
 		if (++column <= column_end)
 		{
 			++newlines;
-			tputs(tgetstr("do", NULL), 1, ft_puti);
-			tputs(tgetstr("cr", NULL), 1, ft_puti);
+			ft_nlcr();
 		}
 	}
 	tputs(tgetstr("cd", NULL), 1, ft_puti); 

@@ -22,29 +22,18 @@
 
 void		cursor_start(t_edit *line_e)
 {
-	unsigned int	i;
 	unsigned int	x;
 
 	if (line_e->line == NULL)
 		return ;
-	i = 0;
-	x = line_e->prompt_size;
-	while (i < line_e->cursor_pos)
-	{
-		if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
-		{
-			x = 0;
-			tputs(tgetstr("up", NULL), 1, ft_puti);
-		}
-		else
-			++x;
-	}
-	if (x == line_e->winsize_col && line_e->cursor_pos != line_e->len)
+	x = get_line_height(line_e, line_e->cursor_pos)
+		- get_line_height(line_e, 0);
+	while (x--)
 		tputs(tgetstr("up", NULL), 1, ft_puti);
-	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
-	i = 0;
-	while (i++ < line_e->prompt_size)
-		tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
+	x = get_position_x_index(line_e, 0);
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
+	while (x--)
+		tputs(tgetstr("nd", NULL), 1, ft_puti);
 }
 
 /*	
@@ -111,14 +100,15 @@ void		cursor_reset_x_pos(t_edit *line_e)
 /*
 **  cursor_move_to
 **
-**  - Move the cursor to a specific position
+**  - Move the cursor to a specific position.
+**    Also updates cursor_pos in the process.
 */
 
-void		cursor_move_to(t_edit *line_e, uint pos)
+void		cursor_move_to(t_edit *line_e, uint to)
 {
 	int x;
 
-	x = get_line_height(line_e, pos)
+	x = get_line_height(line_e, to)
 		- get_line_height(line_e, line_e->cursor_pos);
 	while (x > 0)
 	{
@@ -131,8 +121,30 @@ void		cursor_move_to(t_edit *line_e, uint pos)
 		++x;
 	}
 	tputs(tgetstr("cr", NULL), 1, ft_puti);
-	x = get_position_x_index(line_e, pos);
+	x = get_position_x_index(line_e, to);
 	while (x-- > 0)
 		tputs(tgetstr("nd", NULL), 1, ft_puti);
-	line_e->cursor_pos = pos;
+	line_e->cursor_pos = to;
+}
+
+void		cursor_move_from_to(t_edit *line_e, uint from, uint to)
+{
+	int x;
+
+	x = get_line_height(line_e, to)
+		- get_line_height(line_e, from);
+	while (x > 0)
+	{
+		tputs(tgetstr("do", NULL), 1, ft_puti);
+		--x;
+	}
+	while (x < 0)
+	{
+		tputs(tgetstr("up", NULL), 1, ft_puti);
+		++x;
+	}
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
+	x = get_position_x_index(line_e, to);
+	while (x-- > 0)
+		tputs(tgetstr("nd", NULL), 1, ft_puti);
 }

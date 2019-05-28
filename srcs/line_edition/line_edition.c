@@ -89,15 +89,13 @@ void	insert_char(t_edit *line_e, char c)
 	}
 	if (!(append_to_line(line_e, c)))
 		toexit(line_e, "malloc", 0);
-	if (line_e->cursor_pos < line_e->len)
-		line_e->cursor_pos += 1;
 	write(STDERR_FILENO, &c, 1);
 	if (c == '\n')
 		tputs(tgetstr("cr", NULL), 1, ft_puti);
-	if (line_e->cursor_pos != line_e->len)
+	if (++line_e->cursor_pos != line_e->len)
 	{
 		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-		cursor_reposition(line_e->len - line_e->cursor_pos);
+		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 }
 
@@ -243,15 +241,9 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 		if (line_e->autocomp < 2)
 		{
 			if (ft_memcmp(key, "\x1B\x5B\x36\x7E", 4))
-			{			
-				cursor_start(line_e);
-				line_e->cursor_pos = 0;
-			}
+				cursor_move_to(line_e, 0);
 			else if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4))
-			{
-				cursor_end(line_e);
-				line_e->cursor_pos = line_e->len;
-			}
+				cursor_move_to(line_e, line_e->len);
 			return ;
 		}
 		if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4) == 0)
@@ -265,8 +257,6 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 		if (line_e->autocomp != 2)
 			line_e->autocomp = 2;
 		change_autocomp_idx(line_e, -1);
-		replace_word_from_completion(line_e);
-		print_comp_list(line_e, line_e->autocomp_idx);
 	}
 }
 
@@ -347,20 +337,12 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		else if (key[2] == S_KEY_ARW_UP)
 		{
 			if (line_e->autocomp == 2)
-			{
 				change_autocomp_idx(line_e, -1);
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
-			}
 		}
 		else if (key[2] == S_KEY_ARW_DOWN)
 		{
 			if (line_e->autocomp == 2)
-			{
 				change_autocomp_idx(line_e, 1);
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
-			}
 		}
 		return ;
 	}
@@ -374,7 +356,6 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			return ;
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
-        cursor_start(line_e);
 		line_e->cursor_pos -= 1;
 		line_e->len -= 1;
 		if (line_e->line[0])
@@ -384,10 +365,10 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					line_e->len - line_e->cursor_pos);
 		}
 		line_e->line[line_e->len] = '\0';
-        ft_putstr_fd(line_e->line, STDERR_FILENO);
-		tputs(tgetstr("cd", NULL), 1, ft_puti); 
-        cursor_reposition(line_e->len - line_e->cursor_pos);
-        cursor_reset_x_pos(line_e);
+		tputs(tgetstr("cd", NULL), 1, ft_puti);
+		ft_putstr_fd("\b \b", STDERR_FILENO);
+		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
+		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 	// ft_putstr("key too long comming soon - ");
 }//in tabptrfct

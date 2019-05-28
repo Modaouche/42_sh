@@ -117,10 +117,10 @@ void					cursor_start(t_edit *line_e);
 void					cursor_end(t_edit *line_e);
 void					cursor_after(t_edit *line_e);
 void					cursor_move_to(t_edit *line_e, uint pos);
+void					cursor_move_from_to(t_edit *line_e, uint from, uint to);
 void					cursor_reset_x_pos(t_edit *line_e);
 uint					get_line_height(t_edit *line, uint end);
 uint					get_position_x_index(t_edit *line_e, uint pos);
-uint					get_cursor_x_pos(t_edit *line_e, uint pos);
 
 /*
 **  Line edition - Autocompletion
