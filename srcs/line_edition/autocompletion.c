@@ -30,9 +30,8 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 		new = escape_name(new, AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE, length);
 	else
 		new = escape_name(new, AUTOCOMP_ESCAPED_CHARS, length);
-	if (new == NULL)
+	if ((length = ft_strlen(new)) == 0)
 		return ;
-	length = ft_strlen(new);
 	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix)
 		+ (line_e->autocomp_quote > 0))))
 	{
@@ -40,7 +39,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 		return ;
 	}
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
-	ft_strncat(str + line_e->autocomp_point, new, length);
+	ft_memcpy(str + line_e->autocomp_point, new, length);
 	ft_strcat(str + line_e->autocomp_point + length, suffix);
 	if (line_e->autocomp_quote == 1 && length != 0)
 		ft_strcat(str + line_e->autocomp_point + length, "\"");
