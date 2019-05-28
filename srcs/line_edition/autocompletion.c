@@ -23,17 +23,15 @@
 void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 {
 	char			*str;
-	char			*escape_chars;
 
 	if (line_e->autocomp_quote == 2)
-		escape_chars = "";
+		new = escape_singlequote(new, length);
 	else if (line_e->autocomp_quote == 1)
-		escape_chars = AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE;
+		new = escape_name(new, AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE, length);
 	else
-		escape_chars = AUTOCOMP_ESCAPED_CHARS;
-	if ((new = escape_name(new, escape_chars, length)) == NULL)
+		new = escape_name(new, AUTOCOMP_ESCAPED_CHARS, length);
+	if ((length = ft_strlen(new)) == 0)
 		return ;
-	length = ft_strlen(new);
 	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix)
 		+ (line_e->autocomp_quote > 0))))
 	{
@@ -41,7 +39,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 		return ;
 	}
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
-	ft_strncat(str + line_e->autocomp_point, new, length);
+	ft_memcpy(str + line_e->autocomp_point, new, length);
 	ft_strcat(str + line_e->autocomp_point + length, suffix);
 	if (line_e->autocomp_quote == 1 && length != 0)
 		ft_strcat(str + line_e->autocomp_point + length, "\"");
@@ -54,7 +52,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	line_e->len = ft_strlen(str);
 	line_e->cursor_pos = line_e->len;
 	ft_putstr_fd(str, STDERR_FILENO);
-	tputs(tgetstr("cd", NULL), 1, ft_puti);
+	tputs(tgetstr("ce", NULL), 1, ft_puti);
 }
 
 /*
@@ -122,6 +120,46 @@ int 	build_list_from_word(t_edit *line_e)
 
 /*
 **
+**  escape_singlequote
+**
+**  - Escapes the name's singlequotes by closing them, writing an
+**    escaped singlequote then re-opening singlequotes.
+*/
+
+char 	*escape_singlequote(char *name, unsigned int max)
+{
+	unsigned int x;
+	unsigned int i;
+	char *new;
+
+	i = 0;
+	x = 0;
+	while (name[i] && i < max)
+	{
+		if (name[i++] == '\'')
+			x += 3;
+		++x;
+	}
+	if ((new = ft_strnew(x)) == NULL)
+		return (NULL);
+	x = 0;
+	i = 0;
+	while (name[i] && i < max)
+	{ 
+		if (name[i] == '\'')
+		{
+			ft_memcpy(new + x, "'\\''", 4);
+			x += 4;
+			++i;
+		}
+		else
+			new[x++] = name[i++];
+	}
+	return (new);
+}
+
+/*
+**
 **  escape_name
 **
 **  - Escapes the name's special characters for proper autocompletion purposes.
@@ -138,10 +176,9 @@ char	*escape_name(char *name, char *escaped_chars, unsigned int max)
 	x = 0;
 	while (name[i] && i < max)
 	{
-		if (ft_cfind(escaped_chars, name[i]) != -1)
+		if (ft_cfind(escaped_chars, name[i++]) != -1)
 			++x;
 		++x;
-		++i;
 	}
 	if ((new = ft_strnew(x)) == NULL)
 		return (NULL);
@@ -151,8 +188,7 @@ char	*escape_name(char *name, char *escaped_chars, unsigned int max)
 	{ 
 		if (ft_cfind(escaped_chars, name[i]) != -1)
 			new[x++] = '\\';
-		new[x++] = name[i];
-		++i;
+		new[x++] = name[i++];
 	}
 	return (new);
 }

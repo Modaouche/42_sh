@@ -82,7 +82,6 @@ int     		get_list_longest_word(t_file *list)
 
 void			print_comp_list(t_edit *line_e, int highlight)
 {
-	t_file			*list;
 	int				i;
 	unsigned int	column;
 	unsigned int	column_end;
@@ -93,11 +92,11 @@ void			print_comp_list(t_edit *line_e, int highlight)
 	unsigned int	maxpage;
 	unsigned int	newlines;
 	unsigned int	window_maxrow;
-	
-	if (line_e->autocomp_size <= 1 || !(list = line_e->autocomp_list))
+
+	if (line_e->autocomp_size <= 1 || line_e->autocomp_list == NULL)
 		return ;
 	cursor_after(line_e);
-	max_length = get_list_longest_word(list);
+	max_length = get_list_longest_word(line_e->autocomp_list);
 	maxcol = line_e->winsize_col / max_length;
 	if (maxcol == 0)
 		maxcol = 1;
@@ -116,8 +115,8 @@ void			print_comp_list(t_edit *line_e, int highlight)
 			window_maxrow = (line_e->winsize_row - 2);
 		else
 			window_maxrow = 1;
-		if (window_maxrow > get_line_height(line_e))
-			window_maxrow -= get_line_height(line_e);
+		if (window_maxrow > get_line_height(line_e, -1))
+			window_maxrow -= get_line_height(line_e, -1);
 		maxpage = maxrow / window_maxrow;
 		page = (line_e->autocomp_idx % maxrow) / window_maxrow;
 		if (page > maxpage)
@@ -128,28 +127,32 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		++newlines;
 		tputs(tgetstr("cr", NULL), 1, ft_puti);
 	}
+	tputs(tgetstr("vi", NULL), 1, ft_puti); 
 	while (column <= column_end)
 	{
 		i = column;
 		while (i < (int)line_e->autocomp_size)
 		{
-			list = ft_file_list_at(line_e->autocomp_list, i);
 			if (i == highlight)
 				tputs(tgetstr("mr", NULL), 1, ft_puti);
-			print_with_pad(list, max_length, i == highlight);
+			print_with_pad(ft_file_list_at(line_e->autocomp_list, i),
+							max_length, i == highlight);
 			i += maxrow + 1;
 		}
+		tputs(tgetstr("ce", NULL), 1, ft_puti); 
 		if (++column <= column_end)
 		{
 			++newlines;
 			tputs(tgetstr("do", NULL), 1, ft_puti);
-			tputs(tgetstr("cr", NULL), 1, ft_puti); 
+			tputs(tgetstr("cr", NULL), 1, ft_puti);
 		}
 	}
+	tputs(tgetstr("cd", NULL), 1, ft_puti); 
 	while (newlines > 0)
 	{
 		tputs(tgetstr("up", NULL), 1, ft_puti);
 		--newlines;	
 	}
 	cursor_actualpos(line_e);
+	tputs(tgetstr("ve", NULL), 1, ft_puti);
 }

@@ -67,14 +67,6 @@ typedef struct			s_edit
 	struct winsize		*wsize;
 	char				*line;
 	char				**env;
-	t_file				*autocomp_list;
-	int					autocomp;	
-	unsigned int		autocomp_idx;
-	unsigned int		autocomp_size;
-	unsigned int		autocomp_point;
-	unsigned int 		autocomp_maxcol;
-	unsigned int 		autocomp_maxrow;
-	unsigned int		autocomp_quote;
 	unsigned int		len;
 	unsigned int		ofst;
 	unsigned int		cursor_pos;
@@ -83,6 +75,15 @@ typedef struct			s_edit
 	unsigned int		winsize_col;
 	unsigned int		winsize_row;
 	char				tc_onoff;//for termcap like "dumb" , to have a usable shell
+	t_file				*autocomp_list;
+	int					autocomp;	
+	unsigned int		autocomp_idx;
+	unsigned int		autocomp_size;
+	unsigned int		autocomp_point;
+	unsigned int 		autocomp_maxcol;
+	unsigned int 		autocomp_maxrow;
+	unsigned int		autocomp_quote;
+	unsigned int		autocomp_type;
 }						t_edit;
 
 typedef struct			s_key_code
@@ -116,8 +117,8 @@ void					cursor_start(t_edit *line_e);
 void					cursor_end(t_edit *line_e);
 void					cursor_actualpos(t_edit *line_e);
 void					cursor_after(t_edit *line_e);
-uint         			get_line_height(t_edit *line);
-
+uint					get_line_height(t_edit *line, unsigned int end);
+uint					get_position_x_index(t_edit *line_e, unsigned int pos);
 /*
 **  Line edition - Autocompletion
 */
@@ -140,6 +141,7 @@ int						build_list_from_word(t_edit *line_e);
 void					replace_word(t_edit *line_e, char *new, size_t length, char *suffix);
 void					replace_word_from_completion(t_edit *line_e);
 char					*escape_name(char *name, char* escaped_chars, unsigned int length);
+char 					*escape_singlequote(char *name, unsigned int max);
 
 /*
 **  Line edition - Autocompletion parser

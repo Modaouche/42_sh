@@ -40,18 +40,15 @@ t_file		*ft_file_list_append(t_file **list, char *name, int type)
 	t_file *new;
 	t_file *tmp;
 
-	if (list == NULL || (new = ft_file_list_create(name, type)) == NULL)
-		return (NULL);
 	tmp = *list;
 	while (tmp != NULL)
 	{
 		if (ft_strcmp(name, tmp->name) == 0)
-		{
-			ft_file_list_delete(&new);
 			return (NULL);
-		}
 		tmp = tmp->next;
 	}
+	if (list == NULL || (new = ft_file_list_create(name, type)) == NULL)
+		return (NULL);
 	new->next = *list;
 	*list = new;
 	return (new);
@@ -67,7 +64,7 @@ void		ft_file_list_delete(t_file **list)
 	{
 		tmp = *list;
 		*list = (*list)->next;
-		ft_strdel(&tmp->name);;
+		ft_strdel(&tmp->name);
 		free(tmp);
 	} 
 }
@@ -111,12 +108,6 @@ t_file			*merge(t_file *a, t_file *b, t_file *head)
 	*r = (a == NULL) ? b : a;
 	return (head);
 }
-
-/*
-**
-** araout merge sort
-**
-*/
 
 t_file			*merge_sort(t_file *p)
 {
