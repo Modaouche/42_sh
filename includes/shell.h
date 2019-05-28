@@ -50,7 +50,7 @@ typedef enum
 # define MAX_KEY_LEN			15
 # define BUFFER_LEN				255
 # define TOKEN_CMP				";\n&|!<>"
-# define BKSH_DQT_CMP				"\\$\""
+# define BKSH_DQT_CMP				"\\$\"\'"
 
 typedef struct 			s_file
 {
