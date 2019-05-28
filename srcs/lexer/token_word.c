@@ -10,25 +10,32 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/shell.h"
+#include "shell.h"
 
 void    token_isword(t_token *actual_token, const char *line, unsigned int *i)
 {
-    char *word;
+	char *word;
+	unsigned int i2;
 
-    if (ft_isdigit(line[*i]) && (line[*i + 1] == '<' || line[*i + 1] == '>'))// peut etre to change into word ou bien ajouter une condition pour getword
-        token_isio_nb(actual_token, line, i);
-    else
-    {
-        word = get_word(i);
-        actual_token->tokind = T_WORD;
-        actual_token->lexeme = word;
-    }
+	i2 = *i;
+	skip_predicat(&line, &i2, &ft_isdigit);
+	if (line[i2] == '<' || line[i2] == '>')
+		token_isio_nb(actual_token, line, i);
+	else
+	{
+		word = get_word(i);
+		actual_token->tokind = T_WORD;
+		actual_token->lexeme = word;
+	}
 }
 
 void    token_isio_nb(t_token *actual_token, const char *line, unsigned int *i)
 {
-    actual_token->tokind = T_IO_NB;
-    actual_token->lexeme = ft_strndup(&line[*i], 1);
-    ++(*i);
+	unsigned int len;
+
+	len = *i;
+	skip_predicat(&line, &len, &ft_isdigit);
+	actual_token->tokind = T_IO_NB;
+	actual_token->lexeme = ft_strndup(line + *i, len - *i);
+	skip_predicat(&line, i, &ft_isdigit);
 }
