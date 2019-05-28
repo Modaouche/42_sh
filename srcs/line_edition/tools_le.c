@@ -61,19 +61,24 @@ uint         get_position_x_index(t_edit *line_e, unsigned int pos)
 {
     unsigned int i;
     unsigned int x;
+    unsigned int n;
 
     if (line_e->line == NULL)
         return (0);
     i = 0;
     x = line_e->prompt_size;
+    n = 0;
     while (i < pos && line_e->line[i])
     {
         if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
+        {
             x = 0;
+            ++n;
+        }
         else
             ++x;
     }
-    return (x);
+    return (x + n);
 }
 
 size_t		print_prompt(unsigned int btn)
@@ -82,7 +87,7 @@ size_t		print_prompt(unsigned int btn)
     size_t len;
 
     if (btn == 0)
-        prompt = ft_strdup("\e[1;32m42sh (current path) 🐚\033[0m  $> ");//ajout du path soon
+        prompt = ft_strdup("42sh (current path) $> ");//ajout du path soon
     else if (btn == 1)
 	    prompt = ft_strdup("pipe $> ");
     else if (btn == 2)

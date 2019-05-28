@@ -54,7 +54,6 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	ft_putstr_fd(str, STDERR_FILENO);
 	tputs(tgetstr("ce", NULL), 1, ft_puti);
 }
-
 /*
 **  replace_word_from_completion
 **

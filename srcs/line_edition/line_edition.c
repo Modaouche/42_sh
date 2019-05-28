@@ -61,10 +61,20 @@ int		append_to_line(t_edit *line_e, const char to_add)
 
 void	cancel_autocompletion(t_edit *line_e)
 {
+	unsigned int x;
+
+	if (line_e->autocomp == 0)
+		return ;
 	line_e->autocomp = 0;
-	cursor_end(line_e);
+	cursor_after(line_e);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
-	cursor_actualpos(line_e);
+	x = get_line_height(line_e, line_e->len)
+		- get_line_height(line_e, line_e->cursor_pos) + 1;
+	while (x-- > 0)
+		tputs(tgetstr("up", NULL), 1, ft_puti);
+	x = get_position_x_index(line_e, line_e->cursor_pos);
+	while (x-- > 0)
+		tputs(tgetstr("nd", NULL), 1, ft_puti);
 	ft_file_list_delete(&line_e->autocomp_list);
 }
 
@@ -294,10 +304,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			return ;
 		if (line_e->autocomp == 2)
 		{
-			if (++line_e->autocomp_idx >= line_e->autocomp_size)
-				line_e->autocomp_idx = 0;
-			replace_word_from_completion(line_e);
-			print_comp_list(line_e, line_e->autocomp_idx);
+			change_autocomp_idx(line_e, 1);
 			return ;
 		}
 		if (line_e->autocomp != 0 && prevkey[0] == '\t' && prevkey[1] == '\0'
@@ -325,11 +332,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocomp == 2)
 			{
-				if (line_e->autocomp_idx <= line_e->autocomp_maxrow)
-					return ;
-				line_e->autocomp_idx -= line_e->autocomp_maxrow + 1;
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
+				if (line_e->autocomp_idx > line_e->autocomp_maxrow)
+					change_autocomp_idx(line_e, -(line_e->autocomp_maxrow + 1));
 			}
 			else if (line_e->cursor_pos > 0)
 			{
@@ -357,11 +361,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			if (line_e->autocomp == 2)
 			{
 				if (line_e->autocomp_idx + (line_e->autocomp_maxrow + 1)
-					>= line_e->autocomp_size)
-					return ;
-				line_e->autocomp_idx += line_e->autocomp_maxrow + 1;
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
+					< line_e->autocomp_size)
+					change_autocomp_idx(line_e, line_e->autocomp_maxrow + 1);
 			}
 			else if (line_e->cursor_pos < line_e->len)
 			{
@@ -400,12 +401,10 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	{
 		if (line_e->line == NULL)
 			return ;
-		if (line_e->cursor_pos <= 1)
-		{
+		if (line_e->cursor_pos <= 1 && line_e->autocomp > 0)
 			cancel_autocompletion(line_e);
-			if (line_e->cursor_pos == 0)
-				return ;
-		}
+		if (line_e->cursor_pos == 0)
+			return ;
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
         cursor_start(line_e);
