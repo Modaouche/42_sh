@@ -61,10 +61,16 @@ int		append_to_line(t_edit *line_e, const char to_add)
 
 void	cancel_autocompletion(t_edit *line_e)
 {
+	unsigned int x;
+
 	line_e->autocomp = 0;
-	cursor_end(line_e);
+	cursor_after(line_e);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
-	cursor_actualpos(line_e);
+	x = get_line_height(line_e, line_e->len)
+		- get_line_height(line_e, line_e->cursor_pos) + 1;
+	while (x-- > 0)
+		tputs(tgetstr("up", NULL), 1, ft_puti);
+	cursor_reset_x_pos(line_e);
 	ft_file_list_delete(&line_e->autocomp_list);
 }
 
@@ -83,13 +89,13 @@ void	insert_char(t_edit *line_e, char c)
 	}
 	if (!(append_to_line(line_e, c)))
 		toexit(line_e, "malloc", 0);
-	if (line_e->cursor_pos < line_e->len)
-		line_e->cursor_pos += 1;
 	write(STDERR_FILENO, &c, 1);
-	if (line_e->cursor_pos != line_e->len)
+	if (c == '\n')
+		tputs(tgetstr("cr", NULL), 1, ft_puti);
+	if (++line_e->cursor_pos != line_e->len)
 	{
 		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-		cursor_reposition(line_e->len - line_e->cursor_pos);
+		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 }
 
@@ -156,9 +162,7 @@ void	go_to_prev_word(t_edit *line_e)
 		}
 		++i;
 	}
-	cursor_start(line_e);
-	line_e->cursor_pos = last_word_start;
-	cursor_actualpos(line_e);
+	cursor_move_to(line_e, last_word_start);
 }
 
 void	go_to_next_word(t_edit *line_e)
@@ -204,9 +208,7 @@ void	go_to_next_word(t_edit *line_e)
 		}
 		++i;
 	}
-	cursor_start(line_e);
-	line_e->cursor_pos = i;
-	cursor_actualpos(line_e);
+	cursor_move_to(line_e, i);
 }
 
 void	change_autocomp_idx(t_edit *line_e, int value)
@@ -239,15 +241,9 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 		if (line_e->autocomp < 2)
 		{
 			if (ft_memcmp(key, "\x1B\x5B\x36\x7E", 4))
-			{			
-				cursor_start(line_e);
-				line_e->cursor_pos = 0;
-			}
+				cursor_move_to(line_e, 0);
 			else if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4))
-			{
-				cursor_end(line_e);
-				line_e->cursor_pos = line_e->len;
-			}
+				cursor_move_to(line_e, line_e->len);
 			return ;
 		}
 		if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4) == 0)
@@ -261,9 +257,6 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 		if (line_e->autocomp != 2)
 			line_e->autocomp = 2;
 		change_autocomp_idx(line_e, -1);
-		replace_word_from_completion(line_e);
-		print_comp_list(line_e, line_e->autocomp_idx);
-
 	}
 }
 
@@ -284,6 +277,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	if (ft_strlen(key) <= 1 && (ft_isprint(key[0])
 		|| (can_insert_tabs(line_e) && key[0] == '\t')))
 	{
+		if (*key == '+')
+			*key = '\n';
 		insert_char(line_e, *key);
 		return ;
 	}
@@ -294,10 +289,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			return ;
 		if (line_e->autocomp == 2)
 		{
-			if (++line_e->autocomp_idx >= line_e->autocomp_size)
-				line_e->autocomp_idx = 0;
-			replace_word_from_completion(line_e);
-			print_comp_list(line_e, line_e->autocomp_idx);
+			change_autocomp_idx(line_e, 1);
 			return ;
 		}
 		if (line_e->autocomp != 0 && prevkey[0] == '\t' && prevkey[1] == '\0'
@@ -325,74 +317,32 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocomp == 2)
 			{
-				if (line_e->autocomp_idx <= line_e->autocomp_maxrow)
-					return ;
-				line_e->autocomp_idx -= line_e->autocomp_maxrow + 1;
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
+				if (line_e->autocomp_idx > line_e->autocomp_maxrow)
+					change_autocomp_idx(line_e, -(line_e->autocomp_maxrow + 1));
 			}
 			else if (line_e->cursor_pos > 0)
-			{
-				line_e->cursor_pos -= 1;
-				if (line_e->line[line_e->cursor_pos] == '\n'
-					|| (line_e->cursor_pos + line_e->prompt_size + 1)% line_e->winsize_col == 0)
-				{
-					tputs(tgetstr("up", NULL), 1, ft_puti);
-					unsigned int i = 0;
-					while (line_e->cursor_pos - i != 0)
-					{
-						if(line_e->line[line_e->cursor_pos - i] == '\n')
-							break ;
-						++i;
-					}
-					while ((i-- + line_e->prompt_size) > 0)
-						tputs(tgetstr("nd", NULL), 1, ft_puti);
-				}
-				else
-					tputs(tgetstr("le", NULL), 1, ft_puti); 
-			}
+				cursor_move_to(line_e, line_e->cursor_pos - 1);
 		}
 		else if (line_e->line && key[2] == S_KEY_ARW_RIGHT)
 		{
 			if (line_e->autocomp == 2)
 			{
 				if (line_e->autocomp_idx + (line_e->autocomp_maxrow + 1)
-					>= line_e->autocomp_size)
-					return ;
-				line_e->autocomp_idx += line_e->autocomp_maxrow + 1;
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
+					< line_e->autocomp_size)
+					change_autocomp_idx(line_e, line_e->autocomp_maxrow + 1);
 			}
 			else if (line_e->cursor_pos < line_e->len)
-			{
-				line_e->cursor_pos += 1;
-				if (line_e->line[line_e->cursor_pos] == '\n'
-					|| (line_e->cursor_pos + line_e->prompt_size) % line_e->winsize_col == 0)
-				{
-					tputs(tgetstr("do", NULL), 1, ft_puti);
-					tputs(tgetstr("cr", NULL), 1, ft_puti);
-				}
-				else
-					tputs(tgetstr("nd", NULL), 1, ft_puti);
-			}
+				cursor_move_to(line_e, line_e->cursor_pos + 1);
 		}
 		else if (key[2] == S_KEY_ARW_UP)
 		{
 			if (line_e->autocomp == 2)
-			{
 				change_autocomp_idx(line_e, -1);
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
-			}
 		}
 		else if (key[2] == S_KEY_ARW_DOWN)
 		{
 			if (line_e->autocomp == 2)
-			{
 				change_autocomp_idx(line_e, 1);
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
-			}
 		}
 		return ;
 	}
@@ -400,15 +350,12 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	{
 		if (line_e->line == NULL)
 			return ;
-		if (line_e->cursor_pos <= 1)
-		{
+		if (line_e->cursor_pos <= 1 && line_e->autocomp > 0)
 			cancel_autocompletion(line_e);
-			if (line_e->cursor_pos == 0)
-				return ;
-		}
+		if (line_e->cursor_pos == 0)
+			return ;
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
-        cursor_start(line_e);
 		line_e->cursor_pos -= 1;
 		line_e->len -= 1;
 		if (line_e->line[0])
@@ -418,9 +365,10 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					line_e->len - line_e->cursor_pos);
 		}
 		line_e->line[line_e->len] = '\0';
-        ft_putstr_fd(line_e->line, STDERR_FILENO);
-		tputs(tgetstr("cd", NULL), 1, ft_puti); 
-        cursor_reposition(line_e->len - line_e->cursor_pos);
+		tputs(tgetstr("cd", NULL), 1, ft_puti);
+		ft_putstr_fd("\b \b", STDERR_FILENO);
+		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
+		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 	// ft_putstr("key too long comming soon - ");
 }//in tabptrfct
