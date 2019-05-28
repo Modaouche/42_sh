@@ -4,10 +4,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "buffer.h"
+
 #define _LEXER_NULL             (NULL)
 #define _LEXER_SOURCE(_)        ((char const*)(_)->source)
-#define _LEXER_TOKEN_TYPE(_)    ((token_type_t)(_)->ctoken->ndtype)
-#define _LEXER_TOKEN_LEXEME(_)  ((char const*)(_)->ctoken->lexeme)
+#define _LEXER_TOKEN_TYPE(_)    ((token_type_t)(_)->ctoken.ndtype)
+#define _LEXER_TOKEN_LEXEME(_)  ((buffer_t*)(_)->ctoken.lexeme)
+#define _LEXER_TOKEN_IO_NUM(_)  ((size_t)(_)->ctoken.io_num)
 #define _LEXER_FILENO(_)        ((size_t)(_)->fileno)
 #define _LEXER_MODE(_)          ((_mode_t)(_)->mode)
 
@@ -52,8 +55,11 @@ typedef struct {
     token_type_t    ndtype;
     size_t          lineno;
     union {
-        char const*     lexeme;
-        size_t          io_num;
+        struct {
+            token_type_t    detail;
+            buffer_t*       lexeme;
+        };
+        size_t      io_num;
     };
 } token_t;
 
@@ -71,7 +77,6 @@ typedef struct {
     _mode_t         crmode;
 } lexer_t;
 
-/* TODO SHELL SCRIPT */
 lexer_t*        make_lexer_from_file(char const*)   __attribute__((nothrow));
 lexer_t*        make_lexer(char const*)             __attribute__((nothrow));
 void            free_lexer(lexer_t const*)          __attribute__((nothrow));
