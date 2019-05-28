@@ -112,12 +112,6 @@ t_file			*merge(t_file *a, t_file *b, t_file *head)
 	return (head);
 }
 
-/*
-**
-** araout merge sort
-**
-*/
-
 t_file			*merge_sort(t_file *p)
 {
 	t_file	*a;
