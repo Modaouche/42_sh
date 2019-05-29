@@ -148,11 +148,8 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		}
 	}
 	tputs(tgetstr("cd", NULL), 1, ft_puti); 
-	while (newlines > 0)
-	{
+	while (newlines-- > 0)
 		tputs(tgetstr("up", NULL), 1, ft_puti);
-		--newlines;	
-	}
 	cursor_reset_x_pos(line_e);
 	tputs(tgetstr("ve", NULL), 1, ft_puti);
 }

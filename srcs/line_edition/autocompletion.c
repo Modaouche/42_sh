@@ -51,7 +51,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	line_e->line = str;
 	line_e->len = ft_strlen(str);
 	line_e->cursor_pos = line_e->len;
-	ft_putstr_fd(str, STDERR_FILENO);
+	print_line(line_e, 0);
 	tputs(tgetstr("ce", NULL), 1, ft_puti);
 }
 /*

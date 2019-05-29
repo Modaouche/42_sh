@@ -75,6 +75,27 @@ void	cancel_autocompletion(t_edit *line_e)
 }
 
 /*
+**  print_line
+**
+**  - Prints the line correctly, moving the cursor to the left at
+**    each encountered newline. Required for proper printing.
+*/
+
+void	print_line(t_edit *line_e, unsigned int start)
+{
+	while (start < line_e->len)
+	{
+		write(STDERR_FILENO, &line_e->line[start], 1);
+		if (line_e->line[start] == '\n')
+		{
+			tputs(tgetstr("ce", NULL), 1, ft_puti);
+			tputs(tgetstr("cr", NULL), 1, ft_puti);
+		}
+		++start;
+	}
+}
+
+/*
 **  insert_char
 **
 **  - Called to insert a character to the line and update it visually
@@ -89,12 +110,17 @@ void	insert_char(t_edit *line_e, char c)
 	}
 	if (!(append_to_line(line_e, c)))
 		toexit(line_e, "malloc", 0);
-	write(STDERR_FILENO, &c, 1);
 	if (c == '\n')
-		tputs(tgetstr("cr", NULL), 1, ft_puti);
+	{
+		tputs(tgetstr("ce", NULL), 1, ft_puti);
+		ft_nlcr();
+	}
+	else
+		write(STDERR_FILENO, &c, 1);
 	if (++line_e->cursor_pos != line_e->len)
 	{
-		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
+		cursor_start(line_e);
+		print_line(line_e, 0);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 }
@@ -356,6 +382,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			return ;
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
+		cursor_start(line_e);
+		tputs(tgetstr("cd", NULL), 1, ft_puti);
 		line_e->cursor_pos -= 1;
 		line_e->len -= 1;
 		if (line_e->line[0])
@@ -365,9 +393,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					line_e->len - line_e->cursor_pos);
 		}
 		line_e->line[line_e->len] = '\0';
-		tputs(tgetstr("cd", NULL), 1, ft_puti);
-		ft_putstr_fd("\b \b", STDERR_FILENO);
-		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
+		print_line(line_e, 0);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 	// ft_putstr("key too long comming soon - ");
