@@ -28,7 +28,7 @@
 
 int		is_separator(char c)
 {
-	return (c == ' ' || c == '\t' || c == '\n');
+	return (c == ' ' || c == '\t' || c == '\n' || c == ';');
 }
 
 /*
@@ -165,7 +165,11 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 		word_start = i;
 		word_end = i;
 		while (is_separator(line_e->line[i]) && i < line_e->cursor_pos)
+		{
+			if (line_e->line[i] == '\n' || line_e->line[i] == ';')
+				word_idx = 0;
 			++i;
+		}
 		if (i >= line_e->cursor_pos)
 			break ;
 		word_start = i;
