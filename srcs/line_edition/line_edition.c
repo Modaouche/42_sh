@@ -244,62 +244,48 @@ void	go_to_prev_line(t_edit *line_e)
     unsigned int x;
     unsigned int curr_height;
     unsigned int height;
+    unsigned int newpos;
 
     if (line_e->line == NULL)
         return ;
     i = 0;
+    newpos = 0;
     x = line_e->prompt_size;
     curr_height = 0;
     height = get_line_height(line_e, line_e->cursor_pos);
-    while ((i + 1) < line_e->cursor_pos && (curr_height + 1 < height))
+    while ((i + 1) < line_e->cursor_pos && curr_height < height)
     {
         ++x;
         if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
         {
             x = 0;
-            ++curr_height;
+            if (++curr_height >= height)
+            	break ;
+            newpos = i;
         }
     }
-    if (get_line_height(line_e, i) > 1
-    	&& (x = get_index_x_pos(line_e, i)) > 0)
-    	i -= x;
-    cursor_move_to(line_e, i);
+    cursor_move_to(line_e, newpos);
 }
 
 void	go_to_next_line(t_edit *line_e)
 {
     unsigned int i;
     unsigned int x;
-    unsigned int ex;
-    unsigned int curr_x;
 
     if (line_e->line == NULL)
         return ;
     i = 0;
     x = line_e->prompt_size;
-    ex = 0;
     while (i < line_e->len)
     {
-        ++x;
-        if (i == line_e->cursor_pos)
-        	curr_x = x;
-        if (ex > 0 && x == curr_x)
-       	{
-       		ex = i;
-       		break ;
-       	}
         if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
         {
             x = 0;
-            if (ex > 0)
-            	break ;
             if (i > line_e->cursor_pos)
-            	ex = i;
+            	break ;
         }
     }
-    if (ex <= line_e->cursor_pos)
-    	ex = line_e->len;
-    cursor_move_to(line_e, ex);
+    cursor_move_to(line_e, i);
 }
 
 void	change_autocomp_idx(t_edit *line_e, int value)
