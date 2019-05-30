@@ -7,12 +7,16 @@
 #include "buffer.h"
 
 #define _LEXER_NULL             (NULL)
+#define _TOKEN_NULL             (NULL)
+
 #define _LEXER_SOURCE(_)        ((char const*)(_)->source)
 #define _LEXER_TOKEN_TYPE(_)    ((token_type_t)(_)->ctoken.ndtype)
 #define _LEXER_TOKEN_LEXEME(_)  ((buffer_t*)(_)->ctoken.lexeme)
 #define _LEXER_TOKEN_IO_NUM(_)  ((size_t)(_)->ctoken.io_num)
-#define _LEXER_FILENO(_)        ((size_t)(_)->fileno)
+#define _LEXER_LINENO(_)        ((size_t)(_)->lineno)
 #define _LEXER_MODE(_)          ((_mode_t)(_)->mode)
+
+#define _SHABANG                "#!"
 
 typedef enum {
     WORD                = 0x00,
@@ -49,7 +53,15 @@ typedef enum {
     _EOF                =   -1,
     _ERROR              =   -2,
     _TOKEN              =   -3,
+    _NONE               =   -4,
 } token_type_t;
+
+typedef enum {
+    UNBALANCE_DQUOTE    = 0x00,
+    UNBALANCE_SQUOTE    = 0x01,
+    UNBALANCE_BCTICK    = 0x02,
+    UNBALANCE_DOLLAR    = 0x04,
+} _error_token_t;
 
 typedef struct {
     token_type_t    ndtype;
@@ -59,7 +71,7 @@ typedef struct {
             token_type_t    detail;
             buffer_t*       lexeme;
         };
-        size_t      io_num;
+        size_t          io_num;
     };
 } token_t;
 
@@ -69,18 +81,21 @@ typedef enum {
 } _mode_t;
 
 typedef struct {
-    /* lexer_t composite must free the souce given by the caller  */
-    char const*     source;
+    buffer_t*       source;
     token_t         ctoken;
     size_t          lineno;
     bool            havepk;
     _mode_t         crmode;
+    _error_token_t  lerror;
+    bool            edepth;
 } lexer_t;
 
 lexer_t*        make_lexer_from_file(char const*)   __attribute__((nothrow));
 lexer_t*        make_lexer(char const*)             __attribute__((nothrow));
+void            free_token(token_t const*);
 void            free_lexer(lexer_t const*)          __attribute__((nothrow));
-token_type_t    next_token(lexer_t*)                __attribute__((nothrow));
-token_type_t    peek_token(lexer_t*)                __attribute__((nothrow));
+token_type_t    next_token_lexer(lexer_t*)                __attribute__((nothrow));
+token_type_t    peek_token_lexer(lexer_t*)                __attribute__((nothrow));
+token_t*        export_token(lexer_t const*);
 
 #endif /* _SHELL_H */

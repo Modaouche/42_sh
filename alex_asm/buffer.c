@@ -121,6 +121,7 @@ insert_string_size_buffer(buffer_t* buffer, char const* string, size_t size) {
                      (void*)string, sizeof(char) * size);
         buffer->crsize += size;
         buffer->cursor += size;
+        buffer->string[buffer->crsize] = '\0';
     }
     return (buffer);
 }
@@ -166,53 +167,6 @@ char const* string) {
 }
 
 buffer_t*
-#if defined(_ASSEMBLY) && defined(__GNUC__)
-__attribute__((naked))
-#endif /* defined(_ASSEMBLY) && defined(__GNUC__) */
-insert_char_buffer(
-#if defined(_ASSEMBLY) && defined(__GNUC__)
-__attribute__((unused))
-#endif /* defined(_ASSEMBLY) && defined(__GNUC__) */
-buffer_t* buffer,
-#if defined(_ASSEMBLY) && defined(__GNUC__)
-__attribute__((unused))
-#endif /* defined(_ASSEMBLY) && defined(__GNUC__) */
-char c) {
-    #if defined(_ASSEMBLY) && defined(__GNUC__)
-        #if defined(__x86_64__)     // system v
-            __asm__("pushq  %rbp");
-            __asm__("andq   $~0x0F, %rsp");   // 16-bit boundary aligned
-            __asm__("xorb   %al, %al");
-            __asm__("movb   %sil, 0(%rsp)");
-            __asm__("movb   %al,  1(%rsp)");
-            __asm__("movq   %rsp, %rsi");
-            __asm__("callq  insert_string_buffer");
-            __asm__("leave");
-            __asm__("retq");
-        #elif defined(__i386__)     // cdecl
-            __asm__("pushl  %ebp");
-            __asm__("movl   %esp, %ebp");
-            __asm__("subl   $0x10, %esp");
-            __asm__("movl   8(%ebp), %eax");
-            __asm__("movl   %eax, 0(%esp");
-            __asm__("movb   12(%ebp), %al");
-            __asm__("movb   %al, 8(%esp)");
-            __asm__("xorb   %al, %al");
-            __asm__("movb   %al, 9(%esp)");
-            __asm__("leal   8(%esp), %eax");
-            __asm__("movl   %eax, 4(%esp)");
-            __asm__("calll  insert_string_buffer");
-            __asm__("leave");
-            __asm__("retl");
-        #else
-            #error _BAD_ARCH
-        #endif /* defined(__x86_64__) */
-    #else
-        return (insert_string_buffer(buffer, (char const*)&(char[]){c, 0}));
-    #endif /* defined(_ASSEMBLY) && defined(__GNUC__) */
-}
-
-buffer_t*
 remove_size_buffer(buffer_t* buffer, size_t size) {
     if (!buffer)
         { return (_BUFFER_NULL); }
@@ -227,7 +181,7 @@ remove_size_buffer(buffer_t* buffer, size_t size) {
             size ^= size;
         }
     }
-    if (buffer->cursor < size)
+    if (size > buffer->cursor)
         { size = buffer->cursor; }
     if (size) {
         (void)memmove(buffer->string + (buffer->cursor - size),
@@ -279,3 +233,21 @@ _flush_cache_buffer(buffer_t* buffer) {
         buffer->icache ^= buffer->icache;
     }
 }
+
+buffer_t*
+export_sub_buffer(buffer_t* buffer, size_t start, size_t limit) {
+    _flush_cache_buffer(buffer);
+    if ((!buffer) || (start >= buffer->slimit))
+        { return (_BUFFER_NULL); }
+    if ((start + limit) > buffer->slimit)
+        { limit = (buffer->slimit - start); }
+    buffer_t* sub_buffer = make_buffer((buffer->lcache) ? true : false);
+    if (!sub_buffer)
+        { return (_BUFFER_NULL); }
+    else if (!insert_string_size_buffer(sub_buffer, buffer->string + start, limit)) {
+        free_buffer(sub_buffer);
+        return (_BUFFER_NULL);
+    }
+    return (sub_buffer);
+}
+
