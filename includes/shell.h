@@ -146,6 +146,8 @@ void					replace_word(t_edit *line_e, char *new, size_t length, char *suffix);
 void					replace_word_from_completion(t_edit *line_e);
 char					*escape_name(char *name, char* escaped_chars, unsigned int length);
 char 					*escape_singlequote(char *name, unsigned int max);
+int						search_similar_env_var(t_file **list, char *str, int len,
+						char **env);
 
 /*
 **  Line edition - Autocompletion parser

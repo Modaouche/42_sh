@@ -123,19 +123,46 @@ char	*parse_word(char *line, unsigned int end)
 **  replacing the whole line and instead the last part of it.
 */
 
-int		get_last_slash(char *line, unsigned int word_start,
-		unsigned int word_end, t_edit *line_e)
+int		get_last_slash(t_edit *line_e, unsigned int word_start,
+		unsigned int word_end)
 {
-	while (word_end > word_start && line[word_end] != '/')
+	while (word_end > word_start && line_e->line[word_end] != '/')
 		--word_end;
-	if (line[word_end] == '/')
+	if (line_e->line[word_end] == '/')
 		++word_end;
 	else if (line_e->autocomp_quote > 0)
 		return (word_end + 1);
 	else
 		return (word_end);
-	line_e->autocomp_quote = get_idx_quote_type(line, word_end);
+	line_e->autocomp_quote = get_idx_quote_type(line_e->line, word_end);
 	return (word_end);
+}
+
+int 	get_last_dollar(t_edit *line_e, unsigned int word_start,
+		unsigned int word_end)
+{
+	unsigned int i;
+
+	if (word_end == 0)
+		return (0);
+	i = word_end - 1;
+	while (i >= word_start && line_e->line[i] != '$')
+	{
+		if (!ft_isalnum(line_e->line[i])
+			&& line_e->line[i] != '_' && line_e->line[i] != '{')
+			return (word_start);
+		if (i-- == 0)
+			break ;
+	}
+	if (i < word_start || line_e->line[i] != '$')
+		return (word_start);
+	//TODO: if i is escaped, return word start
+	if (line_e->line[i + 1] == '{')
+		line_e->autocomp_point = i + 2;
+	else
+		line_e->autocomp_point = i + 1;
+	line_e->autocomp_quote = get_idx_quote_type(line_e->line, i);
+	return (i);
 }
 
 /*
@@ -211,6 +238,7 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 		*argument = 1;
 		return (ft_strnew(0));
 	}
-	*autocompletion_point = get_last_slash(line_e->line, word_start, word_end + 1, line_e);
+	*autocompletion_point = get_last_slash(line_e, word_start, word_end + 1);
+	word_start = get_last_dollar(line_e, word_start, word_end + 1);
 	return (parse_word(line_e->line + word_start, word_end - word_start + 1));
 }
