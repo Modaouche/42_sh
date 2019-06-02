@@ -46,12 +46,13 @@ copy_buffer(buffer_t const* buffer) {
     if (!new_buffer)
         { return (_BUFFER_NULL); }
     (void)memcpy((void*)new_buffer, (void*)buffer, sizeof(*new_buffer));
-    new_buffer->string = (char*)malloc(sizeof(char) * buffer->slimit);
+    new_buffer->string = (char*)malloc(sizeof(char) * (buffer->slimit + 1));
     if (!new_buffer->string) {
         free((void*)new_buffer);
         return (_BUFFER_NULL);
     }
-    (void)strcpy(new_buffer->string, buffer->string);
+    (void)memcpy((void*)new_buffer->string, (void*)buffer->string,
+                                        sizeof(char) * (buffer->slimit + 1));
     if (buffer->lcache) {
         new_buffer->lcache = (char*)malloc(sizeof(*new_buffer->lcache) *\
                                 (_BUFFER_CACHE_DEFAULT + 1));
@@ -69,6 +70,7 @@ static int
 _expand_buffer(buffer_t* buffer, size_t unbound) {
     if (unbound < buffer->slimit)
         { return (0); }
+    
     size_t new_size = round_up(unbound);
     char* new_string = (char*)malloc(sizeof(*new_string) * (new_size + 1));
     if (!new_string)
@@ -89,7 +91,7 @@ insert_string_size_buffer(buffer_t* buffer, char const* string, size_t size) {
         { return (_BUFFER_NULL); }
     size_t len = strlen(string);
     if (size > len)
-        { size = len; }
+        { size = (len + 1); }
     if (!size)
         { return (buffer); }
     if (buffer->lcache) {
@@ -97,7 +99,7 @@ insert_string_size_buffer(buffer_t* buffer, char const* string, size_t size) {
             _flush_cache_buffer(buffer);
             if (!size)
                 { break; }
-            buffer->icache += size;
+            buffer->icache += (size > _BUFFER_CACHE_DEFAULT) ? _BUFFER_CACHE_DEFAULT : size;
             if (size >= _BUFFER_CACHE_DEFAULT) {
                 (void)memcpy((void*)buffer->lcache, (void*)string,
                                 sizeof(char) * _BUFFER_CACHE_DEFAULT);
@@ -227,7 +229,7 @@ _flush_cache_buffer(buffer_t* buffer) {
     if (buffer->icache) {
         char* save_cache = buffer->lcache;
         buffer->lcache = NULL;
-        insert_string_buffer(buffer, save_cache);
+        insert_string_size_buffer(buffer, save_cache, buffer->icache);
         (void)memset((void*)save_cache, 0, sizeof(char) * (_BUFFER_CACHE_DEFAULT + 1));
         buffer->lcache = save_cache;
         buffer->icache ^= buffer->icache;

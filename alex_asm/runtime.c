@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <unistd.h>
 
 #include "runtime.h"
 #include "utils.h"
@@ -13,7 +14,7 @@ _del_variable_env(element_t variable_env_t) {
 
 static element_t
 _cpy_variable_env(element_t variable_env_t) {
-    element_t element = (element_t)malloc(sizeof(generic_t) * 2);
+    element_t element = (element_t)malloc(sizeof(generic_t) * 3);
     if (!element)
         { return (_GENERIC_NULL); }
     if (!(element[0] = (generic_t)strdup(variable_env_t[0])))
@@ -22,6 +23,7 @@ _cpy_variable_env(element_t variable_env_t) {
         free(element[0]);
         return (_GENERIC_NULL);
     }
+    element[2] = variable_env_t[2];
     return (element);
 }
 
@@ -64,8 +66,11 @@ environment_hash(char const* envp[]) {
     if (!envp)
         { return (_HASH_NULL); }
     hash_t* hash = make_hash((_selector_t)&hash_string, 0x20,
-                                                        &_del_variable_env,
-                                                        &_cpy_variable_env);
+                                            &_del_variable_env,
+                                            &_cpy_variable_env);
+    if (!hash)
+        { return (_HASH_NULL); }
+
     char* lvalue;
     char* rvalue;
     bool success = true;
@@ -74,7 +79,8 @@ environment_hash(char const* envp[]) {
             success = false;
             break;
         }
-        if ((lvalue && rvalue) && (!insert_hash(hash, 2, 0, (void*)lvalue, (void*)rvalue))) {
+        if ((lvalue && rvalue) && (!insert_hash(hash, 3, 0,
+                                        (void*)lvalue, (void*)rvalue, (void*)true))) {
             free((void*)lvalue);
             free((void*)rvalue);
             success = false;
@@ -96,8 +102,53 @@ _compare_environment(_variable_env_t* element, char const* env_line) {
     return (!strcmp(element->lvalue, env_line));
 }
 
+static hash_t*
+_set_environment_value(hash_t* hash, char const* lvalue,
+                                    char const* rvalue, bool _export, bool* use_path) {
+    element_t element = lookup_hash(hash, (_elt_comp_t)&_compare_environment,
+                                          (generic_t)lvalue);
+    if (!element) {
+        if (!insert_hash(hash, 3, 0, (void*)lvalue, (void*)rvalue, (void*)_export))
+            { return (_HASH_NULL); }
+    } else {
+        free((void*)((_variable_env_t*)element)->rvalue);
+        ((_variable_env_t*)element)->rvalue = rvalue;
+    }
+    if (use_path) {
+        (*use_path) = false;
+        if (!strcmp("PATH", lvalue))
+            { (*use_path) = true; }
+    }
+    return (hash);
+}
+
 hash_t*
-set_environment_hash(hash_t* hash, char const* env_line, bool* use_path) {
+init_default_env(hash_t* hash) {
+    if (!hash)
+        { return (_HASH_NULL); }
+    char const* check_value[] = { "PS1", "PWD", "SHLVL", NULL };
+    for (size_t i = 0; check_value[i]; ++i) {
+        element_t element = lookup_hash(hash,   (_elt_comp_t)&_compare_environment,
+                                                (generic_t)check_value[i]);
+        if (!element) {
+            char const* rvalue = NULL;
+            switch (i) {
+                case 0: rvalue = strdup("$ ");      break;
+                case 1: rvalue = getcwd(NULL, 0);   break;
+                case 2: rvalue = strdup("1");       break;
+            }
+            if ((!rvalue) || (!_set_environment_value(hash,
+                                        check_value[i], rvalue, true, NULL))) {
+                free((void*)rvalue);
+                return (_HASH_NULL);
+            }
+        }
+    }
+    return (hash);
+}
+
+hash_t*
+set_environment_hash(hash_t* hash, char const* env_line, bool _export, bool* use_path) {
     if (!hash)
         { return (_HASH_NULL); }
     if (!env_line || !strchr(env_line, '='))
@@ -109,7 +160,7 @@ set_environment_hash(hash_t* hash, char const* env_line, bool* use_path) {
     if (!element) {
         if (!_split_environment(env_line, &lvalue, &rvalue))
             { return (_HASH_NULL); }
-        if (!insert_hash(hash, 2, 0, (void*)lvalue, (void*)rvalue)) {
+        if (!insert_hash(hash, 3, 0, (void*)lvalue, (void*)rvalue, (void*)_export)) {
             free((void*)lvalue);
             free((void*)rvalue);
             return (_HASH_NULL);
@@ -260,26 +311,20 @@ recompute_hash(hash_t const* envp) {
     return (_HASH_NULL);
 }
 
+/*
 char const*
 expand_variable(char const* target, hash_t const* env) {
-    // TODO
-    /*
-    bool dquote = false;
-    bool squote = false;
-    bool escape = false;
-    for (size_t i = 0; target[i]; ++i) {
-        if (!escape) {
-            if (target[i] == "\\")
-            if ((target[i] == "\"") && (!squote))
-                { dquote ~= dquote; }
-            else if ((target[i] == "'") && (!dquote))
-                { squote ~= squote; }
-            else if ((target[i] == "$") && (dquote)) {
-                
-            }
-        }
-    }
-    */
+}
+*/
+
+bool
+expand_token_tilde(buffer_t* buffer) {
+
+}
+
+bool
+expand_token(buffer_t* buffer, hash_t const* hash) {
+
 }
 
 exit_statut

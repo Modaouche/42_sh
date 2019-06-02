@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "list.h"
 #include "buffer.h"
 
 #define _LEXER_NULL             (NULL)
@@ -53,14 +54,18 @@ typedef enum {
     _EOF                =   -1,
     _ERROR              =   -2,
     _TOKEN              =   -3,
-    _NONE               =   -4,
+    _CONTINUE           =   -4,
+    _NONE               =   -5,
 } token_type_t;
 
 typedef enum {
-    UNBALANCE_DQUOTE    = 0x00,
-    UNBALANCE_SQUOTE    = 0x01,
-    UNBALANCE_BCTICK    = 0x02,
-    UNBALANCE_DOLLAR    = 0x04,
+    UNBALANCE_EDLINE    = 0x00,
+    UNBALANCE_DQUOTE    = 0x01,
+    UNBALANCE_SQUOTE    = 0x02,
+    UNBALANCE_BQUOTE    = 0x03,
+    UNBALANCE_DPARAM    = 0x04,
+    UNBALANCE_DCOMDS    = 0x05,
+    UNBALANCE_DARITH    = 0x06,
 } _error_token_t;
 
 typedef struct {
@@ -86,7 +91,7 @@ typedef struct {
     size_t          lineno;
     bool            havepk;
     _mode_t         crmode;
-    _error_token_t  lerror;
+    list_t*         lconti;
     bool            edepth;
 } lexer_t;
 

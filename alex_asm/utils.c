@@ -1,5 +1,9 @@
 #include <stdlib.h>
-#include "utils.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+
+#include "buffer.h"
 
 #if !defined(NDEBUG)
 #include <stdio.h>
@@ -40,7 +44,7 @@ round_up(
 __attribute__((unused))
 #endif /* defined(_ASSEMBLY) && defined(__GNUC__) */
 size_t _dummy) {
-    #ifdef _ASSEMBLY
+    #if defined(_ASSEMBLY) && defined(__GNUC__)
         #if (!defined(__x86_64__)) && (!defined(__i386__))
             #error "UNABLE TO TARGET AN ARCHITECTURE"
         #endif /* !defined(__x86_64__) && !defined(__i386__) */
@@ -64,12 +68,49 @@ size_t _dummy) {
         #endif /* defined(__i386__) */
     #else
         size_t placeholder = 0;
-        for (int i = sizeof(size_t) - 1; i >= 0; --i) {
+        for (int i = (sizeof(size_t) * 8) - 1; i >= 0; --i) {
             if ((_dummy >> i) & 1) {
                 placeholder = i + 1;
                 break;
             }
         }
         return (1 << placeholder);
-    #endif /* _ASSEMBLY */
+    #endif /* defined(_ASSEMBLY) && defined(__GNUC__) */
+}
+
+#define _CHUNK_SIZE (255)
+
+buffer_t*
+read_file(char const* file_path) {
+    if (!file_path)
+        { return (_BUFFER_NULL); }
+    int fd = open(file_path, O_RDONLY);
+    if (fd == -1)
+        { return (_BUFFER_NULL); }
+    buffer_t* buffer = make_buffer(true);
+    char chunk[_CHUNK_SIZE + 1] = {};
+    int rd;
+    while ((rd = read(fd, chunk, _CHUNK_SIZE))) {
+        bool failure = false;
+        if (rd != -1) {
+            chunk[rd] = '\0';
+            int size = 0;
+            do {
+                if (!insert_string_buffer(buffer, chunk + size)) { 
+                    failure = true;
+                    break;
+                }
+                size += strlen(chunk + size) + 1;
+                if (rd >= size)
+                    { _BUFFER_INSERT_CHAR(buffer, 0x00); }
+            } while (rd > size);
+        }
+        else
+            { failure = true; }
+        if (failure) {
+            free_buffer(buffer);
+            return (_BUFFER_NULL);
+        }
+    }
+    return (buffer);
 }

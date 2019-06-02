@@ -21,6 +21,11 @@ _make_lexer_from_buffer(buffer_t* buffer) {
     lexer->source = buffer;
     lexer->ctoken.ndtype  = _NONE;
     lexer->crmode = _TRECOGN;
+    lexer->lconti = make_list(NULL, NULL);
+    if (!lexer->lconti) {
+        free_lexer(lexer);
+        return (_LEXER_NULL);
+    }
     return (lexer); 
 }
 
@@ -81,12 +86,13 @@ free_token(token_t const* token) {
 }
 
 void
-free_lexer(lexer_t const* lex) {
-    if (lex) {
-        if (lex->ctoken.ndtype == _TOKEN)
-            { free_buffer(lex->ctoken.lexeme); }
-        free_buffer(lex->source);
-        free((void*)lex);
+free_lexer(lexer_t const* lexer) {
+    if (lexer) {
+        if (lexer->ctoken.ndtype == _TOKEN)
+            { free_buffer(lexer->ctoken.lexeme); }
+        free_list(lexer->lconti);
+        free_buffer(lexer->source);
+        free((void*)lexer);
     }
 }
 
@@ -105,95 +111,101 @@ _skip_predicate(buffer_t* source, _lex_pred_t pred) {
 }
 
 static void
-_lexer_operator(lexer_t* lex) {
-    char register char_1 = _BUFFER_CURSOR_CHAR(lex->source);
-    char register char_2 = _BUFFER_STRING(lex->source)[1];
+_lexer_operator(lexer_t* lexer) {
+    char register char_1 = _BUFFER_CURSOR_CHAR(lexer->source);
+    char register char_2 = _BUFFER_STRING(lexer->source)[1];
     switch (char_1) {
         case ';':
-        case '!':   lex->ctoken.ndtype = char_1;
+        case '!':   lexer->ctoken.ndtype = char_1;
                     break;
-        case '&':   lex->ctoken.ndtype = '&';
+        case '&':   lexer->ctoken.ndtype = '&';
                     if (char_2 == '&') {
-                        lex->ctoken.ndtype = AND_IF;
-                        _BUFFER_FORWARD_CURSOR(lex->source);
+                        lexer->ctoken.ndtype = AND_IF;
+                        _BUFFER_FORWARD_CURSOR(lexer->source);
                     }
                     break;
 
-        case '|':   lex->ctoken.ndtype = '|';
+        case '|':   lexer->ctoken.ndtype = '|';
                     if (char_2 == '|') {
-                        lex->ctoken.ndtype = OR_IF;
-                        _BUFFER_FORWARD_CURSOR(lex->source);
+                        lexer->ctoken.ndtype = OR_IF;
+                        _BUFFER_FORWARD_CURSOR(lexer->source);
                     }
                     break;
 
-        case '<':   lex->ctoken.ndtype = '<';
-                    _BUFFER_FORWARD_CURSOR(lex->source);
+        case '<':   lexer->ctoken.ndtype = '<';
+                    _BUFFER_FORWARD_CURSOR(lexer->source);
                     switch (char_2) {
-                        case '&':   lex->ctoken.ndtype = LESSAND; break;
-                        case '<':   lex->ctoken.ndtype = DLESS; break;
-                        case '>':   lex->ctoken.ndtype = LESSGREAT;
-                            if (_BUFFER_STRING(lex->source)[1] == '-') {
-                                lex->ctoken.ndtype = DLESSDASH;
-                                _BUFFER_FORWARD_CURSOR(lex->source);
+                        case '&':   lexer->ctoken.ndtype = LESSAND; break;
+                        case '<':   lexer->ctoken.ndtype = DLESS; break;
+                        case '>':   lexer->ctoken.ndtype = LESSGREAT;
+                            if (_BUFFER_STRING(lexer->source)[1] == '-') {
+                                lexer->ctoken.ndtype = DLESSDASH;
+                                _BUFFER_FORWARD_CURSOR(lexer->source);
                             }
                             break;
-                        default:    _BUFFER_REVERSE_CURSOR(lex->source);
+                        default:    _BUFFER_REVERSE_CURSOR(lexer->source);
                     }
                     break;
 
-        case '>':   lex->ctoken.ndtype = '>';
-                    _BUFFER_FORWARD_CURSOR(lex->source);
+        case '>':   lexer->ctoken.ndtype = '>';
+                    _BUFFER_FORWARD_CURSOR(lexer->source);
                     switch (char_2) {
-                        case '&':   lex->ctoken.ndtype = GREATAND; break;
-                        case '>':   lex->ctoken.ndtype = DGREAT; break;
-                        case '|':   lex->ctoken.ndtype = CLOBBER; break;
-                        default:    _BUFFER_REVERSE_CURSOR(lex->source); 
+                        case '&':   lexer->ctoken.ndtype = GREATAND; break;
+                        case '>':   lexer->ctoken.ndtype = DGREAT; break;
+                        case '|':   lexer->ctoken.ndtype = CLOBBER; break;
+                        default:    _BUFFER_REVERSE_CURSOR(lexer->source); 
                     } 
                     break;
     }
+    _BUFFER_FORWARD_CURSOR(lexer->source);
 }
 
 static void
-_lexer_newline(lexer_t* lex) {
-    lex->ctoken.ndtype = NEWLINE;
-    ++(lex->lineno);
+_lexer_newline(lexer_t* lexer) {
+    _BUFFER_FORWARD_CURSOR(lexer->source);
+    lexer->ctoken.ndtype = NEWLINE;
+    ++(lexer->lineno);
 }
 
 static void
-_lexer_comment(lexer_t* lex) {
-    _skip_predicate(lex->source, &_is_not_newline);
+_lexer_comment(lexer_t* lexer) {
+    _skip_predicate(lexer->source, &_is_not_newline);
 }
 
-static void
-_lexer_token_squote(lexer_t* lex) {
-    if (!(_BUFFER_CURSOR_CHAR(lex->source) != '\''))
-        { return; }
-    _BUFFER_FORWARD_CURSOR(lex->source);
-    while ((!_BUFFER_EOF(lex->source)) && (_BUFFER_CURSOR_CHAR(lex->source) != '\''))
-        { _BUFFER_FORWARD_CURSOR(lex->source); }
-    if (_BUFFER_EOF(lex->source))
-        { lex->lerror |= UNBALANCE_SQUOTE; }
+static bool
+_lexer_token_squote(lexer_t* lexer) {
+    if (_BUFFER_CURSOR_CHAR(lexer->source) == '\'') {
+        _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_SQUOTE);
+        _BUFFER_FORWARD_CURSOR(lexer->source);
+    }
+    while ((!_BUFFER_EOF(lexer->source)) && (_BUFFER_CURSOR_CHAR(lexer->source) != '\''))
+        { _BUFFER_FORWARD_CURSOR(lexer->source); }
+    if (!_BUFFER_EOF(lexer->source))    { _LIST_POP_BACK(lexer->lconti); }
+    else                                { return (false); }
+    return (true);
 }
 
-static void
-_lexer_token_bctick(lexer_t* lex) {
-    if (!(_BUFFER_CURSOR_CHAR(lex->source) != '`'))
-        { return; }
-    _BUFFER_FORWARD_CURSOR(lex->source);
+static bool
+_lexer_token_bquote(lexer_t* lexer) {
+    if (_BUFFER_CURSOR_CHAR(lexer->source) == '`') {
+        _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_BQUOTE);
+        _BUFFER_FORWARD_CURSOR(lexer->source);
+    }
     bool escape = false;
-    while (!_BUFFER_EOF(lex->source)) {
+    while (!_BUFFER_EOF(lexer->source)) {
         if (escape)
             { escape = false; }
         else {
-            if (_BUFFER_CURSOR_CHAR(lex->source) == '`')
+            if (_BUFFER_CURSOR_CHAR(lexer->source) == '`')
                 { break; }
-            else if (_BUFFER_CURSOR_CHAR(lex->source) == '\\')
+            else if (_BUFFER_CURSOR_CHAR(lexer->source) == '\\')
                 { escape = true; }
         }
-        _BUFFER_FORWARD_CURSOR(lex->source);
+        _BUFFER_FORWARD_CURSOR(lexer->source);
     }
-    if (_BUFFER_EOF(lex->source))
-        { lex->lerror |= UNBALANCE_BCTICK; }
+    if (!_BUFFER_EOF(lexer->source))    { _LIST_POP_BACK(lexer->lconti); }
+    else                                { return (false); }
+    return (true);
 }
 
 static int
@@ -201,291 +213,370 @@ _is_identifier(char c) {
     return ((isalnum(c)) || (c == '_'));
 }
 
-static void _lexer_token_dquote(lexer_t*, size_t);
+static bool _lexer_token_dquote(lexer_t*, size_t);
 
 #define _DEPTH_START    (0x00)
 #define _DEPTH_LIMIT    (0xFF)
 
-static void
-_lexer_token_dollar(lexer_t* lex, size_t depth) {
-    if (!(_BUFFER_CURSOR_CHAR(lex->source) != '$'))
-        { return; }
-    _BUFFER_FORWARD_CURSOR(lex->source);
+static bool
+_lexer_token_dollar(lexer_t* lexer, size_t depth, ...) {
+    if (depth > (_DEPTH_LIMIT - _DEPTH_START)) {
+        lexer->edepth = true;
+        return (true);
+    }
     bool param_expand = false;
     bool command_subs = false;
     bool arith_expand = false;
 
     bool escape = false;
     bool braces = false;
-    if (_BUFFER_CURSOR_CHAR(lex->source) == '(') {
-        _BUFFER_FORWARD_CURSOR(lex->source);
-        if (_BUFFER_STRING(lex->source)[1] == '(') { 
-            _BUFFER_FORWARD_CURSOR(lex->source);
-            arith_expand = true;
-        } else
-            { command_subs = true; }
-    } else {
-        param_expand = true;
-        switch (_BUFFER_CURSOR_CHAR(lex->source)) {
-            case '@': case '*': case '#': case '?':
-            case '-': case '$': case '!': case '0':
-            #ifdef __GNUC__
-                case '1' ... '9':
-            #else
-                case '1': case '2': case '3': case '4':
-                case '5': case '6': case '7': case '8':
-                case '9':
-            #endif /* __GNUC__ */
-                        return;
-            case '{':   _BUFFER_FORWARD_CURSOR(lex->source);
-                        braces = true;
-                        break;
+    if (_BUFFER_CURSOR_CHAR(lexer->source) == '$') {
+        _BUFFER_FORWARD_CURSOR(lexer->source);
+        if (_BUFFER_CURSOR_CHAR(lexer->source) == '(') {
+            _BUFFER_FORWARD_CURSOR(lexer->source);
+            if (_BUFFER_STRING(lexer->source)[1] == '(') { 
+                arith_expand = true;
+            } else { 
+                _BUFFER_REVERSE_CURSOR(lexer->source);
+                command_subs = true;
+            }
+        } else {
+            param_expand = true;
+            if (_BUFFER_CURSOR_CHAR(lexer->source) == '{') {
+                _BUFFER_FORWARD_CURSOR(lexer->source);
+                braces = true;
+            }
         }
+        if (param_expand)       { _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_DPARAM); }
+        else if (command_subs)  { _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_DCOMDS); }
+        else if (arith_expand)  { _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_DARITH); }
+    } else {
+        va_list list;
+        va_start(list, depth);
+        switch (va_arg(list, int)) {
+            case UNBALANCE_DPARAM:  param_expand = true; break;
+            case UNBALANCE_DCOMDS:  command_subs = true; break;
+            case UNBALANCE_DARITH:  arith_expand = true; break;
+        }
+        va_end(list);
     }
-    while (!_BUFFER_EOF(lex->source)) {
+
+    while (!_BUFFER_EOF(lexer->source)) {
         if ((param_expand) && (!braces)) {
-            if (!_is_identifier(_BUFFER_CURSOR_CHAR(lex->source))) {
-                _BUFFER_REVERSE_CURSOR(lex->source);
-                return;
+            if (!_is_identifier(_BUFFER_CURSOR_CHAR(lexer->source))) {
+                _BUFFER_REVERSE_CURSOR(lexer->source);
+                return (true);
             }
         }
         if (escape)
             { escape = false; }
         else {
-            char register _char = _BUFFER_CURSOR_CHAR(lex->source);
+            char register _char = _BUFFER_CURSOR_CHAR(lexer->source);
             if ((param_expand) && (_char == '}'))
-                { return; }
+                { break; }
             else if ((!param_expand) && (_char ==  ')')) {
                 if (command_subs)
-                    { return; }
-                else if (_BUFFER_STRING(lex->source)[1] == ')') {
-                    _BUFFER_FORWARD_CURSOR(lex->source);
-                    return;
+                    { break; }
+                else if (_BUFFER_STRING(lexer->source)[1] == ')') {
+                    _BUFFER_FORWARD_CURSOR(lexer->source);
+                    break;
                 }
             }
             else {
                 switch (_char) {
                     case '\\':  escape = true; break;
-                    case '\'':  _lexer_token_squote(lex); break;
-                    case '`':   _lexer_token_bctick(lex); break;
-                    case '"':   _lexer_token_dquote(lex, depth + 1); break;
-                    case '$':   _lexer_token_dollar(lex, depth + 1); break;
+                    case '\'':  (void)_lexer_token_squote(lexer); break;
+                    case '`':   (void)_lexer_token_bquote(lexer); break;
+                    case '"':   (void)_lexer_token_dquote(lexer, depth + 1); break;
+                    case '$':   (void)_lexer_token_dollar(lexer, depth + 1); break;
                 }
             }
         }
-        _BUFFER_FORWARD_CURSOR(lex->source);
+        _BUFFER_FORWARD_CURSOR(lexer->source);
     }
-    if (_BUFFER_EOF(lex->source)) {
-        if (param_expand) {}
-        else if (command_subs) {}
-        else {}
-    }
+    if (!_BUFFER_EOF(lexer->source))    { _LIST_POP_BACK(lexer->lconti); }
+    else                                { return (false); }
+    return (true);
 }
 
-static void
-_lexer_token_dquote(lexer_t* lex, size_t depth) {
-    if (depth > _DEPTH_LIMIT) {
-        lex->edepth = true;
-        return;
+static bool
+_lexer_token_dquote(lexer_t* lexer, size_t depth) {
+    if (depth > (_DEPTH_LIMIT - _DEPTH_START)) {
+        lexer->edepth = true;
+        return (true);
+    } else if (_BUFFER_CURSOR_CHAR(lexer->source) == '"') {
+        _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_DQUOTE);
+        _BUFFER_FORWARD_CURSOR(lexer->source);
     }
-    if (!(_BUFFER_CURSOR_CHAR(lex->source) != '"'))
-        { return; }
-    _BUFFER_FORWARD_CURSOR(lex->source);
     bool escape = false;
-    while (!_BUFFER_EOF(lex->source)) {
+    while (!_BUFFER_EOF(lexer->source)) {
         if (escape)
             { escape = false; }
         else {
-            if (_BUFFER_CURSOR_CHAR(lex->source) == '"')
-                { return; }
-            switch (_BUFFER_CURSOR_CHAR(lex->source)) {
+            if (_BUFFER_CURSOR_CHAR(lexer->source) == '"')
+                { break; }
+            switch (_BUFFER_CURSOR_CHAR(lexer->source)) {
                 case '\\':  escape = true; break;
-                case '`':   _lexer_token_bctick(lex); break;
-                case '$':   _lexer_token_dollar(lex, depth + 1); break;
+                case '`':   (void)_lexer_token_bquote(lexer); break;
+                case '$':   (void)_lexer_token_dollar(lexer, depth + 1); break;
             }
         } 
-        _BUFFER_FORWARD_CURSOR(lex->source);
+        _BUFFER_FORWARD_CURSOR(lexer->source);
     }
-    if (_BUFFER_EOF(lex->source))
-        { lex->lerror |= UNBALANCE_DQUOTE; }
+    if (!_BUFFER_EOF(lexer->source))    { _LIST_POP_BACK(lexer->lconti); }
+    else                                { return (false); }
+    return (true);
 }
 
-#define _TOKEN_FIRST            "\n;!&|<>#"
-#define _IS_WORD(_)             ((_) && ((!isblank(_)) && (!strchr(_TOKEN_FIRST, (_)))))
+#define _TOKEN_NFIRST           "\n;!&|<>#"
+#define _IS_WORD(_)             ((!isblank(_)) && (!strchr(_TOKEN_NFIRST, (_))))
 
 static void
-_lexer_token(lexer_t* lex) {
+_lexer_token(lexer_t* lexer) {
+    lexer->ctoken.ndtype = _CONTINUE;
     buffer_t* current_word = make_buffer(true);
     if (!current_word)
         { return; }
     bool escape = false;
-    while (_IS_WORD(_BUFFER_CURSOR_CHAR(lex->source)) || (escape)) {
+    bool finish = true;
+    while ((!_BUFFER_EOF(lexer->source))
+                            && (_IS_WORD(_BUFFER_CURSOR_CHAR(lexer->source)) || (escape))) {
         bool _write = true;
         if (escape) {
-            if (_BUFFER_CURSOR_CHAR(lex->source) == 0x0A) {
+            if (_BUFFER_CURSOR_CHAR(lexer->source) == 0x0A) {
                 remove_size_buffer(current_word, 1);
                 _write = false;
-            }   
+            }
             escape = false;
         } else {
-            switch (_BUFFER_CURSOR_CHAR(lex->source)) {
+            size_t begin = _BUFFER_GET_CURSOR(lexer->source);
+            switch (_BUFFER_CURSOR_CHAR(lexer->source)) {
                 case '\\':  escape = true; break;
-                case '\'':  _lexer_token_squote(lex); break;
-                case '`':   _lexer_token_bctick(lex); break;
-                case '"':   _lexer_token_dquote(lex, _DEPTH_START); break;
-                case '$':   _lexer_token_dollar(lex, _DEPTH_START); break;
+                case '\'':  finish = _lexer_token_squote(lexer); break;
+                case '`':   finish = _lexer_token_bquote(lexer); break;
+                case '"':   finish = _lexer_token_dquote(lexer, _DEPTH_START); break;
+                case '$':   finish = _lexer_token_dollar(lexer, _DEPTH_START); break;
             }
+            size_t end = _BUFFER_GET_CURSOR(lexer->source);
+            insert_string_size_buffer(current_word,
+                        &_BUFFER_STRING(lexer->source)[begin - end], end - begin);
         }
         if (_write)
-            { _BUFFER_INSERT_CHAR(current_word, _BUFFER_CURSOR_CHAR(lex->source)); }
-        _BUFFER_FORWARD_CURSOR(lex->source);
+            { _BUFFER_INSERT_CHAR(current_word, _BUFFER_CURSOR_CHAR(lexer->source)); }
+        _BUFFER_FORWARD_CURSOR(lexer->source);
     }
-    _BUFFER_SET_CURSOR(current_word, 0);
     if (_BUFFER_SIZE(current_word)) {
-        lex->ctoken.ndtype = _TOKEN;
-        lex->ctoken.lexeme = current_word;
-    } else
-        { free_buffer(current_word); }
+        if ((finish) && (!escape)) {
+            _BUFFER_SET_CURSOR(current_word, 0);
+            lexer->ctoken.ndtype = _TOKEN;
+        } else if (escape) {
+            _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_EDLINE);
+            remove_size_buffer(current_word, 1);
+        }
+        if (!lexer->ctoken.lexeme)  { lexer->ctoken.lexeme = current_word; }
+        else                        { _BUFFER_APPEND(lexer->ctoken.lexeme, current_word); }
+    } else { 
+        lexer->ctoken.ndtype = _NONE;
+        free_buffer(current_word);
+    }
 }
 
-#ifdef _LEX_LOOKUP
+static void
+_lexer_io_number(lexer_t* lexer) {
+    if (!isdigit(_BUFFER_CURSOR_CHAR(lexer->source)))
+        { return; }
+    size_t begin = _BUFFER_GET_CURSOR(lexer->source);
+    _skip_predicate(lexer->source, &isdigit);
+    switch (_BUFFER_CURSOR_CHAR(lexer->source)) {
+        case '<':
+        case '>':
+            /* TODO CHECK OVERFLOW */
+            lexer->ctoken.ndtype = IO_NUMBER;
+            lexer->ctoken.io_num = (size_t)strtol(_BUFFER_FULL_STRING(lexer->source) + begin,
+                                                NULL, 0x0A); 
+            break;
+        default:
+            _BUFFER_SET_CURSOR(lexer->source, begin);
+            _lexer_token(lexer);
+    }
+}
+
+//#ifdef _LEX_LOOKUP
 
 static _tokenset_t
-_lexer_lookup[UCHAR_MAX] = {
-    #ifndef __GNUC__
-    #else
-        [0x0A]=&_lexer_newline,
-        [0x21]=&_lexer_operator, 
-        [0x23]=&_lexer_comment,
-        [0x26]=&_lexer_operator,
-        [0x3B]=&_lexer_operator,
-        [0x3C]=&_lexer_operator,
-        [0x3E]=&_lexer_operator,
-        [0x7C]=&_lexer_operator,
-    #endif /* __GNUC__ */
+_lexer_lookup[UCHAR_MAX + 0x01] = {
+//    #ifndef __GNUC__
+        /* 0x00 - 0x09 */   &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token,
+        /* 0x0A */          &_lexer_newline,
+        /* 0x0B - 0x20 */   &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token,
+        /* 0x21 */          &_lexer_operator, 
+        /* 0x22 */          &_lexer_token,
+        /* 0x23 */          &_lexer_comment,
+        /* 0x24 - 0x25 */   &_lexer_token,
+        /* 0x26 */          &_lexer_operator,
+        /* 0x27 - 0x2F */   &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+        /* 0x30 - 0x39 */   &_lexer_io_number, &_lexer_io_number, &_lexer_io_number,
+                            &_lexer_io_number, &_lexer_io_number, &_lexer_io_number,
+                            &_lexer_io_number, &_lexer_io_number, &_lexer_io_number,
+                            &_lexer_io_number,
+        /* 0x3A */          &_lexer_token,
+        /* 0x3B */          &_lexer_operator,
+        /* 0x3C */          &_lexer_operator,
+        /* 0x3D */          &_lexer_token,
+        /* 0x3E */          &_lexer_operator,
+        /* 0x3F - 0x7B */   &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+        /* 0x7C */          &_lexer_operator,
+        /* 0x7D - 0xFF */   &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token, &_lexer_token,
+                            &_lexer_token, &_lexer_token, &_lexer_token,
+
+//    #else
+/*
+        [0x00 ... 0x09]     = &_lexer_token,
+        [0x0A]              = &_lexer_newline,
+        [0x0B ... 0x20]     = &_lexer_token,
+        [0x21]              = &_lexer_operator, 
+        [0x22]              = &_lexer_token,
+        [0x23]              = &_lexer_comment,
+        [0x24 ... 0x25]     = &_lexer_token,
+        [0x26]              = &_lexer_operator,
+        [0x27 ... 0x2F]     = &_lexer_token,
+        [0x30 ... 0x39]     = &_lexer_io_number,
+        [0x3A]              = &_lexer_token,
+        [0x3B]              = &_lexer_operator,
+        [0x3C]              = &_lexer_operator,
+        [0x3D]              = &_lexer_token,
+        [0x3E]              = &_lexer_operator,
+        [0x3F ... 0x7B]     = &_lexer_token,
+        [0x7C]              = &_lexer_operator,
+        [0x7D ... 0xFF]     = &_lexer_token,
+*/
+//    #endif /* __GNUC__ */
 };
 
-#endif /* _LEX_LOOKUP */
-
+//#endif /* _LEX_LOOKUP */
 
 token_type_t
-next_token_lexer(lexer_t* lex) {
-    if (!lex)
+next_token_lexer(lexer_t* lexer) {
+    if (!lexer)
         { return (_ERROR); }
-    else if (lex->ctoken.ndtype == _TOKEN)
-        { free_buffer(lex->ctoken.lexeme); }
-    lex->ctoken.ndtype = _NONE;
-    _lexer_token(lex);
-    return (lex->ctoken.ndtype);
-}
-#if 0
-
-    size_t begin_cur = _BUFFER_GET_CURSOR(lex->source);
-    _skip_predicate(lex->source, &isblank);
-
-    if (_BUFFER_EOF(lex->source))
-        { return ((lex->ctoken.ndtype = _EOF)); }
-    while (!_BUFFER_EOF(lex->source)) {
-        bool save_escape = escape;
-        escape = false;
-
-        bool save_reeval = reeval;
-        reeval = false;
-
-        char register _char = _BUFFER_CURSOR_CHAR(lex->source);
-        if (isblank(_char)) {
-            if (save_reeval) {
-                _skip_predicate(&lex->source, &isblank);
-                if (!*lex->source) {
-                    free_buffer(current_word);
-                    return ((lex->ctoken.ndtype = _EOF));
-                }
-            }
-            else if (!(escape || dquote || squote))
-                { break; }
-        }
-        #ifdef _LEX_LOOKUP
-            _lexer_lookup[_char](lex);
-        #else
-            switch (_char) {
-                case 0x0A:
-                    _lexer_newline(lex);
-/*
-                    ++lex->lineno;
-                    if ((current_word) && (!save_reeval)) {
-                        if (save_escape && !(dquote || squote)) {
-                            --lex->lineno;
-                            remove_size_buffer(current_word, 1);
-                            if (!_BUFFER_SIZE(current_word))
-                                { reeval = true; }
-                        } else if (!(dquote || squote))
-                            { delim_word = true; }
-                    } else
-                        { lex->ctoken.ndtype = NEWLINE; }
-*/
-                    break;
-
-                case ';': case '!': case '&':   
-                case '|': case '<': case '>': 
-                    _lexer_operator(lex);
-                    break;
-
-                #ifdef __GNUC__
-                    case '0' ... '9': 
-                #else
-                    case '0': case '1': case '2': case '3': case '4':
-                    case '5': case '6': case '7': case '8': case '9':
-                #endif /* __GNUC__ */
-                        if (!current_word) {
-                            _skip_predicate(&lex->source, &isdigit);
-                            if ((*lex->source == '<') || (*lex->source == '>')) {
-                                lex->ctoken.ndtype = IO_NUMBER;
-                                lex->ctoken.io_num = (size_t)strtol(begin, NULL, 0x0A); 
-                                delim_word = true;
-                            } else {
-                                lex->ctoken.ndtype = _TOKEN;
-                                current_word = make_buffer(true);
-                                insert_string_size_buffer(current_word,
-                                                    begin, (lex->source - begin));
-                            }
-                        }    
+    if (_LIST_SIZE(lexer->lconti)) {
+        iter_list_t iter;
+        init_iter_list(lexer->lconti, &iter, REVERSE);
+        element_t* element;
+        bool _continue = true;
+        while ((_continue) && (element = next_iter_list(&iter))) {
+            _continue = false;
+            switch ((_error_token_t)*element) {
+                case UNBALANCE_EDLINE:  _lexer_token(lexer); break;
+                case UNBALANCE_SQUOTE:  _continue = _lexer_token_squote(lexer); break;
+                case UNBALANCE_BQUOTE:  _continue = _lexer_token_bquote(lexer); break;
+                case UNBALANCE_DQUOTE:  _continue = _lexer_token_dquote(lexer, _DEPTH_START);
+                                        break;
+                case UNBALANCE_DPARAM:
+                case UNBALANCE_DCOMDS:
+                case UNBALANCE_DARITH:
+                        _continue = _lexer_token_dollar(lexer, (_error_token_t)*element);
                         break;
-
-                case '#':   _lexer_comment(lex);
-                            break;
-                    
-                default:    if (!current_word) {
-                                current_word = make_buffer(true);
-                                lex->ctoken.ndtype = _TOKEN;
-                            }
-                            if (!save_escape) {
-                                if ((_char == '\'') && (!dquote))
-                                    { squote = ~squote; }
-                                else if ((_char == '"') && (!squote))
-                                    { dquote = ~dquote; }
-                                else if ((_char == '`') && (!squote))
-                                    { bctick = ~bctick; }
-                                else if ((_char == '\\') && (!squote))
-                                    { escape = true; }
-                            }
             }
-        #endif /* _LEX_LOOKUP */
-        if (!delim_word)
-            { ++lex->source; }
+            if (_continue)
+                { _LIST_POP_BACK(lexer->lconti); }
+        }
+        if (_continue)
+            { lexer->ctoken.ndtype = _TOKEN; }
+    } else {
+        if (lexer->ctoken.ndtype == _TOKEN)
+            { free_buffer(lexer->ctoken.lexeme); }
+        lexer->ctoken.ndtype = _NONE;
+        lexer->ctoken.lexeme = NULL;
+        lexer->edepth = false;
+        while (lexer->ctoken.ndtype == _NONE) {
+            _skip_predicate(lexer->source, &isblank);
+            if (_BUFFER_EOF(lexer->source)) {
+                lexer->ctoken.ndtype = _EOF;
+                break;
+            }
+            char register _char = _BUFFER_CURSOR_CHAR(lexer->source);
+            #ifdef _LEX_LOOKUP
+                _lexer_lookup[_char](lexer);
+            #else
+                switch (_char) {
+                    case 0x0A:  _lexer_newline(lexer);      break;
+                    case ';': case '!': case '&':
+                    case '|': case '<': case '>':
+                                _lexer_operator(lexer);     break;
 
-        if ((!current_word) || (delim_word))
-            { break; }
-        else if ((_char != 0x0A) || (squote || dquote))
-            { insert_char_buffer(current_word, _char); }
+                    #ifdef __GNUC__
+                        case '0' ... '9': 
+                    #else
+                        case '0': case '1': case '2': case '3': case '4':
+                        case '5': case '6': case '7': case '8': case '9':
+                    #endif /* __GNUC__ */
+                                _lexer_io_number(lexer);    break;
+
+                    case '#':   _lexer_comment(lexer);      break;
+                    default:    _lexer_token(lexer);
+                }
+            #endif /* _LEX_LOOKUP */
+        }
     }
-    if (current_word) { 
-        if (_BUFFER_SIZE(current_word))
-            { lex->ctoken.lexeme = current_word; }
-        else
-            { free_buffer(current_word); }
-    }
-    return (lex->ctoken.ndtype);
+    return (lexer->ctoken.ndtype);
 }
+
+#if 0
 
 token_type_t
 peek_token(lexer_t* lex) {
@@ -496,7 +587,8 @@ peek_token(lexer_t* lex) {
     return (lex->ctoken.ndtype);
 }
 
-#endif 
+#endif
+ 
 token_t*
 export_token(lexer_t const* lex) {
     if (!lex)

@@ -14,7 +14,7 @@
                                         ((_cur > (_)->crsize) ? _cur : ((_)->cursor = _cur)))
 
 #define _BUFFER_CURSOR_CHAR(_)      (_BUFFER_FLUSH(_), (char)(_)->string[(_)->cursor])
-#define _BUFFER_EOF(_)              (_BUFFER_FLUSH(_), (bool)(!_BUFFER_CURSOR_CHAR(_)))
+#define _BUFFER_EOF(_)              (_BUFFER_FLUSH(_), ((_)->cursor >= (_)->crsize))
 #define _BUFFER_FORWARD_CURSOR(_)   (_BUFFER_FLUSH(_), (size_t)\
                                         (((_)->cursor < (_)->crsize) ?\
                                                     ++(_)->cursor : (_)->cursor))
@@ -24,7 +24,10 @@
 
 #define _BUFFER_LIMIT(_)            (_BUFFER_FLUSH(_), (size_t)(_)->slimit)
 #define _BUFFER_SIZE(_)             (_BUFFER_FLUSH(_), (size_t)(_)->crsize)
-#define _BUFFER_INSERT_CHAR(_, _ch) (insert_string_buffer(_, (char const*)&(char[]){_ch, 0x00}))
+#define _BUFFER_INSERT_CHAR(_, _ch) (insert_string_size_buffer(_,\
+                                        (char const*)&(char[]){_ch, 0x00}, 0x01))
+
+#define _BUFFER_APPEND(_, _bf)      (insert_string_buffer(_, _BUFFER_FULL_STRING(_bf)))
 #define _BUFFER_REMOVE_CHAR(_)      (remove_size_buffer(_, 0x01))
 #define _BUFFER_CACHE(_)            ((char const*)(_)->cache)
 #define _BUFFER_FLUSH(_)            (_flush_cache_buffer(_))

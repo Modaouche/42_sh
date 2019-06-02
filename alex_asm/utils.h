@@ -18,4 +18,14 @@ __attribute__((nothrow))
 #endif /* __GNUC__ */
 size_t      round_up(size_t);
 
+#ifndef _BUFFER_H
+struct buffer_t;
+typedef struct buffer_t buffer_t;
+#endif /* _BUFFER_H */
+
+#ifdef __GNUC__
+__attribute__((nothrow))
+#endif /* __GNUC__ */
+buffer_t*   read_file(char const*);
+
 #endif /* _UTILS_H */
