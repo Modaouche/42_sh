@@ -40,6 +40,8 @@ t_file		*ft_file_list_append(t_file **list, char *name, int type)
 	t_file *new;
 	t_file *tmp;
 
+	if (*name == '\0')
+		return (NULL);
 	tmp = *list;
 	while (tmp != NULL)
 	{
