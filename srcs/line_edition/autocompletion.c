@@ -74,7 +74,8 @@ void	replace_word_from_completion(t_edit *line_e)
 		replace_word(line_e, file->name, ft_strlen(file->name), NULL);
 }
 
-t_file	*build_completion_list_env(char *str, char **env, uint *list_size)
+t_file	*build_completion_list_env(char *str, char **env,
+									uint *list_size, t_edit *line_e)
 {
 	t_file	*list;
 	int		start;		
@@ -85,7 +86,10 @@ t_file	*build_completion_list_env(char *str, char **env, uint *list_size)
 	list = NULL;
 	start = 1;
 	if (str[0] != '0' && str[1] == '{')
+	{
 		start = 2;
+		++line_e->autocomp_point;
+	}
 	*list_size = search_similar_env_var(&list, str + start, 
 					ft_strlen(str + start), env);
 	return (list);
@@ -134,7 +138,7 @@ int 	build_list_from_word(t_edit *line_e)
 	{
 		line_e->autocomp_list = build_completion_list_env(word,
 								line_e->env,
-								&line_e->autocomp_size);
+								&line_e->autocomp_size, line_e);
 	}
 	line_e->autocomp_list = merge_sort(line_e->autocomp_list);
 	ft_strdel(&word);

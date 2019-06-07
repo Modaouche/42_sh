@@ -141,28 +141,42 @@ int		get_last_slash(t_edit *line_e, unsigned int word_start,
 int 	get_last_dollar(t_edit *line_e, unsigned int word_start,
 		unsigned int word_end)
 {
-	unsigned int i;
+	unsigned int 	i;
+	int 			last_dollar;
+	unsigned int	escape;
 
-	if (word_end == 0)
-		return (0);
-	i = word_end - 1;
-	while (i >= word_start && line_e->line[i] != '$')
+	i = word_start;
+	last_dollar = -1;
+	escape = 0;
+	while (i < word_end)
 	{
-		if (!ft_isalnum(line_e->line[i])
-			&& line_e->line[i] != '_' && line_e->line[i] != '{')
-			return (word_start);
-		if (i-- == 0)
-			break ;
+		if (escape)
+		{
+			escape = 0;
+			++i;
+			continue ;
+		}
+		if (line_e->line[i] == '\\')
+		{
+			escape = 1;
+			++i;
+			last_dollar = -1;
+			continue ;
+		}
+		if (line_e->line[i] == '$')
+			last_dollar = i;
+		else if (!ft_isalnum(line_e->line[i]) && line_e->line[i] != '{')
+			last_dollar = -1;
+		++i;
 	}
-	if (i < word_start || line_e->line[i] != '$')
-		return (word_start);
-	//TODO: if i is escaped, return word start
-	if (line_e->line[i + 1] == '{')
-		line_e->autocomp_point = i + 2;
-	else
-		line_e->autocomp_point = i + 1;
-	line_e->autocomp_quote = get_idx_quote_type(line_e->line, i);
-	return (i);
+	if (last_dollar != -1
+		&& (i = get_idx_quote_type(line_e->line, last_dollar)) != 2)
+	{
+		line_e->autocomp_point = last_dollar + 1;
+		line_e->autocomp_quote = i;
+		return (last_dollar);
+	}
+	return (word_start);
 }
 
 /*
