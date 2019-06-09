@@ -15,8 +15,8 @@
 void        io_redirect_fct(t_ast **ast, t_edit *line_e)
 {
 	if (first_set(head_of_line(*ast), T_GREAT, T_GREATAND, T_DGREAT,T_IO_NB,\
-		T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND, T_DLESSDASH, -1)\
-		&& g_errorno != ER_SYNTAX)
+		T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
+		T_DLESSDASH, -1) && g_errorno != ER_SYNTAX)
 	{
 		io_number_opt_fct(ast, line_e);
 		io_kind_fct(ast, line_e);
@@ -32,16 +32,19 @@ void        io_number_opt_fct(t_ast **ast, t_edit *line_e)
 void        io_kind_fct(t_ast **ast, t_edit *line_e)
 {
 	if (first_set(head_of_line(*ast), T_GREAT, T_GREATAND, T_DGREAT,\
-				T_CLOBBER, T_LESSGREAT, T_LESS, T_LESSAND, -1) && g_errorno != ER_SYNTAX)
+			T_CLOBBER, T_LESSGREAT, T_LESS, T_LESSAND, -1)\
+			&& g_errorno != ER_SYNTAX)
 		io_file(ast, line_e);
-	else if (first_set(head_of_line(*ast), T_DLESSDASH, T_DLESS, -1) && g_errorno != ER_SYNTAX)
+	else if (first_set(head_of_line(*ast), T_DLESSDASH, T_DLESS, -1)\
+			&& g_errorno != ER_SYNTAX)
 		io_here(ast, line_e);
 }
 
 void        io_file(t_ast **ast, t_edit *line_e)
 {
 	if (first_set(head_of_line(*ast),T_GREAT, T_GREATAND, T_DGREAT,\
-		T_CLOBBER, T_LESSGREAT, T_LESS, T_LESSAND, -1) && g_errorno != ER_SYNTAX)
+		T_CLOBBER, T_LESSGREAT, T_LESS, T_LESSAND, -1)\
+		&& g_errorno != ER_SYNTAX)
 	{
 		ast_insert_right(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);
 		if (first_set(head_of_line(*ast), T_WORD, -1))

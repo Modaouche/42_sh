@@ -426,39 +426,40 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 
 int		line_edition(t_edit *line_e)
 {
-	int 	ret;
-	char 	key[MAX_KEY_LEN + 1];
-	char 	prevkey[MAX_KEY_LEN + 1];
-	struct 	winsize size;
-	ioctl(0, TIOCGWINSZ, &size);
+  int 	ret;
+  char 	key[MAX_KEY_LEN + 1];
+  char 	prevkey[MAX_KEY_LEN + 1];
+  struct 	winsize size;
 
-	line_e->winsize_col = size.ws_col;
-	line_e->winsize_row = size.ws_row;
-	line_e->autocomp = 0;
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
-		toexit(0, "tcsetattr", 1);
+  ioctl(0, TIOCGWINSZ, &size);
+  line_e->winsize_col = size.ws_col;
+  line_e->winsize_row = size.ws_row;
+  line_e->autocomp = 0;
+  if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
+    toexit(0, "tcsetattr", 1);
 	ft_bzero(prevkey, MAX_KEY_LEN + 1);
 	while (1)
 	{
-	   ft_bzero(key, MAX_KEY_LEN + 1);
-	   ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
-		if (ret == -1 || ret == 0)
-			toexit(line_e, "key:", 1); 
-		if (key[0] == S_KEY_ENTER && !key[1])
-		{
-			if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
-			   toexit(line_e, "tcsetattr", 1);//maybe just turn off termcap instead of exit
-			break ;
-		}
-		on_key_press(line_e, prevkey, key);
-		ft_memcpy(prevkey, key, MAX_KEY_LEN);
-	}
-	if (line_e->line) //clear everything under the line we just sent
+    ft_bzero(key, MAX_KEY_LEN + 1);
+	  ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
+    ft_nlcr();
+    if (ret == -1)
+      toexit(line_e, "key:", 1);
+    if (key[0] == S_KEY_ENTER && !key[1])
+    {
+      if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
+        toexit(line_e, "tcsetattr", 1);//maybe just turn off termcap instead of exit
+      break ;
+    }
+    on_key_press(line_e, prevkey, key);
+    ft_memcpy(prevkey, key, MAX_KEY_LEN);
+  }
+  if (line_e->line) //clear everything under the line we just sent
 	{
-		cursor_end(line_e);
-		tputs(tgetstr("cd", NULL), 1, ft_puti);
-	}
-	ft_file_list_delete(&line_e->autocomp_list);
-	ft_putendl("");
-	return (1);
+    cursor_end(line_e);
+    tputs(tgetstr("cd", NULL), 1, ft_puti);
+  }
+  ft_file_list_delete(&line_e->autocomp_list);
+  ft_putendl("");
+  return (1);
 }

@@ -24,7 +24,7 @@ void    token_isnewl(t_token *actual_token, const char *line, unsigned int *i)
 {
     (void)line;
     actual_token->tokind = T_NEWL;
-    actual_token->lexeme = ft_strdup("\n");
+    actual_token->lexeme = NULL;;
     ++(*i);
 }
 

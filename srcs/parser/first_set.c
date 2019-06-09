@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include <stdarg.h>
-#include "../includes/shell.h"
+#include "shell.h"
 
 int	first_set(int kind, ...)//name tochange maybe in nextok
 {
@@ -34,10 +34,10 @@ int	first_set(int kind, ...)//name tochange maybe in nextok
 int	head_of_line(t_ast *ast)
 {
 	if (!ast)
-		return (T_ERROR);
+		return (-2);
 	if (ast->right)
 		return (head_of_line(ast->right));	
 	if (!ast->right)
 		return (ast->token->tokind);
-	return (T_ERROR);
+	return (-2);
 }

@@ -14,18 +14,16 @@
 
 void    token_isword(t_token *actual_token, const char *line, unsigned int *i)
 {
-	char *word;
 	unsigned int i2;
 
 	i2 = *i;
 	skip_predicat(&line, &i2, &ft_isdigit);
 	if (line[i2] == '<' || line[i2] == '>')
-		token_isio_nb(actual_token, line, i);
-	else
+	  token_isio_nb(actual_token, line, i);
+  else if (!token_isassignmt(actual_token, line, i))
 	{
-		word = get_word(i);
 		actual_token->tokind = T_WORD;
-		actual_token->lexeme = word;
+		actual_token->lexeme = get_word(i);
 	}
 }
 
@@ -38,4 +36,26 @@ void    token_isio_nb(t_token *actual_token, const char *line, unsigned int *i)
 	actual_token->tokind = T_IO_NB;
 	actual_token->lexeme = ft_strndup(line + *i, len - *i);
 	skip_predicat(&line, i, &ft_isdigit);
+}
+
+int    isassign(int c)
+{
+  return ((ft_isalnum(c) || c == '_'));
+}
+
+unsigned int     token_isassignmt(t_token *actual_token, const char *line, unsigned int *i)
+{
+	unsigned int len;
+
+	len = *i;
+  if (ft_isdigit(line[len]))
+    return (0);
+  skip_predicat(&line, &len, &isassign);
+  if (line[len] != '=') 
+    return (0);
+  len++;
+	actual_token->tokind = T_ASGMT_WRD;
+	actual_token->lexeme = ft_strndup(line + *i, len - *i);
+  *i = len;
+  return (1);
 }

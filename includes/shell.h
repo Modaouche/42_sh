@@ -20,8 +20,9 @@
 # include <signal.h>
 # include <term.h>
 # include <curses.h>
-# include "../libft/libft.h"
+# include "libft.h"
 # include "token_and_ast.h"
+# include <errno.h>// to remove
 
 unsigned int     g_errorno;
 
@@ -163,32 +164,34 @@ t_file					*merge_sort(t_file *p);
 ** Line Lexing
 */
 
-t_token					*get_next_token(const char **line, unsigned int *i);
-t_token					*get_heredoc(t_edit *line_e, int *begin);
-int						line_lexer(t_edit *line_e);
-void					skip_predicat(const char ** line, unsigned int *i, int (*pred)(int));
-int						wordlen(char *line);
-int						ft_isspace_tok(int c);
-void					fill_token_tab(void);
-void    				token_isword(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isio_nb(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_iseof(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isnewl(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isbang(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_issemi(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isamper(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isand(t_token *actual_token, unsigned int *i);
-void    				token_ispipe(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isor(t_token *actual_token, unsigned int *i);
-void    				token_isgreat(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isdgreat(t_token *actual_token, unsigned int *i);
-void    				token_isclobber(t_token *actual_token,  unsigned int *i);
-void    				token_isgreatand(t_token *actual_token, unsigned int *i);
-void    				token_isless(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isdless(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isdlessdash(t_token *actual_token, unsigned int *i);
-void    				token_islessgreat(t_token *actual_token, unsigned int *i);
-void    				token_islessand(t_token *actual_token, unsigned int *i);
+t_token				*get_next_token(const char **line, unsigned int *i);
+t_token				*get_heredoc(t_edit *line_e, int *begin);
+int					  line_lexer(t_edit *line_e);
+void				  skip_predicat(const char ** line, unsigned int *i, int (*pred)(int));
+int					  wordlen(char *line);
+int					  ft_isspace_tok(int c);
+int					  isassign(int c);
+void			    fill_token_tab(void);
+void    			token_isword(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_isio_nb(t_token *actual_token, const char *line, unsigned int *i);
+unsigned int  token_isassignmt(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_iseof(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_isnewl(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_isbang(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_issemi(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_isamper(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_isand(t_token *actual_token, unsigned int *i);
+void    			token_ispipe(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_isor(t_token *actual_token, unsigned int *i);
+void    			token_isgreat(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_isdgreat(t_token *actual_token, unsigned int *i);
+void    			token_isclobber(t_token *actual_token,  unsigned int *i);
+void    			token_isgreatand(t_token *actual_token, unsigned int *i);
+void    			token_isless(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_isdless(t_token *actual_token, const char *line, unsigned int *i);
+void    			token_isdlessdash(t_token *actual_token, unsigned int *i);
+void    			token_islessgreat(t_token *actual_token, unsigned int *i);
+void    			token_islessand(t_token *actual_token, unsigned int *i);
 
 /*
 ** Parsing

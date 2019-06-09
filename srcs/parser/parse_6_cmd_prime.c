@@ -52,7 +52,8 @@ void        cmd_suffix_dprime_fct(t_ast **ast, t_edit *line_e)
 
 void        cmd_prefix_fct(t_ast **ast, t_edit *line_e)
 {
-    if (first_set(head_of_line(*ast), T_ASGMT_WRD, -1) && g_errorno != ER_SYNTAX)
+    if (first_set(head_of_line(*ast), T_ASGMT_WRD, -1)\
+		    && g_errorno != ER_SYNTAX)
     {
         ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);
         cmd_prefix_prime_fct(ast, line_e);
@@ -73,7 +74,8 @@ void        cmd_prefix_fct(t_ast **ast, t_edit *line_e)
 
 void        cmd_prefix_prime_fct(t_ast **ast, t_edit *line_e)
 {
-    if (first_set(head_of_line(*ast), T_ASGMT_WRD, -1) && g_errorno != ER_SYNTAX)
+    if (first_set(head_of_line(*ast), T_ASGMT_WRD, -1)\
+		    && g_errorno != ER_SYNTAX)
     {
         ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);
         cmd_prefix_prime_fct(ast, line_e);
