@@ -51,8 +51,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	line_e->line = str;
 	line_e->len = ft_strlen(str);
 	line_e->cursor_pos = line_e->len;
-	ft_putstr_fd(str, STDERR_FILENO);
-	tputs(tgetstr("ce", NULL), 1, ft_puti);
+	print_line(line_e, 0);
 }
 /*
 **  replace_word_from_completion
@@ -75,6 +74,27 @@ void	replace_word_from_completion(t_edit *line_e)
 		replace_word(line_e, file->name, ft_strlen(file->name), NULL);
 }
 
+t_file	*build_completion_list_env(char *str, char **env,
+									uint *list_size, t_edit *line_e)
+{
+	t_file	*list;
+	int		start;		
+
+	*list_size = 0;
+	if (*str == '\0' || env == NULL || *env == NULL)
+		return (NULL);
+	list = NULL;
+	start = 1;
+	if (str[0] != '0' && str[1] == '{')
+	{
+		start = 2;
+		++line_e->autocomp_point;
+	}
+	*list_size = search_similar_env_var(&list, str + start, 
+					ft_strlen(str + start), env);
+	return (list);
+}
+
 /*
 **  build_from_word
 **
@@ -89,28 +109,36 @@ void	replace_word_from_completion(t_edit *line_e)
 int 	build_list_from_word(t_edit *line_e)
 {
 	char			*word;
-	unsigned int	argument;
+	unsigned int	comp_type;
 
 	ft_file_list_delete(&line_e->autocomp_list);
 	ft_bzero(&line_e->autocomp_list,
 		(size_t)&line_e->autocomp_quote - (size_t)&line_e->autocomp_list);
-	if ((word = get_autocompletion_word(line_e, &argument,
+	if ((word = get_autocompletion_word(line_e, &comp_type,
 				&line_e->autocomp_point)) == NULL)
 		return (0);
 	if (word[0] == '/' || word[0] == '.')
-		argument = 1;
-	if (argument == 0)
+		comp_type = 1;
+	else if (word[0] == '$')
+		comp_type = 2;
+	if (comp_type == 0)
 	{
 		line_e->autocomp_list = build_completion_list(word,
 									ft_strlen(word),
 									line_e->env,
 									&line_e->autocomp_size);
 	}
-	else
+	else if (comp_type == 1)
 	{
 		line_e->autocomp_list = build_completion_list_files(word,
 									ft_strlen(word),
 									&line_e->autocomp_size);
+	}
+	else
+	{
+		line_e->autocomp_list = build_completion_list_env(word,
+								line_e->env,
+								&line_e->autocomp_size, line_e);
 	}
 	line_e->autocomp_list = merge_sort(line_e->autocomp_list);
 	ft_strdel(&word);
@@ -127,9 +155,9 @@ int 	build_list_from_word(t_edit *line_e)
 
 char 	*escape_singlequote(char *name, unsigned int max)
 {
-	unsigned int x;
-	unsigned int i;
-	char *new;
+	unsigned int	x;
+	unsigned int	i;
+	char 			*new;
 
 	i = 0;
 	x = 0;

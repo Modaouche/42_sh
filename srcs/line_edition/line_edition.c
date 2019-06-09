@@ -75,9 +75,31 @@ void	cancel_autocompletion(t_edit *line_e)
 }
 
 /*
+**  print_line
+**
+**  - Prints the line correctly, moving the cursor to the left at
+**    each encountered newline. Required for proper printing.
+*/
+
+void	print_line(t_edit *line_e, unsigned int start)
+{
+	while (start < line_e->len)
+	{
+		write(STDERR_FILENO, &line_e->line[start], 1);
+		if (line_e->line[start] == '\n')
+		{
+			tputs(tgetstr("ce", NULL), 1, ft_puti);
+			tputs(tgetstr("cr", NULL), 1, ft_puti);
+		}
+		++start;
+	}
+	tputs(tgetstr("ce", NULL), 1, ft_puti);
+}
+
+/*
 **  insert_char
 **
-**  - Called to insert a character to the line and update it visually
+**  - Called to insert a character to the line and update it visually.
 */
 
 void	insert_char(t_edit *line_e, char c)
@@ -89,12 +111,17 @@ void	insert_char(t_edit *line_e, char c)
 	}
 	if (!(append_to_line(line_e, c)))
 		toexit(line_e, "malloc", 0);
-	write(STDERR_FILENO, &c, 1);
 	if (c == '\n')
-		tputs(tgetstr("cr", NULL), 1, ft_puti);
+	{
+		tputs(tgetstr("ce", NULL), 1, ft_puti);
+		ft_nlcr();
+	}
+	else
+		write(STDERR_FILENO, &c, 1);
 	if (++line_e->cursor_pos != line_e->len)
 	{
-		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
+		cursor_start(line_e);
+		print_line(line_e, 0);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 }
@@ -211,6 +238,56 @@ void	go_to_next_word(t_edit *line_e)
 	cursor_move_to(line_e, i);
 }
 
+void	go_to_prev_line(t_edit *line_e)
+{
+    unsigned int i;
+    unsigned int x;
+    unsigned int curr_height;
+    unsigned int height;
+    unsigned int newpos;
+
+    if (line_e->line == NULL)
+        return ;
+    i = 0;
+    newpos = 0;
+    x = line_e->prompt_size;
+    curr_height = 0;
+    height = get_line_height(line_e, line_e->cursor_pos);
+    while ((i + 1) < line_e->cursor_pos && curr_height < height)
+    {
+        ++x;
+        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
+        {
+            x = 0;
+            if (++curr_height >= height)
+            	break ;
+            newpos = i;
+        }
+    }
+    cursor_move_to(line_e, newpos);
+}
+
+void	go_to_next_line(t_edit *line_e)
+{
+    unsigned int i;
+    unsigned int x;
+
+    if (line_e->line == NULL)
+        return ;
+    i = 0;
+    x = line_e->prompt_size;
+    while (i < line_e->len)
+    {
+        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
+        {
+            x = 0;
+            if (i > line_e->cursor_pos)
+            	break ;
+        }
+    }
+    cursor_move_to(line_e, i);
+}
+
 void	change_autocomp_idx(t_edit *line_e, int value)
 {
 	if (value < 0)
@@ -228,13 +305,19 @@ void	change_autocomp_idx(t_edit *line_e, int value)
 
 void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 {
-	if (ft_strlen(key) == 6 && line_e->autocomp < 2
-		&& !ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5))
+	if (ft_strlen(key) == 6 && line_e->autocomp < 2)
 	{
-		if (key[5] == 0x43)
-			go_to_next_word(line_e);
-		else if (key[5] == 0x44)
-			go_to_prev_word(line_e);
+		if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5))
+		{
+			if (key[5] == 0x43)
+				go_to_next_word(line_e);
+			else if (key[5] == 0x44)
+				go_to_prev_word(line_e);
+			else if (key[5] == 0x41)
+				go_to_prev_line(line_e);
+			else if (key[5] == 0x42)
+				go_to_next_line(line_e);
+		}
 	}
 	else if (ft_strlen(key) == 4)
 	{
@@ -356,6 +439,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			return ;
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
+		cursor_start(line_e);
+		tputs(tgetstr("cd", NULL), 1, ft_puti);
 		line_e->cursor_pos -= 1;
 		line_e->len -= 1;
 		if (line_e->line[0])
@@ -365,9 +450,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					line_e->len - line_e->cursor_pos);
 		}
 		line_e->line[line_e->len] = '\0';
-		tputs(tgetstr("cd", NULL), 1, ft_puti);
-		ft_putstr_fd("\b \b", STDERR_FILENO);
-		ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
+		print_line(line_e, 0);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 	// ft_putstr("key too long comming soon - ");

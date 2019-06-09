@@ -56,7 +56,7 @@ uint         get_line_height(t_edit *line_e, unsigned int end)
     return (height);
 }
 
-uint         get_position_x_index(t_edit *line_e, unsigned int pos)
+uint         get_index_x_pos(t_edit *line_e, unsigned int pos)
 {
     unsigned int i;
     unsigned int x;

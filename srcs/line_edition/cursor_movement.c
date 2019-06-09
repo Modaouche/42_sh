@@ -30,7 +30,7 @@ void		cursor_start(t_edit *line_e)
 		- get_line_height(line_e, 0);
 	while (x--)
 		tputs(tgetstr("up", NULL), 1, ft_puti);
-	x = get_position_x_index(line_e, 0);
+	x = get_index_x_pos(line_e, 0);
 	tputs(tgetstr("cr", NULL), 1, ft_puti);
 	while (x--)
 		tputs(tgetstr("nd", NULL), 1, ft_puti);
@@ -92,7 +92,7 @@ void		cursor_reset_x_pos(t_edit *line_e)
 	unsigned int x;
 
 	tputs(tgetstr("cr", NULL), 1, ft_puti);
-	x = get_position_x_index(line_e, line_e->cursor_pos);
+	x = get_index_x_pos(line_e, line_e->cursor_pos);
 	while (x-- > 0)
 		tputs(tgetstr("nd", NULL), 1, ft_puti);
 }
@@ -121,7 +121,7 @@ void		cursor_move_to(t_edit *line_e, uint to)
 		++x;
 	}
 	tputs(tgetstr("cr", NULL), 1, ft_puti);
-	x = get_position_x_index(line_e, to);
+	x = get_index_x_pos(line_e, to);
 	while (x-- > 0)
 		tputs(tgetstr("nd", NULL), 1, ft_puti);
 	line_e->cursor_pos = to;
@@ -144,7 +144,7 @@ void		cursor_move_from_to(t_edit *line_e, uint from, uint to)
 		++x;
 	}
 	tputs(tgetstr("cr", NULL), 1, ft_puti);
-	x = get_position_x_index(line_e, to);
+	x = get_index_x_pos(line_e, to);
 	while (x-- > 0)
 		tputs(tgetstr("nd", NULL), 1, ft_puti);
 }

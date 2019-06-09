@@ -101,9 +101,9 @@ int				search_similar_env_var(t_file **list, char *str, int len,
 				++i;
 			if (env[0][i] == '\0' || i == 0)
 				continue ;
-			env[0][i + 1] = '\0';
+			env[0][i] = '\0';
 			ft_file_list_append(list, *env, 0);
-			env[0][i + 1] = '=';
+			env[0][i] = '=';
 			++size;
 		}
 		++env;
