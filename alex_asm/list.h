@@ -4,8 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdarg.h>
-
-#define _NARGS(...)                     ((sizeof((void*[]){0,##__VA_ARGS__})/sizeof(void*))-1)
+#include "utils.h"
 
 #define _NODE_NULL                      (NULL)
 #define _LIST_NULL                      (NULL)

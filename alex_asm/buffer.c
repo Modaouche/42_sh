@@ -250,6 +250,31 @@ export_sub_buffer(buffer_t* buffer, size_t start, size_t limit) {
         free_buffer(sub_buffer);
         return (_BUFFER_NULL);
     }
+    _BUFFER_SET_CURSOR(sub_buffer, 0);
     return (sub_buffer);
+}
+
+buffer_t*
+remove_match_buffer(buffer_t* buffer, _match_t pred, size_t* count) {
+    if (!buffer)
+        { return (_BUFFER_NULL); }
+    size_t old_pos = _BUFFER_GET_CURSOR(buffer);
+    size_t cur_count = 0;
+    _BUFFER_SET_CURSOR(buffer, 0);
+    while (!_BUFFER_EOF(buffer)) {
+        size_t size =  (*pred)(_BUFFER_CURSOR_STRING(buffer), _BUFFER_GET_CURSOR(buffer));
+        if (size) {
+            _BUFFER_SET_CURSOR(buffer, _BUFFER_GET_CURSOR(buffer) + size);
+            if (!remove_size_buffer(buffer, size)) 
+                { return (_BUFFER_NULL); }
+            ++cur_count;
+            continue;
+        }
+        _BUFFER_FORWARD_CURSOR(buffer);
+    }
+    _BUFFER_SET_CURSOR(buffer, old_pos);
+    if (count)
+        { (*count) = cur_count; }
+    return (buffer);
 }
 

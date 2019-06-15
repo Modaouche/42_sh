@@ -113,7 +113,7 @@ _skip_predicate(buffer_t* source, _lex_pred_t pred) {
 static void
 _lexer_operator(lexer_t* lexer) {
     char register char_1 = _BUFFER_CURSOR_CHAR(lexer->source);
-    char register char_2 = _BUFFER_STRING(lexer->source)[1];
+    char register char_2 = _BUFFER_CURSOR_STRING(lexer->source)[1];
     switch (char_1) {
         case ';':
         case '!':   lexer->ctoken.ndtype = char_1;
@@ -138,7 +138,7 @@ _lexer_operator(lexer_t* lexer) {
                         case '&':   lexer->ctoken.ndtype = LESSAND; break;
                         case '<':   lexer->ctoken.ndtype = DLESS; break;
                         case '>':   lexer->ctoken.ndtype = LESSGREAT;
-                            if (_BUFFER_STRING(lexer->source)[1] == '-') {
+                            if (_BUFFER_CURSOR_STRING(lexer->source)[1] == '-') {
                                 lexer->ctoken.ndtype = DLESSDASH;
                                 _BUFFER_FORWARD_CURSOR(lexer->source);
                             }
@@ -227,6 +227,7 @@ _lexer_token_dollar(lexer_t* lexer, size_t depth, ...) {
     bool param_expand = false;
     bool command_subs = false;
     bool arith_expand = false;
+    bool regex_expand = false;
 
     bool escape = false;
     bool braces = false;
@@ -234,22 +235,28 @@ _lexer_token_dollar(lexer_t* lexer, size_t depth, ...) {
         _BUFFER_FORWARD_CURSOR(lexer->source);
         if (_BUFFER_CURSOR_CHAR(lexer->source) == '(') {
             _BUFFER_FORWARD_CURSOR(lexer->source);
-            if (_BUFFER_STRING(lexer->source)[1] == '(') { 
+            if (_BUFFER_CURSOR_STRING(lexer->source)[1] == '(') { 
                 arith_expand = true;
             } else { 
                 _BUFFER_REVERSE_CURSOR(lexer->source);
                 command_subs = true;
             }
         } else {
-            param_expand = true;
-            if (_BUFFER_CURSOR_CHAR(lexer->source) == '{') {
+            if (_BUFFER_CURSOR_CHAR(lexer->source) == '[') {
                 _BUFFER_FORWARD_CURSOR(lexer->source);
-                braces = true;
+                regex_expand = true;
+            } else {
+                param_expand = true;
+                if (_BUFFER_CURSOR_CHAR(lexer->source) == '{') {
+                    _BUFFER_FORWARD_CURSOR(lexer->source);
+                    braces = true;
+                }
             }
         }
         if (param_expand)       { _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_DPARAM); }
         else if (command_subs)  { _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_DCOMDS); }
         else if (arith_expand)  { _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_DARITH); }
+        else if (regex_expand)  { _LIST_PUSH_BACK(lexer->lconti, (void*)UNBALANCE_DREGEX); }
     } else {
         va_list list;
         va_start(list, depth);
@@ -257,6 +264,7 @@ _lexer_token_dollar(lexer_t* lexer, size_t depth, ...) {
             case UNBALANCE_DPARAM:  param_expand = true; break;
             case UNBALANCE_DCOMDS:  command_subs = true; break;
             case UNBALANCE_DARITH:  arith_expand = true; break;
+            case UNBALANCE_DREGEX:  regex_expand = true; break;
         }
         va_end(list);
     }
@@ -274,10 +282,12 @@ _lexer_token_dollar(lexer_t* lexer, size_t depth, ...) {
             char register _char = _BUFFER_CURSOR_CHAR(lexer->source);
             if ((param_expand) && (_char == '}'))
                 { break; }
+            else if ((regex_expand) && (_char == ']'))
+                { break; }
             else if ((!param_expand) && (_char ==  ')')) {
                 if (command_subs)
                     { break; }
-                else if (_BUFFER_STRING(lexer->source)[1] == ')') {
+                else if (_BUFFER_CURSOR_STRING(lexer->source)[1] == ')') {
                     _BUFFER_FORWARD_CURSOR(lexer->source);
                     break;
                 }
@@ -288,7 +298,10 @@ _lexer_token_dollar(lexer_t* lexer, size_t depth, ...) {
                     case '\'':  (void)_lexer_token_squote(lexer); break;
                     case '`':   (void)_lexer_token_bquote(lexer); break;
                     case '"':   (void)_lexer_token_dquote(lexer, depth + 1); break;
-                    case '$':   (void)_lexer_token_dollar(lexer, depth + 1); break;
+                    case '$':   if ((!regex_expand)
+                                    || (_BUFFER_CURSOR_STRING(lexer->source)[1] == ']'))
+                                        { (void)_lexer_token_dollar(lexer, depth + 1); }
+                                    break;
                 }
             }
         }
@@ -359,7 +372,7 @@ _lexer_token(lexer_t* lexer) {
             }
             size_t end = _BUFFER_GET_CURSOR(lexer->source);
             insert_string_size_buffer(current_word,
-                        &_BUFFER_STRING(lexer->source)[begin - end], end - begin);
+                        &_BUFFER_CURSOR_STRING(lexer->source)[begin - end], end - begin);
         }
         if (_write)
             { _BUFFER_INSERT_CHAR(current_word, _BUFFER_CURSOR_CHAR(lexer->source)); }
@@ -392,7 +405,7 @@ _lexer_io_number(lexer_t* lexer) {
         case '>':
             /* TODO CHECK OVERFLOW */
             lexer->ctoken.ndtype = IO_NUMBER;
-            lexer->ctoken.io_num = (size_t)strtol(_BUFFER_FULL_STRING(lexer->source) + begin,
+            lexer->ctoken.io_num = (size_t)strtol(_BUFFER_STRING(lexer->source) + begin,
                                                 NULL, 0x0A); 
             break;
         default:
@@ -529,6 +542,7 @@ next_token_lexer(lexer_t* lexer) {
                 case UNBALANCE_DPARAM:
                 case UNBALANCE_DCOMDS:
                 case UNBALANCE_DARITH:
+                case UNBALANCE_DREGEX:
                         _continue = _lexer_token_dollar(lexer, (_error_token_t)*element);
                         break;
             }

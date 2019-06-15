@@ -78,20 +78,19 @@ size_t _dummy) {
     #endif /* defined(_ASSEMBLY) && defined(__GNUC__) */
 }
 
-#define _CHUNK_SIZE (255)
+#define _CHUNK_SIZE (1024)
 
 buffer_t*
-read_file(char const* file_path) {
-    if (!file_path)
-        { return (_BUFFER_NULL); }
-    int fd = open(file_path, O_RDONLY);
+read_filde(int fd, bool _close) {
     if (fd == -1)
         { return (_BUFFER_NULL); }
+    bool failure = false;
     buffer_t* buffer = make_buffer(true);
+    if (!buffer)
+        { failure = true; }
     char chunk[_CHUNK_SIZE + 1] = {};
     int rd;
-    while ((rd = read(fd, chunk, _CHUNK_SIZE))) {
-        bool failure = false;
+    while ((!failure) && (rd = read(fd, chunk, _CHUNK_SIZE))) {
         if (rd != -1) {
             chunk[rd] = '\0';
             int size = 0;
@@ -107,10 +106,12 @@ read_file(char const* file_path) {
         }
         else
             { failure = true; }
-        if (failure) {
-            free_buffer(buffer);
-            return (_BUFFER_NULL);
-        }
+    }
+    if (_close)
+        { failure = close(fd); }
+    if (failure) {
+        free_buffer(buffer);
+        return (_BUFFER_NULL);
     }
     return (buffer);
 }

@@ -66,6 +66,7 @@ typedef enum {
     UNBALANCE_DPARAM    = 0x04,
     UNBALANCE_DCOMDS    = 0x05,
     UNBALANCE_DARITH    = 0x06,
+    UNBALANCE_DREGEX    = 0x07,
 } _error_token_t;
 
 typedef struct {

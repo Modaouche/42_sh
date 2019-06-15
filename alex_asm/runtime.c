@@ -124,9 +124,9 @@ _set_environment_value(hash_t* hash, char const* lvalue,
 
 hash_t*
 init_default_env(hash_t* hash) {
+    static char const* check_value[] = { "PS1", "PWD", "SHLVL", NULL };
     if (!hash)
         { return (_HASH_NULL); }
-    char const* check_value[] = { "PS1", "PWD", "SHLVL", NULL };
     for (size_t i = 0; check_value[i]; ++i) {
         element_t element = lookup_hash(hash,   (_elt_comp_t)&_compare_environment,
                                                 (generic_t)check_value[i]);

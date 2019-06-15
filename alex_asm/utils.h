@@ -1,9 +1,13 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
+#include <stdbool.h>
 #include <stddef.h>
 
-#if !defined(NDEBUG)
+#define _NARGS(...)     ((sizeof((void*[]){0,##__VA_ARGS__}) / sizeof(void*)) - 1)
+#define _READ_FILE(_)   (read_filde(open(_, O_RDONLY), true))
+
+#if (!defined(NDEBUG))
 #define     malloc(_)   (_xmalloc(_, __func__))
 void*       _xmalloc(size_t, char const*);
 #endif /* !defined(NDEBUG) */
@@ -18,14 +22,10 @@ __attribute__((nothrow))
 #endif /* __GNUC__ */
 size_t      round_up(size_t);
 
-#ifndef _BUFFER_H
 struct buffer_t;
-typedef struct buffer_t buffer_t;
-#endif /* _BUFFER_H */
-
 #ifdef __GNUC__
 __attribute__((nothrow))
 #endif /* __GNUC__ */
-buffer_t*   read_file(char const*);
+struct buffer_t*    read_filde(int, bool);
 
 #endif /* _UTILS_H */
