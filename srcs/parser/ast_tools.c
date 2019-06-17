@@ -22,73 +22,106 @@ t_ast       *ast_new(t_token *tok)
 	return (tree);
 }
 
-void        ast_insert_left(t_token *tok, t_ast **root)//ptr > ** ?//rename in injection
+void        ast_left_insert(t_token *tok, t_ast **node)
 {
-	t_ast *tree;
-	t_ast *tmp;
+	t_ast *new;
 
-	tmp = *root;
-	if (!tok || !(tree = ast_new(tok)))
+	if (!tok || !(new = ast_new(tok)))
 		return ;//to_exit !
-	if (!*root)
-		*root = tree;
-	else if (!(*root)->right)
+	if (!*node)
+		*node = new;
+	else
 	{
-		tree->left = *root;
-		*root = tree;
-	}
-	else if ((*root)->right)
-	{
-		while (tmp->right && tmp->right->right)
-			tmp = tmp->right;
-		tree->left = tmp->right;
-		tmp->right = tree;
+		new->left = *node;
+		*node = new;
 	}
 }
 
-void        ast_insert_right(t_token *tok, t_ast **root)//ptr > ** ?
+void	ast_right_insert(t_token *tok, t_ast **node)
 {
-	t_ast *tree;
+	t_ast *new;
 	t_ast *tmp;
 
-	tmp = *root;
-	if (!tok || !(tree = ast_new(tok)))
+	tmp = *node;
+	if (!tok || !(new = ast_new(tok)))
 		return ;//to_exit !
-	while (tmp->right)
-		tmp = tmp->right;
-	tmp->right = tree;
+	if (!*node)
+		*node = new;
+	else
+	{
+		tmp = head_of_node(*node);
+		tmp->right = new;
+	}
+}
+
+void	ast_next_cmd(t_token *tok, t_ast **node)
+{
+	t_ast		*new;
+	t_ast_ptr	*ast_head;
+	t_ast		*elem;
+
+	elem = head_of_node(*node);
+	if (!tok || !(new = ast_new(tok)))
+		return ;//to_exit !
+	tok = ft_memdup(elem->token, sizeof(*tok));
+	tok->lexeme = ft_strdup(elem->token->lexeme);
+	infix_print_ast(*node);
+	ft_printf("\nbef ^^\naft vv\n");
+
+	rm_last_leaf(node);
+	infix_print_ast(*node);
+	ft_printf("\na> [%s] ;? [%d]\n", (*node)->token->lexeme, tok->tokind);
+	ast_left_insert(elem->token, node);
+
+	ft_printf("c> [%s]\n", (*node)->token->lexeme);
+	(*node)->right = new;
+	ast_head = st_ast();
+	if (!ast_head->root)
+	{
+		ft_printf("unNULL ok\n");
+		ast_head->root = *node;
+	}
+	*node = (*node)->right;
+	ast_head->curr_head = *node;
 }
 
 void        infix_print_ast(t_ast *root)
 {
 	if (!root)
-	  return ;
+		return ;
 	infix_print_ast(root->left);
 	if (root->token->lexeme)
 		ft_printf("- %d [%s] ", root->token->tokind, root->token->lexeme);
 	else
 		ft_printf("- %d [NO_THING] -", root->token->tokind);
 	infix_print_ast(root->right);
-	
+
 }
 
-void		rm_last_leaf(t_ast **root)
+void		rm_last_leaf(t_ast **node)
 {
+	t_ast *to_free;
 	t_ast *tmp;
 
-	tmp = *root;
-	if (!root || !*root)
+	tmp = *node;
+	if (!node || !*node)
 	{
-		ft_putendl_fd("root is NULL", 2);//to rm
+		ft_putendl_fd("node is NULL", 2);//to rm
 		return ;
 	}
-	while (tmp->right && tmp->right->right)
-		tmp = tmp->right;
-	if (tmp->right)
+	if ((*node)->right)
 	{
-		ft_strdel(&(tmp->right->token->lexeme));
-		ft_memdel((void *)tmp->right->token);
-		ft_memdel((void *)tmp->right);
-		tmp->right = NULL;
+		while (tmp->right->right)
+			tmp = tmp->right;
+		to_free = tmp->right;
+		tmp->right = (*node)->right->left;
 	}
+	else
+	{
+		to_free = *node;
+		*node = (*node)->left;
+	}
+	ft_strdel(&(to_free->token->lexeme));
+	ft_memdel((void *)to_free->token);
+	ft_memdel((void *)to_free);
 }

@@ -12,54 +12,52 @@
 
 #include "../includes/shell.h"
 
-void        line_break_fct(t_ast **ast, t_edit *line_e)
-{
-	// ft_printf("--<line_break_fct>--\n");
-	if (first_set(head_of_line(*ast), T_NEWL, -1) && g_errorno != ER_SYNTAX)
-		newline_list_fct(ast, line_e);
-	else if (!first_set(head_of_line(*ast), T_BANG, T_WORD, T_GREAT,\
-			T_GREATAND, T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,\
-			T_DLESS, T_LESSAND, T_DLESSDASH, T_IO_NB, T_ASGMT_WRD,\
-			T_EOF, -1))
-	{
-		g_errorno = ER_SYNTAX;
-		return ;
-	}
-}
-
 void        separator_op_fct(t_ast **ast, t_edit *line_e)
 {
 	// ft_printf("--<separator_op_fct>--\n");
-	if (first_set(head_of_line(*ast), T_SEMI, T_AMPER, -1) && g_errorno != ER_SYNTAX)
-		ast_insert_right(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	ft_printf("1st left> [%s]\n", (*ast)->token->lexeme);
+	ft_printf("1st right> [%s]\n", (*ast)->right->token->lexeme);
+	ft_printf("1st left> [%s]\n", (*ast)->left->token->lexeme);
+	ft_printf("1st left> [%s]\n", (*ast)->left->left->token->lexeme);
+	if (token_cmp(head_of_line(*ast), T_SEMI, T_AMPER, -1) && g_errorno != ER_SYNTAX)
+		ast_next_cmd(get_next_token(&(line_e->line), &(line_e->ofst)), ast);
 	else
-	{
 		g_errorno = ER_SYNTAX;
-		return ;
-	}
+}
+
+void        line_break_fct(t_ast **ast, t_edit *line_e)
+{
+	// ft_printf("--<line_break_fct>--\n");
+	//printf( " %s %d\n", __FILE__, __LINE__);
+//	printf( "%d\n",head_of_line(*ast));
+//		infix_print_ast(*ast);
+//	printf( "\n");
+	if (token_cmp(head_of_line(*ast), T_NEWL, -1) && g_errorno != ER_SYNTAX)
+		newline_list_fct(ast, line_e);
 }
 
 void        newline_list_fct(t_ast **ast, t_edit *line_e)
 {
 	// ft_printf("--<newline_list_fct>--\n");
-	if (first_set(head_of_line(*ast), T_NEWL, -1) && g_errorno != ER_SYNTAX)
-		ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);//un nest matcher ??
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(head_of_line(*ast), T_NEWL, -1) && g_errorno != ER_SYNTAX)
+		ast_next_cmd(get_next_token(&(line_e->line),\
+			&(line_e->ofst)), ast);
 	newline_list_prime_fct(ast, line_e);
 }
 
 void        newline_list_prime_fct(t_ast **ast, t_edit *line_e)
 {
 	// ft_printf("--<newline_list_prime_fct>--\n");
-	if (first_set(head_of_line(*ast), T_NEWL, -1 && g_errorno != ER_SYNTAX))
-		ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);
-	if (first_set(head_of_line(*ast), T_NEWL, -1) && g_errorno != ER_SYNTAX)
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(head_of_line(*ast), T_NEWL, -1 && g_errorno != ER_SYNTAX))
+		ast_next_cmd(get_next_token(&(line_e->line), &(line_e->ofst)), ast);
+	if (token_cmp(head_of_line(*ast), T_NEWL, -1) && g_errorno != ER_SYNTAX)
 		newline_list_prime_fct(ast, line_e);
-	else if (!first_set(head_of_line(*ast), T_BANG, T_WORD, T_GREAT,\
+	else if (!token_cmp(head_of_line(*ast), T_BANG, T_WORD, T_GREAT,\
 			T_GREATAND, T_DGREAT, T_CLOBBER, T_LESSGREAT,\
 			T_LESS, T_DLESS,T_LESSAND, T_DLESSDASH, T_IO_NB,\
 			T_ASGMT_WRD, T_EOF, -1))
-	{
 		g_errorno = ER_SYNTAX;
-		return ;
-	}
 }

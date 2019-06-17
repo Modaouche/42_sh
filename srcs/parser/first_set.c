@@ -13,7 +13,7 @@
 #include <stdarg.h>
 #include "shell.h"
 
-int	first_set(int kind, ...)//name tochange maybe in nextok
+int	token_cmp(int kind, ...)
 {
     va_list tokens;
     int current_token;
@@ -31,7 +31,7 @@ int	first_set(int kind, ...)//name tochange maybe in nextok
     return (0);
 }
 
-int	head_of_line(t_ast *ast)
+int	head_of_line(t_ast *ast)//to change in head_of_token
 {
 	if (!ast)
 		return (-2);
@@ -40,4 +40,15 @@ int	head_of_line(t_ast *ast)
 	if (!ast->right)
 		return (ast->token->tokind);
 	return (-2);
+}
+
+t_ast	*head_of_node(t_ast *ast)
+{
+	if (!ast)
+		return (0);
+	if (ast->right)
+		return (head_of_node(ast->right));	
+	if (!ast->right)
+		return (ast);
+	return (0);
 }

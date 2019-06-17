@@ -14,51 +14,89 @@
 
 void        command_fct(t_ast **ast, t_edit *line_e)
 {
-	// ft_printf("--<command_fct>--\n");
-	if (first_set(head_of_line(*ast), T_WORD, -1))
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(head_of_line(*ast), T_WORD, -1))
 	{
-		ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);
+		if (token_cmp((*ast)->token->tokind, T_GREAT, T_GREATAND,\
+			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS,\
+			T_LESSAND, T_DLESSDASH, T_AND_IF, T_OR_IF, -1))
+		 	(!((*ast)->right))
+				? ast_right_insert(get_next_token(\
+				&(line_e->line), &(line_e->ofst)), ast)\
+				: ast_left_insert(get_next_token(\
+				&(line_e->line), &(line_e->ofst)),\
+				&(*ast)->right);
+
+			/*ast_right_insert(get_next_token(&(line_e->line),\
+				&(line_e->ofst)), ast);*/
+		else
+			ast_left_insert(get_next_token(&(line_e->line),\
+				&(line_e->ofst)), ast);
+		//printf("cmd%d %s %d\n", head_of_line(*ast),(*ast)->token->lexeme, line_e->ofst);
+		//getchar();
 		cmd_suffix_opt_fct(ast, line_e);
 	}
-	else if (first_set(head_of_line(*ast), T_GREAT, T_GREATAND, T_DGREAT,\
-			T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND,\
-			T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1))
+	else if (token_cmp(head_of_line(*ast), T_GREAT, T_GREATAND, T_DGREAT,\
+		T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND,\
+		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1))
 	{
 		cmd_prefix_fct(ast, line_e);
 		cmd_suffix_fct(ast, line_e);
 	}
 	else
-	{
 		g_errorno = ER_SYNTAX;
-		return ;
-	}
 }
+
+/*
+ * ajouter les nodes en 'left' serait plus logique mais fatiguant (voir en bas)
+ */
 
 void        cmd_suffix_fct(t_ast **ast, t_edit *line_e)
 {
-	if (first_set(head_of_line(*ast), T_WORD, -1) && g_errorno != ER_SYNTAX)
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(head_of_line(*ast), T_WORD, -1) && g_errorno != ER_SYNTAX)
 	{
-		ast_insert_left(get_next_token((const char **)&(line_e->line), &(line_e->ofst)), ast);
+		if (token_cmp((*ast)->token->tokind, T_GREAT, T_GREATAND,\
+			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS,\
+			T_LESSAND, T_DLESSDASH, T_AND_IF, T_OR_IF, -1))
+		 	(!((*ast)->right))
+				? ast_right_insert(get_next_token(\
+				&(line_e->line), &(line_e->ofst)), ast)\
+				: ast_left_insert(get_next_token(\
+				&(line_e->line), &(line_e->ofst)),\
+				&(*ast)->right);
+			
+			/*ast_right_insert(get_next_token(&(line_e->line),\
+				&(line_e->ofst)), ast);*/
+		else
+			ast_left_insert(get_next_token(&(line_e->line),\
+				&(line_e->ofst)), ast);
 		cmd_suffix_opt_fct(ast, line_e);
 	}
-	else if (!first_set(head_of_line(*ast),T_PIPE, T_AND_IF, T_OR_IF,\
+	else if (!token_cmp(head_of_line(*ast),T_PIPE, T_AND_IF, T_OR_IF,\
 			T_AMPER, T_SEMI, T_NEWL, T_EOF, -1))
-	{
 		g_errorno = ER_SYNTAX;
-		return ;//a virer ?? les empty il n y a pas de gestion d'erreur ? genre c est quand il y a un unempty que l'on check ?
-	}
 }
 
 void        cmd_suffix_opt_fct(t_ast **ast, t_edit *line_e)
 {
-	if (first_set(head_of_line(*ast), T_WORD, T_GREAT, T_GREATAND, T_DGREAT,\
-			T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
-			T_DLESSDASH, T_IO_NB, -1) && g_errorno != ER_SYNTAX)
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(head_of_line(*ast), T_WORD, T_GREAT, T_GREATAND, T_DGREAT,\
+		T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
+		T_DLESSDASH, T_IO_NB, -1) && g_errorno != ER_SYNTAX)
 		cmd_suffix_prime_fct(ast, line_e);        
-	else if (!first_set(head_of_line(*ast),T_PIPE, T_AND_IF, T_OR_IF,\
+	else if (!token_cmp(head_of_line(*ast),T_PIPE, T_AND_IF, T_OR_IF,\
 			T_AMPER, T_SEMI, T_NEWL, T_EOF, -1))
-	{
 		g_errorno = ER_SYNTAX;
-		return ;//a virer ?? les empty il n y a pas de gestion d'erreur ? genre c est quand il y a un unempty que l'on check ?
-	}
 }
+
+
+
+		/*	
+		 	(!((*ast)->right))
+				? ast_right_insert(get_next_token(\
+				&(line_e->line), &(line_e->ofst)), ast)\
+				: ast_left_insert(get_next_token(\
+				&(line_e->line), &(line_e->ofst)),\
+				&(*ast)->right);
+		*/

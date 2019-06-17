@@ -12,7 +12,7 @@
 
 #include "../includes/shell.h"
 
-void    token_isless(t_token *actual_token, const char *line, unsigned int *i)
+void    token_isless(t_token *actual_token, char *line, unsigned int *i)
 {
     actual_token->tokind = T_LESS;
     actual_token->lexeme = ft_strdup("<");
@@ -25,7 +25,7 @@ void    token_isless(t_token *actual_token, const char *line, unsigned int *i)
         token_islessand(actual_token, i);
 }
 
-void    token_isdless(t_token *actual_token, const char *line, unsigned int *i)
+void    token_isdless(t_token *actual_token, char *line, unsigned int *i)
 {
     actual_token->tokind = T_DLESS;
     actual_token->lexeme = ft_strjoin_free(actual_token->lexeme, "<", 1);

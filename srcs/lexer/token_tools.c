@@ -53,7 +53,7 @@ int     ft_isquote_inhib(int c)
 }
 
 
-void    skip_predicat(const char **line, unsigned int *i, int (*pred)(int))
+void    skip_predicat(char **line, unsigned int *i, int (*pred)(int))
 {
     while ((*pred)(line[0][*i]))
         (*i)++;

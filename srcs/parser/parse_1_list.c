@@ -14,10 +14,10 @@
 
 //follow set used here to determinate if $empty or not ...
 
-void					complet_cmd(t_ast **ast, t_edit *line_e)
+void	complet_cmd(t_ast **ast, t_edit *line_e)
 {
-	// ft_printf("--<complet_cmd>--\n");
-	if (first_set(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+//	printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
 		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)
 		&& g_errorno != ER_SYNTAX)
@@ -27,15 +27,16 @@ void					complet_cmd(t_ast **ast, t_edit *line_e)
 	}
 	else
 	{
+		//add more coherent error msg
 		g_errorno = ER_SYNTAX;
 		return ;
 	}
 }
 
-void					list_fct(t_ast **ast, t_edit *line_e)
+void	list_fct(t_ast **ast, t_edit *line_e)
 {
-	// ft_printf("--<list_fct>--\n");
-	if (first_set(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
 		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)
 		&& g_errorno != ER_SYNTAX)
@@ -52,32 +53,32 @@ void					list_fct(t_ast **ast, t_edit *line_e)
 
 void					list_prime_fct(t_ast **ast, t_edit *line_e)
 {
-	// ft_printf("--<list_prime_fct>--\n");
-	if (first_set(head_of_line(*ast), T_SEMI, T_AMPER, -1)\
-      && g_errorno != ER_SYNTAX)
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(head_of_line(*ast), T_SEMI, T_AMPER, -1)\
+			&& g_errorno != ER_SYNTAX)
 	{
-    separator_op_fct(ast, line_e);
-    list_dprime_fct(ast, line_e);
+		separator_op_fct(ast, line_e);
+		list_dprime_fct(ast, line_e);
 	}
-  else if (!first_set(head_of_line(*ast), T_NEWL, T_EOF, -1))
-  {
-    g_errorno = ER_SYNTAX;
-    return ;
-  }
+	else if (!token_cmp(head_of_line(*ast), T_NEWL, T_EOF, -1))
+	{
+		g_errorno = ER_SYNTAX;
+		return ;
+	}
 }
 
 void          list_dprime_fct(t_ast **ast, t_edit *line_e)
 {
-	// ft_printf("--<list_dprime_fct>--\n");
-	if (first_set(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+//	printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
 		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)
-		&& g_errorno != ER_SYNTAX)
+			&& g_errorno != ER_SYNTAX)
 	{
 		and_or_fct(ast, line_e);
 		list_prime_fct(ast, line_e);
 	}
-	else if (!first_set(head_of_line(*ast), T_NEWL, T_EOF, -1))
+	else if (!token_cmp(head_of_line(*ast), T_NEWL, T_EOF, -1))
 	{
 		g_errorno = ER_SYNTAX;
 		return ;

@@ -12,7 +12,7 @@
 
 #include "shell.h"
 
-struct termios				*term_backup(void)
+struct termios			*term_backup(void)
 {
 	static struct termios	termiold;
 
@@ -21,7 +21,7 @@ struct termios				*term_backup(void)
 	return (&termiold);
 }
 
-struct termios				*term_raw(void)
+struct termios			*term_raw(void)
 {
 	static struct termios	termios;
 
@@ -35,11 +35,30 @@ struct termios				*term_raw(void)
 	return (&termios);
 }
 
-void						set_terminal(t_edit *line_e)
+static int		init_term(void)
 {
+	char		*term_type;
+	int			ret;
+
+	if (!(term_type = getenv("TERM")))
+		return (-1);
+	ret = tgetent(NULL, getenv("TERM"));
+	if (ret == 1 && ft_strcmp("dumb", getenv("TERM")))
+		return (0);
+	g_errorno = (ret > 0 && ft_strcmp("dumb", getenv("TERM")))
+		? ER_DBACCES : ER_DBINFO;
+	return (-1);
+}
+
+void				set_terminal(t_edit *line_e, char **envp)
+{
+	ft_bzero(line_e, sizeof(line_e));
+	line_e->tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps //je ne sais pas si ce sera utile
 	line_e->termiold = term_backup();
 	line_e->termios = term_raw();
 	line_e->len_max = BUFFER_LEN;
+	line_e->env = envp;
+	fill_token_tab();
 	if (!isatty(STDERR_FILENO))
 		toexit(line_e, "isatty", 1);
 }

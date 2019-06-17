@@ -12,7 +12,7 @@
 
 #include "../includes/shell.h"
 
-void    token_isgreat(t_token *actual_token, const char *line, unsigned int *i)
+void    token_isgreat(t_token *actual_token, char *line, unsigned int *i)
 {
     actual_token->tokind = T_GREAT;
     actual_token->lexeme = ft_strdup(">");

@@ -30,7 +30,7 @@ void    cursor_reposition(size_t n)
 void        ft_nlcr(void)
 {
     tputs(tgetstr("do", NULL), 1, ft_puti);
-	tputs(tgetstr("cr", NULL), 1, ft_puti);
+    tputs(tgetstr("cr", NULL), 1, ft_puti);
 }
 
 uint         get_line_height(t_edit *line_e)
@@ -58,11 +58,11 @@ uint         get_line_height(t_edit *line_e)
 
 size_t		print_prompt(unsigned int btn)
 {
-    char *prompt;
-    size_t len;
+    char	*prompt;
+    size_t	len;
 
     if (btn == 0)
-        prompt = ft_strdup("\e[1;32m42sh (current path) 🐚\033[0m  $> ");//ajout du path soon
+        prompt = ft_strdup("\e[1;32m42sh (current path)\033[0m  $> ");//ajout du path soon
     else if (btn == 1)
 	    prompt = ft_strdup("pipe $> ");
     else if (btn == 2)
@@ -79,7 +79,8 @@ size_t		print_prompt(unsigned int btn)
 	    prompt = ft_strdup("$> ");
 //    else if (btn == 6)
 //	    prompt = ft_strdup("bquote $> ");//not sure
-    len = ft_strlen(prompt);
+    len = (btn == 0) ? ft_strlen(prompt) - ft_strlen("\e[1;32m\033[0m")\
+	 : ft_strlen(prompt);
     ft_putstr(prompt);
     ft_strdel(&prompt);
     return (len);
