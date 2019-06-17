@@ -16,20 +16,3 @@ int			check_env_value(char **env, char *to_check)
 	}
 	return (0);
 }
-
-int		manag_env(char **env, char **arg)
-{
-	char **env_sh;
-	int flag;
-
-	env_sh = env_cpy(env);
-	sh_level(&env);
-	return (1);// return (exit success)
-}
-
-
-int main(int ac, char **av, char **env)
-{
-	manag_env(env);
-	return (0);
-}
