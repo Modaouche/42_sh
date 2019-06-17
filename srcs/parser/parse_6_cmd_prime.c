@@ -14,7 +14,7 @@
 
 void        cmd_suffix_prime_fct(t_ast **ast, t_edit *line_e)
 {
-//	printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_WORD, -1) && g_errorno != ER_SYNTAX)
 	{
 		if (token_cmp((*ast)->token->tokind, T_GREAT, T_GREATAND,\
@@ -26,8 +26,6 @@ void        cmd_suffix_prime_fct(t_ast **ast, t_edit *line_e)
 				: ast_left_insert(get_next_token(\
 				&(line_e->line), &(line_e->ofst)),\
 				&(*ast)->right);
-/*			ast_right_insert(get_next_token(&(line_e->line),\
-				&(line_e->ofst)), ast);*/
 		else
 			ast_left_insert(get_next_token(&(line_e->line),\
 				&(line_e->ofst)), ast);
@@ -46,7 +44,7 @@ void        cmd_suffix_prime_fct(t_ast **ast, t_edit *line_e)
 
 void        cmd_suffix_dprime_fct(t_ast **ast, t_edit *line_e)
 {
-//	printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_WORD, -1) && g_errorno != ER_SYNTAX)
 	{
 		if (token_cmp((*ast)->token->tokind, T_GREAT, T_GREATAND,\
@@ -58,8 +56,6 @@ void        cmd_suffix_dprime_fct(t_ast **ast, t_edit *line_e)
 				: ast_left_insert(get_next_token(\
 				&(line_e->line), &(line_e->ofst)),\
 				&(*ast)->right);
-/*				ast_right_insert(get_next_token(&(line_e->line),\
-				&(line_e->ofst)), ast);*/
 		else
 			ast_left_insert(get_next_token(&(line_e->line),\
 				&(line_e->ofst)), ast);
@@ -76,7 +72,7 @@ void        cmd_suffix_dprime_fct(t_ast **ast, t_edit *line_e)
 
 void        cmd_prefix_fct(t_ast **ast, t_edit *line_e)
 {
-//	printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_ASGMT_WRD, -1)\
 			&& g_errorno != ER_SYNTAX)
 	{
@@ -89,8 +85,6 @@ void        cmd_prefix_fct(t_ast **ast, t_edit *line_e)
 				: ast_left_insert(get_next_token(\
 				&(line_e->line), &(line_e->ofst)),\
 				&(*ast)->right);
-		/*	ast_right_insert(get_next_token(&(line_e->line),\
-				&(line_e->ofst)), ast);*/
 		else
 			ast_left_insert(get_next_token(&(line_e->line),\
 				&(line_e->ofst)), ast);
@@ -109,7 +103,7 @@ void        cmd_prefix_fct(t_ast **ast, t_edit *line_e)
 
 void        cmd_prefix_prime_fct(t_ast **ast, t_edit *line_e)
 {
-//	printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_ASGMT_WRD, -1)\
 		&& g_errorno != ER_SYNTAX)
 	{
@@ -122,8 +116,6 @@ void        cmd_prefix_prime_fct(t_ast **ast, t_edit *line_e)
 				: ast_left_insert(get_next_token(\
 				&(line_e->line), &(line_e->ofst)),\
 				&(*ast)->right);
-/*			ast_right_insert(get_next_token(&(line_e->line),\
-				&(line_e->ofst)), ast);*/
 		else
 			ast_left_insert(get_next_token(&(line_e->line),\
 				&(line_e->ofst)), ast);

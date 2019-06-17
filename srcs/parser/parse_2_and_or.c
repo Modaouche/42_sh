@@ -14,7 +14,7 @@
 
 void        and_or_fct(t_ast **ast, t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
 		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)\
@@ -27,7 +27,7 @@ void        and_or_fct(t_ast **ast, t_edit *line_e)
 
 void        and_or_prime_fct(t_ast **ast, t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_AND_IF, T_OR_IF, -1)\
 		&& g_errorno != ER_SYNTAX)
 	{
@@ -54,6 +54,6 @@ void        and_or_prime_fct(t_ast **ast, t_edit *line_e)
 
 void        and_or_op_fct(t_ast **ast, t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	ast_left_insert(get_next_token(&(line_e->line), &(line_e->ofst)), ast);//here
 }

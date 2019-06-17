@@ -65,15 +65,9 @@ void	ast_next_cmd(t_token *tok, t_ast **node)
 		return ;//to_exit !
 	tok = ft_memdup(elem->token, sizeof(*tok));
 	tok->lexeme = ft_strdup(elem->token->lexeme);
-	infix_print_ast(*node);
-	ft_printf("\nbef ^^\naft vv\n");
-
 	rm_last_leaf(node);
-	infix_print_ast(*node);
-	ft_printf("\na> [%s] ;? [%d]\n", (*node)->token->lexeme, tok->tokind);
-	ast_left_insert(elem->token, node);
-
-	ft_printf("c> [%s]\n", (*node)->token->lexeme);
+	ast_left_insert(tok, node);
+	
 	(*node)->right = new;
 	ast_head = st_ast();
 	if (!ast_head->root)

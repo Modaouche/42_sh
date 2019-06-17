@@ -14,7 +14,7 @@
 
 void        io_redirect_fct(t_ast **ast, t_edit *line_e)
 {
-//	printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_GREAT, T_GREATAND, T_DGREAT,T_IO_NB,\
 		T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
 		T_DLESSDASH, -1) && g_errorno != ER_SYNTAX)
@@ -26,7 +26,7 @@ void        io_redirect_fct(t_ast **ast, t_edit *line_e)
 
 void        io_number_opt_fct(t_ast **ast, t_edit *line_e)
 {
-//	printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_IO_NB, -1) && g_errorno != ER_SYNTAX)
 	{
 		if (token_cmp((*ast)->token->tokind, T_GREAT, T_GREATAND,\
@@ -38,8 +38,6 @@ void        io_number_opt_fct(t_ast **ast, t_edit *line_e)
 				: ast_left_insert(get_next_token(\
 				&(line_e->line), &(line_e->ofst)),\
 				&(*ast)->right);
-/*			ast_right_insert(get_next_token(&(line_e->line),\
-				&(line_e->ofst)), ast);*/
 		else
 			ast_left_insert(get_next_token(&(line_e->line),\
 				&(line_e->ofst)), ast);
@@ -48,7 +46,7 @@ void        io_number_opt_fct(t_ast **ast, t_edit *line_e)
 
 void        io_kind_fct(t_ast **ast, t_edit *line_e)
 {
-//	printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_GREAT, T_GREATAND, T_DGREAT,\
 		T_CLOBBER, T_LESSGREAT, T_LESS, T_LESSAND, -1)\
 		&& g_errorno != ER_SYNTAX)
@@ -65,7 +63,6 @@ void        io_kind_fct(t_ast **ast, t_edit *line_e)
 
 void        io_file(t_ast **ast, t_edit *line_e)
 {
-//	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast),T_GREAT, T_GREATAND, T_DGREAT,\
 		T_CLOBBER, T_LESSGREAT, T_LESS, T_LESSAND, -1)\
 		&& g_errorno != ER_SYNTAX)
@@ -81,6 +78,7 @@ void        io_file(t_ast **ast, t_edit *line_e)
 
 void        io_here(t_ast **ast, t_edit *line_e)
 {
+	printf( " %s %d\n", __FILE__, __LINE__);
 	t_token *heredoc;
 	char	*cpy;
 	t_token *to_cmp;

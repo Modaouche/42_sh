@@ -15,11 +15,7 @@
 void        separator_op_fct(t_ast **ast, t_edit *line_e)
 {
 	// ft_printf("--<separator_op_fct>--\n");
-	//printf( " %s %d\n", __FILE__, __LINE__);
-	ft_printf("1st left> [%s]\n", (*ast)->token->lexeme);
-	ft_printf("1st right> [%s]\n", (*ast)->right->token->lexeme);
-	ft_printf("1st left> [%s]\n", (*ast)->left->token->lexeme);
-	ft_printf("1st left> [%s]\n", (*ast)->left->left->token->lexeme);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_SEMI, T_AMPER, -1) && g_errorno != ER_SYNTAX)
 		ast_next_cmd(get_next_token(&(line_e->line), &(line_e->ofst)), ast);
 	else
@@ -29,10 +25,7 @@ void        separator_op_fct(t_ast **ast, t_edit *line_e)
 void        line_break_fct(t_ast **ast, t_edit *line_e)
 {
 	// ft_printf("--<line_break_fct>--\n");
-	//printf( " %s %d\n", __FILE__, __LINE__);
-//	printf( "%d\n",head_of_line(*ast));
-//		infix_print_ast(*ast);
-//	printf( "\n");
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_NEWL, -1) && g_errorno != ER_SYNTAX)
 		newline_list_fct(ast, line_e);
 }
@@ -40,7 +33,7 @@ void        line_break_fct(t_ast **ast, t_edit *line_e)
 void        newline_list_fct(t_ast **ast, t_edit *line_e)
 {
 	// ft_printf("--<newline_list_fct>--\n");
-	//printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_NEWL, -1) && g_errorno != ER_SYNTAX)
 		ast_next_cmd(get_next_token(&(line_e->line),\
 			&(line_e->ofst)), ast);
@@ -50,7 +43,7 @@ void        newline_list_fct(t_ast **ast, t_edit *line_e)
 void        newline_list_prime_fct(t_ast **ast, t_edit *line_e)
 {
 	// ft_printf("--<newline_list_prime_fct>--\n");
-	//printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_NEWL, -1 && g_errorno != ER_SYNTAX))
 		ast_next_cmd(get_next_token(&(line_e->line), &(line_e->ofst)), ast);
 	if (token_cmp(head_of_line(*ast), T_NEWL, -1) && g_errorno != ER_SYNTAX)

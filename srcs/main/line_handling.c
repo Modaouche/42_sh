@@ -36,7 +36,7 @@ int         line_lexer(t_edit *line_e)
 			ast_head->root = ast_head->curr_head;
 		infix_print_ast(ast_head->root);
 	}
-	else //useless because we print specified error when we find it
+	else //useless because we need to print specified error when we find it
 		ft_putstr_fd("42sh syntax error\n", 2);
 	return (1);
 }

@@ -14,7 +14,7 @@
 
 void        command_fct(t_ast **ast, t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_WORD, -1))
 	{
 		if (token_cmp((*ast)->token->tokind, T_GREAT, T_GREATAND,\
@@ -26,14 +26,9 @@ void        command_fct(t_ast **ast, t_edit *line_e)
 				: ast_left_insert(get_next_token(\
 				&(line_e->line), &(line_e->ofst)),\
 				&(*ast)->right);
-
-			/*ast_right_insert(get_next_token(&(line_e->line),\
-				&(line_e->ofst)), ast);*/
 		else
 			ast_left_insert(get_next_token(&(line_e->line),\
 				&(line_e->ofst)), ast);
-		//printf("cmd%d %s %d\n", head_of_line(*ast),(*ast)->token->lexeme, line_e->ofst);
-		//getchar();
 		cmd_suffix_opt_fct(ast, line_e);
 	}
 	else if (token_cmp(head_of_line(*ast), T_GREAT, T_GREATAND, T_DGREAT,\
@@ -47,13 +42,9 @@ void        command_fct(t_ast **ast, t_edit *line_e)
 		g_errorno = ER_SYNTAX;
 }
 
-/*
- * ajouter les nodes en 'left' serait plus logique mais fatiguant (voir en bas)
- */
-
 void        cmd_suffix_fct(t_ast **ast, t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_WORD, -1) && g_errorno != ER_SYNTAX)
 	{
 		if (token_cmp((*ast)->token->tokind, T_GREAT, T_GREATAND,\
@@ -65,9 +56,6 @@ void        cmd_suffix_fct(t_ast **ast, t_edit *line_e)
 				: ast_left_insert(get_next_token(\
 				&(line_e->line), &(line_e->ofst)),\
 				&(*ast)->right);
-			
-			/*ast_right_insert(get_next_token(&(line_e->line),\
-				&(line_e->ofst)), ast);*/
 		else
 			ast_left_insert(get_next_token(&(line_e->line),\
 				&(line_e->ofst)), ast);
@@ -80,7 +68,7 @@ void        cmd_suffix_fct(t_ast **ast, t_edit *line_e)
 
 void        cmd_suffix_opt_fct(t_ast **ast, t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
+	printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(head_of_line(*ast), T_WORD, T_GREAT, T_GREATAND, T_DGREAT,\
 		T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, -1) && g_errorno != ER_SYNTAX)
@@ -89,14 +77,3 @@ void        cmd_suffix_opt_fct(t_ast **ast, t_edit *line_e)
 			T_AMPER, T_SEMI, T_NEWL, T_EOF, -1))
 		g_errorno = ER_SYNTAX;
 }
-
-
-
-		/*	
-		 	(!((*ast)->right))
-				? ast_right_insert(get_next_token(\
-				&(line_e->line), &(line_e->ofst)), ast)\
-				: ast_left_insert(get_next_token(\
-				&(line_e->line), &(line_e->ofst)),\
-				&(*ast)->right);
-		*/
