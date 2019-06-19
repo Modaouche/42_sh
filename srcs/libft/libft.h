@@ -6,7 +6,7 @@
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 07:09:22 by kicausse          #+#    #+#             */
-/*   Updated: 2019/04/25 20:14:19 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/06/19 22:22:36 by kaboujna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ char					*ft_strstr(const char *str1, const char *str2);
 char					*ft_strnstr(const char *s1, const char *s2,
 						size_t length);
 int						ft_strcmp(const char *str1, const char *str2);
+int						ft_tablen(char **tab);
 unsigned int			ft_strlcmp(const char *str1, const char *str2);
 int						ft_strncmp(const char *str1, const char *str2,
 						size_t num);

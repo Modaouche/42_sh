@@ -10,10 +10,10 @@ void		ft_remove_place_env(char ***env, char *to_remove)
 	char **new_tab;
 
 	i = -1;
-	if ((c = check_env_value(*env, to_remove))
+	if ((c = check_env_value(*env, to_remove)))
 	{
 		k = 0;
-		if (!(new_tab = (char **)ft_memalloc(sizeof(char *) * ft_tablen + 1)))
+		if (!(new_tab = (char **)ft_memalloc(sizeof(char *) * ft_tablen(*env))))
 			return ;
 		while (*env[++i])
 		{

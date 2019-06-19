@@ -1,5 +1,8 @@
 #include "env.h"
 
+/*
+**  Check if the value exist and return his index
+*/
 int			check_env_value(char **env, char *to_check)
 {
 	int c;
@@ -9,10 +12,10 @@ int			check_env_value(char **env, char *to_check)
 		c = 0;
 		while (env[c])
 		{
-			if (ft_strnstr(env[i], to_check, ft_cfind(env[i], '='))
+			if (ft_strnstr(env[c], to_check, ft_cfind(env[c], '=')))
 				return (c);
 			c++;
 		}
 	}
-	return (0);
+	return (-1);
 }

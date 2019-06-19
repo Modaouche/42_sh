@@ -9,7 +9,7 @@ void		ft_add_place_env(char ***env, char *new_var)
 
 	c = 0;
 	if (!(new_env = (char **)ft_memalloc(sizeof(char *) * ft_tablen(*env) + 1)))
-		return (NULL);
+		return ;
 	while (*env && *env[c])
 	{
 		new_env[c] = ft_strdup(*env[c]);
