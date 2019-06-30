@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_1_list.c                                     :+:      :+:    :+:   */
+/*   1_parse_list.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,18 +12,16 @@
 
 #include "../includes/shell.h"
 
-//follow set used here to determinate if $empty or not ...
-
-void	complet_cmd(t_ast **ast, t_edit *line_e)
+void	complet_cmd(t_edit *line_e)
 {
-	printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(last_token(0), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
 		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)
 		&& g_errorno != ER_SYNTAX)
 	{
-		list_fct(ast, line_e);
-		line_break_fct(ast, line_e);
+		list_fct(line_e);
+		line_break_fct(line_e);
 	}
 	else
 	{
@@ -33,16 +31,16 @@ void	complet_cmd(t_ast **ast, t_edit *line_e)
 	}
 }
 
-void	list_fct(t_ast **ast, t_edit *line_e)
+void	list_fct(t_edit *line_e)
 {
-	printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(last_token(0), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
 		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)
 		&& g_errorno != ER_SYNTAX)
 	{
-		and_or_fct(ast, line_e);
-		list_prime_fct(ast, line_e);
+		and_or_fct(line_e);
+		list_prime_fct(line_e);
 	}
 	else
 	{
@@ -51,34 +49,34 @@ void	list_fct(t_ast **ast, t_edit *line_e)
 	}
 }
 
-void					list_prime_fct(t_ast **ast, t_edit *line_e)
+void					list_prime_fct(t_edit *line_e)
 {
-	printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(head_of_line(*ast), T_SEMI, T_AMPER, -1)\
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(last_token(0), T_SEMI, T_AMPER, -1)\
 			&& g_errorno != ER_SYNTAX)
 	{
-		separator_op_fct(ast, line_e);
-		list_dprime_fct(ast, line_e);
+		separator_op_fct(line_e);
+		list_dprime_fct(line_e);
 	}
-	else if (!token_cmp(head_of_line(*ast), T_NEWL, T_EOF, -1))
+	else if (!token_cmp(last_token(0), T_NEWL, T_EOF, -1))
 	{
 		g_errorno = ER_SYNTAX;
 		return ;
 	}
 }
 
-void          list_dprime_fct(t_ast **ast, t_edit *line_e)
+void          list_dprime_fct(t_edit *line_e)
 {
-	printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(head_of_line(*ast), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
-		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND,\
+	//printf( " %s %d\n", __FILE__, __LINE__);
+	if (token_cmp(last_token(0), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
+		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)
 			&& g_errorno != ER_SYNTAX)
 	{
-		and_or_fct(ast, line_e);
-		list_prime_fct(ast, line_e);
+		and_or_fct(line_e);
+		list_prime_fct(line_e);
 	}
-	else if (!token_cmp(head_of_line(*ast), T_NEWL, T_EOF, -1))
+	else if (!token_cmp(last_token(0), T_NEWL, T_EOF, -1))
 	{
 		g_errorno = ER_SYNTAX;
 		return ;

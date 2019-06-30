@@ -48,7 +48,7 @@ typedef enum
 // # define S_KEY_NONE			0
 
 
-# define MAX_KEY_LEN			15
+# define MAX_KEY_LEN			12
 # define BUFFER_LEN				255
 # define TOKEN_CMP				";\n&|!<>"
 # define BKSH_DQT_CMP				"\\$\"\'"
@@ -200,34 +200,34 @@ void    			token_islessand(t_token *actual_token, unsigned int *i);
 ** Parsing
 */
 
-int					line_parser(t_ast **tree, t_edit *line_e);
-void					complet_cmd(t_ast **tree, t_edit *line_e);
-void					list_fct(t_ast **tree, t_edit *line_e);
-void					list_prime_fct(t_ast **tree, t_edit *line_e);
-void					list_dprime_fct(t_ast **tree, t_edit *line_e);
-void					and_or_fct(t_ast **tree, t_edit *line_e);
-void					and_or_prime_fct(t_ast **tree, t_edit *line_e);
-void					and_or_op_fct(t_ast **tree, t_edit *line_e);
-void					bang_fct(t_ast **tree, t_edit *line_e);
-void					pipeline_fct(t_ast **tree, t_edit *line_e);
-void					pipe_sequence_fct(t_ast **tree, t_edit *line_e);
-void					pipe_sequence_prime_fct(t_ast **tree, t_edit *line_e);
-void					command_fct(t_ast **tree, t_edit *line_e);
-void					cmd_suffix_fct(t_ast **ast, t_edit *line_e);
-void					cmd_suffix_opt_fct(t_ast **ast, t_edit *line_e);
-void					cmd_suffix_prime_fct(t_ast **ast, t_edit *line_e);
-void					cmd_suffix_dprime_fct(t_ast **ast, t_edit *line_e);
-void					cmd_prefix_fct(t_ast **ast, t_edit *line_e);
-void					cmd_prefix_prime_fct(t_ast **ast, t_edit *line_e);
-void					io_redirect_fct(t_ast **ast, t_edit *line_e);
-void					io_number_opt_fct(t_ast **ast, t_edit *line_e);
-void					io_kind_fct(t_ast **ast, t_edit *line_e);
-void					io_file(t_ast **ast, t_edit *line_e);
-void					io_here(t_ast **ast, t_edit *line_e);
-void					line_break_fct(t_ast **tree, t_edit *line_e);
-void					separator_op_fct(t_ast **tree, t_edit *line_e);
-void					newline_list_fct(t_ast **tree, t_edit *line_e);
-void					newline_list_prime_fct(t_ast **tree, t_edit *line_e);
+int					line_parser(t_edit *line_e);
+void					complet_cmd(t_edit *line_e);
+void					list_fct(t_edit *line_e);
+void					list_prime_fct(t_edit *line_e);
+void					list_dprime_fct(t_edit *line_e);
+void					and_or_fct(t_edit *line_e);
+void					and_or_prime_fct(t_edit *line_e);
+void					and_or_op_fct(t_edit *line_e);
+void					bang_fct(t_edit *line_e);
+void					pipeline_fct(t_edit *line_e);
+void					pipe_sequence_fct(t_edit *line_e);
+void					pipe_sequence_prime_fct(t_edit *line_e);
+void					command_fct(t_edit *line_e);
+void					cmd_suffix_fct(t_edit *line_e);
+void					cmd_suffix_opt_fct(t_edit *line_e);
+void					cmd_suffix_prime_fct(t_edit *line_e);
+void					cmd_suffix_dprime_fct(t_edit *line_e);
+void					cmd_prefix_fct(t_edit *line_e);
+void					cmd_prefix_prime_fct(t_edit *line_e);
+void					io_redirect_fct(t_edit *line_e);
+void					io_number_opt_fct(t_edit *line_e);
+void					io_kind_fct(t_edit *line_e);
+void					io_file(t_edit *line_e);
+void					io_here(t_edit *line_e);
+void					line_break_fct(t_edit *line_e);
+void					separator_op_fct(t_edit *line_e);
+void					newline_list_fct(t_edit *line_e);
+void					newline_list_prime_fct(t_edit *line_e);
 int					token_cmp(int kind, ...);//name tochange
 
 /*
@@ -235,13 +235,16 @@ int					token_cmp(int kind, ...);//name tochange
 */
 
 t_ast					*ast_new(t_token *tok);
-void					ast_left_insert(t_token *tok, t_ast **node);
-void					ast_right_insert(t_token *tok, t_ast **node);
-void					ast_next_cmd(t_token *tok, t_ast **node);
+void					ast_left_insert(t_token *tok);
+void					ast_right_insert(t_token *tok);
+void					ast_next_cmd(t_token *tok);
 void					infix_print_ast(t_ast *node);
-void					rm_last_leaf(t_ast **node);
-int					head_of_line(t_ast *ast);
-t_ast					*head_of_node(t_ast *ast);
+void					rm_last_leaf(void);
+int					last_token(t_ast *node);
+t_ast					*last_node(t_ast *node);
+void					bind_last_head(void);
+void					assign_to_word(void);
+t_ast					*get_curr_head(void);
 
 /*
 ** Inhibitor

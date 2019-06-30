@@ -34,15 +34,15 @@ SRC =	srcs/main/main.c\
 		srcs/lexer/token_redirect_less.c\
 		srcs/lexer/token_word.c\
 		srcs/lexer/token_andor.c\
+		srcs/parser/1_parse_list.c\
+		srcs/parser/2_parse_and_or.c\
+		srcs/parser/3_parse_pipe_seq.c\
+		srcs/parser/4_parse_line_brk.c\
+		srcs/parser/5_parse_cmd.c\
+		srcs/parser/6_parse_cmd_prime.c\
+		srcs/parser/7_parse_io_fct.c\
 		srcs/parser/ast_tools.c\
-		srcs/parser/parse_1_list.c\
-		srcs/parser/parse_2_and_or.c\
-		srcs/parser/parse_3_pipe_seq.c\
-		srcs/parser/parse_4_line_brk.c\
-		srcs/parser/parse_5_cmd.c\
-		srcs/parser/parse_6_cmd_prime.c\
-		srcs/parser/parse_7_io_fct.c\
-		srcs/parser/first_set.c\
+		srcs/parser/ast_head_and_cmp.c\
 		srcs/inhibitor/inhibitors.c\
 		srcs/inhibitor/quote_handling.c\
 		srcs/inhibitor/word_handling.c\
@@ -62,8 +62,8 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 
 CC = gcc
 
-CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)\
-			-g -fsanitize=address\
+CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
+	#		-g -fsanitize=address\
 			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 

@@ -12,31 +12,41 @@
 
 #include "shell.h"
 
-int		line_parser(t_ast **ast, t_edit *line_e)
+static int		line_parser_prime(t_edit *line_e)
 {
 	g_errorno = 0;
-	ast_left_insert(get_next_token(&(line_e->line), &(line_e->ofst)), ast);
-	if (!token_cmp(head_of_line(*ast), T_EOF, -1))
-		complet_cmd(ast, line_e);
+	if (!token_cmp(last_token(0), T_EOF, -1))
+		complet_cmd(line_e);
 	if (g_errorno == ER_SYNTAX)
 		return (0);
 	return (1);
 }
 
-int         line_lexer(t_edit *line_e)
+int         line_parser(t_edit *line_e)
 {
 	t_ast_ptr	*ast_head;
+	t_ast		*last;
 
 	ast_head = st_ast();
-	ast_head->root = NULL;
 	ast_head->curr_head = NULL;
-	if (line_parser(&(ast_head->curr_head), line_e) == 1)
+	ast_left_insert(get_next_token(&(line_e->line), &(line_e->ofst)));
+	if (line_parser_prime(line_e))
 	{
 		if (!(ast_head->root))
 			ast_head->root = ast_head->curr_head;
+		if (last_token(ast_head->root) != T_EOF)
+			bind_last_head();
 		infix_print_ast(ast_head->root);
+		ft_putendl("");
+		ast_head->curr_head = NULL;
 	}
-	else //useless because we need to print specified error when we find it
-		ft_putstr_fd("42sh syntax error\n", 2);
+	else
+	{
+		last = last_node(ast_head->root);
+		ft_printf_fd(2, "42sh: parse error near `%s'\n",\
+				last->token->lexeme);
+	}	
+	ast_head->curr_head = NULL;//leaksdeoufff
+	ast_head->root = NULL;//leaksdeoufff
 	return (1);
 }

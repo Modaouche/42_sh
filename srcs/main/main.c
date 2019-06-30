@@ -29,13 +29,13 @@ int main(int ac, char **av, char **envp)
 			line_e->prompt_size = print_prompt(0);
 			line_edition(line_e);
 		}
-		line_lexer(line_e);
+		line_parser(line_e);
 		//execution();
-		if (line_e->line && !ft_strcmp(line_e->line, "reset"))//buitin
+		if (line_e->line && !ft_strcmp(line_e->line, "clear"))//buitin
 			tputs(tgetstr("cl", NULL), 1, ft_puti);//to rm
 		if (line_e->line && !ft_strcmp(line_e->line, "exit"))//buitin
 			break ;//to rm
-		ft_putendl("");//to make after command exec
+	//	ft_putendl("");//to make after command exec
 	}
 	ft_strdel(&(line_e->line));
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)

@@ -48,7 +48,7 @@ unsigned int     token_isassignmt(t_token *actual_token, char *line, unsigned in
 	unsigned int len;
 
 	len = *i;
-	if (ft_isdigit(line[len]))
+	if (ft_isdigit(line[len]) || line[len] == '=')
 		return (0);
 	skip_predicat(&line, &len, &isassign);
 	if (line[len] != '=') 
@@ -56,6 +56,7 @@ unsigned int     token_isassignmt(t_token *actual_token, char *line, unsigned in
 	len++;
 	actual_token->tokind = T_ASGMT_WRD;
 	actual_token->lexeme = ft_strndup(line + *i, len - *i);
+	actual_token->lexeme = ft_strjoin(actual_token->lexeme, get_word(&len));
 	*i = len;
 	return (1);
 }
