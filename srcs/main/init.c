@@ -27,3 +27,9 @@ t_edit	*st_line(void)
 	static t_edit line_e;
 	return (&line_e);
 }
+
+t_ast_ptr	*st_ast(void)
+{
+	static t_ast_ptr	ast_head;
+	return (&ast_head);
+}

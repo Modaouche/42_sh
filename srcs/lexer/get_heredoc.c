@@ -41,11 +41,10 @@ static char *dup_str_heredoc(t_edit *line_e)
 	return (word);
 }
 
-t_token *get_heredoc(t_edit *line_e, int *begin)
+t_token *get_heredoc(t_edit *line_e)
 {
 	t_token     *actual_token;
 
-	*begin = 0;
 	if (!(actual_token = (t_token*)ft_memalloc(sizeof(t_token))))
 		return (0);
 	actual_token->tokind = T_WORD;

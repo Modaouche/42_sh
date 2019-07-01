@@ -14,11 +14,11 @@
 #include "libft.h"
 
 /*
-**  append_to_line
-**
-**  - Adds a character to the input line, and if necessary, reallocates the
-**  line to fit it's new size.
-*/
+ **  append_to_line
+ **
+ **  - Adds a character to the input line, and if necessary, reallocates the
+ **  line to fit it's new size.
+ */
 
 int		append_to_line(t_edit *line_e, const char to_add)
 {
@@ -46,7 +46,7 @@ int		append_to_line(t_edit *line_e, const char to_add)
 	ft_memcpy(new, line_e->line, line_e->cursor_pos);
 	new[line_e->cursor_pos] = to_add;
 	ft_memcpy(new + (line_e->cursor_pos + 1), line_e->line\
-		+ line_e->cursor_pos, line_e->len - line_e->cursor_pos);
+			+ line_e->cursor_pos, line_e->len - line_e->cursor_pos);
 	ft_strdel(&(line_e->line));
 	line_e->line = new;
 	line_e->len += 1;
@@ -54,10 +54,10 @@ int		append_to_line(t_edit *line_e, const char to_add)
 }
 
 /*
-**  cancel_autocompletion
-**
-**  - Hides and free the current autocompletion.
-*/
+ **  cancel_autocompletion
+ **
+ **  - Hides and free the current autocompletion.
+ */
 
 void	cancel_autocompletion(t_edit *line_e)
 {
@@ -344,11 +344,11 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 }
 
 /*
-**  on_key_press
-**
-**  - Event handler called whenever the user pressed a key.
-**    used to happen input to line or to react to special characters.
-*/
+ **  on_key_press
+ **
+ **  - Event handler called whenever the user pressed a key.
+ **    used to happen input to line or to react to special characters.
+ */
 
 void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 {
@@ -376,7 +376,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			return ;
 		}
 		if (line_e->autocomp != 0 && prevkey[0] == '\t' && prevkey[1] == '\0'
-			&& line_e->autocomp_list != NULL)
+				&& line_e->autocomp_list != NULL)
 		{
 			line_e->autocomp = 2;
 			replace_word_from_completion(line_e);
@@ -457,11 +457,11 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 }//in tabptrfct
 
 /*
-**  line_edition
-**
-**  - Called to start the line edition, does not exit until the user
-**    presses enter.
-*/
+ **  line_edition
+ **
+ **  - Called to start the line edition, does not exit until the user
+ **    presses enter.
+ */
 
 int		line_edition(t_edit *line_e)
 {
@@ -469,8 +469,8 @@ int		line_edition(t_edit *line_e)
 	char 	key[MAX_KEY_LEN + 1];
 	char 	prevkey[MAX_KEY_LEN + 1];
 	struct 	winsize size;
-	ioctl(0, TIOCGWINSZ, &size);
 
+	ioctl(0, TIOCGWINSZ, &size);
 	line_e->winsize_col = size.ws_col;
 	line_e->winsize_row = size.ws_row;
 	line_e->autocomp = 0;
@@ -479,14 +479,14 @@ int		line_edition(t_edit *line_e)
 	ft_bzero(prevkey, MAX_KEY_LEN + 1);
 	while (1)
 	{
-	   ft_bzero(key, MAX_KEY_LEN + 1);
-	   ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
-		if (ret == -1 || ret == 0)
-			toexit(line_e, "key:", 1); 
+		ft_bzero(key, MAX_KEY_LEN + 1);
+		ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
+		if (ret == -1)
+			toexit(line_e, "key:", 1);
 		if (key[0] == S_KEY_ENTER && !key[1])
 		{
 			if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
-			   toexit(line_e, "tcsetattr", 1);//maybe just turn off termcap instead of exit
+				toexit(line_e, "tcsetattr", 1);//maybe just turn off termcap instead of exit
 			break ;
 		}
 		on_key_press(line_e, prevkey, key);

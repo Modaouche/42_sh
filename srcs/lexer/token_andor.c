@@ -13,7 +13,7 @@
 #include "../includes/shell.h"
 
 
-void    token_isamper(t_token *actual_token, const char *line, unsigned int *i)
+void    token_isamper(t_token *actual_token, char *line, unsigned int *i)
 {
     actual_token->tokind = T_AMPER;
     actual_token->lexeme = ft_strdup("&");
@@ -29,7 +29,7 @@ void    token_isand(t_token *actual_token, unsigned int *i)
     ++(*i);  
 }
 
-void    token_ispipe(t_token *actual_token, const char *line, unsigned int *i)
+void    token_ispipe(t_token *actual_token, char *line, unsigned int *i)
 {
     actual_token->tokind = T_PIPE;
     actual_token->lexeme = ft_strdup("|");

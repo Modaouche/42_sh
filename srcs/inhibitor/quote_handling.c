@@ -25,7 +25,6 @@ int     quote_parser(const char *line, char **word, unsigned int qt)
 	{
 		if (ft_strclen(line + qt, '\''))
 			*word = ft_strjoin_free(*word, ft_strcdup(line + qt, '\''), 3);
-		getchar();
 	}
 	if (!ft_strchr(line + qt, '\''))
 	{

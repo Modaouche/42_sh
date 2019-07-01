@@ -20,8 +20,9 @@
 # include <signal.h>
 # include <term.h>
 # include <curses.h>
-# include "../libft/libft.h"
+# include "libft.h"
 # include "token_and_ast.h"
+# include <errno.h>// to remove
 
 unsigned int     g_errorno;
 
@@ -47,10 +48,10 @@ typedef enum
 // # define S_KEY_NONE			0
 
 
-# define MAX_KEY_LEN			15
+# define MAX_KEY_LEN			12
 # define BUFFER_LEN				255
 # define TOKEN_CMP				";\n&|!<>"
-# define BKSH_DQT_CMP				"\\$\""
+# define BKSH_DQT_CMP				"\\$\"\'"
 
 typedef struct 			s_file
 {
@@ -86,31 +87,34 @@ typedef struct			s_edit
 	unsigned int		autocomp_type;
 }						t_edit;
 
+/*
 typedef struct			s_key_code
 {
 	unsigned char		*key;
 	void				(*dump_key)(t_edit *line_e, char *buff);
 }						t_key_code;
+*/
 
 /*
 ** Initialization & Co
 */
 
-void					set_terminal(t_edit *line_e);
+void					set_terminal(t_edit *line_e, char **envp);
 void					toexit(t_edit *line_e, char *str, int err);
-struct termios*			term_backup(void);
-struct termios*			term_raw(void);
+struct termios*				term_backup(void);
+struct termios*				term_raw(void);
 void					init_line(t_edit *line_e);
 t_edit					*st_line(void);
+t_ast_ptr				*st_ast(void);
 
 /*
 ** Line edition
 */
 
-int						line_edition(t_edit *line_e);
+int					line_edition(t_edit *line_e);
 void					cursor_reposition(size_t n);
-int						is_arrow(char *key);
-int						ft_puti(int i);
+int					is_arrow(char *key);
+int					ft_puti(int i);
 void					ft_nlcr(void);
 size_t					print_prompt(uint btn);
 void					cursor_start(t_edit *line_e);
@@ -127,10 +131,10 @@ void					print_line(t_edit *line_e, unsigned int start);
 **  Line edition - Autocompletion
 */
 
-#define AUTOCOMP_ESCAPED_CHARS				("*\\'\"!? ~$")
+#define AUTOCOMP_ESCAPED_CHARS			("*\\'\"!? ~$")
 #define AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE	("\\\"!$")
 #define AUTOCOMP_TYPE_SYMLINK			-2
-#define AUTOCOMP_TYPE_CHARACTER_FILE	2
+#define AUTOCOMP_TYPE_CHARACTER_FILE		2
 #define AUTOCOMP_TYPE_FOLDER			4
 #define AUTOCOMP_TYPE_BLOCK_FILE		6
 #define AUTOCOMP_TYPE_FOLDER2			8
@@ -171,94 +175,101 @@ t_file					*merge_sort(t_file *p);
 ** Line Lexing
 */
 
-t_token					*get_next_token(const char **line, unsigned int *i);
-t_token					*get_heredoc(t_edit *line_e, int *begin);
-int						line_lexer(t_edit *line_e);
-void					skip_predicat(const char ** line, unsigned int *i, int (*pred)(int));
-int						wordlen(char *line);
-int						ft_isspace_tok(int c);
-void					fill_token_tab(void);
-void    				token_isword(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isio_nb(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_iseof(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isnewl(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isbang(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_issemi(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isamper(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isand(t_token *actual_token, unsigned int *i);
-void    				token_ispipe(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isor(t_token *actual_token, unsigned int *i);
-void    				token_isgreat(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isdgreat(t_token *actual_token, unsigned int *i);
-void    				token_isclobber(t_token *actual_token,  unsigned int *i);
-void    				token_isgreatand(t_token *actual_token, unsigned int *i);
-void    				token_isless(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isdless(t_token *actual_token, const char *line, unsigned int *i);
-void    				token_isdlessdash(t_token *actual_token, unsigned int *i);
-void    				token_islessgreat(t_token *actual_token, unsigned int *i);
-void    				token_islessand(t_token *actual_token, unsigned int *i);
+t_token				*get_next_token(char **line, unsigned int *i);
+t_token				*get_heredoc(t_edit *line_e);
+int				line_lexer(t_edit *line_e);
+void				skip_predicat(char ** line, unsigned int *i, int (*pred)(int));
+int				wordlen(char *line);
+int				ft_isspace_tok(int c);
+int				isassign(int c);
+void			    	fill_token_tab(void);
+void    			token_isword(t_token *actual_token, char *line, unsigned int *i);
+void    			token_isio_nb(t_token *actual_token, char *line, unsigned int *i);
+unsigned int  			token_isassignmt(t_token *actual_token, char *line, unsigned int *i);
+void    			token_iseof(t_token *actual_token, char *line, unsigned int *i);
+void    			token_isnewl(t_token *actual_token, char *line, unsigned int *i);
+void    			token_isbang(t_token *actual_token, char *line, unsigned int *i);
+void    			token_issemi(t_token *actual_token, char *line, unsigned int *i);
+void    			token_isamper(t_token *actual_token, char *line, unsigned int *i);
+void    			token_isand(t_token *actual_token, unsigned int *i);
+void    			token_isor(t_token *actual_token, unsigned int *i);
+void    			token_ispipe(t_token *actual_token, char *line, unsigned int *i);
+void    			token_isgreat(t_token *actual_token, char *line, unsigned int *i);
+void    			token_isdgreat(t_token *actual_token, unsigned int *i);
+void    			token_isclobber(t_token *actual_token,  unsigned int *i);
+void    			token_isgreatand(t_token *actual_token, unsigned int *i);
+void    			token_isless(t_token *actual_token, char *line, unsigned int *i);
+void    			token_isdless(t_token *actual_token, char *line, unsigned int *i);
+void    			token_isdlessdash(t_token *actual_token, unsigned int *i);
+void    			token_islessgreat(t_token *actual_token, unsigned int *i);
+void    			token_islessand(t_token *actual_token, unsigned int *i);
 
 /*
 ** Parsing
 */
 
-int						line_parser(t_ast **tree, t_edit *line_e);
-void					complet_cmd(t_ast **tree, t_edit *line_e);
-void					list_fct(t_ast **tree, t_edit *line_e);
-void					list_prime_fct(t_ast **tree, t_edit *line_e);
-void					list_dprime_fct(t_ast **tree, t_edit *line_e);
-void					and_or_fct(t_ast **tree, t_edit *line_e);
-void					and_or_prime_fct(t_ast **tree, t_edit *line_e);
-void					and_or_op_fct(t_ast **tree, t_edit *line_e);
-void					bang_fct(t_ast **tree, t_edit *line_e);
-void					pipeline_fct(t_ast **tree, t_edit *line_e);
-void					pipe_sequence_fct(t_ast **tree, t_edit *line_e);
-void					pipe_sequence_prime_fct(t_ast **tree, t_edit *line_e);
-void					command_fct(t_ast **tree, t_edit *line_e);
-void					cmd_suffix_fct(t_ast **ast, t_edit *line_e);
-void					cmd_suffix_opt_fct(t_ast **ast, t_edit *line_e);
-void					cmd_suffix_prime_fct(t_ast **ast, t_edit *line_e);
-void					cmd_suffix_dprime_fct(t_ast **ast, t_edit *line_e);
-void					cmd_prefix_fct(t_ast **ast, t_edit *line_e);
-void					cmd_prefix_prime_fct(t_ast **ast, t_edit *line_e);
-void					io_redirect_fct(t_ast **ast, t_edit *line_e);
-void					io_number_opt_fct(t_ast **ast, t_edit *line_e);
-void					io_kind_fct(t_ast **ast, t_edit *line_e);
-void					io_file(t_ast **ast, t_edit *line_e);
-void					io_here(t_ast **ast, t_edit *line_e);
-void					line_break_fct(t_ast **tree, t_edit *line_e);
-void					separator_op_fct(t_ast **tree, t_edit *line_e);
-void					newline_list_fct(t_ast **tree, t_edit *line_e);
-void					newline_list_prime_fct(t_ast **tree, t_edit *line_e);
-int						first_set(int kind, ...);//name tochange
+int					line_parser(t_edit *line_e);
+void					complet_cmd(t_edit *line_e);
+void					list_fct(t_edit *line_e);
+void					list_prime_fct(t_edit *line_e);
+void					list_dprime_fct(t_edit *line_e);
+void					and_or_fct(t_edit *line_e);
+void					and_or_prime_fct(t_edit *line_e);
+void					and_or_op_fct(t_edit *line_e);
+void					bang_fct(t_edit *line_e);
+void					pipeline_fct(t_edit *line_e);
+void					pipe_sequence_fct(t_edit *line_e);
+void					pipe_sequence_prime_fct(t_edit *line_e);
+void					command_fct(t_edit *line_e);
+void					cmd_suffix_fct(t_edit *line_e);
+void					cmd_suffix_opt_fct(t_edit *line_e);
+void					cmd_suffix_prime_fct(t_edit *line_e);
+void					cmd_suffix_dprime_fct(t_edit *line_e);
+void					cmd_prefix_fct(t_edit *line_e);
+void					cmd_prefix_prime_fct(t_edit *line_e);
+void					io_redirect_fct(t_edit *line_e);
+void					io_number_opt_fct(t_edit *line_e);
+void					io_kind_fct(t_edit *line_e);
+void					io_file(t_edit *line_e);
+void					io_here(t_edit *line_e);
+void					line_break_fct(t_edit *line_e);
+void					separator_op_fct(t_edit *line_e);
+void					newline_list_fct(t_edit *line_e);
+void					newline_list_prime_fct(t_edit *line_e);
+int					token_cmp(int kind, ...);//name tochange
 
 /*
 ** Abstract Syntax Tree
 */
 
 t_ast					*ast_new(t_token *tok);
-void					ast_insert_left(t_token *tok, t_ast **root);
-void					ast_insert_right(t_token *tok, t_ast **root);
-void					infix_print_ast(t_ast *root);
-void					rm_last_leaf(t_ast **root);
-int						head_of_line(t_ast *ast);
+void					ast_left_insert(t_token *tok);
+void					ast_right_insert(t_token *tok);
+void					ast_next_cmd(t_token *tok);
+void					infix_print_ast(t_ast *node);
+void					rm_last_leaf(void);
+int					last_token(t_ast *node);
+t_ast					*last_node(t_ast *node);
+void					bind_last_head(void);
+void					assign_to_word(void);
+t_ast					*get_curr_head(void);
 
 /*
 ** Inhibitor
 */
 
-char    				*get_word(unsigned int *i);
-int						ft_isquote_inhib(int c);
-int						ft_isspace_inhib(int c);
-int						for_end_word_inhib(int c);
-void					extend_quotes(t_edit *line_e, char **word, unsigned int *i);
-int						quote_parser(const char *line, char **word, unsigned int qt);
-int     				word_parser(const char *line, char **word, int qt);
-char    				*word_handling(const char *, unsigned int *, int);
-int    					word_handling_prime(const char *, char **, unsigned int *, int);
-void    				dollars_cmd(const char *, char **, unsigned int *);
-int    					backslash(const char *, char **, unsigned int *, int qt);
-int	    				backslash_end(t_edit *, unsigned int *, int *);
+char    			*get_word(unsigned int *i);
+int				ft_isquote_inhib(int c);
+int				ft_isspace_inhib(int c);
+int				for_end_word_inhib(int c);
+void				extend_quotes(t_edit *line_e, char **word, unsigned int *i);
+int				quote_parser(const char *line, char **word, unsigned int qt);
+int     			word_parser(const char *line, char **word, int qt);
+char    			*word_handling(const char *, unsigned int *, int);
+int    				word_handling_prime(const char *, char **, unsigned int *, int);
+void    			dollars_cmd(const char *, char **, unsigned int *);
+int    				backslash(const char *, char **, unsigned int *, int qt);
+int	    			backslash_end(t_edit *, unsigned int *, int *);
 
 /*
 ** Tools & Co

@@ -12,7 +12,7 @@
 
 #include "../includes/shell.h"
 
-t_token *get_next_token(const char **line, unsigned int *i)
+t_token *get_next_token(char **line, unsigned int *i)
 {
 	t_token     *actual_token;
 

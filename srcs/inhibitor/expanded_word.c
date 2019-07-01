@@ -12,14 +12,6 @@
 
 #include "../includes/shell.h"
 
-/* 
- * 
- * salut\
- * les\
- *  amis
- *   
- */
-
 //norme + unleaks + protection malloc
 
 int    backslash(const char *line, char **word, unsigned int *i, int qt)
@@ -34,12 +26,11 @@ int    backslash(const char *line, char **word, unsigned int *i, int qt)
 	else if (line[*i] == '\n')
 		++(*i);
 	else if (ft_strchr(BKSH_DQT_CMP, line[*i]))
-	{
-		*word = (!*word) ? ft_strndup(line + *i, 1) : ft_strjoin_free(*word, ft_strndup(line + *i, 1), 3);
-		++(*i);
-	}
+		*word = (!*word) ? ft_strndup(line + *i, 1)
+			: ft_strjoin_free(*word, ft_strndup(line + *i, 1), 3);
 	else if (ft_isspace_inhib(line[*i]))
-		*word = (!*word) ? ft_strndup(line + *i, 1) : ft_strjoin_free(*word, ft_strndup(line + *i, 1), 3);
+		*word = (!*word) ? ft_strndup(line + *i, 1)
+			: ft_strjoin_free(*word, ft_strndup(line + *i, 1), 3);
 	else
 		--(*i);
 	return (1);
