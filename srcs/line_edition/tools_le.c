@@ -100,8 +100,7 @@ size_t		print_prompt(unsigned int btn)
 	    prompt = ft_strdup("$> ");
 //    else if (btn == 6)
 //	    prompt = ft_strdup("bquote $> ");//not sure
-    len = (btn == 0) ? ft_strlen(prompt) - ft_strlen("\e[1;32m\033[0m")\
-	 : ft_strlen(prompt);
+    len = ft_strlen(prompt);
     ft_putstr(prompt);
     ft_strdel(&prompt);
     return (len);
