@@ -85,7 +85,10 @@ void	print_line(t_edit *line_e, unsigned int start)
 {
 	while (start < line_e->len)
 	{
-		write(STDERR_FILENO, &line_e->line[start], 1);
+		if (line_e->line[start] == '\t')
+			write(STDERR_FILENO, TAB_CHARS, TAB_LEN);
+		else
+			write(STDERR_FILENO, &line_e->line[start], 1);
 		if (line_e->line[start] == '\n')
 		{
 			tputs(tgetstr("ce", NULL), 1, ft_puti);
@@ -116,6 +119,8 @@ void	insert_char(t_edit *line_e, char c)
 		tputs(tgetstr("ce", NULL), 1, ft_puti);
 		ft_nlcr();
 	}
+	else if (c == '\t')
+		write(STDERR_FILENO, TAB_CHARS, TAB_LEN);
 	else
 		write(STDERR_FILENO, &c, 1);
 	if (++line_e->cursor_pos != line_e->len)
@@ -492,12 +497,11 @@ int		line_edition(t_edit *line_e)
 		on_key_press(line_e, prevkey, key);
 		ft_memcpy(prevkey, key, MAX_KEY_LEN);
 	}
-	if (line_e->line) //clear everything under the line we just sent
+	if (line_e->line) 
 	{
-		cursor_end(line_e);
+		cursor_after(line_e);
 		tputs(tgetstr("cd", NULL), 1, ft_puti);
 	}
 	ft_file_list_delete(&line_e->autocomp_list);
-	ft_putendl("");
 	return (1);
 }
