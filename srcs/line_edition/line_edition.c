@@ -61,18 +61,46 @@ int		append_to_line(t_edit *line_e, const char to_add)
 
 void	cancel_autocompletion(t_edit *line_e)
 {
+	unsigned int x;
+
 	line_e->autocomp = 0;
-	cursor_end(line_e);
+	cursor_after(line_e);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
-	cursor_actualpos(line_e);
+	x = get_line_height(line_e, line_e->len)
+		- get_line_height(line_e, line_e->cursor_pos) + 1;
+	while (x-- > 0)
+		tputs(tgetstr("up", NULL), 1, ft_puti);
+	cursor_reset_x_pos(line_e);
 	ft_file_list_delete(&line_e->autocomp_list);
 }
 
 /*
- **  insert_char
- **
- **  - Called to insert a character to the line and update it visually
- */
+**  print_line
+**
+**  - Prints the line correctly, moving the cursor to the left at
+**    each encountered newline. Required for proper printing.
+*/
+
+void	print_line(t_edit *line_e, unsigned int start)
+{
+	while (start < line_e->len)
+	{
+		write(STDERR_FILENO, &line_e->line[start], 1);
+		if (line_e->line[start] == '\n')
+		{
+			tputs(tgetstr("ce", NULL), 1, ft_puti);
+			tputs(tgetstr("cr", NULL), 1, ft_puti);
+		}
+		++start;
+	}
+	tputs(tgetstr("ce", NULL), 1, ft_puti);
+}
+
+/*
+**  insert_char
+**
+**  - Called to insert a character to the line and update it visually.
+*/
 
 void	insert_char(t_edit *line_e, char c)
 {
@@ -83,18 +111,26 @@ void	insert_char(t_edit *line_e, char c)
 	}
 	if (!(append_to_line(line_e, c)))
 		toexit(line_e, "malloc", 0);
-	if (line_e->cursor_pos < line_e->len)
-		line_e->cursor_pos += 1;
-	write(STDERR_FILENO, &c, 1);
-	ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-	cursor_actualpos(line_e);
+	if (c == '\n')
+	{
+		tputs(tgetstr("ce", NULL), 1, ft_puti);
+		ft_nlcr();
+	}
+	else
+		write(STDERR_FILENO, &c, 1);
+	if (++line_e->cursor_pos != line_e->len)
+	{
+		cursor_start(line_e);
+		print_line(line_e, 0);
+		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
+	}
 }
 
 /*
- **  can_insert_tabs
- **
- **  - Function that determines whether the line is empty or not
- */
+**  can_insert_tabs
+**
+**  - Function that determines whether the line is empty or not.
+*/
 
 int		can_insert_tabs(t_edit *line_e)
 {
@@ -153,9 +189,7 @@ void	go_to_prev_word(t_edit *line_e)
 		}
 		++i;
 	}
-	cursor_start(line_e);
-	line_e->cursor_pos = last_word_start;
-	cursor_actualpos(line_e);
+	cursor_move_to(line_e, last_word_start);
 }
 
 void	go_to_next_word(t_edit *line_e)
@@ -201,9 +235,112 @@ void	go_to_next_word(t_edit *line_e)
 		}
 		++i;
 	}
-	cursor_start(line_e);
-	line_e->cursor_pos = i;
-	cursor_actualpos(line_e);
+	cursor_move_to(line_e, i);
+}
+
+void	go_to_prev_line(t_edit *line_e)
+{
+    unsigned int i;
+    unsigned int x;
+    unsigned int curr_height;
+    unsigned int height;
+    unsigned int newpos;
+
+    if (line_e->line == NULL)
+        return ;
+    i = 0;
+    newpos = 0;
+    x = line_e->prompt_size;
+    curr_height = 0;
+    height = get_line_height(line_e, line_e->cursor_pos);
+    while ((i + 1) < line_e->cursor_pos && curr_height < height)
+    {
+        ++x;
+        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
+        {
+            x = 0;
+            if (++curr_height >= height)
+            	break ;
+            newpos = i;
+        }
+    }
+    cursor_move_to(line_e, newpos);
+}
+
+void	go_to_next_line(t_edit *line_e)
+{
+    unsigned int i;
+    unsigned int x;
+
+    if (line_e->line == NULL)
+        return ;
+    i = 0;
+    x = line_e->prompt_size;
+    while (i < line_e->len)
+    {
+        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
+        {
+            x = 0;
+            if (i > line_e->cursor_pos)
+            	break ;
+        }
+    }
+    cursor_move_to(line_e, i);
+}
+
+void	change_autocomp_idx(t_edit *line_e, int value)
+{
+	if (value < 0)
+	{
+		if ((uint)(-value) <= line_e->autocomp_idx)
+			line_e->autocomp_idx += value;
+		else
+			line_e->autocomp_idx = line_e->autocomp_size - 1;
+	}
+	else if ((line_e->autocomp_idx += (uint)value) >= line_e->autocomp_size)
+		line_e->autocomp_idx = 0;
+	replace_word_from_completion(line_e);
+	print_comp_list(line_e, line_e->autocomp_idx);
+}
+
+void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
+{
+	if (ft_strlen(key) == 6 && line_e->autocomp < 2)
+	{
+		if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5))
+		{
+			if (key[5] == 0x43)
+				go_to_next_word(line_e);
+			else if (key[5] == 0x44)
+				go_to_prev_word(line_e);
+			else if (key[5] == 0x41)
+				go_to_prev_line(line_e);
+			else if (key[5] == 0x42)
+				go_to_next_line(line_e);
+		}
+	}
+	else if (ft_strlen(key) == 4)
+	{
+		if (line_e->autocomp < 2)
+		{
+			if (ft_memcmp(key, "\x1B\x5B\x36\x7E", 4))
+				cursor_move_to(line_e, 0);
+			else if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4))
+				cursor_move_to(line_e, line_e->len);
+			return ;
+		}
+		if (ft_memcmp(key, "\x1B\x5B\x35\x7E", 4) == 0)
+			change_autocomp_idx(line_e, -line_e->winsize_row);
+		else if (ft_memcmp(key, "\x1B\x5B\x36\x7E", 4) == 0)
+			change_autocomp_idx(line_e, line_e->winsize_row);
+	}
+	else if (ft_strlen(key) == 3 && !ft_memcmp(key, "\x1B\x5B\x5A", 3)
+		&& (line_e->autocomp == 2 || !ft_strcmp(prevkey, "\t")))
+	{
+		if (line_e->autocomp != 2)
+			line_e->autocomp = 2;
+		change_autocomp_idx(line_e, -1);
+	}
 }
 
 /*
@@ -220,71 +357,22 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		ft_putendl_fd("error : key :null", STDERR_FILENO);
 		return ;
 	}
-	if (ft_strlen(key) <= 1 && ft_isprint(key[0]))
+	if (ft_strlen(key) <= 1 && (ft_isprint(key[0])
+		|| (can_insert_tabs(line_e) && key[0] == '\t')))
 	{
+		if (*key == '+')
+			*key = '\n';
 		insert_char(line_e, *key);
 		return ;
 	}
-	else if (ft_strlen(key) == 6 && key[0] == 27 && key[1] == 91 && key[2] == 49 && key[3] == 59 && key[4] == 50 && key[5] == 68)
-		go_to_prev_word(line_e);
-	else if (ft_strlen(key) == 6 && key[0] == 27 && key[1] == 91 && key[2] == 49 && key[3] == 59 && key[4] == 50 && key[5] == 67)
-		go_to_next_word(line_e);
-	else if (ft_strlen(key) == 4 && key[0] == 27 && key[1] == 91 && key[2] == 53 && key[3] == 126)
+	key_shortcut_handler(line_e, prevkey, key);
+	if (ft_strlen(key) <= 1 && key[0] == '\t')
 	{
-		if (line_e->autocomp == 2)
-		{
-			if (line_e->autocomp_idx < line_e->winsize_row)
-				line_e->autocomp_idx = line_e->autocomp_size;
-			else
-				line_e->autocomp_idx -= line_e->winsize_row;
-			replace_word_from_completion(line_e);
-			print_comp_list(line_e, line_e->autocomp_idx);
-		}
-		else
-		{
-			cursor_start(line_e);
-			line_e->cursor_pos = 0;
-		}
-	}
-	else if (ft_strlen(key) == 4 && key[0] == 27 && key[1] == 91 && key[2] == 54 && key[3] == 126)
-	{
-		if (line_e->autocomp == 2)
-		{
-			if (line_e->autocomp_idx + line_e->winsize_row > line_e->autocomp_size)
-				line_e->autocomp_idx = 0;
-			else
-				line_e->autocomp_idx += line_e->winsize_row;
-			replace_word_from_completion(line_e);
-			print_comp_list(line_e, line_e->autocomp_idx);
-		}
-		else
-		{
-			cursor_end(line_e);
-			line_e->cursor_pos = line_e->len;
-		}
-	}
-	else if (line_e->autocomp == 2 && ft_strlen(key) == 3 && key[0] == 27 && key[1] == 91 && key[2] == 90) //shift+tab
-	{
-		if (line_e->autocomp_idx-- == 0)
-			line_e->autocomp_idx = line_e->autocomp_size - 1;
-		replace_word_from_completion(line_e);
-		print_comp_list(line_e, line_e->autocomp_idx);
-	}
-	else if (ft_strlen(key) <= 1 && key[0] == '\t')
-	{
-		if (can_insert_tabs(line_e))
-		{
-			insert_char(line_e, '\t');
-			return ;
-		}
 		if (line_e->line == NULL)
 			return ;
 		if (line_e->autocomp == 2)
 		{
-			if (++line_e->autocomp_idx >= line_e->autocomp_size)
-				line_e->autocomp_idx = 0;
-			replace_word_from_completion(line_e);
-			print_comp_list(line_e, line_e->autocomp_idx);
+			change_autocomp_idx(line_e, 1);
 			return ;
 		}
 		if (line_e->autocomp != 0 && prevkey[0] == '\t' && prevkey[1] == '\0'
@@ -312,90 +400,47 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocomp == 2)
 			{
-				if (line_e->autocomp_idx <= line_e->autocomp_maxrow)
-					return ;
-				line_e->autocomp_idx -= line_e->autocomp_maxrow + 1;
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
+				if (line_e->autocomp_idx > line_e->autocomp_maxrow)
+					change_autocomp_idx(line_e, -(line_e->autocomp_maxrow + 1));
 			}
 			else if (line_e->cursor_pos > 0)
-			{
-				line_e->cursor_pos -= 1;
-				if (line_e->line[line_e->cursor_pos] == '\n'
-						|| (line_e->cursor_pos + g_shell.prompt_size + 1) % line_e->winsize_col == 0)
-				{
-					tputs(tgetstr("up", NULL), 1, ft_puti);
-					unsigned int i = 0;
-					while (line_e->cursor_pos - i != 0)
-					{
-						if(line_e->line[line_e->cursor_pos - i] == '\n')
-							break ;
-						++i;
-					}
-					while ((i-- + g_shell.prompt_size) > 0)
-						tputs(tgetstr("nd", NULL), 1, ft_puti);
-				}
-				else
-					tputs(tgetstr("le", NULL), 1, ft_puti); 
-			}
+				cursor_move_to(line_e, line_e->cursor_pos - 1);
 		}
 		else if (line_e->line && key[2] == S_KEY_ARW_RIGHT)
 		{
 			if (line_e->autocomp == 2)
 			{
-				if (line_e->autocomp_idx + (line_e->autocomp_maxrow + 1) >= line_e->autocomp_size)
-					return ;
-				line_e->autocomp_idx += line_e->autocomp_maxrow + 1;
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
+				if (line_e->autocomp_idx + (line_e->autocomp_maxrow + 1)
+					< line_e->autocomp_size)
+					change_autocomp_idx(line_e, line_e->autocomp_maxrow + 1);
 			}
 			else if (line_e->cursor_pos < line_e->len)
-			{
-				line_e->cursor_pos += 1;
-				if (line_e->line[line_e->cursor_pos] == '\n'
-						|| (line_e->cursor_pos + g_shell.prompt_size) % line_e->winsize_col == 0)
-				{
-					tputs(tgetstr("do", NULL), 1, ft_puti);
-					tputs(tgetstr("cr", NULL), 1, ft_puti);
-				}
-				else
-					tputs(tgetstr("nd", NULL), 1, ft_puti);
-			}
+				cursor_move_to(line_e, line_e->cursor_pos + 1);
 		}
 		else if (key[2] == S_KEY_ARW_UP)
 		{
 			if (line_e->autocomp == 2)
-			{
-				if (line_e->autocomp_idx-- == 0)
-					line_e->autocomp_idx = line_e->autocomp_size - 1;
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
-			}
+				change_autocomp_idx(line_e, -1);
 		}
 		else if (key[2] == S_KEY_ARW_DOWN)
 		{
 			if (line_e->autocomp == 2)
-			{
-				if (++line_e->autocomp_idx > line_e->autocomp_size)
-					line_e->autocomp_idx = 0;
-				replace_word_from_completion(line_e);
-				print_comp_list(line_e, line_e->autocomp_idx);
-			}
+				change_autocomp_idx(line_e, 1);
 		}
 		return ;
 	}
 	else if (line_e->line && (key[0] == S_KEY_ERASE && !key[1]))
 	{
-		if (line_e->cursor_pos == 0 || line_e->line == NULL)
-		{
-			cancel_autocompletion(line_e);
+		if (line_e->line == NULL)
 			return ;
-		}
+		if (line_e->cursor_pos <= 1 && line_e->autocomp > 0)
+			cancel_autocompletion(line_e);
+		if (line_e->cursor_pos == 0)
+			return ;
 		if (line_e->autocomp > 0)
-		{
 			line_e->autocomp = 0;
-			print_comp_list(line_e, -1);
-		}
+		cursor_start(line_e);
+		tputs(tgetstr("cd", NULL), 1, ft_puti);
 		line_e->cursor_pos -= 1;
 		line_e->len -= 1;
 		if (line_e->line[0])
@@ -405,14 +450,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					line_e->len - line_e->cursor_pos);
 		}
 		line_e->line[line_e->len] = '\0';
-		tputs(tgetstr("le", NULL), 1, ft_puti);
-		write(STDERR_FILENO, " ", 1);
-		tputs(tgetstr("le", NULL), 1, ft_puti);
-		if (line_e->cursor_pos != line_e->len)
-		{
-			ft_putstr_fd(line_e->line + line_e->cursor_pos, STDERR_FILENO);
-			cursor_reposition(line_e->len - line_e->cursor_pos + 1);
-		}
+		print_line(line_e, 0);
+		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 	// ft_putstr("key too long comming soon - ");
 }//in tabptrfct

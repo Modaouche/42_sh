@@ -71,6 +71,8 @@ int						ft_strcmp(const char *str1, const char *str2);
 unsigned int			ft_strlcmp(const char *str1, const char *str2);
 int						ft_strncmp(const char *str1, const char *str2,
 						size_t num);
+int						ft_strncmp_case(const char *str1, const char *str2,
+						size_t num);
 size_t					ft_strlen(const char *s);
 size_t					ft_strclen(const char *s, char c);
 size_t					ft_strlen_if(const char *s, int (*f)(int));

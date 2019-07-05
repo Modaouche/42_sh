@@ -22,28 +22,18 @@
 
 void		cursor_start(t_edit *line_e)
 {
-	unsigned int	i;
 	unsigned int	x;
 
 	if (line_e->line == NULL)
 		return ;
-	i = 0;
-	x = g_shell.prompt_size;
-	while (i < line_e->cursor_pos)
-	{
-		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
-		{
-			x = 0;
-			tputs(tgetstr("up", NULL), 1, ft_puti);
-		}
-		else
-			++x;
-		++i;
-	}
-	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
-	i = 0;
-	while (i++ < g_shell.prompt_size)
-		tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
+	x = get_line_height(line_e, line_e->cursor_pos)
+		- get_line_height(line_e, 0);
+	while (x--)
+		tputs(tgetstr("up", NULL), 1, ft_puti);
+	x = get_index_x_pos(line_e, 0);
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
+	while (x--)
+		tputs(tgetstr("nd", NULL), 1, ft_puti);
 }
 
 /*	
@@ -57,30 +47,14 @@ void		cursor_start(t_edit *line_e)
 void		cursor_end(t_edit *line_e)
 {
 	unsigned int	i;
-	unsigned int	x;
 
 	if (line_e->line == NULL)
 		return ;
-	cursor_start(line_e);
-	i = 0;
-	x = g_shell.prompt_size;
-	while (line_e->line[i])
-	{
-		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
-		{
-			x = 0;
-			tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-		}
-		else
-			++x;
-		++i;
-	}
-	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
-	while (x > 0)
-	{
-		tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
-		--x;
-	}
+	i = get_line_height(line_e, line_e->len)
+		- get_line_height(line_e, line_e->cursor_pos);
+	while (i-- > 0)
+		tputs(tgetstr("do", NULL), 1, ft_puti);
+	cursor_reset_x_pos(line_e);
 }
 
 /*	
@@ -94,59 +68,83 @@ void		cursor_end(t_edit *line_e)
 void		cursor_after(t_edit *line_e)
 {
 	unsigned int	i;
-	unsigned int	x;
 
 	if (line_e->line == NULL)
 		return ;
-	cursor_start(line_e);
-	i = 0;
-	x = g_shell.prompt_size;
-	while (line_e->line[i])
+	i = get_line_height(line_e, line_e->len) + 1
+		- get_line_height(line_e, line_e->cursor_pos);
+	while (i != 0)
 	{
-		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
-		{
-			x = 0;
-			tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-		}
-		else
-			++x;
-		++i;
+		tputs(tgetstr("do", NULL), 1, ft_puti);
+		--i;
 	}
-	tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
 }
 
-/*	
-**   cursor_actualpos
+/*
+**  cursor_reset_x_pos
 **
-** - Move the cursor to the cursor_pos
-**   To be used when the cursor is at the correct line but wrong column.
-**
+**  - Move the cursor to it's correct horizontal position.
 */
 
-void        cursor_actualpos(t_edit *line_e)
+void		cursor_reset_x_pos(t_edit *line_e)
 {
-	unsigned int	i;
-	unsigned int	x;
+	unsigned int x;
 
-	cursor_start(line_e);
-	i = 0;
-	x = g_shell.prompt_size;
-	while (i < line_e->cursor_pos)
-	{
-		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
-		{
-			x = 0;
-			tputs(tgetstr("do", NULL), 1, ft_puti); //go down
-		}
-		else
-			++x;
-		++i;
-	}
-	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
+	x = get_index_x_pos(line_e, line_e->cursor_pos);
+	while (x-- > 0)
+		tputs(tgetstr("nd", NULL), 1, ft_puti);
+}
+
+/*
+**  cursor_move_to
+**
+**  - Move the cursor to a specific position.
+**    Also updates cursor_pos in the process.
+*/
+
+void		cursor_move_to(t_edit *line_e, uint to)
+{
+	int x;
+
+	x = get_line_height(line_e, to)
+		- get_line_height(line_e, line_e->cursor_pos);
 	while (x > 0)
 	{
+		tputs(tgetstr("do", NULL), 1, ft_puti);
 		--x;
-		tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
 	}
+	while (x < 0)
+	{
+		tputs(tgetstr("up", NULL), 1, ft_puti);
+		++x;
+	}
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
+	x = get_index_x_pos(line_e, to);
+	while (x-- > 0)
+		tputs(tgetstr("nd", NULL), 1, ft_puti);
+	line_e->cursor_pos = to;
+}
+
+void		cursor_move_from_to(t_edit *line_e, uint from, uint to)
+{
+	int x;
+
+	x = get_line_height(line_e, to)
+		- get_line_height(line_e, from);
+	while (x > 0)
+	{
+		tputs(tgetstr("do", NULL), 1, ft_puti);
+		--x;
+	}
+	while (x < 0)
+	{
+		tputs(tgetstr("up", NULL), 1, ft_puti);
+		++x;
+	}
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
+	x = get_index_x_pos(line_e, to);
+	while (x-- > 0)
+		tputs(tgetstr("nd", NULL), 1, ft_puti);
 }

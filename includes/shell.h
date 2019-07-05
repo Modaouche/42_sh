@@ -119,12 +119,16 @@ void					cursor_reposition(size_t n);
 int					is_arrow(char *key);
 int					ft_puti(int i);
 void					ft_nlcr(void);
-size_t					print_prompt(unsigned int btn);
+size_t					print_prompt(uint btn);
 void					cursor_start(t_edit *line_e);
 void					cursor_end(t_edit *line_e);
-void					cursor_actualpos(t_edit *line_e);
 void					cursor_after(t_edit *line_e);
-uint 	        			get_line_height(t_edit *line);
+void					cursor_move_to(t_edit *line_e, uint pos);
+void					cursor_move_from_to(t_edit *line_e, uint from, uint to);
+void					cursor_reset_x_pos(t_edit *line_e);
+uint					get_line_height(t_edit *line, uint end);
+uint					get_index_x_pos(t_edit *line_e, uint pos);
+void					print_line(t_edit *line_e, unsigned int start);
 
 /*
 **  Line edition - Autocompletion
@@ -148,6 +152,9 @@ int						build_list_from_word(t_edit *line_e);
 void					replace_word(t_edit *line_e, char *new, size_t length, char *suffix);
 void					replace_word_from_completion(t_edit *line_e);
 char					*escape_name(char *name, char* escaped_chars, unsigned int length);
+char 					*escape_singlequote(char *name, unsigned int max);
+int						search_similar_env_var(t_file **list, char *str, int len,
+						char **env);
 
 /*
 **  Line edition - Autocompletion parser

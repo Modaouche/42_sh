@@ -33,10 +33,10 @@ int				get_last_common_char(t_file *list)
 	while (list->name[last] != '\0')
 	{
 		tmp = list;
-		c = list->name[last];
+		c = ft_tolower(list->name[last]);
 		while (tmp != NULL)
 		{
-			if (tmp->name == NULL || tmp->name[last] != c)
+			if (tmp->name == NULL || ft_tolower(tmp->name[last]) != c)
 				return (last);
 			tmp = tmp->next;
 		}
@@ -67,13 +67,14 @@ unsigned int	search_similar_files(t_file **list, char *path,
 	{
 		if (f->d_name[0] == '.' && (!len || str[0] != '.'))
 			continue ;
-		if (ft_strncmp(f->d_name, str, len) == 0)
+		if (ft_strncmp_case(f->d_name, str, len) == 0)
 		{
 			type = 8 - f->d_type;
 			if (ft_file_list_append(list, f->d_name, type))
 				++size;
 		}
 	}
+	closedir(d);
 	return (size);
 }
 
@@ -93,16 +94,16 @@ int				search_similar_env_var(t_file **list, char *str, int len,
 	size = 0;
 	while (*env != NULL)
 	{
-		if (ft_strncmp(*env, str, len) == 0)
+		if (ft_strncmp_case(*env, str, len) == 0)
 		{
 			i = 0;
 			while (env[0][i] != '=' && env[0][i])
 				++i;
 			if (env[0][i] == '\0' || i == 0)
 				continue ;
-			env[0][i + 1] = '\0';
-			ft_file_list_append(list, *env, 9);
-			env[0][i + 1] = '=';
+			env[0][i] = '\0';
+			ft_file_list_append(list, *env, 0);
+			env[0][i] = '=';
 			++size;
 		}
 		++env;
@@ -147,7 +148,7 @@ int				search_similar_builtin(t_file **list, char *str, int len)
 	i = 0;
 	while (i < BUILTIN_COUNT)
 	{
-		if (ft_strncmp(str, builtins[i], len) == 0
+		if (ft_strncmp_case(str, builtins[i], len) == 0
 			&& ft_file_list_append(list, (char*)builtins[i], 0))
 			++size;
 		++i;

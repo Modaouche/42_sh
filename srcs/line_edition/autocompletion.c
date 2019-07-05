@@ -23,17 +23,15 @@
 void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 {
 	char			*str;
-	char			*escape_chars;
 
 	if (line_e->autocomp_quote == 2)
-		escape_chars = "";
+		new = escape_singlequote(new, length);
 	else if (line_e->autocomp_quote == 1)
-		escape_chars = AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE;
+		new = escape_name(new, AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE, length);
 	else
-		escape_chars = AUTOCOMP_ESCAPED_CHARS;
-	if ((new = escape_name(new, escape_chars, length)) == NULL)
+		new = escape_name(new, AUTOCOMP_ESCAPED_CHARS, length);
+	if ((length = ft_strlen(new)) == 0)
 		return ;
-	length = ft_strlen(new);
 	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix)
 		+ (line_e->autocomp_quote > 0))))
 	{
@@ -41,7 +39,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 		return ;
 	}
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
-	ft_strncat(str + line_e->autocomp_point, new, length);
+	ft_memcpy(str + line_e->autocomp_point, new, length);
 	ft_strcat(str + line_e->autocomp_point + length, suffix);
 	if (line_e->autocomp_quote == 1 && length != 0)
 		ft_strcat(str + line_e->autocomp_point + length, "\"");
@@ -53,10 +51,8 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	line_e->line = str;
 	line_e->len = ft_strlen(str);
 	line_e->cursor_pos = line_e->len;
-	ft_putstr_fd(str, STDERR_FILENO);
-	tputs(tgetstr("cd", NULL), 1, ft_puti);
+	print_line(line_e, 0);
 }
-
 /*
 **  replace_word_from_completion
 **
@@ -78,6 +74,27 @@ void	replace_word_from_completion(t_edit *line_e)
 		replace_word(line_e, file->name, ft_strlen(file->name), NULL);
 }
 
+t_file	*build_completion_list_env(char *str, char **env,
+									uint *list_size, t_edit *line_e)
+{
+	t_file	*list;
+	int		start;		
+
+	*list_size = 0;
+	if (*str == '\0' || env == NULL || *env == NULL)
+		return (NULL);
+	list = NULL;
+	start = 1;
+	if (str[0] != '0' && str[1] == '{')
+	{
+		start = 2;
+		++line_e->autocomp_point;
+	}
+	*list_size = search_similar_env_var(&list, str + start, 
+					ft_strlen(str + start), env);
+	return (list);
+}
+
 /*
 **  build_from_word
 **
@@ -92,32 +109,80 @@ void	replace_word_from_completion(t_edit *line_e)
 int 	build_list_from_word(t_edit *line_e)
 {
 	char			*word;
-	unsigned int	argument;
+	unsigned int	comp_type;
 
 	ft_file_list_delete(&line_e->autocomp_list);
 	ft_bzero(&line_e->autocomp_list,
 		(size_t)&line_e->autocomp_quote - (size_t)&line_e->autocomp_list);
-	if ((word = get_autocompletion_word(line_e, &argument,
+	if ((word = get_autocompletion_word(line_e, &comp_type,
 				&line_e->autocomp_point)) == NULL)
 		return (0);
 	if (word[0] == '/' || word[0] == '.')
-		argument = 1;
-	if (argument == 0)
+		comp_type = 1;
+	else if (word[0] == '$')
+		comp_type = 2;
+	if (comp_type == 0)
 	{
 		line_e->autocomp_list = build_completion_list(word,
 									ft_strlen(word),
 									g_shell.envp,
 									&line_e->autocomp_size);
 	}
-	else
+	else if (comp_type == 1)
 	{
 		line_e->autocomp_list = build_completion_list_files(word,
 									ft_strlen(word),
 									&line_e->autocomp_size);
 	}
+	else
+	{
+		line_e->autocomp_list = build_completion_list_env(word,
+								line_e->env,
+								&line_e->autocomp_size, line_e);
+	}
 	line_e->autocomp_list = merge_sort(line_e->autocomp_list);
 	ft_strdel(&word);
 	return (line_e->autocomp_list == NULL ? 0 : 1);
+}
+
+/*
+**
+**  escape_singlequote
+**
+**  - Escapes the name's singlequotes by closing them, writing an
+**    escaped singlequote then re-opening singlequotes.
+*/
+
+char 	*escape_singlequote(char *name, unsigned int max)
+{
+	unsigned int	x;
+	unsigned int	i;
+	char 			*new;
+
+	i = 0;
+	x = 0;
+	while (name[i] && i < max)
+	{
+		if (name[i++] == '\'')
+			x += 3;
+		++x;
+	}
+	if ((new = ft_strnew(x)) == NULL)
+		return (NULL);
+	x = 0;
+	i = 0;
+	while (name[i] && i < max)
+	{ 
+		if (name[i] == '\'')
+		{
+			ft_memcpy(new + x, "'\\''", 4);
+			x += 4;
+			++i;
+		}
+		else
+			new[x++] = name[i++];
+	}
+	return (new);
 }
 
 /*
@@ -138,10 +203,9 @@ char	*escape_name(char *name, char *escaped_chars, unsigned int max)
 	x = 0;
 	while (name[i] && i < max)
 	{
-		if (ft_cfind(escaped_chars, name[i]) != -1)
+		if (ft_cfind(escaped_chars, name[i++]) != -1)
 			++x;
 		++x;
-		++i;
 	}
 	if ((new = ft_strnew(x)) == NULL)
 		return (NULL);
@@ -151,8 +215,7 @@ char	*escape_name(char *name, char *escaped_chars, unsigned int max)
 	{ 
 		if (ft_cfind(escaped_chars, name[i]) != -1)
 			new[x++] = '\\';
-		new[x++] = name[i];
-		++i;
+		new[x++] = name[i++];
 	}
 	return (new);
 }

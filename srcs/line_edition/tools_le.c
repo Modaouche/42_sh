@@ -33,7 +33,7 @@ void        ft_nlcr(void)
     tputs(tgetstr("cr", NULL), 1, ft_puti);
 }
 
-uint         get_line_height(t_edit *line_e)
+uint         get_line_height(t_edit *line_e, unsigned int end)
 {
     unsigned int i;
     unsigned int x;
@@ -42,18 +42,39 @@ uint         get_line_height(t_edit *line_e)
     if (line_e->line == NULL)
         return (0);
     i = 0;
-    x = 0;
+    x = line_e->prompt_size;
     height = 1;
-    while (line_e->line[i])
+    while (i < end && line_e->line[i])
     {
-        if (line_e->line[i] == '\n' || ++x >= line_e->winsize_col)
+        ++x;
+        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
         {
             x = 0;
             ++height;
         }
-        ++i;
     }
     return (height);
+}
+
+uint         get_index_x_pos(t_edit *line_e, unsigned int pos)
+{
+    unsigned int i;
+    unsigned int x;
+    unsigned int n;
+
+    if (line_e->line == NULL)
+        return (0);
+    i = 0;
+    x = line_e->prompt_size;
+    n = 0;
+    while (i < pos && line_e->line[i])
+    {
+        if (x++ >= line_e->winsize_col)
+            ++n;
+        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
+            x = 0;
+    }
+    return (x + n);
 }
 
 size_t		print_prompt(unsigned int btn)
