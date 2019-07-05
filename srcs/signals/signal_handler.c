@@ -19,9 +19,9 @@ static void		prompt(int sig)
 
 	(void)sig;
 	line_e = st_line();
-	init_line(line_e);//a voir avec kicausse
+	cancel_autocompletion(line_e);// is it ok kicausse ?
+	init_line(line_e);// is it ok kicausse ?
 	ft_nlcr();
-	tputs(tgetstr("cd", NULL), 1, ft_puti);
 	print_prompt(0);
 }
 
@@ -33,11 +33,11 @@ static void		le_resume(int sig)
 	line_e = st_line();
 	write(1, "\n", 1);
 	print_prompt(0);
-	ft_putstr(line_e->line);//to check if it work
 	(tcgetattr(STDERR_FILENO, g_shell.termiold) == -1)\
 		? toexit(0, "tcgetattr", 0) : 0;
 	(tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termios) == -1)\
 		? toexit(0, "tcsetattr", 0) : 0;
+	print_line(line_e, 0);// is it ok kicausse ?
 	signal(SIGCONT,	le_resume);
 }
 

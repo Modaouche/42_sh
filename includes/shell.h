@@ -147,22 +147,30 @@ t_file					*build_completion_list(char *str, int len, char **env,
 t_file					*build_completion_list_files(char *str, int len,
 						unsigned int *list_size);
 void					print_comp_list(t_edit *line_e, int highlight);
-int						get_last_common_char(t_file *list);
-int						build_list_from_word(t_edit *line_e);
-void					replace_word(t_edit *line_e, char *new, size_t length, char *suffix);
+int					get_last_common_char(t_file *list);
+int					build_list_from_word(t_edit *line_e);
+void					replace_word(t_edit *line_e, char *new,\
+						size_t length, char *suffix);
 void					replace_word_from_completion(t_edit *line_e);
-char					*escape_name(char *name, char* escaped_chars, unsigned int length);
+char					*escape_name(char *name, char* escaped_chars,\
+						unsigned int length);
 char 					*escape_singlequote(char *name, unsigned int max);
-int						search_similar_env_var(t_file **list, char *str, int len,
-						char **env);
+int					search_similar_env_var(t_file **list, char *str,\
+						int len, char **env);
+void					cancel_autocompletion(t_edit *line_e);
 
 /*
 **  Line edition - Autocompletion parser
 */
-char					*get_autocompletion_word(t_edit *line_e, unsigned int *argument, unsigned int *autocompletion_point);
-int						quote_match(char *line, unsigned int *i, unsigned int maxlen, char c);
-int						get_idx_quote_type(char *line, unsigned int idx);
-int						is_separator(char c);
+
+char					*get_autocompletion_word(t_edit *line_e,\
+						unsigned int *argument,\
+						unsigned int *autocompletion_point);
+int					quote_match(char *line, unsigned int *i,\
+						unsigned int maxlen, char c);
+int					get_idx_quote_type(char *line, unsigned int idx);
+int					is_separator(char c);
+
 /*
 **  Line edition - File list
 */
