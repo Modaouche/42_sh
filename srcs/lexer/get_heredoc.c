@@ -28,7 +28,7 @@ static char *dup_str_heredoc(t_edit *line_e)
 	while (backslash == true)
 	{
 		init_line(line_e);
-		line_e->prompt_size = print_prompt(6);
+		g_shell.prompt_size = print_prompt(6);
 		line_edition(line_e);
 		(!line_e->line) ? line_e->line = ft_strnew(1) : 0;
 		if ((idx = ft_strlen(line_e->line) - 1) == -1 || line_e->line[idx] != '\\')

@@ -49,7 +49,7 @@ void        command_fct(t_edit *line_e)
 		cmd_suffix_fct(line_e);
 	}
 	else
-		g_errorno = ER_SYNTAX;
+		g_shell.errorno = ER_SYNTAX;
 }
 
 void        cmd_suffix_fct(t_edit *line_e)
@@ -60,7 +60,7 @@ void        cmd_suffix_fct(t_edit *line_e)
 	ast_head = st_ast();
 	save = ast_head->curr_head;
 	//printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(last_token(0), T_WORD, -1) && g_errorno != ER_SYNTAX)
+	if (token_cmp(last_token(0), T_WORD, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		if (token_cmp(ast_head->curr_head->token->tokind, T_GREAT, T_GREATAND,\
 			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS,\
@@ -81,7 +81,7 @@ void        cmd_suffix_fct(t_edit *line_e)
 	}
 	else if (!token_cmp(last_token(0),T_PIPE, T_AND_IF, T_OR_IF,\
 			T_AMPER, T_SEMI, T_NEWL, T_EOF, -1))
-		g_errorno = ER_SYNTAX;
+		g_shell.errorno = ER_SYNTAX;
 }
 
 void        cmd_suffix_opt_fct(t_edit *line_e)
@@ -90,9 +90,9 @@ void        cmd_suffix_opt_fct(t_edit *line_e)
 	assign_to_word();
 	if (token_cmp(last_token(0), T_WORD, T_GREAT, T_GREATAND, T_DGREAT,\
 		T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
-		T_DLESSDASH, T_IO_NB, -1) && g_errorno != ER_SYNTAX)
+		T_DLESSDASH, T_IO_NB, -1) && g_shell.errorno != ER_SYNTAX)
 		cmd_suffix_prime_fct(line_e);        
 	else if (!token_cmp(last_token(0), T_PIPE, T_AND_IF, T_OR_IF,\
 			T_AMPER, T_SEMI, T_NEWL, T_EOF, -1))
-		g_errorno = ER_SYNTAX;
+		g_shell.errorno = ER_SYNTAX;
 }

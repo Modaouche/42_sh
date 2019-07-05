@@ -13,7 +13,7 @@
 #include <stdarg.h>
 #include "shell.h"
 
-int	token_cmp(int kind, ...)
+bool	token_cmp(int kind, ...)
 {
 	va_list tokens;
 	int current_token;
@@ -24,11 +24,11 @@ int	token_cmp(int kind, ...)
 		if (current_token == kind)
 		{
 			va_end(tokens);
-			return (1);
+			return (TRUE);
 		}
 	}
 	va_end(tokens);
-	return (0);
+	return (FALSE);
 }
 
 int	last_token(t_ast *ast)

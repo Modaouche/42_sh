@@ -322,7 +322,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			{
 				line_e->cursor_pos -= 1;
 				if (line_e->line[line_e->cursor_pos] == '\n'
-						|| (line_e->cursor_pos + line_e->prompt_size + 1) % line_e->winsize_col == 0)
+						|| (line_e->cursor_pos + g_shell.prompt_size + 1) % line_e->winsize_col == 0)
 				{
 					tputs(tgetstr("up", NULL), 1, ft_puti);
 					unsigned int i = 0;
@@ -332,7 +332,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 							break ;
 						++i;
 					}
-					while ((i-- + line_e->prompt_size) > 0)
+					while ((i-- + g_shell.prompt_size) > 0)
 						tputs(tgetstr("nd", NULL), 1, ft_puti);
 				}
 				else
@@ -353,7 +353,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			{
 				line_e->cursor_pos += 1;
 				if (line_e->line[line_e->cursor_pos] == '\n'
-						|| (line_e->cursor_pos + line_e->prompt_size) % line_e->winsize_col == 0)
+						|| (line_e->cursor_pos + g_shell.prompt_size) % line_e->winsize_col == 0)
 				{
 					tputs(tgetstr("do", NULL), 1, ft_puti);
 					tputs(tgetstr("cr", NULL), 1, ft_puti);
@@ -435,7 +435,7 @@ int		line_edition(t_edit *line_e)
 	line_e->winsize_col = size.ws_col;
 	line_e->winsize_row = size.ws_row;
 	line_e->autocomp = 0;
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
+	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termios) == -1)
 		toexit(0, "tcsetattr", 1);
 	ft_bzero(prevkey, MAX_KEY_LEN + 1);
 	while (1)
@@ -446,7 +446,7 @@ int		line_edition(t_edit *line_e)
 			toexit(line_e, "key:", 1);
 		if (key[0] == S_KEY_ENTER && !key[1])
 		{
-			if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
+			if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
 				toexit(line_e, "tcsetattr", 1);//maybe just turn off termcap instead of exit
 			break ;
 		}

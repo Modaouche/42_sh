@@ -28,7 +28,7 @@ void		cursor_start(t_edit *line_e)
 	if (line_e->line == NULL)
 		return ;
 	i = 0;
-	x = line_e->prompt_size;
+	x = g_shell.prompt_size;
 	while (i < line_e->cursor_pos)
 	{
 		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
@@ -42,7 +42,7 @@ void		cursor_start(t_edit *line_e)
 	}
 	tputs(tgetstr("cr", NULL), 1, ft_puti); //start of line
 	i = 0;
-	while (i++ < line_e->prompt_size)
+	while (i++ < g_shell.prompt_size)
 		tputs(tgetstr("nd", NULL), 1, ft_puti); //go right
 }
 
@@ -63,7 +63,7 @@ void		cursor_end(t_edit *line_e)
 		return ;
 	cursor_start(line_e);
 	i = 0;
-	x = line_e->prompt_size;
+	x = g_shell.prompt_size;
 	while (line_e->line[i])
 	{
 		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
@@ -100,7 +100,7 @@ void		cursor_after(t_edit *line_e)
 		return ;
 	cursor_start(line_e);
 	i = 0;
-	x = line_e->prompt_size;
+	x = g_shell.prompt_size;
 	while (line_e->line[i])
 	{
 		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)
@@ -131,7 +131,7 @@ void        cursor_actualpos(t_edit *line_e)
 
 	cursor_start(line_e);
 	i = 0;
-	x = line_e->prompt_size;
+	x = g_shell.prompt_size;
 	while (i < line_e->cursor_pos)
 	{
 		if (line_e->line[i] == '\n' || x >= line_e->winsize_col)

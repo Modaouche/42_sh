@@ -23,7 +23,7 @@ void        pipeline_fct(t_edit *line_e)
 	if (token_cmp(last_token(0), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
 		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)
-		&& g_errorno != ER_SYNTAX)
+		&& g_shell.errorno != ER_SYNTAX)
 	{
 		if (token_cmp(save->token->tokind, T_AND_IF, T_OR_IF, -1))
 		{
@@ -40,13 +40,13 @@ void        pipeline_fct(t_edit *line_e)
 		}
 	}
 	else if (!token_cmp(last_token(0), T_EOF, -1))
-		g_errorno = ER_SYNTAX;
+		g_shell.errorno = ER_SYNTAX;
 }
 
 void        bang_fct(t_edit *line_e)
 {
 	//printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(last_token(0), T_BANG, -1) && g_errorno != ER_SYNTAX)
+	if (token_cmp(last_token(0), T_BANG, -1) && g_shell.errorno != ER_SYNTAX)
 		ast_left_insert(get_next_token(&(line_e->line),\
 				&(line_e->ofst)));
 }
@@ -56,19 +56,19 @@ void        pipe_sequence_fct(t_edit *line_e)
 	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0), T_WORD, T_GREAT, T_GREATAND, T_DGREAT,\
 		T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND, T_DLESSDASH,\
-		T_IO_NB, T_ASGMT_WRD, -1) && g_errorno != ER_SYNTAX)
+		T_IO_NB, T_ASGMT_WRD, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		command_fct(line_e);
 		pipe_sequence_prime_fct(line_e);
 	}
 	else
-		g_errorno = ER_SYNTAX;
+		g_shell.errorno = ER_SYNTAX;
 }
 
 void        pipe_sequence_prime_fct(t_edit *line_e)
 {
 	//printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(last_token(0), T_PIPE, -1) && g_errorno != ER_SYNTAX)
+	if (token_cmp(last_token(0), T_PIPE, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		ast_right_insert(get_next_token(&(line_e->line),\
 			&(line_e->ofst)));
@@ -76,7 +76,7 @@ void        pipe_sequence_prime_fct(t_edit *line_e)
 		while (token_cmp(last_token(0), T_EOF, -1))
 		{
 			init_line(line_e);
-			line_e->prompt_size = print_prompt(1);
+			g_shell.prompt_size = print_prompt(1);
 			line_edition(line_e);
 			if (!line_e->line)
 				line_e->line = ft_memalloc(1);
@@ -87,5 +87,5 @@ void        pipe_sequence_prime_fct(t_edit *line_e)
 		pipe_sequence_prime_fct(line_e);
 	}
 	else if (!token_cmp(last_token(0), T_EOF, T_NEWL, T_AND_IF, T_OR_IF, T_SEMI, T_AMPER, -1))
-		g_errorno = ER_SYNTAX;
+		g_shell.errorno = ER_SYNTAX;
 }

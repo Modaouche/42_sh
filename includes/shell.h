@@ -17,22 +17,14 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/ioctl.h>
-# include <signal.h>
 # include <term.h>
 # include <curses.h>
 # include "libft.h"
+# include <stdbool.h>
 # include "token_and_ast.h"
+# include "signal_handler.h"
 # include <errno.h>// to remove
 
-unsigned int     g_errorno;
-
-typedef enum
-{
-						NO_ERROR,
-						ER_DBACCES,
-						ER_DBINFO,
-						ER_SYNTAX
-}						ERRORNO;
 
 # define S_KEY_ARW_UP			65
 # define S_KEY_ARW_DOWN			66
@@ -49,27 +41,32 @@ typedef enum
 
 
 # define MAX_KEY_LEN			12
-# define BUFFER_LEN				255
-# define TOKEN_CMP				";\n&|!<>"
-# define BKSH_DQT_CMP				"\\$\"\'"
+# define BUFFER_LEN			255
+# define TOKEN_CMP			";\n&|!<>"
+# define BKSH_DQT_CMP			"\\$\"\'"
+
+typedef enum
+{
+					NO_ERROR,
+					ER_DBACCES,
+					ER_DBINFO,
+					ER_SYNTAX
+}					t_errorno;
 
 typedef struct 			s_file
 {
 	char			*name;
 	size_t			len;
-	int				type;
-	struct s_file	*next;
-}						t_file;
+	int			type;
+	struct s_file		*next;
+}				t_file;
 
 typedef struct			s_edit
 {
-	struct termios		*termiold;
-	struct termios		*termios;
 	struct winsize		*wsize;
-	char			**env;
 	char			*line;
 	t_file			*autocomp_list;
-	int			autocomp;	
+	int			autocomp;
 	unsigned int		autocomp_idx;
 	unsigned int		autocomp_size;
 	unsigned int		autocomp_point;
@@ -80,25 +77,32 @@ typedef struct			s_edit
 	unsigned int		ofst;
 	unsigned int		cursor_pos;
 	unsigned int		len_max;
-	unsigned int		prompt_size;
 	unsigned int		winsize_col;
 	unsigned int		winsize_row;
-	char			tc_onoff;//for termcap like "dumb" , to have a usable shell
 }				t_edit;
 
-/*
-typedef struct			s_key_code
+typedef struct			s_sh
 {
-	unsigned char		*key;
-	void				(*dump_key)(t_edit *line_e, char *buff);
-}						t_key_code;
-*/
+	struct termios		*termiold;
+	struct termios		*termios;
+	char			**envp;
+	t_ast			*ast;
+	char			**buff_cmd;
+	bool			tc_onoff;//for termcap like "dumb" , to have a usable shell
+	bool			in_bg;
+	pid_t			pid;
+	uint16_t		fd;
+	uint8_t			prompt_size;
+	uint8_t			errorno;
+}				t_sh;
+
+t_sh			g_shell;
 
 /*
 ** Initialization & Co
 */
 
-void					set_terminal(t_edit *line_e, char **envp);
+void					init_term(t_edit *line_e, char **envp);
 void					toexit(t_edit *line_e, char *str, int err);
 struct termios*				term_backup(void);
 struct termios*				term_raw(void);
@@ -200,7 +204,7 @@ void    			token_islessand(t_token *actual_token, unsigned int *i);
 ** Parsing
 */
 
-int					line_parser(t_edit *line_e);
+void					line_parser(t_edit *line_e);
 void					complet_cmd(t_edit *line_e);
 void					list_fct(t_edit *line_e);
 void					list_prime_fct(t_edit *line_e);
@@ -228,7 +232,7 @@ void					line_break_fct(t_edit *line_e);
 void					separator_op_fct(t_edit *line_e);
 void					newline_list_fct(t_edit *line_e);
 void					newline_list_prime_fct(t_edit *line_e);
-int					token_cmp(int kind, ...);//name tochange
+bool					token_cmp(int kind, ...);
 
 /*
 ** Abstract Syntax Tree
@@ -247,6 +251,20 @@ void					assign_to_word(void);
 t_ast					*get_curr_head(void);
 
 /*
+** Line Execution 
+*/
+
+
+void					line_execution(void);
+void					ast_execution(t_ast *ast);
+bool					exec_and_or(t_ast *ast);
+bool					exec_cmd(t_ast *ast);
+bool					exec_redir(t_ast *ast);
+bool					is_slice_exec(t_tok tokind);
+bool					is_and_or_exec(t_tok tokind);
+bool					is_redir_pipe_exec(t_tok tokind);
+
+/*
 ** Inhibitor
 */
 
@@ -262,10 +280,5 @@ int    				word_handling_prime(const char *, char **, unsigned int *, int);
 void    			dollars_cmd(const char *, char **, unsigned int *);
 int    				backslash(const char *, char **, unsigned int *, int qt);
 int	    			backslash_end(t_edit *, unsigned int *, int *);
-
-/*
-** Tools & Co
-*/
-
 
 #endif

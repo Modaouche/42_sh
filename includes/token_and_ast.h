@@ -36,12 +36,12 @@ typedef enum
                         T_ASGMT_WRD,
                         T_IO_NB,
                         T_EOF,
-}                       token;
+}                       t_tok;
 
 typedef struct		s_token
 {
 	char		*lexeme;
-	token		tokind;
+	t_tok		tokind;
 }                       t_token;
 
 typedef struct          s_ast

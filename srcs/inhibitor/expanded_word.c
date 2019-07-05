@@ -39,7 +39,7 @@ int    backslash(const char *line, char **word, unsigned int *i, int qt)
 int    backslash_end(t_edit *line_e, unsigned int *i, int *ret)
 {
 	init_line(line_e);
-	line_e->prompt_size = print_prompt(7);
+	g_shell.prompt_size = print_prompt(7);
 	line_edition(line_e);
 	if (!line_e->line)
 		line_e->line = ft_memalloc(1);

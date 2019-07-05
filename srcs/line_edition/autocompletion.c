@@ -106,7 +106,7 @@ int 	build_list_from_word(t_edit *line_e)
 	{
 		line_e->autocomp_list = build_completion_list(word,
 									ft_strlen(word),
-									line_e->env,
+									g_shell.envp,
 									&line_e->autocomp_size);
 	}
 	else

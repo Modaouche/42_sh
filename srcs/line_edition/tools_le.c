@@ -62,7 +62,7 @@ size_t		print_prompt(unsigned int btn)
     size_t	len;
 
     if (btn == 0)
-        prompt = ft_strdup("\e[1;32m42sh (current path)\033[0m  $> ");//ajout du path soon
+        prompt = ft_strdup("42sh (current path) $> ");//ajout du path soon
     else if (btn == 1)
 	    prompt = ft_strdup("pipe $> ");
     else if (btn == 2)
@@ -79,8 +79,7 @@ size_t		print_prompt(unsigned int btn)
 	    prompt = ft_strdup("$> ");
 //    else if (btn == 6)
 //	    prompt = ft_strdup("bquote $> ");//not sure
-    len = (btn == 0) ? ft_strlen(prompt) - ft_strlen("\e[1;32m\033[0m")\
-	 : ft_strlen(prompt);
+    len = ft_strlen(prompt);
     ft_putstr(prompt);
     ft_strdel(&prompt);
     return (len);
