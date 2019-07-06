@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 12:34:07 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/07/06 17:18:46 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdbool.h>
 # include "token_and_ast.h"
 # include "signal_handler.h"
+# include <fcntl.h>
 # include <errno.h>// to remove
 
 
@@ -94,6 +95,7 @@ typedef struct			s_sh
 	uint16_t		fd;
 	uint8_t			prompt_size;
 	uint8_t			errorno;
+	char			*hist_path;
 }				t_sh;
 
 t_sh			g_shell;
@@ -296,4 +298,10 @@ void    			dollars_cmd(const char *, char **, unsigned int *);
 int    				backslash(const char *, char **, unsigned int *, int qt);
 int	    			backslash_end(t_edit *, unsigned int *, int *);
 
+/*
+** history
+*/
+void				open_history(void);
+void				write_history(char *line);
+char				**dump_history(void);
 #endif

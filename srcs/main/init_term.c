@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 11:41:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/11 22:16:58 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/07/06 15:25:19 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,5 @@ void				init_term(t_edit *line_e, char **envp)
 	g_shell.pid = getpid();
 	setpgid(g_shell.pid, g_shell.pid);//tocheck
 	tcsetpgrp(g_shell.fd, g_shell.pid);//tocheck
+	open_history();
 }
