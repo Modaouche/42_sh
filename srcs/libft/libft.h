@@ -68,7 +68,7 @@ char					*ft_strstr(const char *str1, const char *str2);
 char					*ft_strnstr(const char *s1, const char *s2,
 						size_t length);
 int						ft_strcmp(const char *str1, const char *str2);
-int						ft_tablen(char **tab);
+int						ft_tablen(char **tabb);
 unsigned int			ft_strlcmp(const char *str1, const char *str2);
 int						ft_strncmp(const char *str1, const char *str2,
 						size_t num);
