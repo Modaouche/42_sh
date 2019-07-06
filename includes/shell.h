@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/06 17:31:45 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/06 17:40:34 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,14 @@
 # define S_KEY_ENTER			10
 # define S_KEY_ERASE			127
 
-// # define S_KEY_PRINTABLE		0
-// # define S_KEY_SPACE			0
-// # define S_KEY_ESC			27
-// # define S_KEY_CTRL_D		4
-// # define S_KEY_END			1
-// # define S_KEY_NONE			0
+/*
+** # define S_KEY_PRINTABLE		0
+** # define S_KEY_SPACE			0
+** # define S_KEY_ESC			27
+** # define S_KEY_CTRL_D		4
+** # define S_KEY_END			1
+** # define S_KEY_NONE			0
+*/
 # define MAX_KEY_LEN			12
 # define BUFFER_LEN			255
 # define TOKEN_CMP			";\n&|!<>"

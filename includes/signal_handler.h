@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/04 02:39:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/04 02:55:07 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/07/06 17:41:33 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,6 @@
 # define EXEC 1
 # define LINE_EDIT 2
 
-void		signal_handler(uint8_t );
+void		signal_handler(uint8_t);
 
 #endif
