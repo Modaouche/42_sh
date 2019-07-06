@@ -86,19 +86,20 @@ typedef struct			s_sh
 {
 	struct termios		*termiold;
 	struct termios		*termios;
-	char				**envp;
-	t_ast				*ast;
-	char				**buff_cmd;
-	bool				tc_onoff;//for termcap like "dumb" , to have a usable shell
-	bool				in_bg;
-	pid_t				pid;
-	uint16_t			fd;
-	uint8_t				prompt_size;
-	uint8_t				errorno;
-	char				*hist_path;
-}						t_sh;
+	char			**envp;
+	t_edit			*line_e;
+	t_ast			*ast;
+	char			**buff_cmd;
+	pid_t			pid;//in proc struct
+	uint16_t		fd;
+	uint8_t			prompt_size;
+	uint8_t			errorno;
+	bool			tc_onoff;//for termcap like "dumb" , to have a usable shell
+	bool			in_bg;//in proc struct
+	char			*hist_path;
+}				t_sh;
 
-t_sh					g_shell;
+t_sh			g_shell;
 
 /*
 ** Initialization & Co
