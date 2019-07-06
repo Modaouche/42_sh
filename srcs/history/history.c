@@ -14,10 +14,10 @@
 
 void		open_history(void)
 {
-	int			fd;
+//	int			fd;
 
 	g_shell.hist_path = ft_strjoin(getenv("HOME"), "/.42sh_history");
-	fd = open(g_shell.hist_path, O_CREAT, S_IRUSR | S_IWUSR);
+//	fd = open(g_shell.hist_path, O_CREAT, S_IRUSR | S_IWUSR);
 }
 
 /*
