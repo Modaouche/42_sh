@@ -54,5 +54,7 @@ char		**dump_history(void)
 			ft_strdel(&tmp);
 		}
 	}
-	return (ft_split(hist, "\n"));
+        tmp = ft_split(hist, "\n");
+        free(hist);
+	return (tmp);
 }
