@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_in.c                                         :+:      :+:    :+:   */
+/*   built_in_init.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/08 01:30:43 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 04:20:10 by araout           ###   ########.fr       */
+/*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
+/*   Updated: 2019/07/08 06:12:14 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,12 @@ static t_fptr	*init_fptr(void)
 	func->flag[0] = ft_strdup("cd");
 	func->flag[1] = ft_strdup("env");
 	func->flag[2] = ft_strdup("clear");
-	func->flag[3] = NULL;
+	func->flag[3] = ft_strdup("pwd");
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
 	func->f[2] = &ft_clear;
-	func->f[3] = NULL;
+	func->f[3] = &ft_pwd;
 	return (func);
-}
-
-int				ft_clear(char **s)
-{
-	(void)s;
-	tputs(tgetstr("cl", NULL), 1, ft_puti);
-	return (1);
 }
 
 static void		free_for_ft_built_in(t_fptr *func, char **tmp)
@@ -53,12 +46,6 @@ static void		free_for_ft_built_in(t_fptr *func, char **tmp)
 	ft_memdel((void **)&tmp);
 }
 
-/*
-**	ft_built_in takes a segment of command like "cd /patati/patata"
-**	and check if a built in has to be exetuted
-** works for cd , env , exit , clear
-*/
-
 static void		check_exit(char **tmp, int i)
 {
 	if (!ft_strcmp(tmp[0], "exit"))
@@ -68,6 +55,12 @@ static void		check_exit(char **tmp, int i)
 		fexit(NULL);
 	}
 }
+
+/*
+**	ft_built_in takes a segment of command like "cd /patati/patata"
+**	and check if a built in has to be exetuted
+** works for cd , env , exit , clear
+*/
 
 int				ft_built_in(char *cmd)
 {

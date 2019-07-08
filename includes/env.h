@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/07 22:35:51 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 04:12:21 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/08 06:13:38 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int						ft_built_in(char *cmd);
 int						print_env(char **s);
 int						fexit(char **s);
 int						ft_clear(char **s);
+int						ft_pwd(char **s);
+void					cd_set_env(int exec_flag, char *pwd);
 
 # define EXIT 1
 # define CLEAN 2
