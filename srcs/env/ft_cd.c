@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/13 07:03:17 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 04:16:58 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/08 04:20:59 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,20 @@ static void		cd_set_env(int exec_flag, char *pwd)
 
 static int		ft_cd_minest(void)
 {
-
 	return (1);
 }
 
 int				ft_cd(char **cmd)
 {
-	(void)cmd;
 	int		exec_flag;
 	char	*pwd;
 
+	(void)cmd;
 	pwd = getcwd(NULL, 1024);
 	exec_flag = 0;
 	if (!cmd[1])
 		exec_flag = ft_cd_home();
-	else if(!ft_strcmp(cmd[1], "-"))
+	else if (!ft_strcmp(cmd[1], "-"))
 		exec_flag = ft_cd_minest();
 	cd_set_env(exec_flag, pwd);
 	return (1);

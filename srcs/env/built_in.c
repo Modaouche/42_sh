@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 01:30:43 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 04:14:26 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/08 04:20:10 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,11 @@ static void		free_for_ft_built_in(t_fptr *func, char **tmp)
 	while (tmp[i])
 		ft_strdel(&tmp[i++]);
 	ft_memdel((void **)&tmp);
-	
 }
 
 /*
-**	ft_built_in takes a segment of command like "cd /patati/patata" 
-**	and check if a built in has to be exetuted 
+**	ft_built_in takes a segment of command like "cd /patati/patata"
+**	and check if a built in has to be exetuted
 ** works for cd , env , exit , clear
 */
 
