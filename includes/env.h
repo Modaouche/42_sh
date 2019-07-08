@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/07 22:35:51 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 06:13:38 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/08 08:20:06 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ typedef struct			s_fptr
 {
 	char	**flag;
 	int		(*f[255])(char **);
-}				t_fptr;
+}						t_fptr;
 
 char					**set_var_env(char *varname, char *value, char **env);
 int						is_var(char *s1, char *s2);
@@ -38,6 +38,9 @@ int						fexit(char **s);
 int						ft_clear(char **s);
 int						ft_pwd(char **s);
 void					cd_set_env(int exec_flag, char *pwd);
+int						ft_setenv(char **cmd);
+int						ft_unsetenv(char **cmd);
+void					free_env();
 
 # define EXIT 1
 # define CLEAN 2

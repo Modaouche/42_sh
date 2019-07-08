@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/07/08 05:55:50 by araout           ###   ########.fr        #
+#    Updated: 2019/07/08 07:24:29 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ SRC =	srcs/main/main.c\
 		srcs/env/ft_errors.c\
 		srcs/env/built_in_init.c\
 		srcs/env/built_in_function.c\
+		srcs/env/setenv.c\
 #srcs/exec/exec_cmd.c\ to replace above
 OBJ = $(SRC:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 06:12:14 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/08 07:34:52 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,22 @@ static t_fptr	*init_fptr(void)
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 5)))
+	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 7)))
 		return (NULL);
 	func->flag[0] = ft_strdup("cd");
 	func->flag[1] = ft_strdup("env");
 	func->flag[2] = ft_strdup("clear");
 	func->flag[3] = ft_strdup("pwd");
+	func->flag[4] = ft_strdup("setenv");
+	func->flag[5] = ft_strdup("unsetenv");
+	func->flag[6] = NULL;
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
 	func->f[2] = &ft_clear;
 	func->f[3] = &ft_pwd;
+	func->f[4] = &ft_setenv;
+	func->f[5] = &ft_unsetenv;
+	func->f[6] = NULL;
 	return (func);
 }
 

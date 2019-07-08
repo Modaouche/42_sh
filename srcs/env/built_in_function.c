@@ -6,11 +6,25 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:00:02 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 06:13:30 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/08 08:19:05 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+
+int			fexit(char **s)
+{
+	int		i;
+
+	i = 0;
+	(void)s;
+	ft_strdel(&(g_shell.line_e->line));
+	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
+		toexit(0, "tcsetattr", 1);
+	free_env();
+	exit(0);
+	return (0);
+}
 
 void		cd_set_env(int exec_flag, char *pwd)
 {

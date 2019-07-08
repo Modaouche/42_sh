@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:16:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/08 03:23:54 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/08 07:41:17 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,6 @@ void	line_edit(t_edit *line_e)
 	}
 	signal_handler(REGULAR);
 }//cree une fonction generique (tu as le meme genre de code dans le parser)
-
-int		fexit(char **s)
-{
-	(void)s;
-	ft_strdel(&(g_shell.line_e->line));
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-		toexit(0, "tcsetattr", 1);
-	exit(0);
-	return (0);
-}
 
 int		main(int ac, char **av, char **envp)
 {
