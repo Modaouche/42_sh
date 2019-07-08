@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/06 17:40:34 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/08 02:11:22 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include "signal_handler.h"
 # include <fcntl.h>
 # include <errno.h>// to remove
+# include "env.h"
 
 # define S_KEY_ARW_UP			65
 # define S_KEY_ARW_DOWN			66
@@ -323,7 +324,7 @@ int						backslash_end(t_edit *line_e, unsigned int *i, int *qt);
 /*
 ** history
 */
-void					open_history(void);
+void					init_history(void);
 void					write_history(char *line);
 char					**dump_history(void);
 #endif

@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 11:41:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/06 15:25:19 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/08 03:27:34 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void				init_term(t_edit *line_e, char **envp)
 	init_line(line_e);
 	fill_token_tab();
 	g_shell.tc_onoff = (init_tc() == -1) ? 1 : 0;//set off termcaps
-	g_shell.envp = envp;
+	init_env(envp);
 	g_shell.fd = STDERR_FILENO;
 	g_shell.termiold = term_backup();
 	g_shell.termios = term_raw();
@@ -74,5 +74,5 @@ void				init_term(t_edit *line_e, char **envp)
 	g_shell.pid = getpid();
 	setpgid(g_shell.pid, g_shell.pid);//tocheck
 	tcsetpgrp(g_shell.fd, g_shell.pid);//tocheck
-	open_history();
+	init_history();
 }

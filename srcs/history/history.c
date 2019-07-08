@@ -6,18 +6,15 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/06 15:12:43 by araout            #+#    #+#             */
-/*   Updated: 2019/07/06 17:18:24 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/07 22:27:26 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void		open_history(void)
+void		init_history(void)
 {
-//	int			fd;
-
 	g_shell.hist_path = ft_strjoin(getenv("HOME"), "/.42sh_history");
-//	fd = open(g_shell.hist_path, O_CREAT, S_IRUSR | S_IWUSR);
 }
 
 /*
@@ -37,7 +34,7 @@ char		**dump_history(void)
 	int				fd;
 	char			*hist;
 	char			buf[255];
-	char			*tmp;
+	char			**ret;
 
 	fd = open(g_shell.hist_path, O_RDONLY);
 	hist = NULL;
@@ -49,12 +46,12 @@ char		**dump_history(void)
 			hist = ft_strdup(buf);
 		else
 		{
-			tmp = hist;
+			ret = &hist;
 			hist = ft_strjoin(hist, buf);
-			ft_strdel(&tmp);
+			ft_strdel(ret);
 		}
 	}
-        tmp = ft_split(hist, "\n");
-        free(hist);
-	return (tmp);
+	ret = ft_split(hist, "\n");
+	free(hist);
+	return (ret);
 }
