@@ -121,6 +121,7 @@ int 	build_list_from_word(t_edit *line_e)
 		comp_type = 1;
 	else if (word[0] == '$')
 		comp_type = 2;
+	line_e->autocomp = 1;
 	if (comp_type == 0)
 	{
 		line_e->autocomp_list = build_completion_list(word,
@@ -142,6 +143,11 @@ int 	build_list_from_word(t_edit *line_e)
 	}
 	line_e->autocomp_list = merge_sort(line_e->autocomp_list);
 	ft_strdel(&word);
+	if (line_e->autocomp_list == NULL || line_e->autocomp == 0)
+	{
+		line_e->autocomp = 0;
+		ft_file_list_delete(&line_e->autocomp_list);
+	}
 	return (line_e->autocomp_list == NULL ? 0 : 1);
 }
 
