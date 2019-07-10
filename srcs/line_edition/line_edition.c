@@ -310,9 +310,9 @@ void	change_autocomp_idx(t_edit *line_e, int value)
 
 void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 {
-	if (ft_strlen(key) == 6 && line_e->autocomp < 2)
+	if (ft_strlen(key) == 6)
 	{
-		if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5))
+		if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5) && line_e->autocomp < 2)
 		{
 			if (key[5] == 0x43)
 				go_to_next_word(line_e);
@@ -322,6 +322,13 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 				go_to_prev_line(line_e);
 			else if (key[5] == 0x42)
 				go_to_next_line(line_e);
+		}
+		else  if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5) && line_e->autocomp >= 2)
+		{
+			if (key[5] == 0x43 || key[5] == 0x42)
+				change_autocomp_idx(line_e, line_e->winsize_row);
+			else if (key[5] == 0x44 || key[5] == 0x41)
+				change_autocomp_idx(line_e, -line_e->winsize_row);
 		}
 	}
 	else if (ft_strlen(key) == 4)
