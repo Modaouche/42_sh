@@ -38,8 +38,8 @@ void			print_with_pad(t_file *file, int minlen, int selected,
 		write(STDERR_FILENO, file->name, file->len);
 	else 
 	{
-		if (win_maxlen > 3)
-		write(STDERR_FILENO, file->name, win_maxlen - 3);
+		if (win_maxlen > 4)
+		write(STDERR_FILENO, file->name, win_maxlen - 4);
 		write(STDERR_FILENO, "...", 3);
 
 	}
