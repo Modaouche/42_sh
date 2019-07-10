@@ -20,7 +20,7 @@ void        cmd_suffix_prime_fct(t_edit *line_e)
 	ast_head = st_ast();
 	save = ast_head->curr_head;
 	//printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(last_token(0), T_WORD, -1) && g_errorno != ER_SYNTAX)
+	if (token_cmp(last_token(0), T_WORD, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		if (token_cmp(ast_head->curr_head->token->tokind, T_GREAT, T_GREATAND,\
 			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS,\
@@ -41,13 +41,13 @@ void        cmd_suffix_prime_fct(t_edit *line_e)
 	}
 	else if (token_cmp(last_token(0), T_GREAT, T_GREATAND,\
 			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS,\
-			T_LESSAND, T_DLESSDASH, T_IO_NB, -1) && g_errorno != ER_SYNTAX)
+			T_LESSAND, T_DLESSDASH, T_IO_NB, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		io_redirect_fct(line_e);
 		cmd_suffix_dprime_fct(line_e);
 	}
 	else
-		g_errorno = ER_SYNTAX;
+		g_shell.errorno = ER_SYNTAX;
 }
 
 void        cmd_suffix_dprime_fct(t_edit *line_e)
@@ -59,7 +59,7 @@ void        cmd_suffix_dprime_fct(t_edit *line_e)
 	save = ast_head->curr_head;
 	assign_to_word();
 	//printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(last_token(0), T_WORD, -1) && g_errorno != ER_SYNTAX)
+	if (token_cmp(last_token(0), T_WORD, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		if (token_cmp(ast_head->curr_head->token->tokind, T_GREAT, T_GREATAND,\
 			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS,\
@@ -84,7 +84,7 @@ void        cmd_suffix_dprime_fct(t_edit *line_e)
 	}
 	else if (token_cmp(last_token(0), T_GREAT, T_GREATAND,\
 			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
-			T_DLESSDASH, T_IO_NB, -1) && g_errorno != ER_SYNTAX)
+			T_DLESSDASH, T_IO_NB, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		io_redirect_fct(line_e);
 		cmd_suffix_dprime_fct(line_e);
@@ -101,7 +101,7 @@ void        cmd_prefix_fct(t_edit *line_e)
 	save = ast_head->curr_head;
 	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0), T_ASGMT_WRD, -1)\
-			&& g_errorno != ER_SYNTAX)
+			&& g_shell.errorno != ER_SYNTAX)
 	{
 		lookahead = get_next_token(&(line_e->line), &(line_e->ofst));
 		if (token_cmp(ast_head->curr_head->token->tokind, T_GREAT,\
@@ -123,13 +123,13 @@ void        cmd_prefix_fct(t_edit *line_e)
 	}
 	else if (token_cmp(last_token(0), T_GREAT, T_GREATAND,\
 			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND,\
-			T_DLESSDASH, T_IO_NB, -1) && g_errorno != ER_SYNTAX)
+			T_DLESSDASH, T_IO_NB, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		io_redirect_fct(line_e);
 		cmd_prefix_prime_fct(line_e);
 	}
 	else
-		g_errorno = ER_SYNTAX;
+		g_shell.errorno = ER_SYNTAX;
 }
 
 void        cmd_prefix_prime_fct(t_edit *line_e)
@@ -142,7 +142,7 @@ void        cmd_prefix_prime_fct(t_edit *line_e)
 	save = ast_head->curr_head;
 	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0), T_ASGMT_WRD, -1)\
-		&& g_errorno != ER_SYNTAX)
+		&& g_shell.errorno != ER_SYNTAX)
 	{
 		lookahead = get_next_token(&(line_e->line), &(line_e->ofst));
 		if (token_cmp(ast_head->curr_head->token->tokind, T_GREAT,\
@@ -164,7 +164,7 @@ void        cmd_prefix_prime_fct(t_edit *line_e)
 	}
 	else if (token_cmp(last_token(0), T_GREAT, T_GREATAND,\
 			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS,\
-			T_LESSAND, T_DLESSDASH,T_IO_NB, -1) && g_errorno != ER_SYNTAX)
+			T_LESSAND, T_DLESSDASH,T_IO_NB, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		io_redirect_fct(line_e);
 		cmd_prefix_prime_fct(line_e);

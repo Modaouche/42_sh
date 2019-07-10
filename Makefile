@@ -6,16 +6,16 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/05/11 18:44:34 by modaouch         ###   ########.fr        #
+#    Updated: 2019/07/06 15:17:01 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = 42sh
 
 SRC =	srcs/main/main.c\
-		srcs/main/init.c\
+		srcs/main/init_term.c\
+		srcs/main/init_tool.c\
 		srcs/main/line_handling.c\
-		srcs/line_edition/set_terminal.c\
 		srcs/line_edition/line_edition.c\
 		srcs/line_edition/exit_le.c\
 		srcs/line_edition/tools_le.c\
@@ -43,18 +43,24 @@ SRC =	srcs/main/main.c\
 		srcs/parser/7_parse_io_fct.c\
 		srcs/parser/ast_tools.c\
 		srcs/parser/ast_head_and_cmp.c\
+		srcs/signals/signal_handler.c\
+		srcs/exec/exec.c\
+		srcs/exec/exec_and_or.c\
+		srcs/exec/exec_cmp.c\
 		srcs/inhibitor/inhibitors.c\
 		srcs/inhibitor/quote_handling.c\
 		srcs/inhibitor/word_handling.c\
-		srcs/inhibitor/expanded_word.c
+		srcs/inhibitor/expanded_word.c\
+		srcs/history/history.c\
 
+		#srcs/exec/exec_cmd.c\ to replace above
 OBJ = $(SRC:.c=.o)
 
 LIBFT = srcs/libft
 
 LIB = $(LIBFT)/libft.a
 
-HEADERS = includes/shell.h includes/token_and_ast.h
+HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h
 
 INCLUDES = -Iincludes -I$(LIBFT)
 

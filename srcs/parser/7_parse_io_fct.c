@@ -17,7 +17,7 @@ void        io_redirect_fct(t_edit *line_e)
 	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0), T_GREAT, T_GREATAND, T_DGREAT, T_IO_NB,\
 		T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
-		T_DLESSDASH, -1) && g_errorno != ER_SYNTAX)
+		T_DLESSDASH, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		io_number_opt_fct((line_e));
 		io_kind_fct((line_e));
@@ -33,7 +33,7 @@ void        io_number_opt_fct(t_edit *line_e)
 	ast_head = st_ast();
 	save = ast_head->curr_head;
 	//printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(last_token(0), T_IO_NB, -1) && g_errorno != ER_SYNTAX)
+	if (token_cmp(last_token(0), T_IO_NB, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		lookahead = get_next_token(&(line_e->line), &(line_e->ofst));
 		if (token_cmp(ast_head->curr_head->token->tokind, T_GREAT,\
@@ -59,10 +59,10 @@ void        io_kind_fct(t_edit *line_e)
 	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0), T_GREAT, T_GREATAND, T_DGREAT,\
 		T_CLOBBER, T_LESSGREAT, T_LESS, T_LESSAND, -1)\
-		&& g_errorno != ER_SYNTAX)
+		&& g_shell.errorno != ER_SYNTAX)
 		io_file((line_e));
 	else if (token_cmp(last_token(0), T_DLESSDASH, T_DLESS, -1)\
-		&& g_errorno != ER_SYNTAX)
+		&& g_shell.errorno != ER_SYNTAX)
 		io_here((line_e));
 	assign_to_word();
 }
@@ -78,7 +78,7 @@ void        io_file(t_edit *line_e)
 	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0),T_GREAT, T_GREATAND, T_DGREAT,\
 		T_CLOBBER, T_LESSGREAT, T_LESS, T_LESSAND, -1)\
-		&& g_errorno != ER_SYNTAX)
+		&& g_shell.errorno != ER_SYNTAX)
 	{
 		ast_right_insert(get_next_token(&(line_e->line),\
 			&(line_e->ofst)));
@@ -104,7 +104,7 @@ void        io_file(t_edit *line_e)
 				ast_left_insert(lookahead);//in one fct
 		}
 		else
-			g_errorno = ER_SYNTAX;
+			g_shell.errorno = ER_SYNTAX;
 	}
 }
 
@@ -119,7 +119,7 @@ void        io_here(t_edit *line_e)// after look at this part
 	begin = 1;
 	next = NULL;
 	//printf( " %s %d\n", __FILE__, __LINE__);
-	if (token_cmp(last_token(0), T_DLESSDASH, T_DLESS, -1) && g_errorno != ER_SYNTAX)
+	if (token_cmp(last_token(0), T_DLESSDASH, T_DLESS, -1) && g_shell.errorno != ER_SYNTAX)
 	{
 		heredoc = get_next_token(&(line_e->line), &(line_e->ofst));//leaks?
 		assign_to_word();
@@ -130,7 +130,7 @@ void        io_here(t_edit *line_e)// after look at this part
 			while (1)
 			{
 				init_line(line_e);
-				line_e->prompt_size = print_prompt(6);
+				g_shell.prompt_size = print_prompt(6);
 				line_edition(line_e);
 				if (!line_e->line || !line_e->line[0])
 					line_e->line = ft_strdup_del("\n", line_e->line);
@@ -166,7 +166,7 @@ void        io_here(t_edit *line_e)// after look at this part
 		else
 		{
 			ft_memdel((void **)&heredoc);
-			g_errorno = ER_SYNTAX;
+			g_shell.errorno = ER_SYNTAX;
 		}
 	}
 }//gerer les heredocd (voir la doc opengrp) et and , once the ctrl v + j set, go make a parser for \n.                  //c'est a revoir...

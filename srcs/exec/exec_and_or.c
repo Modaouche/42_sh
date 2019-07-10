@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   exec_and_or.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,26 +12,25 @@
 
 #include "shell.h"
 
-void	ast_execution(t_ast *ast)
+bool		exec_and_or(t_ast *ast)
 {
-	if (!ast || ast->token->tokind == T_EOF)
-		return ;
-	if (is_slice_exec(ast->token->tokind))
-		ast_execution(ast->left);
-	if (is_slice_exec(ast->token->tokind))
-		ast_execution(ast->right);
-	else if (is_and_or_exec(ast->token->tokind))
-		exec_and_or(ast);
-	//else if (is_redir_pipe_exec(ast->token->tokind))
-	//	exec_redirec(ast);//tobuild
-}
-
-void		line_execution(void)
-{
-	if (!g_shell.ast)
-		return ;
-	ast_execution(g_shell.ast);
-	//ast_free(g_shell.ast);to build
-	g_shell.ast = NULL;//leaks to remove use fct above
-	ft_putendl("Comming Soon ;)");
+	if (ast->token->tokind == T_AND_IF)
+	{
+		if (exec_and_or(ast->left) && exec_and_or(ast->right))
+			return (true);
+	}
+	else if (ast->token->tokind == T_OR_IF)
+	{
+		if (exec_and_or(ast->left) || exec_and_or(ast->right))		
+			return (true);
+	}
+	else if (is_redir_pipe_exec(ast->token->tokind))
+	{
+//		if (exec_redir(ast))//to_build
+//			return (true);
+	}
+	//else
+		//if (exec_cmd(ast))//to finish
+		//	return (true);
+	return (false);
 }

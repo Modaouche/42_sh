@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   exe_cmp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,26 +12,29 @@
 
 #include "shell.h"
 
-void	ast_execution(t_ast *ast)
+bool		is_slice_exec(t_tok tokind)
 {
-	if (!ast || ast->token->tokind == T_EOF)
-		return ;
-	if (is_slice_exec(ast->token->tokind))
-		ast_execution(ast->left);
-	if (is_slice_exec(ast->token->tokind))
-		ast_execution(ast->right);
-	else if (is_and_or_exec(ast->token->tokind))
-		exec_and_or(ast);
-	//else if (is_redir_pipe_exec(ast->token->tokind))
-	//	exec_redirec(ast);//tobuild
+	if (tokind == T_AMPER)
+		g_shell.in_bg = true;
+	else if (token_cmp(tokind, T_SEMI, T_NEWL, -1))
+		g_shell.in_bg = false;
+	if (token_cmp(tokind, T_SEMI, T_AMPER, T_NEWL, -1))
+		return (true);
+	return (false);
 }
 
-void		line_execution(void)
+bool		is_and_or_exec(t_tok tokind)
 {
-	if (!g_shell.ast)
-		return ;
-	ast_execution(g_shell.ast);
-	//ast_free(g_shell.ast);to build
-	g_shell.ast = NULL;//leaks to remove use fct above
-	ft_putendl("Comming Soon ;)");
+	if (token_cmp(tokind, T_AND_IF, T_OR_IF, -1))
+		return (true);
+	return (false);
+}
+
+bool		is_redir_pipe_exec(t_tok tokind)
+{
+	if (token_cmp(tokind, T_GREAT, T_GREATAND, T_DGREAT,\
+			T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS,\
+			T_LESSAND, T_DLESSDASH, T_PIPE))
+		return (true);
+	return (false);
 }

@@ -255,7 +255,7 @@ void	go_to_prev_line(t_edit *line_e)
         return ;
     i = 0;
     newpos = 0;
-    x = line_e->prompt_size;
+    x = g_shell.prompt_size;
     curr_height = 0;
     height = get_line_height(line_e, line_e->cursor_pos);
     while ((i + 1) < line_e->cursor_pos && curr_height < height)
@@ -280,7 +280,7 @@ void	go_to_next_line(t_edit *line_e)
     if (line_e->line == NULL)
         return ;
     i = 0;
-    x = line_e->prompt_size;
+    x = g_shell.prompt_size;
     while (i < line_e->len)
     {
         if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
@@ -479,7 +479,7 @@ int		line_edition(t_edit *line_e)
 	line_e->winsize_col = size.ws_col;
 	line_e->winsize_row = size.ws_row;
 	line_e->autocomp = 0;
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termios) == -1)
+	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termios) == -1)
 		toexit(0, "tcsetattr", 1);
 	ft_bzero(prevkey, MAX_KEY_LEN + 1);
 	while (1)
@@ -490,8 +490,8 @@ int		line_edition(t_edit *line_e)
 			toexit(line_e, "key:", 1);
 		if (key[0] == S_KEY_ENTER && !key[1])
 		{
-			if (tcsetattr(STDERR_FILENO, TCSADRAIN, line_e->termiold) == -1)
-				toexit(line_e, "tcsetattr", 1);//maybe just turn off termcap instead of exit
+			if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
+				toexit(line_e, "tcsetattr", 1);//maybe turn off termcap no exit
 			break ;
 		}
 		on_key_press(line_e, prevkey, key);

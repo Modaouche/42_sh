@@ -42,7 +42,7 @@ uint         get_line_height(t_edit *line_e, unsigned int end)
     if (line_e->line == NULL)
         return (0);
     i = 0;
-    x = line_e->prompt_size;
+    x = g_shell.prompt_size;
     height = 1;
     while (i < end && line_e->line[i])
     {
@@ -67,7 +67,7 @@ uint         get_index_x_pos(t_edit *line_e, unsigned int pos)
     if (line_e->line == NULL)
         return (0);
     i = 0;
-    x = line_e->prompt_size;
+    x = g_shell.prompt_size;
     n = 0;
     while (i < pos && line_e->line[i])
     {

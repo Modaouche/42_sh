@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_terminal.c                                     :+:      :+:    :+:   */
+/*   init_term.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 11:41:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/02/11 22:16:58 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/07/06 15:25:19 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,30 +35,44 @@ struct termios			*term_raw(void)
 	return (&termios);
 }
 
-static int		init_term(void)
+static int		init_tc(void)
 {
 	char		*term_type;
-	int			ret;
+	int		ret;
 
 	if (!(term_type = getenv("TERM")))
 		return (-1);
 	ret = tgetent(NULL, getenv("TERM"));
 	if (ret == 1 && ft_strcmp("dumb", getenv("TERM")))
 		return (0);
-	g_errorno = (ret > 0 && ft_strcmp("dumb", getenv("TERM")))
+	g_shell.errorno = (ret > 0 && ft_strcmp("dumb", getenv("TERM")))
 		? ER_DBACCES : ER_DBINFO;
 	return (-1);
 }
 
-void				set_terminal(t_edit *line_e, char **envp)
+void				init_term(t_edit *line_e, char **envp)
 {
-	ft_bzero(line_e, sizeof(line_e));
-	line_e->tc_onoff = (init_term() == -1) ? 1 : 0;//ici set off l'utilisation des termcaps //je ne sais pas si ce sera utile
-	line_e->termiold = term_backup();
-	line_e->termios = term_raw();
-	line_e->len_max = BUFFER_LEN;
-	line_e->env = envp;
-	fill_token_tab();
 	if (!isatty(STDERR_FILENO))
 		toexit(line_e, "isatty", 1);
+	line_e = st_line();
+	ft_bzero(line_e, sizeof(line_e));
+	ft_bzero(&g_shell, sizeof(g_shell));
+	init_line(line_e);
+	fill_token_tab();
+	g_shell.tc_onoff = (init_tc() == -1) ? 1 : 0;//set off termcaps
+	g_shell.envp = envp;
+	g_shell.fd = STDERR_FILENO;
+	g_shell.termiold = term_backup();
+	g_shell.termios = term_raw();
+	g_shell.pid = getpgrp();//tocheck
+	while (tcgetpgrp(g_shell.fd) != g_shell.pid)
+	{
+		ft_printf("PGRP != PID\n");
+		kill(-g_shell.pid, SIGTTIN);
+	}//tocheck
+	signal_handler(REGULAR);
+	g_shell.pid = getpid();
+	setpgid(g_shell.pid, g_shell.pid);//tocheck
+	tcsetpgrp(g_shell.fd, g_shell.pid);//tocheck
+	open_history();
 }

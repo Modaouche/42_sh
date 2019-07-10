@@ -1,35 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   signal_handler.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/11 12:49:29 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 02:22:35 by modaouch         ###   ########.fr       */
+/*   Created: 2019/07/04 02:39:51 by modaouch          #+#    #+#             */
+/*   Updated: 2019/07/06 17:41:33 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shell.h"
+#ifndef SIGNAL_HANDLER_H
+# define SIGNAL_HANDLER_H
 
-void		init_line(t_edit *line_e)
-{
-	if (line_e->line)
-		ft_strdel(&line_e->line);
-	line_e->len_max = BUFFER_LEN;
-	line_e->cursor_pos = 0;
-	line_e->ofst = 0;
-	line_e->len = 0;
-}
+# include <signal.h>
+# define REGULAR 0
+# define EXEC 1
+# define LINE_EDIT 2
 
-t_edit	*st_line(void)
-{
-	static t_edit line_e;
-	return (&line_e);
-}
+void		signal_handler(uint8_t);
 
-t_ast_ptr	*st_ast(void)
-{
-	static t_ast_ptr	ast_head;
-	return (&ast_head);
-}
+#endif

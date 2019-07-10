@@ -16,19 +16,19 @@
 
 void	toexit(t_edit *line_e, char *str, int err)
 {
-	if (line_e && line_e->termiold)
+	if (line_e && g_shell.termiold)//tochange
 	{
-		line_e->termiold->c_lflag |= (ICANON | ECHO);
-		line_e->termiold->c_oflag |= (OPOST);
-		tcsetattr(STDERR_FILENO, TCSAFLUSH, line_e->termiold);
+	//	g_shell.termiold->c_lflag |= (ICANON | ECHO);
+	//	g_shell.termiold->c_oflag |= (OPOST);
+		tcsetattr(STDERR_FILENO, TCSAFLUSH, g_shell.termiold);
 	}
 	ft_putstr_fd("\n./42sh : ", STDERR_FILENO);
 	if (err)
-		perror(str);
+		perror(str);//to rm ?
 	else
 	{
 		ft_putstr_fd(str, STDERR_FILENO);
 		ft_putendl_fd(" : failed", STDERR_FILENO);
 	}
 	exit(EXIT_FAILURE);
-}
+}//tochange avec des free et rename en le_exit

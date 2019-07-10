@@ -125,7 +125,7 @@ int 	build_list_from_word(t_edit *line_e)
 	{
 		line_e->autocomp_list = build_completion_list(word,
 									ft_strlen(word),
-									line_e->env,
+									g_shell.envp,
 									&line_e->autocomp_size);
 	}
 	else if (comp_type == 1)
@@ -137,7 +137,7 @@ int 	build_list_from_word(t_edit *line_e)
 	else
 	{
 		line_e->autocomp_list = build_completion_list_env(word,
-								line_e->env,
+								g_shell.envp,
 								&line_e->autocomp_size, line_e);
 	}
 	line_e->autocomp_list = merge_sort(line_e->autocomp_list);
