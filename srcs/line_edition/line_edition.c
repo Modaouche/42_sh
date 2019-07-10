@@ -498,10 +498,10 @@ int		line_edition(t_edit *line_e)
 		ft_memcpy(prevkey, key, MAX_KEY_LEN);
 	}
 	if (line_e->line) 
-	{
 		cursor_after(line_e);
-		tputs(tgetstr("cd", NULL), 1, ft_puti);
-	}
+	else
+		ft_nlcr();
+	tputs(tgetstr("cd", NULL), 1, ft_puti);
 	ft_file_list_delete(&line_e->autocomp_list);
 	return (1);
 }
