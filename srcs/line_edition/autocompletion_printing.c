@@ -43,7 +43,7 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 	else if (file->type == -2)
 		write(STDERR_FILENO, "\033[0m@", 5);
 	i = minlen - file->len - (file->type != 0) - 2;
-	while (i > 0)
+	while (minlen > 0 && i > 0)
 	{
 		write(STDERR_FILENO, " ", 1);
 		--i;
@@ -72,6 +72,21 @@ int     		get_list_longest_word(t_file *list)
 	return (longest + 2);
 }
 
+int				get_list_printing_height(t_edit *line_e)
+{
+	int		len;
+	t_file	*file;
+
+	len = 0;
+	file = line_e->autocomp_list;
+	while (file != NULL)
+	{
+		len += (file->len) / line_e->winsize_col;
+		file = file->next;
+	}
+	return (len + line_e->autocomp_size);
+}
+
 /*
 **  print_comp_list
 **
@@ -97,9 +112,13 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		return ;
 	cursor_after(line_e);
 	max_length = get_list_longest_word(line_e->autocomp_list);
-	maxcol = line_e->winsize_col / max_length;
-	if (maxcol == 0)
+	if (max_length > line_e->winsize_col)
+	{
+		max_length = 0;
 		maxcol = 1;
+	}
+	else
+		maxcol = line_e->winsize_col / max_length;
 	maxrow = (line_e->autocomp_size / maxcol);
 	if (maxrow == 0)
 		maxrow = 1;
@@ -147,7 +166,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 			ft_nlcr();
 		}
 	}
-	tputs(tgetstr("cd", NULL), 1, ft_puti); 
+	tputs(tgetstr("cd", NULL), 1, ft_puti);
 	while (newlines-- > 0)
 		tputs(tgetstr("up", NULL), 1, ft_puti);
 	cursor_reset_x_pos(line_e);
