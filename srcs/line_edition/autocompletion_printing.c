@@ -21,7 +21,8 @@
 **    an executable or folder.
 */
 
-void			print_with_pad(t_file *file, int minlen, int selected)
+void			print_with_pad(t_file *file, int minlen, int selected,
+				unsigned int win_maxlen)
 {
 	unsigned int	i;
 
@@ -33,7 +34,15 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 		ft_putstr_fd("\033[38;5;11m", STDERR_FILENO);
 	else if ((file->type == -2) && !selected)
 		ft_putstr_fd("\033[38;5;14m", STDERR_FILENO);
-	write(STDERR_FILENO, file->name, file->len);
+	if (file->len <= win_maxlen)
+		write(STDERR_FILENO, file->name, file->len);
+	else 
+	{
+		if (win_maxlen > 3)
+		write(STDERR_FILENO, file->name, win_maxlen - 3);
+		write(STDERR_FILENO, "...", 3);
+
+	}
 	if (file->type == 4 || file->type == 8)
 		write(STDERR_FILENO, "\033[0m/", 5);
 	else if (file->type == 6)
@@ -48,8 +57,9 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 		write(STDERR_FILENO, " ", 1);
 		--i;
 	}
-	tputs(tgetstr("me", NULL), 1, ft_puti);	
-	write(STDERR_FILENO, "  ", 2);
+	tputs(tgetstr("me", NULL), 1, ft_puti);
+	if (minlen != 0)
+		write(STDERR_FILENO, "  ", 2);
 }
 
 /*
@@ -137,7 +147,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		if (window_maxrow > get_line_height(line_e, -1))
 			window_maxrow -= get_line_height(line_e, -1);
 		maxpage = maxrow / window_maxrow;
-		page = (line_e->autocomp_idx % (maxrow +1 )) / window_maxrow;
+		page = (line_e->autocomp_idx % (maxrow + 1)) / window_maxrow;
 		if (page > maxpage)
 			page = maxpage;
 		column = page * window_maxrow;
@@ -156,7 +166,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 			if (i == highlight)
 				tputs(tgetstr("mr", NULL), 1, ft_puti);
 			print_with_pad(ft_file_list_at(line_e->autocomp_list, i),
-							max_length, i == highlight);
+							max_length, i == highlight, line_e->winsize_col);
 			i += maxrow + 1;
 		}
 		tputs(tgetstr("ce", NULL), 1, ft_puti);
