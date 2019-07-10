@@ -82,21 +82,6 @@ int     		get_list_longest_word(t_file *list)
 	return (longest + 2);
 }
 
-int				get_list_printing_height(t_edit *line_e)
-{
-	int		len;
-	t_file	*file;
-
-	len = 0;
-	file = line_e->autocomp_list;
-	while (file != NULL)
-	{
-		len += (file->len) / line_e->winsize_col;
-		file = file->next;
-	}
-	return (len + line_e->autocomp_size);
-}
-
 /*
 **  print_comp_list
 **
