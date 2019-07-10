@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/07 22:35:51 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 08:20:06 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/10 04:56:43 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ typedef struct s_edit	t_edit;
 typedef struct			s_fptr
 {
 	char	**flag;
-	int		(*f[255])(char **);
+	int		(*f[255])(void *);
 }						t_fptr;
 
 char					**set_var_env(char *varname, char *value, char **env);
@@ -31,16 +31,19 @@ char					**dump_env(char **env, int size);
 void					init_env(char **env);
 int						check_perms(char *path);
 int						throw_error(char *str, int exec_flag);
-int						ft_cd(char **cmd);
+int						ft_cd(void *ptr);
 int						ft_built_in(char *cmd);
-int						print_env(char **s);
-int						fexit(char **s);
-int						ft_clear(char **s);
-int						ft_pwd(char **s);
+int						print_env(void *ptr);
+int						fexit(void *ptr);
+int						ft_clear(void *ptr);
+int						ft_pwd(void *ptr);
 void					cd_set_env(int exec_flag, char *pwd);
-int						ft_setenv(char **cmd);
-int						ft_unsetenv(char **cmd);
+int						ft_setenv(void *ptr);
+int						ft_unsetenv(void *ptr);
+int						ft_unsetenv_cmd(void *ptr);
 void					free_env();
+int						ft_setenv_equal(char *cmd, int flag);
+char					*get_env_value(char *varname);
 
 # define EXIT 1
 # define CLEAN 2

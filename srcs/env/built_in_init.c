@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 07:34:52 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/10 04:45:24 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@ static t_fptr	*init_fptr(void)
 	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 7)))
 		return (NULL);
 	func->flag[0] = ft_strdup("cd");
-	func->flag[1] = ft_strdup("env");
+	func->flag[1] = ft_strdup("set");
 	func->flag[2] = ft_strdup("clear");
 	func->flag[3] = ft_strdup("pwd");
-	func->flag[4] = ft_strdup("setenv");
-	func->flag[5] = ft_strdup("unsetenv");
+	func->flag[4] = ft_strdup("export");
+	func->flag[5] = ft_strdup("unset");
 	func->flag[6] = NULL;
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
 	func->f[2] = &ft_clear;
 	func->f[3] = &ft_pwd;
 	func->f[4] = &ft_setenv;
-	func->f[5] = &ft_unsetenv;
+	func->f[5] = &ft_unsetenv_cmd;
 	func->f[6] = NULL;
 	return (func);
 }
@@ -65,7 +65,7 @@ static void		check_exit(char **tmp, int i)
 /*
 **	ft_built_in takes a segment of command like "cd /patati/patata"
 **	and check if a built in has to be exetuted
-** works for cd , env , exit , clear
+**	return 1 a built_in has been executed
 */
 
 int				ft_built_in(char *cmd)
@@ -91,5 +91,7 @@ int				ft_built_in(char *cmd)
 		i++;
 	}
 	free_for_ft_built_in(func, tmp);
+	if (ft_setenv_equal(cmd, 0))
+		return (1);
 	return (0);
 }

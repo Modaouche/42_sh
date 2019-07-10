@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/08 02:11:22 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/09 23:16:40 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ typedef struct			s_sh
 	struct termios		*termiold;
 	struct termios		*termios;
 	char			**envp;
+	char			**intern_var;
 	t_edit			*line_e;
 	t_ast			*ast;
 	char			**buff_cmd;

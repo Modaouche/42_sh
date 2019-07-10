@@ -6,11 +6,24 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:10:51 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 06:10:54 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/10 05:05:34 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+
+char			*get_env_value(char *varname)
+{
+	int		vpos;
+
+	vpos = find_var(varname, g_shell.intern_var);
+	if (g_shell.envp[find_var(varname, g_shell.envp)])
+		return (ft_strdup((g_shell.envp[find_var(varname, g_shell.envp)])\
+				+ ft_strlen(varname) + 1));
+	else if (g_shell.intern_var[find_var(varname, g_shell.intern_var)])
+		return (ft_strdup((g_shell.intern_var[vpos]) + ft_strlen(varname) + 1));
+	return (NULL);
+}
 
 int				is_var(char *s1, char *s2)
 {
@@ -39,7 +52,7 @@ char			**set_var_env(char *varname, char *value, char **env)
 		return (NULL);
 	if (env && env[index])
 	{
-		ft_strdel(&env[index]);
+		ft_strdel(&(env[index]));
 		if (!value)
 			env[index] = tmp;
 		else if ((env[index] = ft_strjoin(tmp, value)) || 1)
@@ -88,6 +101,7 @@ char			**dump_env(char **env, int size)
 		new[i] = ft_strdup(env[i]);
 		ft_strdel(&env[i]);
 	}
-	ft_memdel((void *)&env);
+	if (env)
+		ft_memdel((void *)&env);
 	return (new);
 }

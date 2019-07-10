@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/13 07:03:17 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 06:15:44 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/09 22:07:31 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,13 @@ static int		ft_cd_minest(void)
 	return (index);
 }
 
-int				ft_cd(char **cmd)
+int				ft_cd(void *ptr)
 {
 	int		exec_flag;
 	char	*pwd;
+	char	**cmd;
 
+	cmd = ptr;
 	if (!cmd || !*cmd)
 		return (-1);
 	pwd = getcwd(NULL, 1024);

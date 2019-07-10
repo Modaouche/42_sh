@@ -6,18 +6,18 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:00:02 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 08:19:05 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/10 01:09:45 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 
-int			fexit(char **s)
+int			fexit(void *ptr)
 {
 	int		i;
 
 	i = 0;
-	(void)s;
+	(void)ptr;
 	ft_strdel(&(g_shell.line_e->line));
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
 		toexit(0, "tcsetattr", 1);
@@ -41,30 +41,35 @@ void		cd_set_env(int exec_flag, char *pwd)
 	ft_strdel(&pwd);
 }
 
-int			print_env(char **s)
+int			print_env(void *ptr)
 {
 	int		i;
 
 	i = -1;
-	(void)s;
+	if (ptr)
+	{
+		while (g_shell.intern_var && g_shell.intern_var[++i])
+			ft_printf("%s\n", g_shell.intern_var[i]);
+	}
+	i = 0;
 	while (g_shell.envp[++i])
 		ft_printf("%s\n", g_shell.envp[i]);
 	return (1);
 }
 
-int			ft_clear(char **s)
+int			ft_clear(void *ptr)
 {
-	(void)s;
+	(void)ptr;
 	tputs(tgetstr("cl", NULL), 1, ft_puti);
 	return (1);
 }
 
-int			ft_pwd(char **s)
+int			ft_pwd(void *ptr)
 {
 	char	*str;
 
 	str = NULL;
-	(void)s;
+	(void)ptr;
 	str = getcwd(str, 1024);
 	ft_printf("%s\n", str);
 	ft_strdel(&str);
