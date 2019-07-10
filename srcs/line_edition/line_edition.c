@@ -397,6 +397,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		}
 		if (build_list_from_word(line_e) == 0 || line_e->autocomp_size == 1)
 		{
+			if (line_e->line == NULL)
+				return ;
 			replace_word_from_completion(line_e);
 			cancel_autocompletion(line_e);
 			return ;
