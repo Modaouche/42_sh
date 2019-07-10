@@ -47,6 +47,8 @@ uint         get_line_height(t_edit *line_e, unsigned int end)
     while (i < end && line_e->line[i])
     {
         ++x;
+        if (line_e->line[i] == '\t')
+            x += TAB_LEN - 1;
         if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
         {
             x = 0;
@@ -69,6 +71,8 @@ uint         get_index_x_pos(t_edit *line_e, unsigned int pos)
     n = 0;
     while (i < pos && line_e->line[i])
     {
+        if (line_e->line[i] == '\t')
+            x += TAB_LEN - 1;
         if (x++ >= line_e->winsize_col)
             ++n;
         if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
@@ -83,7 +87,7 @@ size_t		print_prompt(unsigned int btn)
     size_t	len;
 
     if (btn == 0)
-        prompt = ft_strdup("42sh (current path) $> ");//ajout du path soon
+        prompt = ft_strdup("42sh (current path) 12$> ");//ajout du path soon
     else if (btn == 1)
 	    prompt = ft_strdup("pipe $> ");
     else if (btn == 2)

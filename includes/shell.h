@@ -42,7 +42,10 @@
 ** # define S_KEY_NONE			0
 */
 # define MAX_KEY_LEN			12
-# define BUFFER_LEN			255
+# define BUFFER_LEN				255
+# define TAB_LEN				7
+# define TAB_CHARS				"       "
+
 # define TOKEN_CMP			";\n&|!<>"
 # define BKSH_DQT_CMP			"\\$\"\'"
 

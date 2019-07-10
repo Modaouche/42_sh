@@ -21,7 +21,8 @@
 **    an executable or folder.
 */
 
-void			print_with_pad(t_file *file, int minlen, int selected)
+void			print_with_pad(t_file *file, int minlen, int selected,
+				unsigned int win_maxlen)
 {
 	unsigned int	i;
 
@@ -33,7 +34,15 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 		ft_putstr_fd("\033[38;5;11m", STDERR_FILENO);
 	else if ((file->type == -2) && !selected)
 		ft_putstr_fd("\033[38;5;14m", STDERR_FILENO);
-	write(STDERR_FILENO, file->name, file->len);
+	if (file->len <= win_maxlen)
+		write(STDERR_FILENO, file->name, file->len);
+	else 
+	{
+		if (win_maxlen > 4)
+		write(STDERR_FILENO, file->name, win_maxlen - 4);
+		write(STDERR_FILENO, "...", 3);
+
+	}
 	if (file->type == 4 || file->type == 8)
 		write(STDERR_FILENO, "\033[0m/", 5);
 	else if (file->type == 6)
@@ -43,13 +52,14 @@ void			print_with_pad(t_file *file, int minlen, int selected)
 	else if (file->type == -2)
 		write(STDERR_FILENO, "\033[0m@", 5);
 	i = minlen - file->len - (file->type != 0) - 2;
-	while (i > 0)
+	while (minlen > 0 && i > 0)
 	{
 		write(STDERR_FILENO, " ", 1);
 		--i;
 	}
-	tputs(tgetstr("me", NULL), 1, ft_puti);	
-	write(STDERR_FILENO, "  ", 2);
+	tputs(tgetstr("me", NULL), 1, ft_puti);
+	if (minlen != 0)
+		write(STDERR_FILENO, "  ", 2);
 }
 
 /*
@@ -97,9 +107,13 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		return ;
 	cursor_after(line_e);
 	max_length = get_list_longest_word(line_e->autocomp_list);
-	maxcol = line_e->winsize_col / max_length;
-	if (maxcol == 0)
+	if (max_length > line_e->winsize_col)
+	{
+		max_length = 0;
 		maxcol = 1;
+	}
+	else
+		maxcol = line_e->winsize_col / max_length;
 	maxrow = (line_e->autocomp_size / maxcol);
 	if (maxrow == 0)
 		maxrow = 1;
@@ -118,7 +132,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		if (window_maxrow > get_line_height(line_e, -1))
 			window_maxrow -= get_line_height(line_e, -1);
 		maxpage = maxrow / window_maxrow;
-		page = (line_e->autocomp_idx % (maxrow +1 )) / window_maxrow;
+		page = (line_e->autocomp_idx % (maxrow + 1)) / window_maxrow;
 		if (page > maxpage)
 			page = maxpage;
 		column = page * window_maxrow;
@@ -137,7 +151,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 			if (i == highlight)
 				tputs(tgetstr("mr", NULL), 1, ft_puti);
 			print_with_pad(ft_file_list_at(line_e->autocomp_list, i),
-							max_length, i == highlight);
+							max_length, i == highlight, line_e->winsize_col);
 			i += maxrow + 1;
 		}
 		tputs(tgetstr("ce", NULL), 1, ft_puti);
@@ -147,7 +161,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 			ft_nlcr();
 		}
 	}
-	tputs(tgetstr("cd", NULL), 1, ft_puti); 
+	tputs(tgetstr("cd", NULL), 1, ft_puti);
 	while (newlines-- > 0)
 		tputs(tgetstr("up", NULL), 1, ft_puti);
 	cursor_reset_x_pos(line_e);

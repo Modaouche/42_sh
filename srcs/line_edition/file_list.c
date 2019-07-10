@@ -13,6 +13,32 @@
 #include "shell.h"
 #include "libft.h"
 
+char 	*ft_strdup_printable(char *name)
+{
+	unsigned int 	x;
+	unsigned int 	i;
+	char			*new;
+
+	i = 0;
+	x = 0;
+	while (name[i])
+	{
+		if (ft_isprint(name[i++]))
+			++x;
+	}
+	if ((new = ft_strnew(x)) == NULL)
+		return (NULL);
+	i = 0;
+	x = 0;
+	while (name[i])
+	{
+		if (ft_isprint(name[i]))
+			new[x++] = name[i];
+		++i;
+	}
+	return (new);
+}
+
 /*
 **  List functions made specifically for the autocompletion linked list
 **  Nothing particularly interesting happens here.
@@ -24,7 +50,7 @@ t_file		*ft_file_list_create(char *name, int type)
 
 	if ((new = ft_memalloc(sizeof(t_file))) == NULL)
 		return (NULL);
-	if ((new->name = ft_strdup(name)) == NULL)
+	if ((new->name = ft_strdup_printable(name)) == NULL)
 	{
 		free(new);
 		return (NULL);
