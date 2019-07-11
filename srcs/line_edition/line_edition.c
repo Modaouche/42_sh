@@ -61,16 +61,11 @@ int		append_to_line(t_edit *line_e, const char to_add)
 
 void	cancel_autocompletion(t_edit *line_e)
 {
-	unsigned int x;
-
 	line_e->autocomp = 0;
 	cursor_after(line_e);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
-	x = get_line_height(line_e, line_e->len)
-		- get_line_height(line_e, line_e->cursor_pos) + 1;
-	while (x-- > 0)
-		tputs(tgetstr("up", NULL), 1, ft_puti);
-	cursor_reset_x_pos(line_e);
+	tputs(tgetstr("up", NULL), 1, ft_puti);
+	cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	ft_file_list_delete(&line_e->autocomp_list);
 }
 
@@ -128,6 +123,11 @@ void	insert_char(t_edit *line_e, char c)
 	{
 		print_comp_list(line_e, -1);
 		line_e->autocomp = 0;
+	}
+	if (get_line_height(line_e, line_e->len) != get_line_height(line_e, line_e->len - 1))
+	{
+		cancel_autocompletion(line_e);
+		ft_nlcr();
 	}
 }
 
