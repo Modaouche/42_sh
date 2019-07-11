@@ -453,9 +453,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			return ;
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
-		cursor_start(line_e);
+		cursor_move_to(line_e, line_e->cursor_pos - 1);
 		tputs(tgetstr("cd", NULL), 1, ft_puti);
-		line_e->cursor_pos -= 1;
 		line_e->len -= 1;
 		if (line_e->line[0])
 		{
@@ -463,8 +462,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					line_e->line + (line_e->cursor_pos + 1),\
 					line_e->len - line_e->cursor_pos);
 		}
-		line_e->line[line_e->len] = '\0';
-		print_line(line_e, 0);
+		print_line(line_e, line_e->cursor_pos);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 	// ft_putstr("key too long comming soon - ");
