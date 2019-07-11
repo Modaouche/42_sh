@@ -107,11 +107,7 @@ void	print_line(t_edit *line_e, unsigned int start)
 
 void	insert_char(t_edit *line_e, char c)
 {
-	if (line_e->autocomp == 2)
-	{
-		line_e->autocomp = 0;
-		print_comp_list(line_e, -1);
-	}
+
 	if (!(append_to_line(line_e, c)))
 		toexit(line_e, "malloc", 0);
 	if (c == '\n')
@@ -125,9 +121,13 @@ void	insert_char(t_edit *line_e, char c)
 		write(STDERR_FILENO, &c, 1);
 	if (++line_e->cursor_pos != line_e->len)
 	{
-		cursor_start(line_e);
-		print_line(line_e, 0);
+		print_line(line_e, line_e->cursor_pos);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
+	}
+	if (line_e->autocomp != 0)
+	{
+		print_comp_list(line_e, -1);
+		line_e->autocomp = 0;
 	}
 }
 
