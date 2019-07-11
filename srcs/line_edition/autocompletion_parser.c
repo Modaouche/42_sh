@@ -197,6 +197,8 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 	unsigned int escape;
 	unsigned int word_idx;
 
+	if (line_e->line == NULL)
+		return (NULL);
 	i = 0;
 	word_start = 0;
 	word_end = 0;
