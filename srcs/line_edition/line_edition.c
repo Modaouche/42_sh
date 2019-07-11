@@ -127,7 +127,8 @@ void	insert_char(t_edit *line_e, char c)
 	if (get_line_height(line_e, line_e->len) != get_line_height(line_e, line_e->len - 1))
 	{
 		cancel_autocompletion(line_e);
-		ft_nlcr();
+		if (c != '\n')
+			ft_nlcr();
 	}
 }
 
