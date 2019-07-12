@@ -51,6 +51,9 @@ static void		window_resize(int sig)
 	ioctl(0, TIOCGWINSZ, &size);
 	line_e->winsize_col = size.ws_col;
 	line_e->winsize_row = size.ws_row;
+	re_print_prompt(line_e);
+	re_print_line(line_e);
+	print_comp_list(line_e, -1);
 }
 
 void			signal_handler(uint8_t state)

@@ -39,6 +39,7 @@ void	line_parser(t_edit *line_e)
 			bind_last_head();
 		ast_head->curr_head = NULL;
 		g_shell.ast = ast_head->root;
+		infix_print_ast(g_shell.ast);
 	}
 	else
 	{

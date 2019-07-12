@@ -89,3 +89,32 @@ int		get_idx_quote_type(char *line, unsigned int idx)
 	}
 	return (quote);
 }
+
+/*
+**  re_print_prompt
+**
+**  - Re-prints the prompt regardless of cursor position
+*/
+
+void	re_print_prompt(t_edit *line_e)
+{
+	if (line_e->line == NULL)
+		return ;
+	cursor_start(line_e);
+	while (g_shell.prompt_size > 0)
+	{
+		tputs(tgetstr("le", NULL), 1, ft_puti);
+		--g_shell.prompt_size;
+	}
+	g_shell.prompt_size = print_prompt(0);
+	cursor_move_from_to(line_e, 0, line_e->cursor_pos);
+}
+
+void	re_print_line(t_edit *line_e)
+{
+	if (line_e->line == NULL)
+		return ;
+	cursor_start(line_e);
+	print_line(line_e, 0);
+	cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
+}
