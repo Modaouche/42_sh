@@ -6,52 +6,53 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/06 15:12:43 by araout            #+#    #+#             */
-/*   Updated: 2019/07/08 04:27:09 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/12 04:15:28 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void		init_history(void)
+char		*double_bang(void)
 {
-	g_shell.hist_path = ft_strjoin(getenv("HOME"), "/.42sh_history");
+	char	**hist;
+	int		i;
+	int		j;
+	char	*ret;
+
+	j = 0;
+	i = -1;
+	ret = NULL;
+	hist = NULL;
+	if (!(dump_history(&hist)))
+		return (NULL);
+	while (hist[i])
+		i++;
+	while (hist[i - 1][j])
+	{
+		if ((hist[i][j] == '\t') && (ret = ft_strdup(&(hist[i][j + 1]))))
+			break ;
+		j++;
+	}
+	i = -1;
+	while (hist[++i])
+		ft_strdel(&(hist[i]));
+	ft_memdel((void **)hist);
+	return (ret);
 }
 
-/*
-** write each cmd in $HOME/.42sh_history
-*/
-void		write_history(char *line)
+int			ft_history(void *ptr)
 {
 	int		fd;
+	char	*line;
 
-	fd = open(g_shell.hist_path, O_APPEND | O_RDWR);
-	write(fd, line, ft_strlen(line));
-	write(fd, "\n", 1);
-}
-
-char		**dump_history(void)
-{
-	int				fd;
-	char			*hist;
-	char			buf[255];
-	char			**ret;
-
-	fd = open(g_shell.hist_path, O_RDONLY);
-	hist = NULL;
-	ft_bzero(buf, 255);
-	while (read(fd, buf, 255) > 0)
+	(void)ptr;
+	fd = dup(g_shell.history->fd);
+	lseek(fd, 0, SEEK_SET);
+	while (get_next_line(fd, &line) > 0)
 	{
-		buf[254] = '\0';
-		if (!hist)
-			hist = ft_strdup(buf);
-		else
-		{
-			ret = &hist;
-			hist = ft_strjoin(hist, buf);
-			ft_strdel(ret);
-		}
+		ft_printf("%s\n", line);
+		ft_strdel(&line);
 	}
-	ret = ft_split(hist, "\n");
-	free(hist);
-	return (ret);
+	close(fd);
+	return (1);
 }

@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/07/09 22:48:56 by araout           ###   ########.fr        #
+#    Updated: 2019/07/12 01:31:00 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,7 @@ SRC =	srcs/main/main.c\
 		srcs/inhibitor/word_handling.c\
 		srcs/inhibitor/expanded_word.c\
 		srcs/history/history.c\
+		srcs/history/history_utils.c\
 		srcs/env/misc_env.c\
 		srcs/env/init_env.c\
 		srcs/env/ft_cd.c\
@@ -67,7 +68,8 @@ LIBFT = srcs/libft
 
 LIB = $(LIBFT)/libft.a
 
-HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h includes/env.h
+HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h \
+		includes/history.h includes/env.h
 
 INCLUDES = -Iincludes -I$(LIBFT)
 

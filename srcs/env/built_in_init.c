@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
-/*   Updated: 2019/07/10 04:45:24 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/12 03:30:27 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static t_fptr	*init_fptr(void)
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 7)))
+	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 8)))
 		return (NULL);
 	func->flag[0] = ft_strdup("cd");
 	func->flag[1] = ft_strdup("set");
@@ -26,14 +26,16 @@ static t_fptr	*init_fptr(void)
 	func->flag[3] = ft_strdup("pwd");
 	func->flag[4] = ft_strdup("export");
 	func->flag[5] = ft_strdup("unset");
-	func->flag[6] = NULL;
+	func->flag[6] = ft_strdup("history");
+	func->flag[7] = NULL;
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
 	func->f[2] = &ft_clear;
 	func->f[3] = &ft_pwd;
 	func->f[4] = &ft_setenv;
 	func->f[5] = &ft_unsetenv_cmd;
-	func->f[6] = NULL;
+	func->f[6] = &ft_history;
+	func->f[7] = NULL;
 	return (func);
 }
 
@@ -42,13 +44,13 @@ static void		free_for_ft_built_in(t_fptr *func, char **tmp)
 	int		i;
 
 	i = -1;
-	while (func->flag[++i])
+	while (func->flag && func->flag[++i])
 		ft_strdel(&(func->flag[i]));
 	ft_memdel((void **)&(func->flag));
 	ft_memdel((void **)&func);
 	i = 0;
-	while (tmp[i])
-		ft_strdel(&tmp[i++]);
+	while (tmp && tmp[i])
+		ft_strdel(&(tmp[i++]));
 	ft_memdel((void **)&tmp);
 }
 

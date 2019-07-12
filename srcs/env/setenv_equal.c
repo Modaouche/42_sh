@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/09 22:43:17 by araout            #+#    #+#             */
-/*   Updated: 2019/07/10 04:59:04 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/12 04:12:37 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char		*get_value(char *cmd)
 			return ("");
 		i++;
 	}
-	return (NULL);
+	return ("");
 }
 
 char		*get_varname(char *cmd)

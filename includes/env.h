@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/07 22:35:51 by araout            #+#    #+#             */
-/*   Updated: 2019/07/10 04:56:43 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/10 07:13:39 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int						ft_unsetenv_cmd(void *ptr);
 void					free_env();
 int						ft_setenv_equal(char *cmd, int flag);
 char					*get_env_value(char *varname);
+int						ft_history(void *ptr);
 
 # define EXIT 1
 # define CLEAN 2
