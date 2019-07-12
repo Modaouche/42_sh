@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/09 22:43:17 by araout            #+#    #+#             */
-/*   Updated: 2019/07/12 05:52:25 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/12 06:04:44 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,11 @@ int			ft_export_inner_var(char *cmd)
 	value = NULL;
 	if (!g_shell.intern_var)
 		return (0);
-	else if (g_shell.intern_var[find_var(cmd, g_shell.intern_var)])
-	{
-		value = get_env_value(cmd);
-		ft_unsetenv(cmd);
-		g_shell.envp = set_var_env(cmd, value, g_shell.envp);
-		ft_strdel(&value);
-		return (1);
-	}
+	value = get_env_value(cmd);
+	ft_unsetenv(cmd);
+	g_shell.envp = set_var_env(cmd, value, g_shell.envp);
 	ft_strdel(&value);
-	return (0);
+	return (1);
 }
 
 int			ft_setenv_equal(char *cmd, int flag)
@@ -79,7 +74,7 @@ int			ft_setenv_equal(char *cmd, int flag)
 	if (flag == 1 && value && ft_unsetenv(varname))
 		g_shell.envp = set_var_env(varname, value, g_shell.envp);
 	else if (flag == 1 && !value)
-		ft_export_inner_var(cmd);
+		g_shell.envp = set_var_env(cmd, "", g_shell.envp);
 	else if (flag == 0 && value)
 	{
 		if (g_shell.envp[find_var(cmd, g_shell.envp)])
@@ -90,7 +85,8 @@ int			ft_setenv_equal(char *cmd, int flag)
 		else
 			g_shell.intern_var = set_var_env(varname,\
 					value, g_shell.intern_var);
-			return (1);
+		ft_strdel(&varname);
+		return (1);
 	}
 	ft_strdel(&varname);
 	return (0);
