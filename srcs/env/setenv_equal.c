@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/09 22:43:17 by araout            #+#    #+#             */
-/*   Updated: 2019/07/12 05:41:17 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/12 05:52:25 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char		*get_value(char *cmd)
 	i = 0;
 	while (cmd[i])
 	{
-		if (cmd[i] == '=')
+		if (cmd[i] == '=' && cmd[i + 1])
 			return (&(cmd[i + 1]));
 		else if (cmd[i] == '=' && !cmd[i + 1])
 			return ("");
@@ -49,21 +49,23 @@ char		*get_varname(char *cmd)
 	return (ft_strdup(cmd));
 }
 
-int			ft_export_inner_var(char *cmd, int flag)
+int			ft_export_inner_var(char *cmd)
 {
 	char	*value;
 
 	value = NULL;
 	if (!g_shell.intern_var)
 		return (0);
-	else if (g_shell.intern_var[find_var(cmd, g_shell.intern_var)] && flag == 1)
+	else if (g_shell.intern_var[find_var(cmd, g_shell.intern_var)])
 	{
 		value = get_env_value(cmd);
 		ft_unsetenv(cmd);
 		g_shell.envp = set_var_env(cmd, value, g_shell.envp);
+		ft_strdel(&value);
+		return (1);
 	}
 	ft_strdel(&value);
-	return (1);
+	return (0);
 }
 
 int			ft_setenv_equal(char *cmd, int flag)
@@ -77,19 +79,19 @@ int			ft_setenv_equal(char *cmd, int flag)
 	if (flag == 1 && value && ft_unsetenv(varname))
 		g_shell.envp = set_var_env(varname, value, g_shell.envp);
 	else if (flag == 1 && !value)
-		ft_export_inner_var(cmd, flag);
+		ft_export_inner_var(cmd);
 	else if (flag == 0 && value)
 	{
 		if (g_shell.envp[find_var(cmd, g_shell.envp)])
 		{
 			g_shell.envp = set_var_env(varname, value, g_shell.envp);
 			ft_strdel(&varname);
-			return (1);
 		}
-		else if ((value = get_value(cmd)))
+		else
 			g_shell.intern_var = set_var_env(varname,\
 					value, g_shell.intern_var);
+			return (1);
 	}
 	ft_strdel(&varname);
-	return (1);
+	return (0);
 }
