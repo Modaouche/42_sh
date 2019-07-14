@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/07/12 01:31:00 by araout           ###   ########.fr        #
+#    Updated: 2019/07/15 00:30:59 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,8 +78,8 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 CC = gcc
 
 CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
-	#		-g -fsanitize=address\
-			-fno-omit-frame-pointer\
+			-g3 -fsanitize=address
+	#		-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 
 all: lib $(NAME)

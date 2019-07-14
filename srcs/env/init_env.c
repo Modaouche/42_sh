@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/07 23:04:21 by araout            #+#    #+#             */
-/*   Updated: 2019/07/10 00:11:48 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/15 00:56:16 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,11 @@ void			init_env(char **env)
 {
 	char *tmp;
 
-	if (!(g_shell.envp = get_env(env)))
+	g_shell.envp = get_env(env);
+	if (!(g_shell.intern_var = ft_memalloc(sizeof(char **) * 2)))
 		return ;
-	g_shell.intern_var = NULL;
 	tmp = sh_lvl(env);
-	if ((g_shell.envp = set_var_env("SHLVL", tmp, g_shell.envp)) == NULL)
-	{
-		free(tmp);
-		return ;
-	}
+	g_shell.envp = set_var_env("SHLVL", tmp, g_shell.envp);
 	free(tmp);
+	return ;
 }

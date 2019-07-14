@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:10:51 by araout            #+#    #+#             */
-/*   Updated: 2019/07/10 05:05:34 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/15 01:22:35 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,11 @@ char			*get_env_value(char *varname)
 	int		vpos;
 
 	vpos = find_var(varname, g_shell.intern_var);
-	if (g_shell.envp[find_var(varname, g_shell.envp)])
-		return (ft_strdup((g_shell.envp[find_var(varname, g_shell.envp)])\
-				+ ft_strlen(varname) + 1));
-	else if (g_shell.intern_var[find_var(varname, g_shell.intern_var)])
+	if (g_shell.envp && g_shell.envp[find_var(varname, g_shell.envp)])
+		return (ft_strdup(g_shell.envp[find_var(varname, g_shell.envp)]\
+					+ ft_strlen(varname) + 1));
+	else if (g_shell.intern_var && g_shell.intern_var[find_var(varname,\
+				g_shell.intern_var)])
 		return (ft_strdup((g_shell.intern_var[vpos]) + ft_strlen(varname) + 1));
 	return (NULL);
 }
