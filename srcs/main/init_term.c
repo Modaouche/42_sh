@@ -52,26 +52,24 @@ static int		init_tc(void)
 
 void				init_term(t_edit *line_e, char **envp)
 {
+	ft_bzero(&g_shell, sizeof(g_shell));
+	ft_bzero(line_e, sizeof(line_e));
 	if (!isatty(STDERR_FILENO))
 		toexit(line_e, "isatty", 1);
-	line_e = st_line();
-	ft_bzero(line_e, sizeof(line_e));
-	ft_bzero(&g_shell, sizeof(g_shell));
-	init_line(line_e);
-	fill_token_tab();
-	g_shell.tc_onoff = (init_tc() == -1) ? 1 : 0;//set off termcaps
-	g_shell.envp = envp;
 	g_shell.fd = STDERR_FILENO;
-	g_shell.termiold = term_backup();
-	g_shell.termios = term_raw();
 	g_shell.pid = getpgrp();//tocheck
 	while (tcgetpgrp(g_shell.fd) != g_shell.pid)
-	{
-		ft_printf("PGRP != PID\n");
 		kill(-g_shell.pid, SIGTTIN);
-	}//tocheck
 	signal_handler(REGULAR);
 	g_shell.pid = getpid();
 	setpgid(g_shell.pid, g_shell.pid);//tocheck
 	tcsetpgrp(g_shell.fd, g_shell.pid);//tocheck
+	line_e = st_line();
+	init_line(line_e);
+	fill_token_tab();
+	g_shell.tc_onoff = (init_tc() == -1) ? 1 : 0;//set off termcaps
+	g_shell.envp = envp;
+	g_shell.termiold = term_backup();
+	g_shell.termios = term_raw();
+
 }

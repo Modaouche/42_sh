@@ -15,7 +15,6 @@
 
 # include <signal.h>
 # define REGULAR 0
-# define EXEC 1
 # define LINE_EDIT 2
 
 void		signal_handler(uint8_t );
