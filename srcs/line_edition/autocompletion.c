@@ -74,14 +74,14 @@ void	replace_word_from_completion(t_edit *line_e)
 		replace_word(line_e, file->name, ft_strlen(file->name), NULL);
 }
 
-t_file	*build_completion_list_env(char *str, char **env,
+t_file	*build_completion_list_env(int *cont, char *str, char **env,
 									uint *list_size, t_edit *line_e)
 {
 	t_file	*list;
 	int		start;		
 
 	*list_size = 0;
-	if (*str == '\0' || env == NULL || *env == NULL)
+	if (*str == '\0' || env == NULL || *env == NULL || *cont == 0)
 		return (NULL);
 	list = NULL;
 	start = 1;
@@ -90,7 +90,7 @@ t_file	*build_completion_list_env(char *str, char **env,
 		start = 2;
 		++line_e->autocomp_point;
 	}
-	*list_size = search_similar_env_var(&list, str + start, 
+	*list_size = search_similar_env_var(cont, &list, str + start, 
 					ft_strlen(str + start), env);
 	return (list);
 }
@@ -121,27 +121,33 @@ int 	build_list_from_word(t_edit *line_e)
 		comp_type = 1;
 	else if (word[0] == '$')
 		comp_type = 2;
+	line_e->autocomp = 1;
 	if (comp_type == 0)
 	{
-		line_e->autocomp_list = build_completion_list(word,
+		line_e->autocomp_list = build_completion_list(&line_e->autocomp, word,
 									ft_strlen(word),
 									g_shell.envp,
 									&line_e->autocomp_size);
 	}
 	else if (comp_type == 1)
 	{
-		line_e->autocomp_list = build_completion_list_files(word,
+		line_e->autocomp_list = build_completion_list_files(&line_e->autocomp, word,
 									ft_strlen(word),
 									&line_e->autocomp_size);
 	}
 	else
 	{
-		line_e->autocomp_list = build_completion_list_env(word,
+		line_e->autocomp_list = build_completion_list_env(&line_e->autocomp, word,
 								g_shell.envp,
 								&line_e->autocomp_size, line_e);
 	}
 	line_e->autocomp_list = merge_sort(line_e->autocomp_list);
 	ft_strdel(&word);
+	if (line_e->autocomp_list == NULL || line_e->autocomp == 0)
+	{
+		line_e->autocomp = 0;
+		ft_file_list_delete(&line_e->autocomp_list);
+	}
 	return (line_e->autocomp_list == NULL ? 0 : 1);
 }
 

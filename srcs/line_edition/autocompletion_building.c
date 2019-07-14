@@ -52,7 +52,7 @@ int				get_last_common_char(t_file *list)
 **    letters as the given string, in the given path.
 */
 
-unsigned int	search_similar_files(t_file **list, char *path,
+unsigned int	search_similar_files(int *cont, t_file **list, char *path,
 				char *str, int len)
 {
 	DIR				*d;
@@ -63,7 +63,7 @@ unsigned int	search_similar_files(t_file **list, char *path,
 	if (!(d = opendir(path)))
 		return (0);
 	size = 0;
-	while ((f = readdir(d)) != NULL)
+	while (*cont && (f = readdir(d)) != NULL)
 	{
 		if (f->d_name[0] == '.' && (!len || str[0] != '.'))
 			continue ;
@@ -85,14 +85,14 @@ unsigned int	search_similar_files(t_file **list, char *path,
 **   specifically at the environment variables.
 */
 
-int				search_similar_env_var(t_file **list, char *str, int len,
-				char **env)
+int				search_similar_env_var(int *cont, t_file **list,
+				char *str, int len, char **env)
 {
 	int		size;
 	int		i;
 
 	size = 0;
-	while (*env != NULL)
+	while (*env != NULL && *cont)
 	{
 		if (ft_strncmp_case(*env, str, len) == 0)
 		{
@@ -139,14 +139,14 @@ const char *builtins[BUILTIN_COUNT] = {
 	"exit"
 };
 
-int				search_similar_builtin(t_file **list, char *str, int len)
+int				search_similar_builtin(int *cont, t_file **list, char *str, int len)
 {
 	int size;
 	int	i;
 
 	size = 0;
 	i = 0;
-	while (i < BUILTIN_COUNT)
+	while (i < BUILTIN_COUNT && *cont != 0)
 	{
 		if (ft_strncmp_case(str, builtins[i], len) == 0
 			&& ft_file_list_append(list, (char*)builtins[i], 0))
@@ -156,8 +156,8 @@ int				search_similar_builtin(t_file **list, char *str, int len)
 	return (size);
 }
 
-t_file			*build_completion_list(char *str, int len, char **env,
-				unsigned int *list_size)
+t_file			*build_completion_list(int *cont, char *str,
+				int len, char **env, unsigned int *list_size)
 {
 	t_file	*list;
 	char	*path;
@@ -166,13 +166,13 @@ t_file			*build_completion_list(char *str, int len, char **env,
 	if (env == NULL)
 		return (NULL);
 	list = NULL;
-	*list_size = search_similar_env_var(&list, str, len, env);
+	*list_size = search_similar_env_var(cont, &list, str, len, env);
 	while (*env != NULL && ft_strncmp(*env, "PATH=", 5) != 0)
 		++env;
 	if (*env == NULL)
 		return (NULL);
 	path = *env + 5;
-	while (*path != 0)
+	while (*path != 0 && *cont)
 	{
 		i = 0;
 		while (path[i] != ':' && path[i] != '\0')
@@ -180,15 +180,15 @@ t_file			*build_completion_list(char *str, int len, char **env,
 		if (path[i] == ':')
 		{
 			path[i] = '\0';
-			*list_size += search_similar_files(&list, path, str, len);
+			*list_size += search_similar_files(cont, &list, path, str, len);
 			path[i] = ':';
 			++i;
 		}
 		else
-			*list_size += search_similar_files(&list, path, str, len);
+			*list_size += search_similar_files(cont, &list, path, str, len);
 		path += i;
 	}
-	*list_size += search_similar_builtin(&list, str, len);
+	*list_size += search_similar_builtin(cont, &list, str, len);
 	return (list);
 }
 
@@ -199,7 +199,7 @@ t_file			*build_completion_list(char *str, int len, char **env,
 **    and searching files based on current written path
 */
 
-t_file			*build_completion_list_files(char *str, int len,
+t_file			*build_completion_list_files(int *cont, char *str, int len,
 				unsigned int *list_size)
 {
 	t_file	*list;
@@ -211,18 +211,18 @@ t_file			*build_completion_list_files(char *str, int len,
 	list = NULL;
 	*list_size = 0;
 	if (last_slash < 0)
-		*list_size += search_similar_files(&list, ".", str, len);
+		*list_size += search_similar_files(cont, &list, ".", str, len);
 	else
 	{
 		if (last_slash == 0)
 		{
-			*list_size += search_similar_files(&list, "/",
+			*list_size += search_similar_files(cont, &list, "/",
 						str + 1, len - 1);
 		}
 		else
 		{
 			str[last_slash] = '\0';
-			*list_size += search_similar_files(&list, str,
+			*list_size += search_similar_files(cont, &list, str,
 						str + last_slash + 1, len - last_slash - 1);
 			str[last_slash] = '/';
 		}

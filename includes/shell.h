@@ -44,7 +44,10 @@
 ** # define S_KEY_NONE			0
 */
 # define MAX_KEY_LEN			12
-# define BUFFER_LEN			255
+# define BUFFER_LEN				255
+# define TAB_LEN				7
+# define TAB_CHARS				"       "
+
 # define TOKEN_CMP			";\n&|!<>"
 # define BKSH_DQT_CMP			"\\$\"\'"
 
@@ -148,9 +151,9 @@ void					print_line(t_edit *line_e, unsigned int start);
 # define AUTOCOMP_TYPE_BLOCK_FILE		6
 # define AUTOCOMP_TYPE_FOLDER2			8
 
-t_file					*build_completion_list(char *str, int len, char **env,\
+t_file					*build_completion_list(int *cont, char *str, int len, char **env,\
 					unsigned int *list_size);
-t_file					*build_completion_list_files(char *str, int len,\
+t_file					*build_completion_list_files(int *cont, char *str, int len,\
 					unsigned int *list_size);
 void					print_comp_list(t_edit *line_e, int highlight);
 int						get_last_common_char(t_file *list);
@@ -161,7 +164,7 @@ void					replace_word_from_completion(t_edit *line_e);
 char					*escape_name(char *name, char *escaped_chars,\
 						unsigned int length);
 char					*escape_singlequote(char *name, unsigned int max);
-int						search_similar_env_var(t_file **list, char *str,\
+int						search_similar_env_var(int *cont, t_file **list, char *str,\
 					int len, char **env);
 void					cancel_autocompletion(t_edit *line_e);
 

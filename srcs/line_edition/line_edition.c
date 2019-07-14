@@ -61,16 +61,11 @@ int		append_to_line(t_edit *line_e, const char to_add)
 
 void	cancel_autocompletion(t_edit *line_e)
 {
-	unsigned int x;
-
 	line_e->autocomp = 0;
 	cursor_after(line_e);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
-	x = get_line_height(line_e, line_e->len)
-		- get_line_height(line_e, line_e->cursor_pos) + 1;
-	while (x-- > 0)
-		tputs(tgetstr("up", NULL), 1, ft_puti);
-	cursor_reset_x_pos(line_e);
+	tputs(tgetstr("up", NULL), 1, ft_puti);
+	cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	ft_file_list_delete(&line_e->autocomp_list);
 }
 
@@ -85,7 +80,10 @@ void	print_line(t_edit *line_e, unsigned int start)
 {
 	while (start < line_e->len)
 	{
-		write(STDERR_FILENO, &line_e->line[start], 1);
+		if (line_e->line[start] == '\t')
+			write(STDERR_FILENO, TAB_CHARS, TAB_LEN);
+		else
+			write(STDERR_FILENO, &line_e->line[start], 1);
 		if (line_e->line[start] == '\n')
 		{
 			tputs(tgetstr("ce", NULL), 1, ft_puti);
@@ -104,11 +102,7 @@ void	print_line(t_edit *line_e, unsigned int start)
 
 void	insert_char(t_edit *line_e, char c)
 {
-	if (line_e->autocomp == 2)
-	{
-		line_e->autocomp = 0;
-		print_comp_list(line_e, -1);
-	}
+
 	if (!(append_to_line(line_e, c)))
 		toexit(line_e, "malloc", 0);
 	if (c == '\n')
@@ -116,13 +110,24 @@ void	insert_char(t_edit *line_e, char c)
 		tputs(tgetstr("ce", NULL), 1, ft_puti);
 		ft_nlcr();
 	}
+	else if (c == '\t')
+		write(STDERR_FILENO, TAB_CHARS, TAB_LEN);
 	else
 		write(STDERR_FILENO, &c, 1);
 	if (++line_e->cursor_pos != line_e->len)
 	{
-		cursor_start(line_e);
-		print_line(line_e, 0);
+		print_line(line_e, line_e->cursor_pos);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
+	}
+	if (line_e->autocomp != 0)
+	{
+		print_comp_list(line_e, -1);
+		line_e->autocomp = 0;
+	}
+	if (get_line_height(line_e, line_e->len) != get_line_height(line_e, line_e->len - 1))
+	{
+		cancel_autocompletion(line_e);
+		ft_nlcr();
 	}
 }
 
@@ -305,9 +310,9 @@ void	change_autocomp_idx(t_edit *line_e, int value)
 
 void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 {
-	if (ft_strlen(key) == 6 && line_e->autocomp < 2)
+	if (ft_strlen(key) == 6)
 	{
-		if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5))
+		if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5) && line_e->autocomp < 2)
 		{
 			if (key[5] == 0x43)
 				go_to_next_word(line_e);
@@ -317,6 +322,13 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 				go_to_prev_line(line_e);
 			else if (key[5] == 0x42)
 				go_to_next_line(line_e);
+		}
+		else  if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5) && line_e->autocomp >= 2)
+		{
+			if (key[5] == 0x43 || key[5] == 0x42)
+				change_autocomp_idx(line_e, line_e->winsize_row);
+			else if (key[5] == 0x44 || key[5] == 0x41)
+				change_autocomp_idx(line_e, -line_e->winsize_row);
 		}
 	}
 	else if (ft_strlen(key) == 4)
@@ -385,6 +397,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		}
 		if (build_list_from_word(line_e) == 0 || line_e->autocomp_size == 1)
 		{
+			if (line_e->line == NULL)
+				return ;
 			replace_word_from_completion(line_e);
 			cancel_autocompletion(line_e);
 			return ;
@@ -439,9 +453,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 			return ;
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
-		cursor_start(line_e);
+		cursor_move_to(line_e, line_e->cursor_pos - 1);
 		tputs(tgetstr("cd", NULL), 1, ft_puti);
-		line_e->cursor_pos -= 1;
 		line_e->len -= 1;
 		if (line_e->line[0])
 		{
@@ -449,8 +462,7 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 					line_e->line + (line_e->cursor_pos + 1),\
 					line_e->len - line_e->cursor_pos);
 		}
-		line_e->line[line_e->len] = '\0';
-		print_line(line_e, 0);
+		print_line(line_e, line_e->cursor_pos);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 	// ft_putstr("key too long comming soon - ");
@@ -492,12 +504,11 @@ int		line_edition(t_edit *line_e)
 		on_key_press(line_e, prevkey, key);
 		ft_memcpy(prevkey, key, MAX_KEY_LEN);
 	}
-	if (line_e->line) //clear everything under the line we just sent
-	{
-		cursor_end(line_e);
-		tputs(tgetstr("cd", NULL), 1, ft_puti);
-	}
+	if (line_e->line) 
+		cursor_after(line_e);
+	else
+		ft_nlcr();
+	tputs(tgetstr("cd", NULL), 1, ft_puti);
 	ft_file_list_delete(&line_e->autocomp_list);
-	ft_putendl("");
 	return (1);
 }
