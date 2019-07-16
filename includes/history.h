@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+	/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   history.h                                          :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 01:10:02 by araout            #+#    #+#             */
-/*   Updated: 2019/07/12 03:15:44 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/16 01:16:08 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,23 @@
 
 # include "shell.h"
 
+typedef struct			s_hnode
+{
+	char		*cmd;
+	int			index;
+}						t_hnode;
+
 typedef struct			s_history
 {
 	unsigned int		line;
-	char				**history;
+	t_list				*hist;
 	int					fd;
 	char				*path;
-	off_t				offset_end;
 }						t_history;
 
 void					free_history(void);
 char					*double_bang(void);
-int						dump_history(char ***ret);
+int						dump_history(void);
 int						ft_history(void *ptr);
 void					init_history(void);
 void					write_history(char *line);

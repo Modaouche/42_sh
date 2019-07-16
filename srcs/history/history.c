@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/06 15:12:43 by araout            #+#    #+#             */
-/*   Updated: 2019/07/12 04:15:28 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/16 02:37:53 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,45 +14,32 @@
 
 char		*double_bang(void)
 {
-	char	**hist;
-	int		i;
-	int		j;
-	char	*ret;
+	return (NULL);
+}
 
-	j = 0;
-	i = -1;
-	ret = NULL;
-	hist = NULL;
-	if (!(dump_history(&hist)))
-		return (NULL);
-	while (hist[i])
-		i++;
-	while (hist[i - 1][j])
-	{
-		if ((hist[i][j] == '\t') && (ret = ft_strdup(&(hist[i][j + 1]))))
-			break ;
-		j++;
-	}
-	i = -1;
-	while (hist[++i])
-		ft_strdel(&(hist[i]));
-	ft_memdel((void **)hist);
-	return (ret);
+void		write_history(char *line)
+{
+	int		fd;
+
+	g_shell.history->line++;
+	fd = open(g_shell.history->path, O_APPEND | O_RDWR);
+	ft_putnbr_fd(g_shell.history->line, fd);
+	write(fd, "\t", 1);
+	write(fd, line, ft_strlen(line));
+	write(fd, "\n", 1);
 }
 
 int			ft_history(void *ptr)
 {
-	int		fd;
-	char	*line;
+	t_list		*head;
 
 	(void)ptr;
-	fd = dup(g_shell.history->fd);
-	lseek(fd, 0, SEEK_SET);
-	while (get_next_line(fd, &line) > 0)
+	head = g_shell.history->hist;
+	while (head && head->content)
 	{
-		ft_printf("%s\n", line);
-		ft_strdel(&line);
+		ft_printf("%d\t", ((t_hnode *)head->content)->index);
+		ft_printf("%s\n", ((t_hnode*)head->content)->cmd);
+		head = head->next;
 	}
-	close(fd);
 	return (1);
 }

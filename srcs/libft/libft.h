@@ -6,7 +6,7 @@
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 07:09:22 by kicausse          #+#    #+#             */
-/*   Updated: 2019/04/25 20:14:19 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/07/16 01:41:15 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 typedef struct	s_list
 {
-	char			*content;
+	void			*content;
 	struct s_list	*next;
 	size_t			content_size;
 }				t_list;
