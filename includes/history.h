@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 01:10:02 by araout            #+#    #+#             */
-/*   Updated: 2019/07/16 01:16:08 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/16 05:27:19 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct			s_history
 	t_list				*hist;
 	int					fd;
 	char				*path;
+	off_t				size;
 }						t_history;
 
 void					free_history(void);
@@ -35,5 +36,5 @@ int						dump_history(void);
 int						ft_history(void *ptr);
 void					init_history(void);
 void					write_history(char *line);
-int						get_hist_line(void);
+int						build_node(char *line, t_list **node);
 #endif

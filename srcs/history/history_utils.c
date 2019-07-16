@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/10 07:17:53 by araout            #+#    #+#             */
-/*   Updated: 2019/07/16 02:38:15 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/16 05:30:14 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void		free_history(void)
 	t_list		*tmp;
 	t_hnode		*n;
 
+	write_history(NULL);
 	head = g_shell.history->hist;
 	while (head)
 	{
@@ -28,11 +29,6 @@ void		free_history(void)
 		free(n);
 		free(tmp);
 	}
-}
-
-int			get_hist_line(void)
-{
-	return (0);
 }
 
 int			build_node(char *line, t_list **node)
@@ -46,7 +42,7 @@ int			build_node(char *line, t_list **node)
 	if (!(content = (t_hnode *)ft_memalloc(sizeof(t_hnode))))
 		return (-1);
 	content->index = ft_atoi(line);
-	while (line && line[i])
+	while (line && line[i] && *node)
 	{
 		if (line[i] == '\t' && line[i + 1])
 		{
@@ -90,6 +86,16 @@ t_list		*build_hist_lst(void)
 	return (head);
 }
 
+off_t		get_hist_size(void)
+{
+	struct stat	s;
+	int			size;
+
+	stat(g_shell.history->path, &s);
+	size = s.st_size;
+	return (size);
+}
+
 void		init_history(void)
 {
 	char	*home_path;
@@ -106,6 +112,6 @@ void		init_history(void)
 	g_shell.history->fd = open(g_shell.history->path,\
 			O_CREAT, S_IRUSR | S_IWUSR);
 	g_shell.history->hist = build_hist_lst();
-	g_shell.history->line = get_hist_line();
+	g_shell.history->size = get_hist_size();
 	ft_strdel(&home_path);
 }
