@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/07/15 00:30:59 by araout           ###   ########.fr        #
+#    Updated: 2019/07/18 07:48:24 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,6 +53,8 @@ SRC =	srcs/main/main.c\
 		srcs/inhibitor/expanded_word.c\
 		srcs/history/history.c\
 		srcs/history/history_utils.c\
+		srcs/history/ft_fc.c\
+		srcs/history/ft_build_history.c\
 		srcs/env/misc_env.c\
 		srcs/env/init_env.c\
 		srcs/env/ft_cd.c\

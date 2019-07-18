@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
-/*   Updated: 2019/07/18 03:09:51 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 06:31:30 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static t_fptr	*init_fptr(void)
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 8)))
+	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 9)))
 		return (NULL);
 	func->flag[0] = ft_strdup("cd");
 	func->flag[1] = ft_strdup("set");
@@ -27,7 +27,8 @@ static t_fptr	*init_fptr(void)
 	func->flag[4] = ft_strdup("export");
 	func->flag[5] = ft_strdup("unset");
 	func->flag[6] = ft_strdup("history");
-	func->flag[7] = NULL;
+	func->flag[7] = ft_strdup("fc");
+	func->flag[8] = NULL;
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
 	func->f[2] = &ft_clear;
@@ -35,7 +36,8 @@ static t_fptr	*init_fptr(void)
 	func->f[4] = &ft_setenv;
 	func->f[5] = &ft_unsetenv_cmd;
 	func->f[6] = &ft_history;
-	func->f[7] = NULL;
+	func->f[7] = &ft_fc;
+	func->f[8] = NULL;
 	return (func);
 }
 
@@ -54,16 +56,6 @@ static void		free_for_ft_built_in(t_fptr *func, char **tmp)
 	ft_memdel((void **)&tmp);
 }
 
-static void		check_exit(char **tmp, int i)
-{
-	if (!ft_strcmp(tmp[0], "exit"))
-	{
-		while (tmp[i])
-			ft_strdel(&(tmp[i++]));
-		fexit(NULL);
-	}
-}
-
 /*
 **	ft_built_in takes a segment of command like "cd /patati/patata"
 **	and check if a built in has to be exetuted
@@ -77,10 +69,10 @@ int				ft_built_in(char *cmd)
 	char		**tmp;
 
 	i = 0;
-	ft_putstr(cmd);
 	if (!(tmp = ft_split(cmd, " ")))
 		return (-1);
-	check_exit(tmp, i);
+	if (!ft_strcmp(tmp[0], "exit"))
+		fexit(tmp);
 	if ((func = init_fptr()) == NULL)
 		return (0);
 	while (func->f[i])

@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/07 22:35:51 by araout            #+#    #+#             */
-/*   Updated: 2019/07/18 03:06:41 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 06:13:20 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define ENV_H
 # include <sys/stat.h>
 # include "shell.h"
+
+
 
 typedef struct s_edit	t_edit;
 
@@ -44,7 +46,6 @@ int						ft_unsetenv_cmd(void *ptr);
 void					free_env();
 int						ft_setenv_equal(char *cmd, int flag);
 char					*get_env_value(char *varname);
-int						ft_history(void *ptr);
 
 # define EXIT 1
 # define CLEAN 2

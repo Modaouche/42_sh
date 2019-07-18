@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/06 15:12:43 by araout            #+#    #+#             */
-/*   Updated: 2019/07/18 03:02:39 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 07:45:18 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,23 @@
 
 char		*double_bang(void)
 {
-	return (NULL);
+	t_list		*h;
+
+	h = g_shell.history->hist;
+	while (h->next)
+		h = h->next;
+	return (((t_hnode *)h->content)->cmd);
+}
+
+void		del_hist(void)
+{
+	int		fd;
+
+	if (!(fd = open(g_shell.history->path, O_TRUNC | O_CREAT | O_WRONLY, 600)))
+		return ;
+	close(fd);
+	free_history();
+	init_history();
 }
 
 void		write_history_tolist(char *line, t_list *head, t_hnode *n)
@@ -45,7 +61,7 @@ void		write_history(char *line)
 	head = g_shell.history->hist;
 	if (!line)
 	{
-		if (!(fd = open(g_shell.history->path, O_RDWR | O_APPEND)))
+		if (!(fd = open(g_shell.history->path, O_RDWR)))
 		{
 			ft_putstr_fd("cannot open", 2);
 			return ;
@@ -66,17 +82,23 @@ int			ft_history(void *ptr)
 {
 	t_list		*head;
 	int			i;
+	char		**p;
 
-	(void)ptr;
 	i = 1;
+	p = ptr;
 	head = g_shell.history->hist;
-	while (head && head->content)
+	if (ptr && !ft_strcmp(p[1], "-c"))
+		del_hist();
+	else
 	{
-		ft_putnbr(i);
-		write(1, "\t", 1);
-		ft_printf("%s\n", ((t_hnode*)head->content)->cmd);
-		head = head->next;
-		i++;
+		while (head && head->content)
+		{
+			ft_putnbr(i);
+			write(1, "\t", 1);
+			ft_printf("%s\n", ((t_hnode*)head->content)->cmd);
+			head = head->next;
+			i++;
+		}
 	}
 	return (1);
 }

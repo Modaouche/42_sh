@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:00:02 by araout            #+#    #+#             */
-/*   Updated: 2019/07/12 03:04:26 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 03:57:40 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,22 @@
 int			fexit(void *ptr)
 {
 	int		i;
+	char	**p;
+	int		j;
 
-	i = 0;
-	(void)ptr;
+	p = ptr;
+	j = 0;
+	write_history(NULL);
 	ft_strdel(&(g_shell.line_e->line));
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
 		toexit(0, "tcsetattr", 1);
 	free_env();
 	free_history();
-	exit(0);
+	i = p[1] ? ft_atoi(p[1]) : 0;
+	while (p[j])
+		ft_strdel(&(p[j++]));
+	ft_memdel((void **)&p);
+	exit(i);
 	return (0);
 }
 
