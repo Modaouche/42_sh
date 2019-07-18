@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/06 15:12:43 by araout            #+#    #+#             */
-/*   Updated: 2019/07/16 05:33:51 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 02:24:46 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,7 @@ void		write_history(char *line)
 		{
 			n = head->content;
 			head = head->next;
-			ft_printf("%s\n", n->cmd);
-			ft_putnbr_fd(n->index, fd);
-			ft_putstr_fd("\t", fd);
-			ft_putstr_fd(n->cmd, fd);
-			ft_putstr_fd("\n", fd);
+			ft_putendl_fd(n->cmd, fd);
 		}
 	}
 	else

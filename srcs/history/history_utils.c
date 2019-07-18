@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/10 07:17:53 by araout            #+#    #+#             */
-/*   Updated: 2019/07/16 05:30:14 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 02:31:15 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,13 +101,13 @@ void		init_history(void)
 	char	*home_path;
 
 	home_path = get_env_value("HOME");
-	if (!(g_shell.history = (t_history *)ft_memalloc(sizeof(t_history))))
-		return ;
 	if (!home_path)
 	{
 		ft_putstr_fd("error : history need HOME env variable", 2);
 		return ;
 	}
+	if (!(g_shell.history = (t_history *)ft_memalloc(sizeof(t_history))))
+		return ;
 	g_shell.history->path = ft_strjoin(home_path, "/.42sh_history");
 	g_shell.history->fd = open(g_shell.history->path,\
 			O_CREAT, S_IRUSR | S_IWUSR);
