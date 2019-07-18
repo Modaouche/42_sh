@@ -27,10 +27,10 @@ bool		exec_and_or(t_ast *ast)
 	else if (is_redir_pipe_exec(ast->token->tokind))
 	{
 //		if (exec_redir(ast))//to_build
-//			return (true);
+			return (true);
 	}
-	//else
-		//if (exec_cmd(ast))//to finish
-		//	return (true);
+	else
+		if (exec_cmd(ast))//to finish
+			return (true);
 	return (false);
 }

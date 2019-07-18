@@ -24,7 +24,7 @@ SRC		=	ft_abs.c ft_adv_memcmp.c ft_atoi.c ft_atoi_base.c ft_bzero.c ft_ceil.c  \
 			ft_putstr_non_printable.c ft_putstr_non_printable_fd.c ft_memdup.c  \
 			ft_set_bit.c ft_strcat.c ft_strchr.c ft_strclr.c ft_strcmp.c ft_strcpy.c  \
 			ft_strcut.c ft_tablen.c ft_strdel.c ft_strdup.c ft_strdup_if.c ft_strequ.c  \
-			ft_strins.c ft_striter.c ft_striteri.c ft_strjoin.c ft_strjoin_if.c  \
+			ft_strins.c ft_striter.c ft_striteri.c ft_strjoin.c ft_strjoin_if.c ft_multijoin.c \
 			ft_strjoin_free.c ft_strjoinfree.c ft_strlcat.c ft_strlen.c ft_strlen_if.c\
 			ft_strmap.c ft_strmapi.c ft_strncat.c ft_strncmp.c ft_strncpy.c ft_strnequ.c  \
 			ft_strnew.c ft_strnstr.c ft_strrchr.c ft_strsplit.c ft_strstr.c  \

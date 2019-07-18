@@ -68,7 +68,7 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 CC = gcc
 
 CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
-	#		-g -fsanitize=address\
+		#	-g3 -fsanitize=address\
 			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 

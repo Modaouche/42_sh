@@ -32,6 +32,6 @@ void		line_execution(void)
 		return ;
 	ast_execution(g_shell.ast);
 	//ast_free(g_shell.ast);to build
-	g_shell.ast = NULL;//leaks to remove use fct above
-	ft_putendl("Comming Soon ;)");
+	g_shell.ast = NULL;//leaks to remove use the fct above
+//	ft_putendl("Comming Soon ;)");
 }

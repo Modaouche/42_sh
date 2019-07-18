@@ -51,7 +51,11 @@ typedef enum
 					ER_DBACCES,
 					ER_DBINFO,
 					ER_SYNTAX
-}					t_errorno;
+                                        ER_FORK,
+                                        ER_PIPE,
+                                        ER_ACCES,
+                                        ER_ISDIR
+}                                       t_errorno;
 
 typedef struct 			s_file
 {
