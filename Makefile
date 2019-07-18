@@ -51,6 +51,7 @@ SRC =	srcs/main/main.c\
 		srcs/inhibitor/quote_handling.c\
 		srcs/inhibitor/word_handling.c\
 		srcs/inhibitor/expanded_word.c\
+		srcs/options/options.c\
 		srcs/history/history.c\
 		srcs/history/history_utils.c\
 		srcs/history/ft_fc.c\
