@@ -22,20 +22,16 @@
 char	validate_options(char **args, char *valid_options)
 {
 	unsigned int i;
-	unsigned int options;
 	unsigned int x;
 
-	options = 0;
 	i = 0;
-	while (args[i])
+	while (args[i] && ft_strcmp(args[i], "--") != 0)
 	{
 		if (args[i][0] != '-')
 		{
 			++i;
 			continue ;
 		}
-		if (ft_strcmp(args[i], "--") == 0)
-			return (0);
 		x = 1;
 		while (args[i][x])
 		{
@@ -63,15 +59,13 @@ int		get_options(char **args)
 
 	options = 0;
 	i = 0;
-	while (args[i])
+	while (args[i] && ft_strcmp(args[i], "--"))
 	{
 		if (args[i][0] != '-')
 		{
 			++i;
 			continue ;
 		}
-		if (ft_strcmp(args[i], "--") == 0)
-			break ;
 		x = 1;
 		while (args[i][x])
 		{
