@@ -120,15 +120,10 @@ void	insert_char(t_edit *line_e, char c)
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	}
 	if (line_e->autocomp != 0)
-	{
-		print_comp_list(line_e, -1);
-		line_e->autocomp = 0;
-	}
-	if (get_line_height(line_e, line_e->len) != get_line_height(line_e, line_e->len - 1))
-	{
 		cancel_autocompletion(line_e);
+	if (get_line_height(line_e, line_e->len) != get_line_height(line_e, line_e->len - 1)
+		&& c != '\n')
 		ft_nlcr();
-	}
 }
 
 /*

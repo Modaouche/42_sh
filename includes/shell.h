@@ -119,6 +119,8 @@ t_ast_ptr				*st_ast(void);
 ** Line edition
 */
 
+void					re_print_prompt(t_edit *line_e);
+void					re_print_line(t_edit *line_e);
 int						line_edition(t_edit *line_e);
 void					cursor_reposition(size_t n);
 int						is_arrow(char *key);

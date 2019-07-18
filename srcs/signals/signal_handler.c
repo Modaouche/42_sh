@@ -41,12 +41,28 @@ static void		le_resume(int sig)
 	signal(SIGCONT,	le_resume);
 }
 
+static void		window_resize(int sig)
+{
+	t_edit *line_e;
+	struct 	winsize size;
+
+	(void)sig;
+	line_e = st_line();
+	ioctl(0, TIOCGWINSZ, &size);
+	line_e->winsize_col = size.ws_col;
+	line_e->winsize_row = size.ws_row;
+	re_print_prompt(line_e);
+	re_print_line(line_e);
+	print_comp_list(line_e, -1);
+}
+
 void			signal_handler(uint8_t state)
 {
 	if (state == LINE_EDIT)
 	{
 		signal(SIGCONT,	le_resume);
 		signal(SIGINT,	prompt);
+		signal(SIGWINCH, window_resize);
 		return ;
 	}
 	signal(SIGINT, SIG_IGN);
@@ -56,5 +72,6 @@ void			signal_handler(uint8_t state)
 	signal(SIGTSTP, SIG_IGN);
 	signal(SIGTTOU, SIG_IGN);
 	signal(SIGTTIN, SIG_IGN);
+	signal(SIGWINCH, SIG_IGN);
 	signal(SIGCHLD, SIG_IGN);//maybe tochange when we exec or to handle jobs
 }
