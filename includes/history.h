@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 01:10:02 by araout            #+#    #+#             */
-/*   Updated: 2019/07/16 05:27:19 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 02:35:20 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 typedef struct			s_hnode
 {
 	char		*cmd;
-	int			index;
 }						t_hnode;
 
 typedef struct			s_history

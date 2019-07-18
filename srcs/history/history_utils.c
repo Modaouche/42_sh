@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/10 07:17:53 by araout            #+#    #+#             */
-/*   Updated: 2019/07/18 02:31:15 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 02:57:34 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,10 @@ int			build_node(char *line, t_list **node)
 	i = 0;
 	if (!(content = (t_hnode *)ft_memalloc(sizeof(t_hnode))))
 		return (-1);
-	content->index = ft_atoi(line);
-	while (line && line[i] && *node)
-	{
-		if (line[i] == '\t' && line[i + 1])
-		{
-			content->cmd = ft_strdup(line + i + 1);
-			(*node)->content = content;
-			(*node)->content_size = sizeof(content);
-			return (1);
-		}
-		i++;
-	}
-	free(content);
-	return (-1);
+	content->cmd = ft_strdup(line);
+	(*node)->content = content;
+	(*node)->content_size = sizeof(content);
+	return (1);
 }
 
 t_list		*build_hist_lst(void)

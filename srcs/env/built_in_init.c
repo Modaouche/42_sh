@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
-/*   Updated: 2019/07/12 03:30:27 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 03:09:51 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int				ft_built_in(char *cmd)
 	char		**tmp;
 
 	i = 0;
+	ft_putstr(cmd);
 	if (!(tmp = ft_split(cmd, " ")))
 		return (-1);
 	check_exit(tmp, i);
