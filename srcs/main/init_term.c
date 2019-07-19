@@ -17,7 +17,7 @@ struct termios			*term_backup(void)
 	static struct termios	termiold;
 
 	if (tcgetattr(STDERR_FILENO, &termiold) == -1)
-		toexit(0, "tcgetattr", 1);
+		le_exit(0);
 	return (&termiold);
 }
 
@@ -26,7 +26,7 @@ struct termios			*term_raw(void)
 	static struct termios	termios;
 
 	if (tcgetattr(STDERR_FILENO, &termios) == -1)
-		toexit(0, "tcgetattr", 1);
+		le_exit(0);
 	termios.c_lflag |= IEXTEN;
 	termios.c_lflag &= ~(ICANON | ECHO);
 	termios.c_oflag &= ~(OPOST);
@@ -55,7 +55,7 @@ void				init_term(t_edit *line_e, char **envp)
 	ft_bzero(&g_shell, sizeof(g_shell));
 	ft_bzero(line_e, sizeof(line_e));
 	if (!isatty(STDERR_FILENO))
-		toexit(line_e, "isatty", 1);
+		le_exit(ER_NOT_TTY);
 	g_shell.fd = STDERR_FILENO;
 	g_shell.pid = getpgrp();//tocheck
 	while (tcgetpgrp(g_shell.fd) != g_shell.pid)

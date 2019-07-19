@@ -36,9 +36,9 @@ static void		le_resume(int sig)
 	write(1, "\n", 1);
 	print_prompt(0);
 	(tcgetattr(STDERR_FILENO, g_shell.termiold) == -1)\
-		? toexit(0, "tcgetattr", 0) : 0;
+		? le_exit(0) : 0;
 	(tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termios) == -1)\
-		? toexit(0, "tcsetattr", 0) : 0;
+		? le_exit(0) : 0;
 	print_line(line_e, 0);
 	signal(SIGCONT,	le_resume);
 }

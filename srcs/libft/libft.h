@@ -113,6 +113,7 @@ char					*ft_strjoinfree_last(const char *source, char *concat);
 char					*ft_strjoin_free(char *s1, char *s2, size_t bt);
 char					*ft_strjoin_if(char *source, char *concat,
 						int (*f)(int));
+char					*ft_multijoin(unsigned int n, ...);
 char					*ft_strtrim(char const *s);
 char					**ft_strsplit(char const *s, char c);
 char					**ft_split(char const *s, char *c);
@@ -143,8 +144,8 @@ void					ft_striteri(char *s, void (*f)(unsigned int, char *));
 char					*ft_strtolower(char *string);
 char					*ft_strtoupper(char *string);
 char					*ft_strcut(char *str, int start, int end);
-void					ft_free_tab(char **tabb);
-char					**reverse_free_tab(char **tabb, int size);
+void					free_tabstr(char ***tabb);
+void					reverse_free_tabstr(char ***tabb, int size);
 
 /*
 ** Printing functions

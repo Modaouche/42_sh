@@ -13,7 +13,7 @@
 #include "libft.h"
 #include <stdarg.h>
 
-char		*ft_multijoin(int nb, ...)
+char		*ft_multijoin(unsigned int nb, ...)
 {
 	va_list	params;
 	char	*str;

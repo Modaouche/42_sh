@@ -79,7 +79,7 @@ void        pipe_sequence_prime_fct(t_edit *line_e)
 			g_shell.prompt_size = print_prompt(1);
 			line_edition(line_e);
 			if (!line_e->line)
-				line_e->line = ft_memalloc(1);
+				(!(line_e->line = ft_memalloc(1))) ? to_exit(1) : 0;
 			rm_last_leaf();
 			ast_right_insert(get_next_token(&(line_e->line), &(line_e->ofst)));
 		}

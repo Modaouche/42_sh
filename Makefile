@@ -15,9 +15,9 @@ NAME = 42sh
 SRC =	srcs/main/main.c\
 		srcs/main/init_term.c\
 		srcs/main/init_tool.c\
+		srcs/main/exit_handler.c\
 		srcs/main/line_handling.c\
 		srcs/line_edition/line_edition.c\
-		srcs/line_edition/exit_le.c\
 		srcs/line_edition/tools_le.c\
 		srcs/line_edition/autocompletion.c\
 		srcs/line_edition/autocompletion_building.c\
@@ -46,20 +46,25 @@ SRC =	srcs/main/main.c\
 		srcs/signals/signal_handler.c\
 		srcs/exec/exec.c\
 		srcs/exec/exec_and_or.c\
+		srcs/exec/exec_cmd.c\
 		srcs/exec/exec_cmp.c\
+		srcs/exec/exec_tools.c\
 		srcs/inhibitor/inhibitors.c\
 		srcs/inhibitor/quote_handling.c\
 		srcs/inhibitor/word_handling.c\
 		srcs/inhibitor/expanded_word.c
 
-		#srcs/exec/exec_cmd.c\ to replace above
 OBJ = $(SRC:.c=.o)
 
 LIBFT = srcs/libft
 
 LIB = $(LIBFT)/libft.a
 
-HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h
+HEADERS = includes/shell.h includes/token_and_ast.h\
+		includes/signal_handler.h includes/error_handler.h\
+		#includes/jobs.h
+
+
 
 INCLUDES = -Iincludes -I$(LIBFT)
 
@@ -67,8 +72,8 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 
 CC = gcc
 
-CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
-		#	-g3 -fsanitize=address\
+CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)\
+			-g3 -fsanitize=address\
 			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 

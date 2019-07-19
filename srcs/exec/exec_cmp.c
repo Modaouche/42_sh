@@ -34,7 +34,15 @@ bool		is_redir_pipe_exec(t_tok tokind)
 {
 	if (token_cmp(tokind, T_GREAT, T_GREATAND, T_DGREAT,\
 			T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS,\
-			T_LESSAND, T_DLESSDASH, T_PIPE))
+			T_LESSAND, T_DLESSDASH, T_PIPE, -1))
+		return (true);
+	return (false);
+}
+
+bool		is_other_exec(t_tok tokind)
+{
+	if (!is_slice_exec(tokind) && !is_and_or_exec(tokind)\
+		&& !is_redir_pipe_exec(tokind) && tokind != T_EOF)
 		return (true);
 	return (false);
 }

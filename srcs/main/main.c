@@ -41,11 +41,10 @@ int main(int ac, char **av, char **envp)
 			tputs(tgetstr("cl", NULL), 1, ft_puti);
 		if (line_e->line && !ft_strcmp(line_e->line, "exit"))//buitin
 			break ;
-	//	ft_putendl("");//to make after command exec
 	}
 	//un free de tout donc les ligne ci dessous sont a virer
 	ft_strdel(&(line_e->line));//a virer car il y aura un grand nettoyage
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-		toexit(0, "tcsetattr", 1);//idem
+		le_exit(0);//idem
 	return (0);
 }

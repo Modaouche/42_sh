@@ -14,6 +14,7 @@
 # define SHELL_H
 
 # include <sys/types.h>
+# include <sys/stat.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/ioctl.h>
@@ -23,7 +24,7 @@
 # include <stdbool.h>
 # include "token_and_ast.h"
 # include "signal_handler.h"
-# include <errno.h>// to remove
+# include "error_handler.h"
 
 
 # define S_KEY_ARW_UP			65
@@ -32,30 +33,12 @@
 # define S_KEY_ARW_LEFT			68
 # define S_KEY_ENTER			10
 # define S_KEY_ERASE			127
-// # define S_KEY_PRINTABLE		0
-// # define S_KEY_SPACE			0
-// # define S_KEY_ESC			27
-// # define S_KEY_CTRL_D		4
-// # define S_KEY_END			1
-// # define S_KEY_NONE			0
 
 
 # define MAX_KEY_LEN			12
 # define BUFFER_LEN			255
 # define TOKEN_CMP			";\n&|!<>"
 # define BKSH_DQT_CMP			"\\$\"\'"
-
-typedef enum
-{
-					NO_ERROR,
-					ER_DBACCES,
-					ER_DBINFO,
-					ER_SYNTAX
-                                        ER_FORK,
-                                        ER_PIPE,
-                                        ER_ACCES,
-                                        ER_ISDIR
-}                                       t_errorno;
 
 typedef struct 			s_file
 {
@@ -95,6 +78,7 @@ typedef struct			s_sh
 	char			**buff_cmd;
 	pid_t			pid;//in proc struct
 	uint16_t		fd;
+	uint8_t			ret;
 	uint8_t			prompt_size;
 	uint8_t			errorno;
 	bool			tc_onoff;//for termcap like "dumb" , to have a usable shell
@@ -108,7 +92,6 @@ t_sh			g_shell;
 */
 
 void					init_term(t_edit *line_e, char **envp);
-void					toexit(t_edit *line_e, char *str, int err);
 struct termios*				term_backup(void);
 struct termios*				term_raw(void);
 void					init_line(t_edit *line_e);
@@ -283,6 +266,10 @@ bool					exec_redir(t_ast *ast);
 bool					is_slice_exec(t_tok tokind);
 bool					is_and_or_exec(t_tok tokind);
 bool					is_redir_pipe_exec(t_tok tokind);
+bool					is_other_exec(t_tok tokind);
+bool					exec_builtin(void);
+char					**get_cmd(t_ast *ast);
+char					*find_var(char **envp, char *with);
 
 /*
 ** Inhibitor
