@@ -57,8 +57,6 @@ int				get_next_line(const int fd, char **line)
 	char			buffer[BUFF_SIZE + 1];
 	static char		*prevbuffer = NULL;
 
-	if (line == 0 && fd == -1)
-		ft_strdel(prevbuffer);
 	if (fd < 0 || line == 0 || BUFF_SIZE <= 0)
 		return (-1);
 	if ((!prevbuffer || ft_strchr(prevbuffer, '\n') == NULL) && (ret = 1))

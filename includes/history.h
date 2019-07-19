@@ -42,4 +42,12 @@ void					write_history(char *line);
 int						build_node(char *line, t_list **node);
 int						ft_fc(void *ptr);
 off_t					get_hist_size(void);
+
+
+int		count_args(char **args);
+char	validate_options(char **args, char *valid_options);
+int		get_options(char **args);
+int		get_argument_starting_index(char **args, char force_letter);
+int		get_option(int options, char letter);
+
 #endif

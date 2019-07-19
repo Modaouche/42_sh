@@ -86,8 +86,8 @@ int		get_options(char **args)
 		x = 1;
 		while (args[i][x])
 		{
-			if (ft_isascii(args[i][x]))
-				options |= (1 << (ft_tolower(args[i][x]) - 'a'));
+			if (ft_isalpha(args[i][x]))
+				options |= (1 << (ft_tolower(args[i][x]) - 'a')); 
 			++x;
 		}
 		++i;
@@ -114,14 +114,17 @@ int		get_option(int options, char letter)
 **   
 */
 
-int		get_argument_starting_index(char **args)
+int		get_argument_starting_index(char **args, char force_letter)
 {
 	unsigned int i;
 
 	i = 1;
-	while (args[i] && ft_strcmp(args[i], "--") != 0 && args[i] == '-')
-		++i;
-	if (args[i] != NULL && args[i] != '-')
+	while (args[i] && ft_strcmp(args[i], "--") != 0 && args[i][0] == '-')
+	{
+		if (ft_cfind(args[i++], force_letter) != -1)
+			break ;
+	}
+	if (args[i] != NULL)
 		return (i);
 	return (-1);
 }

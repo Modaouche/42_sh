@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+#include "history.h"
+
 //https://www.unix.com/man-page/posix/1p/fc/
 
 char    **get_history_field(int a, int b)
@@ -17,32 +20,40 @@ char    **get_history_field(int a, int b)
   char    **ret;
   int      size;
   int      reverse;
-  t_list    **head;
+  t_list    *head;
   int       i;
+
+  ft_printf_fd(2, "a = %d b = %d\n", a, b);
   reverse = (a > b);
   if (reverse)
-      ft_swap(&a, &b);
-  size  = a - b;
-  if (!(ret = (char **)ft_memalloc(sizeof((char **) * (size - 1)))))
+      ft_swap_int(&a, &b);
+  size = b - a;
+  if (!(ret = (char **)ft_memalloc(sizeof(char *) * (size + 2))))
         return (NULL);
   head = g_shell.history->hist;
   i = 1;
   while (i < a && head)
+  {
       head = head->next;
+      ++i;
+ }
   if (head == NULL)
   {
-       close(fd);
-        free(ret);
+		free(ret);
       return (NULL);
   }
   while (i <= b && head)
   {
-      ret[a - i] = ((t_hnode *)head->content)->cmd;                    
+      ret[i - a] = ((t_hnode *)head->content)->cmd;     
+  		ft_printf_fd(2, "%d - \t\t%s\n", i, ret[i - a]);               
       head = head->next;
+      ++i;
   }
   if (head == NULL)
-      ft_memdel((void**)ret);
-  close(fd);
+ {
+ 	free(ret);
+ 	return (NULL);
+ }
   return (ret);
 }
 
@@ -57,26 +68,22 @@ int     get_field_size(char **field)
   
 }
 
-int     print_rev(char **field, int a, int b)
+void     print_rev(char **field, int a, int b)
 {
     int    i;
   
-    i = 0;
-
-      i = get_field_size(field);
-      while (--i > 0)
-      {
-        ft_printf("%d\t%s\n", a, field[i--]);
-        if (a > b)
-          a--;
-        else
-          a++;
-      }  
+    i = get_field_size(field);
+    while (--i >= 0)
+    {
+    	ft_printf("%d\t%s\n", a, field[i]);
+    	if (a > b)
+    		--a;
+    	else
+    		++a;
     }
-    return (1);
 }
 
-int     print_field(char *field, int a, int b)
+void     print_field(char **field, int a, int b)
 {
   int    i;
   
@@ -93,56 +100,64 @@ int     print_field(char *field, int a, int b)
 
 int     print_history(int flag, char **field, int a, int b)
 {
-    if (get_option(flag, "r") == 1)
-      return (print_rev(field, a, b));
-    else
-      return (print_field(field, a, b));
+	if (field == NULL)
+		return (0);
+    if (get_option(flag, 'r') == 1)
+    	print_rev(field, a, b);
+   	else
+    	print_field(field, a, b);
+    return (1);
 }
 
-void    get_range(**args, int *a, int *b)
+void    get_range(char **args, int *a, int *b)
 {
   int   i;
   int   flag;
   
-  falg = 0;
-  i = get_argument_starting_index(args);
+  flag = 0;
+  i = get_argument_starting_index(args, 'l');
+  *b = 0;
   if (i == -1)
   {
-    *a = get_hist_size()
-    *b = *a - 16;
+    *b = get_hist_nbline();
+    *a = *b - 16;
     return ;
   }
   if (args[i])
-    *a = ft_atoi(args[i])
+    *a = ft_atoi(args[i]);
   if (args[++i])
-    *b = ft_atoi(args[i])
-  else (a <= 0)
+    *b = ft_atoi(args[i]);
+  else if (*a <= 0)
   {
-    *b = get_hist_size();
-    *a = get_hist_size() - *a;
+  	if (*a == 0)
+  		*a = -1;
+    *b = get_hist_nbline();
+    *a = *b + *a + 1;
   }
-  if (*a == 0)
-    *a = get_hist_filesize();
-  if (*b == 0)
-    *b = get_hist_filesize();
+  if (*a == 0 || *a == -1)
+    *a = get_hist_nbline();
+  if (*b == 0 || *b == -1)
+    *b = get_hist_nbline();
 }
 
 int			ft_fc(void *ptr)
 {
-  char  **tab;
+  char  **args;
+  char 	**hist;
   int   options;
   int   a;
   int   b;
   
-  tab = (char **)ptr;
-  if (validate_options(tab, "elnrs") != 0)
+  args = (char **)ptr;
+  if (validate_options(args, "elnrs0123456789") != 0)
   {
-       ft_printf_fd(2, "fc: Invalid argument \"%c\"\n", validate_options(tab, "elnrs"));
+       ft_printf_fd(2, "fc: Invalid argument \"%c\"\n", validate_options(args, "elnrs"));
        return (1);
   }
-  option = get_options(tab);
-  get_range(char **tab, &a, &b);
-  if (get_option(option, "l"))
-    print_history(option, tab, a, b);
+  options = get_options(args);
+  get_range(args, &a, &b);
+  hist = get_history_field(a, b);
+  if (get_option(options, 'l'))
+    print_history(options, hist, a, b);
 	return (0);
 }

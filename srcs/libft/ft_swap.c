@@ -18,3 +18,12 @@ void	ft_swap(void **str, void **str2)
 	*str = *str2;
 	*str2 = tmp;
 }
+
+void	ft_swap_int(int *str, int *str2)
+{
+	int tmp;
+
+	tmp = *str;
+	*str = *str2;
+	*str2 = tmp;
+}

@@ -50,6 +50,7 @@ void					ft_memdel(void **ap);
 void					*ft_memdup(const void *src, size_t size);
 int						ft_adv_memcmp(const void *source, const char *hexdata);
 void					ft_swap(void **str, void **str2);
+void					ft_swap_int(int *str, int *str2);
 
 /*
 ** String comparison / Searching
