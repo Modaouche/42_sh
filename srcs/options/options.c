@@ -12,6 +12,23 @@
 
 #include "libft.h"
 
+
+/*
+**  count_args
+**
+**  - Returns the number of arguments as an integer
+*/
+
+int		count_args(char **args)
+{
+	int i;
+
+	i = 1;
+	while (args[i] && ft_strcmp(args[i], "--") != 0)
+		++i;
+	return (i - 1);
+}
+
 /*
 **  validate_options
 **
@@ -24,7 +41,7 @@ char	validate_options(char **args, char *valid_options)
 	unsigned int i;
 	unsigned int x;
 
-	i = 0;
+	i = 1;
 	while (args[i] && ft_strcmp(args[i], "--") != 0)
 	{
 		if (args[i][0] != '-')
@@ -58,7 +75,7 @@ int		get_options(char **args)
 	unsigned int x;
 
 	options = 0;
-	i = 0;
+	i = 1;
 	while (args[i] && ft_strcmp(args[i], "--"))
 	{
 		if (args[i][0] != '-')
@@ -81,11 +98,30 @@ int		get_options(char **args)
 /*
 **  get_option
 **
-**  - Returns 1 if the given letter is contained within the variable
+**  - Returns 1 if the given letter is contained within the options
 **    Returns 0 otherwise
 */
 
 int		get_option(int options, char letter)
 {
 	return ((options >> (letter - 'a')) & 1);
+}
+
+/*
+**  get_argument_starting_index
+**
+**  -
+**   
+*/
+
+int		get_argument_starting_index(char **args)
+{
+	unsigned int i;
+
+	i = 1;
+	while (args[i] && ft_strcmp(args[i], "--") != 0 && args[i] == '-')
+		++i;
+	if (args[i] != NULL && args[i] != '-')
+		return (i);
+	return (-1);
 }
