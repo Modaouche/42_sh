@@ -28,7 +28,8 @@ typedef enum
 					ER_MALLOC,
                                         ER_PIPE,
                                         ER_ACCES,
-                                        ER_ISDIR
+                                        ER_ISDIR,
+                                        ER_NOENT
 }                                       t_errorno;
 
 void					le_exit(uint8_t bt);

@@ -42,7 +42,7 @@ bool		is_redir_pipe_exec(t_tok tokind)
 bool		is_other_exec(t_tok tokind)
 {
 	if (!is_slice_exec(tokind) && !is_and_or_exec(tokind)\
-		&& !is_redir_pipe_exec(tokind))//add more condition
+		&& !is_redir_pipe_exec(tokind))//add more condition (check for assign)
 		return (true);
 	return (false);
 }

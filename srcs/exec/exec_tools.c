@@ -31,22 +31,28 @@ char			*find_var(char **envp, char *with)//to_add in env fct or check if araout 
 	return (0);
 }
 
-bool			exec_builtin(void)
+static int 	ft_putendlr(char *s)
+{
+	ft_putendl(s);
+	return (0);
+}
+
+ssize_t			exec_builtin(void)
 {
 	char		**cmd;
 	int8_t		ret;
 
 	ret = -1;
 	cmd = g_shell.buff_cmd;
-	(!ft_strcmp("set", cmd[0]) && ret == -1) ? ft_putendl("is builtin") : 0;//ret = ret_set(cmd) : 0;//tobuild VV
-	(!ft_strcmp("unset", cmd[0]) && ret == -1) ? ft_putendl("is builtin") : 0;//ret = ret_unset(cmd) : 0;
-	(!ft_strcmp("cd", cmd[0]) && ret == -1) ? ft_putendl("is builtin") : 0;//ret = ret_cd(cmd) : 0;
-	(!ft_strcmp("echo", cmd[0]) && ret == -1) ? ft_putendl("is builtin") : 0;//ret = ret_echo(cmd) : 0;
-	(!ft_strcmp("exit", cmd[0]) && ret == -1) ? ft_putendl("is builtin") : 0;//ret = ret_exit(cmd) : 0;
-	(!ft_strcmp("jobs", cmd[0]) && ret == -1) ? ft_putendl("is builtin") : 0;//ret = ret_jobs(cmd) : 0;
-	(!ft_strcmp("fg", cmd[0]) && ret == -1) ? ft_putendl("is builtin") : 0;//ret = ret_fg(cmd) : 0;
-	(!ft_strcmp("bg", cmd[0]) && ret == -1) ? ft_putendl("is builtin") : 0;//ret = ret_bg(cmd) : 0;//until here
-	return (ret);
+	(!ft_strcmp("set", cmd[0]) && ret == -1) ? ret = ft_putendlr("is builtin") : 0;//ret = ret_set(cmd) : 0;//tobuild VV
+	(!ft_strcmp("unset", cmd[0]) && ret == -1) ? ret = ft_putendlr("is builtin") : 0;//ret = ret_unset(cmd) : 0;
+	(!ft_strcmp("cd", cmd[0]) && ret == -1) ? ret = ft_putendlr("is builtin") : 0;//ret = ret_cd(cmd) : 0;
+	(!ft_strcmp("echo", cmd[0]) && ret == -1) ? ret = ft_putendlr("is builtin") : 0;//ret = ret_echo(cmd) : 0;
+	(!ft_strcmp("exit", cmd[0]) && ret == -1) ? ret = ft_putendlr("is builtin") : 0;//ret = ret_exit(cmd) : 0;
+	(!ft_strcmp("jobs", cmd[0]) && ret == -1) ? ret = ft_putendlr("is builtin") : 0;//ret = ret_jobs(cmd) : 0;
+	(!ft_strcmp("fg", cmd[0]) && ret == -1) ? ret = ft_putendlr("is builtin") : 0;//ret = ret_fg(cmd) : 0;
+	(!ft_strcmp("bg", cmd[0]) && ret == -1) ? ret = ft_putendlr("is builtin") : 0;//ret = ret_bg(cmd) : 0;//until here
+	return (ret);//-1, false ou true
 }
 
 char			**get_cmd(t_ast *ast)

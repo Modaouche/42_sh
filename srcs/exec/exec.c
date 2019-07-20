@@ -18,31 +18,33 @@ void	ast_execution(t_ast *ast)
 		return ;
 	if (is_slice_exec(ast->token->tokind))
 	{
-		ft_putendl("slice");
+		ft_putendl("                           -- slice");
 		ast_execution(ast->left);
 	}
 	if (is_slice_exec(ast->token->tokind))
 	{
-		ft_putendl("slice2");
+		ft_putendl("                           -- slice2");
 		ast_execution(ast->right);
 	}
 	else if (is_and_or_exec(ast->token->tokind))
 		exec_and_or(ast);
 	else if (is_redir_pipe_exec(ast->token->tokind))
-		ft_putendl("redir pipe");//		exec_redirec(ast);//tobuild
-	else if (is_other_exec(ast->token->tokind))//below
+		ft_putendl("                           -- redir pipe");//		exec_redirec(ast);//tobuild
+	else if (is_other_exec(ast->token->tokind))
 	{
-		ft_printf("other %d\n", ast->token->tokind);
-		exec_cmd(ast);//below
+		ft_printf("                           -- other %d\n", ast->token->tokind);
+		exec_cmd(ast);
 	}
 }
 
 void		line_execution(void)
 {
+	ft_putendl("----------------------------------Beginning-------------------------------");
 	if (!g_shell.ast)
 		return ;
 	ast_execution(g_shell.ast);
 	//ast_free(g_shell.ast);to build
 	g_shell.ast = NULL;//leaks to remove use the fct above
 //	ft_putendl("Comming Soon ;)");
+	ft_putendl("----------------------------------End-------------------------------");
 }

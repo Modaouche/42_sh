@@ -267,7 +267,7 @@ bool					is_slice_exec(t_tok tokind);
 bool					is_and_or_exec(t_tok tokind);
 bool					is_redir_pipe_exec(t_tok tokind);
 bool					is_other_exec(t_tok tokind);
-bool					exec_builtin(void);
+ssize_t					exec_builtin(void);
 char					**get_cmd(t_ast *ast);
 char					*find_var(char **envp, char *with);
 

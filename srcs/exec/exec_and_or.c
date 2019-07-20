@@ -18,24 +18,24 @@ bool		exec_and_or(t_ast *ast)
 		return (exec_and_or(ast->left));
 	if (ast->token->tokind == T_AND_IF)
 	{
-		ft_putendl("and");
+		ft_putendl("                           -- and");
 		if (exec_and_or(ast->left) && exec_and_or(ast->right))//here
 			return (true);
 	}
 	else if (ast->token->tokind == T_OR_IF)
 	{
-		ft_putendl("or");
+		ft_putendl("                           -- or");
 		if (exec_and_or(ast->left) || exec_and_or(ast->right))		
 			return (true);
 	}
 	else if (is_redir_pipe_exec(ast->token->tokind))//add eof tokentocmp
 	{
-		ft_putendl("redir pipe2");
+		ft_putendl("                           -- redir pipe2");
 		return (true);//ret fct directly exec_redir_pipe(ast))//to_build
 	}
 	else if (is_other_exec(ast->token->tokind))
 	{
-		ft_printf("other2 %d\n", ast->token->tokind);
+		ft_printf("                           -- other2 %d\n", ast->token->tokind);
 		if (exec_cmd(ast))//to finish
 			return (true);
 	}

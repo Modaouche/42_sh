@@ -17,8 +17,11 @@ bool		access_verification(char *cmd)
 {
 	struct stat file;
 
-	if (access(cmd, F_OK))
+	if (access(cmd, F_OK) == -1)
+	{
+		g_shell.errorno = ER_NOENT;
 		return (false);
+	}
 	if (access(cmd, F_OK | X_OK) == -1)
 	{
 		g_shell.errorno = ER_ACCES;
@@ -52,7 +55,7 @@ static bool	cmd_verification(char **envp)
 		if (!(to_check = ft_multijoin(3, sliced_path[idx++], "/",\
 				g_shell.buff_cmd[0])))
 			to_exit(1);
-		if (access(to_check, F_OK | X_OK) && !g_shell.errorno)
+		if (!access(to_check, F_OK | X_OK) && !g_shell.errorno)
 		{
 			free_tabstr(&sliced_path);
 			ft_strdel(&(g_shell.buff_cmd[0]));
@@ -71,17 +74,18 @@ bool		exec_cmd(t_ast *ast)
 	//pid_t	pid;
 	int8_t	ret;
 
-	ft_putendl("--- IN EXEC CMD ---");
+	ft_putendl("                           -- IN EXEC CMD ---");
 	g_shell.buff_cmd = get_cmd(ast);
-	for (int i = 0; g_shell.buff_cmd[i] != NULL ; i++)//rm
-		ft_putendl(g_shell.buff_cmd[i]);//rm
 	if ((ret = exec_builtin()) != -1)
 		return (ret);
-	if (cmd_verification(g_shell.envp))
+	ft_putendl("                           ~~{ok}~~");
+	if (!cmd_verification(g_shell.envp))
 	{
-		error_msg("\n./42sh : ");
+		error_msg("./42sh");
 		return (false);
 	}
+	for (int i = 0; g_shell.buff_cmd[i] != NULL ; i++)//rm
+		ft_putendl(g_shell.buff_cmd[i]);//rm
 	return (true);//rm
 	
 	/*
