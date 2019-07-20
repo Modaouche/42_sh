@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/07/18 07:48:24 by araout           ###   ########.fr        #
+#    Updated: 2019/07/20 11:18:31 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,8 @@ SRC =	srcs/main/main.c\
 		srcs/history/history.c\
 		srcs/history/history_utils.c\
 		srcs/history/ft_fc.c\
+		srcs/history/ft_fc_print.c\
+		srcs/history/ft_fc_utils.c\
 		srcs/history/ft_build_history.c\
 		srcs/env/misc_env.c\
 		srcs/env/init_env.c\
@@ -81,7 +83,7 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 CC = gcc
 
 CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
-			-g3 -fsanitize=address
+			-g -fsanitize=address
 	#		-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 
