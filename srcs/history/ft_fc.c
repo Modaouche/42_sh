@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 06:36:44 by araout            #+#    #+#             */
-/*   Updated: 2019/07/20 11:21:07 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/20 11:23:57 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ int			ft_fc(void *ptr)
 	hist = get_history_field(a, b, NULL, (a > b));
 	if (get_option(options, 'l'))
 		print_history(options, hist, a, b);
+	free(hist);
 	return (0);
 }
