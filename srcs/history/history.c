@@ -6,53 +6,99 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/06 15:12:43 by araout            #+#    #+#             */
-/*   Updated: 2019/07/06 17:18:24 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/18 07:45:18 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void		open_history(void)
+char		*double_bang(void)
 {
-//	int			fd;
+	t_list		*h;
 
-	g_shell.hist_path = ft_strjoin(getenv("HOME"), "/.42sh_history");
-//	fd = open(g_shell.hist_path, O_CREAT, S_IRUSR | S_IWUSR);
+	h = g_shell.history->hist;
+	while (h->next)
+		h = h->next;
+	return (((t_hnode *)h->content)->cmd);
 }
 
-/*
-** write each cmd in $HOME/.42sh_history
-*/
-void		write_history(char *line)
+void		del_hist(void)
 {
 	int		fd;
 
-	fd = open(g_shell.hist_path, O_APPEND | O_RDWR);
-	write(fd, line, ft_strlen(line));
-	write(fd, "\n", 1);
+	if (!(fd = open(g_shell.history->path, O_TRUNC | O_CREAT | O_WRONLY, 600)))
+		return ;
+	close(fd);
+	free_history();
+	init_history();
 }
 
-char		**dump_history(void)
+void		write_history_tolist(char *line, t_list *head, t_hnode *n)
 {
-	int				fd;
-	char			*hist;
-	char			buf[255];
-	char			*tmp;
-
-	fd = open(g_shell.hist_path, O_RDONLY);
-	hist = NULL;
-	ft_bzero(buf, 255);
-	while (read(fd, buf, 255) > 0)
+	if (!head || !head->content)
 	{
-		buf[254] = '\0';
-		if (!hist)
-			hist = ft_strdup(buf);
-		else
+		if (!(head = (t_list *)ft_memalloc(sizeof(t_list))))
+			return ;
+		build_node(line, &head);
+		g_shell.history->hist = head;
+		return ;
+	}
+	while (head && head->next)
+		head = head->next;
+	n = head->content;
+	if (!(head->next = (t_list *)ft_memalloc(sizeof(t_list))))
+		return ;
+	build_node(line, &(head->next));
+}
+
+void		write_history(char *line)
+{
+	t_list		*head;
+	t_hnode		*n;
+	int			fd;
+
+	n = NULL;
+	head = g_shell.history->hist;
+	if (!line)
+	{
+		if (!(fd = open(g_shell.history->path, O_RDWR)))
 		{
-			tmp = hist;
-			hist = ft_strjoin(hist, buf);
-			ft_strdel(&tmp);
+			ft_putstr_fd("cannot open", 2);
+			return ;
+		}
+		while (head && head->content)
+		{
+			n = head->content;
+			head = head->next;
+			ft_putendl_fd(n->cmd, fd);
+		}
+		close(fd);
+	}
+	else
+		write_history_tolist(line, head, n);
+}
+
+int			ft_history(void *ptr)
+{
+	t_list		*head;
+	int			i;
+	char		**p;
+
+	i = 1;
+	p = ptr;
+	head = g_shell.history->hist;
+	if (ptr && !ft_strcmp(p[1], "-c"))
+		del_hist();
+	else
+	{
+		while (head && head->content)
+		{
+			ft_putnbr(i);
+			write(1, "\t", 1);
+			ft_printf("%s\n", ((t_hnode*)head->content)->cmd);
+			head = head->next;
+			i++;
 		}
 	}
-	return (ft_split(hist, "\n"));
+	return (1);
 }

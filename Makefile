@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/07/06 15:17:01 by araout           ###   ########.fr        #
+#    Updated: 2019/07/20 11:18:31 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,16 +51,30 @@ SRC =	srcs/main/main.c\
 		srcs/inhibitor/quote_handling.c\
 		srcs/inhibitor/word_handling.c\
 		srcs/inhibitor/expanded_word.c\
+		srcs/options/options.c\
 		srcs/history/history.c\
-
-		#srcs/exec/exec_cmd.c\ to replace above
+		srcs/history/history_utils.c\
+		srcs/history/ft_fc.c\
+		srcs/history/ft_fc_print.c\
+		srcs/history/ft_fc_utils.c\
+		srcs/history/ft_build_history.c\
+		srcs/env/misc_env.c\
+		srcs/env/init_env.c\
+		srcs/env/ft_cd.c\
+		srcs/env/ft_errors.c\
+		srcs/env/built_in_init.c\
+		srcs/env/built_in_function.c\
+		srcs/env/setenv.c\
+		srcs/env/setenv_equal.c\
+#srcs/exec/exec_cmd.c\ to replace above
 OBJ = $(SRC:.c=.o)
 
 LIBFT = srcs/libft
 
 LIB = $(LIBFT)/libft.a
 
-HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h
+HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h \
+		includes/history.h includes/env.h
 
 INCLUDES = -Iincludes -I$(LIBFT)
 
@@ -69,8 +83,8 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 CC = gcc
 
 CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
-	#		-g -fsanitize=address\
-			-fno-omit-frame-pointer\
+			-g -fsanitize=address
+	#		-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 
 all: lib $(NAME)

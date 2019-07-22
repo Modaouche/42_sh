@@ -12,6 +12,22 @@
 
 #include "libft.h"
 
+int		str_match_charset(char *charset, char *str)
+{
+	unsigned int	i;
+
+	while (*str)
+	{
+		i = 0;
+		while (charset[i] && charset[i] != *str)
+			++i;
+		if (charset[i] == '\0')
+			return (0);
+		++str;
+	}
+	return (1);
+}
+
 int		charset_match(char *charset, char *str)
 {
 	unsigned int	i;
@@ -20,22 +36,6 @@ int		charset_match(char *charset, char *str)
 	{
 		i = 0;
 		while (charset[i] && charset[i] == *str)
-			++i;
-		if (charset[i] != '\0')
-			return (0);
-		++str;
-	}
-	return (1);
-}
-
-int		charset_unmatch(char *charset, char *str)
-{
-	unsigned int	i;
-
-	while (*str)
-	{
-		i = 0;
-		while (charset[i] && charset[i] != *str)
 			++i;
 		if (charset[i] != '\0')
 			return (0);

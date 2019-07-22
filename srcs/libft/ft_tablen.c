@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   ft_tablen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kaboujna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/06 07:09:22 by kicausse          #+#    #+#             */
-/*   Updated: 2019/07/16 04:06:33 by araout           ###   ########.fr       */
+/*   Created: 2019/06/19 22:20:18 by kaboujna          #+#    #+#             */
+/*   Updated: 2019/06/19 22:21:22 by kaboujna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
-void					ft_list_delete(t_list **list)
+int		ft_tablen(char **tab)
 {
-	t_list *tmp;
+	int c;
 
-	if (list == NULL)
-		return ;
-	while (*list != NULL)
+	c = 0;
+	if (tab)
 	{
-		tmp = *list;
-		*list = (*list)->next;
-		ft_strdel(((char **)&tmp->content));
-		free(tmp);
-	} 
+		while (tab[c])
+			c++;
+	}
+	return (c);
 }

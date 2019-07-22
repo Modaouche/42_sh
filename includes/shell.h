@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/06 17:40:34 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/12 01:52:06 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include "signal_handler.h"
 # include <fcntl.h>
 # include <errno.h>// to remove
+# include "env.h"
+# include "history.h"
 
 # define S_KEY_ARW_UP			65
 # define S_KEY_ARW_DOWN			66
@@ -90,18 +92,20 @@ typedef struct			s_sh
 	struct termios		*termiold;
 	struct termios		*termios;
 	char				**envp;
+	char				**intern_var;
+	t_edit				*line_e;
 	t_ast				*ast;
 	char				**buff_cmd;
-	bool				tc_onoff;//for termcap like "dumb" , to have a usable shell
-	bool				in_bg;
-	pid_t				pid;
+	pid_t				pid;//in proc struct
 	uint16_t			fd;
 	uint8_t				prompt_size;
 	uint8_t				errorno;
-	char				*hist_path;
-}						t_sh;
+	bool				tc_onoff;//for termcap like "dumb" , to have a usable shell
+	bool				in_bg;//in proc struct
+	struct s_history	*history;
+}				t_sh;
 
-t_sh					g_shell;
+t_sh			g_shell;
 
 /*
 ** Initialization & Co
@@ -323,11 +327,4 @@ void					dollars_cmd(const char *line, char **word,\
 int						backslash(const char *line, char **word,
 		unsigned int *i, int qt);
 int						backslash_end(t_edit *line_e, unsigned int *i, int *qt);
-
-/*
-** history
-*/
-void					open_history(void);
-void					write_history(char *line);
-char					**dump_history(void);
 #endif

@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:16:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/06 17:19:34 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/16 04:23:05 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	line_edit(t_edit *line_e)
 	signal_handler(REGULAR);
 }//cree une fonction generique (tu as le meme genre de code dans le parser)
 
-int main(int ac, char **av, char **envp)
+int		main(int ac, char **av, char **envp)
 {
 	t_edit	*line_e;
 
@@ -35,19 +35,16 @@ int main(int ac, char **av, char **envp)
 	while (1)
 	{
 		line_edit(line_e);
-		write_history(line_e->line);
-//		dump_history();
 		line_parser(line_e);
+		g_shell.line_e = line_e;
+		write_history(line_e->line);
+		ft_built_in(line_e->line);
 		line_execution();
-		if (line_e->line && !ft_strcmp(line_e->line, "clear"))//buitin
-			tputs(tgetstr("cl", NULL), 1, ft_puti);
-		if (line_e->line && !ft_strcmp(line_e->line, "exit"))//buitin
-			break ;
 	//	ft_putendl("");//to make after command exec
 	}
+	//free et exit dan fonction fexit OK !
 	//un free de tout donc les ligne ci dessous sont a virer
-	ft_strdel(&(line_e->line));//a virer car il y aura un grand nettoyage
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-		toexit(0, "tcsetattr", 1);//idem
+	//aussis g_shell.envp a free
+	fexit(NULL);
 	return (0);
 }

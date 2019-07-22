@@ -19,8 +19,10 @@ static void		prompt(int sig)
 
 	(void)sig;
 	line_e = st_line();
-	cancel_autocompletion(line_e);// is it ok kicausse ?
-	init_line(line_e);// is it ok kicausse ?
+	cancel_autocompletion(line_e);
+	if (!line_e->line)
+		ft_nlcr();
+	init_line(line_e);
 	ft_nlcr();
 	print_prompt(0);
 }
@@ -37,7 +39,7 @@ static void		le_resume(int sig)
 		? toexit(0, "tcgetattr", 0) : 0;
 	(tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termios) == -1)\
 		? toexit(0, "tcsetattr", 0) : 0;
-	print_line(line_e, 0);// is it ok kicausse ?
+	print_line(line_e, 0);
 	signal(SIGCONT,	le_resume);
 }
 

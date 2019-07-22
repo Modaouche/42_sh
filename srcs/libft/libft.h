@@ -6,7 +6,7 @@
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 07:09:22 by kicausse          #+#    #+#             */
-/*   Updated: 2019/04/25 20:14:19 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/07/16 01:41:15 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 typedef struct	s_list
 {
-	char			*content;
+	void			*content;
 	struct s_list	*next;
 	size_t			content_size;
 }				t_list;
@@ -50,6 +50,7 @@ void					ft_memdel(void **ap);
 void					*ft_memdup(const void *src, size_t size);
 int						ft_adv_memcmp(const void *source, const char *hexdata);
 void					ft_swap(void **str, void **str2);
+void					ft_swap_int(int *str, int *str2);
 
 /*
 ** String comparison / Searching
@@ -68,6 +69,7 @@ char					*ft_strstr(const char *str1, const char *str2);
 char					*ft_strnstr(const char *s1, const char *s2,
 						size_t length);
 int						ft_strcmp(const char *str1, const char *str2);
+int						ft_tablen(char **tabb);
 unsigned int			ft_strlcmp(const char *str1, const char *str2);
 int						ft_strncmp(const char *str1, const char *str2,
 						size_t num);
@@ -77,7 +79,7 @@ size_t					ft_strlen(const char *s);
 size_t					ft_strclen(const char *s, char c);
 size_t					ft_strlen_if(const char *s, int (*f)(int));
 int						charset_match(char *charset, char *str);
-int						charset_unmatch(char *charset, char *str);
+int						str_match_charset(char *charset, char *str);
 size_t					ft_ccount(char *str, char c);
 
 /*

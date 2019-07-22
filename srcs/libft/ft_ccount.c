@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   ft_ccount.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/06 07:09:22 by kicausse          #+#    #+#             */
-/*   Updated: 2019/07/16 04:06:33 by araout           ###   ########.fr       */
+/*   Created: 2019/07/10 07:17:53 by kicausse          #+#    #+#             */
+/*   Updated: 2019/07/18 07:47:45 by kicausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdlib.h>
-
-void					ft_list_delete(t_list **list)
+int		ft_ccount(char *str, char c)
 {
-	t_list *tmp;
+	int count;
 
-	if (list == NULL)
-		return ;
-	while (*list != NULL)
+	count = 0;
+	while (*str)
 	{
-		tmp = *list;
-		*list = (*list)->next;
-		ft_strdel(((char **)&tmp->content));
-		free(tmp);
-	} 
+		if (c == *str)
+			++count;
+		++str;
+	}
+	return (count);
 }
