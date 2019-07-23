@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/06 15:12:43 by araout            #+#    #+#             */
-/*   Updated: 2019/07/18 07:45:18 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/23 22:57:41 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void		del_hist(void)
 	init_history();
 }
 
-void		write_history_tolist(char *line, t_list *head, t_hnode *n)
+void		write_history_tolist(char *line, t_list *head)
 {
 	if (!head || !head->content)
 	{
@@ -45,7 +45,6 @@ void		write_history_tolist(char *line, t_list *head, t_hnode *n)
 	}
 	while (head && head->next)
 		head = head->next;
-	n = head->content;
 	if (!(head->next = (t_list *)ft_memalloc(sizeof(t_list))))
 		return ;
 	build_node(line, &(head->next));
@@ -75,7 +74,7 @@ void		write_history(char *line)
 		close(fd);
 	}
 	else
-		write_history_tolist(line, head, n);
+		write_history_tolist(line, head);
 }
 
 int			ft_history(void *ptr)
