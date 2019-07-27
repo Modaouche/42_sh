@@ -14,6 +14,23 @@
 #include "libft.h"
 
 /*
+**  replace_line_raw
+**
+**  - Replaces the whole line with the given string and prints it.
+*/
+
+void	replace_line_raw(t_edit *line_e, char *str)
+{
+	cursor_start(line_e);
+	ft_strdel(&line_e->line);
+	line_e->line = str;
+	line_e->len = ft_strlen(str);
+	line_e->cursor_pos = line_e->len;
+	print_line(line_e, 0);
+
+}
+
+/*
 **  replace_word
 **
 **  - Replaces the word at the current cursor position with the
@@ -46,12 +63,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	else if (line_e->autocomp_quote == 2 && length != 0)
 		ft_strcat(str + line_e->autocomp_point + length, "'");
 	ft_strdel(&new);
-	cursor_start(line_e);
-	ft_strdel(&line_e->line);
-	line_e->line = str;
-	line_e->len = ft_strlen(str);
-	line_e->cursor_pos = line_e->len;
-	print_line(line_e, 0);
+	replace_line_raw(line_e, str);
 }
 /*
 **  replace_word_from_completion

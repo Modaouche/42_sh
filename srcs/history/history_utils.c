@@ -12,6 +12,23 @@
 
 #include "history.h"
 
+char		*get_hist_line_from_end(int position)
+{
+	t_list	*head;
+	int 	size;
+
+	size = get_hist_nbline() + 1;
+	head = g_shell.history->hist;
+	while (head && size > position)
+	{
+		head = head->next;
+		--size;
+	}
+	if (size != position || head == NULL)
+		return (NULL);
+	return (((t_hnode*)head->content)->cmd);
+}
+
 int			get_hist_nbline(void)
 {
 	t_list		*head;

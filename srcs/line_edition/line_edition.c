@@ -350,6 +350,25 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 	}
 }
 
+void	get_hist_line(t_edit *line_e, int offset)
+{
+	char	*str;
+
+	str = get_hist_line_from_end(line_e->history_pos + offset);
+	if (str == NULL)
+	{
+		if (offset < 0)
+			line_e->history_pos = 0;
+		return ;
+	}
+	if (line_e->history_pos == 0 && offset < 0)
+		str = "";
+	else
+		line_e->history_pos += offset;
+	replace_line_raw(line_e, ft_strdup(str));
+	cancel_autocompletion(line_e);
+}
+
 /*
  **  on_key_press
  **
@@ -430,11 +449,15 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		{
 			if (line_e->autocomp == 2)
 				change_autocomp_idx(line_e, -1);
+			else
+				get_hist_line(line_e, 1);
 		}
 		else if (key[2] == S_KEY_ARW_DOWN)
 		{
 			if (line_e->autocomp == 2)
 				change_autocomp_idx(line_e, 1);
+			else
+				get_hist_line(line_e, -1);
 		}
 		return ;
 	}
@@ -445,7 +468,10 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		if (line_e->cursor_pos <= 1 && line_e->autocomp > 0)
 			cancel_autocompletion(line_e);
 		if (line_e->cursor_pos == 0)
+		{
+			line_e->history_pos = 0;
 			return ;
+		}
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
 		cursor_move_to(line_e, line_e->cursor_pos - 1);
@@ -481,6 +507,7 @@ int		line_edition(t_edit *line_e)
 	line_e->winsize_col = size.ws_col;
 	line_e->winsize_row = size.ws_row;
 	line_e->autocomp = 0;
+	line_e->history_pos = 0;
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termios) == -1)
 		toexit(0, "tcsetattr", 1);
 	ft_bzero(prevkey, MAX_KEY_LEN + 1);

@@ -79,6 +79,7 @@ typedef struct			s_edit
 	unsigned int		autocomp_maxcol;
 	unsigned int		autocomp_maxrow;
 	unsigned int		autocomp_quote;
+	unsigned int		history_pos;
 	unsigned int		len;
 	unsigned int		ofst;
 	unsigned int		cursor_pos;
@@ -160,6 +161,7 @@ t_file					*build_completion_list_files(int *cont, char *str, int len,\
 void					print_comp_list(t_edit *line_e, int highlight);
 int						get_last_common_char(t_file *list);
 int						build_list_from_word(t_edit *line_e);
+void					replace_line_raw(t_edit *line_e, char *new);
 void					replace_word(t_edit *line_e, char *new,\
 						size_t length, char *suffix);
 void					replace_word_from_completion(t_edit *line_e);
