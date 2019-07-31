@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 17:03:29 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 01:48:52 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/07/31 05:42:47 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,10 @@ int		get_argument_starting_index(char **args, char force_letter)
 			break ;
 	}
 	if (args[i] != NULL)
+	{
+		while (args[i] && args[i][0] == '-' && args[i][1] && !(ft_isdigit(args[i][1])))
+			i++;
 		return (i);
+	}
 	return (-1);
 }

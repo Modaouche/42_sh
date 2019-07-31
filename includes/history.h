@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 01:10:02 by araout            #+#    #+#             */
-/*   Updated: 2019/07/20 11:20:16 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/31 05:17:17 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,11 @@ int						get_option(int options, char letter);
 
 int						check_head(t_list *head, char **ret);
 char					**get_history_field(int a, int b, char **ret, int rev);
-void					get_range(char **args, int *a, int *b);
+int						get_range(char **args, int *a, int *b, int i);
+int						valid_operand(char **args, int i);
 int						get_field_size(char **field);
 int						ft_fc(void *ptr);
-void					print_rev(char **field, int a, int b);
-void					print_field(char **field, int a, int b);
+void					print_rev(char **field, int a, int b, int flag);
+void					print_field(char **field, int a, int b, int flag);
 int						print_history(int flag, char **field, int a, int b);
 #endif
