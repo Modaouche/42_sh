@@ -31,7 +31,7 @@ typedef struct			s_history
 
 
 /*
-** history funcitons
+** history functions
 */
 
 t_list					*build_hist_lst(void);

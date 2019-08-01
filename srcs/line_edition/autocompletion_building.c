@@ -118,27 +118,6 @@ int				search_similar_env_var(int *cont, t_file **list,
 **    identifying each path and feeding them to the above function.
 */
 
-#define BUILTIN_COUNT 17
-const char *builtins[BUILTIN_COUNT] = {
-	"cd",
-	"export",
-	"set",
-	"unset",
-	"echo",
-	"env",
-	"test",
-	"type",
-	"hash",
-	"pwd",
-	"alias",
-	"unalias",
-	"jobs",
-	"fg",
-	"bg",
-	".",
-	"exit"
-};
-
 int				search_similar_builtin(int *cont, t_file **list, char *str, int len)
 {
 	int size;
@@ -146,10 +125,10 @@ int				search_similar_builtin(int *cont, t_file **list, char *str, int len)
 
 	size = 0;
 	i = 0;
-	while (i < BUILTIN_COUNT && *cont != 0)
+	while (g_shell.fptr->flag[i] && *cont != 0)
 	{
-		if (ft_strncmp_case(str, builtins[i], len) == 0
-			&& ft_file_list_append(list, (char*)builtins[i], 0))
+		if (ft_strncmp_case(str, g_shell.fptr->flag[i], len) == 0
+			&& ft_file_list_append(list, g_shell.fptr->flag[i], 0))
 			++size;
 		++i;
 	}

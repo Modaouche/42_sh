@@ -15,15 +15,7 @@
 # include <sys/stat.h>
 # include "shell.h"
 
-
-
 typedef struct s_edit	t_edit;
-
-typedef struct			s_fptr
-{
-	char	**flag;
-	int		(*f[255])(void *);
-}						t_fptr;
 
 char					**set_var_env(char *varname, char *value, char **env);
 int						is_var(char *s1, char *s2);

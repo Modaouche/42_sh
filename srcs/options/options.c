@@ -45,10 +45,7 @@ char	validate_options(char **args, char *valid_options)
 	while (args[i] && ft_strcmp(args[i], "--") != 0)
 	{
 		if (args[i][0] != '-')
-		{
-			++i;
-			continue ;
-		}
+			break ;
 		x = 1;
 		while (args[i][x])
 		{
@@ -79,10 +76,7 @@ int		get_options(char **args)
 	while (args[i] && ft_strcmp(args[i], "--"))
 	{
 		if (args[i][0] != '-')
-		{
-			++i;
-			continue ;
-		}
+			break ;
 		x = 1;
 		while (args[i][x])
 		{

@@ -67,6 +67,12 @@ typedef struct			s_file
 	struct s_file		*next;
 }						t_file;
 
+typedef struct			s_fptr
+{
+	char	**flag;
+	int		(*f[255])(void *);
+}						t_fptr;
+
 typedef struct			s_edit
 {
 	struct winsize		*wsize;
@@ -104,6 +110,7 @@ typedef struct			s_sh
 	bool				tc_onoff;//for termcap like "dumb" , to have a usable shell
 	bool				in_bg;//in proc struct
 	struct s_history	*history;
+	t_fptr				*fptr;
 }				t_sh;
 
 t_sh			g_shell;
@@ -119,6 +126,8 @@ struct termios			*term_raw(void);
 void					init_line(t_edit *line_e);
 t_edit					*st_line(void);
 t_ast_ptr				*st_ast(void);
+t_fptr					*init_fptr(void);
+void					free_for_ft_built_in(t_fptr *func);
 
 /*
 ** Line edition

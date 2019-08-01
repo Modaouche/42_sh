@@ -30,6 +30,7 @@ int			fexit(void *ptr)
 	while (p[j])
 		ft_strdel(&(p[j++]));
 	ft_memdel((void **)&p);
+	free_for_ft_built_in(g_shell.fptr);
 	exit(i);
 	return (0);
 }

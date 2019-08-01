@@ -12,7 +12,7 @@
 
 #include "env.h"
 
-static t_fptr	*init_fptr(void)
+t_fptr	*init_fptr(void)
 {
 	t_fptr		*func;
 
@@ -28,7 +28,6 @@ static t_fptr	*init_fptr(void)
 	func->flag[5] = ft_strdup("unset");
 	func->flag[6] = ft_strdup("history");
 	func->flag[7] = ft_strdup("fc");
-	func->flag[8] = NULL;
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
 	func->f[2] = &ft_clear;
@@ -37,11 +36,10 @@ static t_fptr	*init_fptr(void)
 	func->f[5] = &ft_unsetenv_cmd;
 	func->f[6] = &ft_history;
 	func->f[7] = &ft_fc;
-	func->f[8] = NULL;
 	return (func);
 }
 
-static void		free_for_ft_built_in(t_fptr *func, char **tmp)
+void		free_for_ft_built_in(t_fptr *func)
 {
 	int		i;
 
@@ -50,10 +48,6 @@ static void		free_for_ft_built_in(t_fptr *func, char **tmp)
 		ft_strdel(&(func->flag[i]));
 	ft_memdel((void **)&(func->flag));
 	ft_memdel((void **)&func);
-	i = 0;
-	while (tmp && tmp[i])
-		ft_strdel(&(tmp[i++]));
-	ft_memdel((void **)&tmp);
 }
 
 /*
@@ -64,7 +58,6 @@ static void		free_for_ft_built_in(t_fptr *func, char **tmp)
 
 int				ft_built_in(char *cmd)
 {
-	t_fptr		*func;
 	int			i;
 	char		**tmp;
 
@@ -73,19 +66,15 @@ int				ft_built_in(char *cmd)
 		return (-1);
 	if (!ft_strcmp(tmp[0], "exit"))
 		fexit(tmp);
-	if ((func = init_fptr()) == NULL)
-		return (0);
-	while (func->f[i])
+	while (g_shell.fptr->f[i])
 	{
-		if (!(ft_strcmp(func->flag[i], tmp[0])))
+		if (!(ft_strcmp(g_shell.fptr->flag[i], tmp[0])))
 		{
-			func->f[i](tmp);
-			free_for_ft_built_in(func, tmp);
+			g_shell.fptr->f[i](tmp);
 			return (1);
 		}
 		i++;
 	}
-	free_for_ft_built_in(func, tmp);
 	if (ft_setenv_equal(cmd, 0))
 		return (1);
 	return (0);
