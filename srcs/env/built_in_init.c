@@ -28,6 +28,7 @@ t_fptr	*init_fptr(void)
 	func->flag[5] = ft_strdup("unset");
 	func->flag[6] = ft_strdup("history");
 	func->flag[7] = ft_strdup("fc");
+	func->flag[8] = ft_strdup("echo");
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
 	func->f[2] = &ft_clear;
@@ -36,6 +37,7 @@ t_fptr	*init_fptr(void)
 	func->f[5] = &ft_unsetenv_cmd;
 	func->f[6] = &ft_history;
 	func->f[7] = &ft_fc;
+	func->f[8] = &ft_echo;
 	return (func);
 }
 

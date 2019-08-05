@@ -19,17 +19,21 @@
 */
 
 
+void  edit_line(char **hist, char *editor);
+
 int    exec_by_fc(int options, char **args)
 {
   int  i;
   int  nbr;
-  
+
+  (void)options;
+  (void)args;
+  return (1);  
   i = get_argument_starting_index(args, 's');
-  if (i = -1)
-    
-  if (nbr = ft_atoi(args[i]) == 0)
+  // if (i == -1)
+  if ((nbr = ft_atoi(args[i])) == 0)
   {
-    exec_with_word
+      //exec_with_word
   }
   return (1);
 }
@@ -52,7 +56,7 @@ int			ft_fc(void *ptr)
 	options = get_options(args);	
 	if (get_range(args, &a, &b, get_argument_starting_index(args, 'l')) == -1)
 		return (-1);
-  if (get_option(option, 's'))
+  if (get_option(options, 's'))
     return (exec_by_fc(options, args));
 	hist = get_history_field(a, b, NULL, (a > b));
 	if (get_option(options, 'l'))
@@ -88,7 +92,7 @@ void  exec_file(char *filename)
   int   fd;
   char   *line;
   
-  if ((fd = open(tmp_filename, O_RDONLY)) < 0)
+  if ((fd = open(filename, O_RDONLY)) < 0)
     return ;
   while (get_next_line(fd, &line) > 0)
   {
@@ -100,7 +104,7 @@ void  exec_file(char *filename)
   close(fd);
 }
 
-void	edit_line(char **lines, char *editor)
+void	edit_line(char **hist, char *editor)
 {
   char *tmp_filename;
   char *args[3];
@@ -108,17 +112,18 @@ void	edit_line(char **lines, char *editor)
   
   if ((tmp_filename = generate_random_filename()) == NULL)
     return ;
-	if (editor == NULL && (editor = get_env_value("FCEDIT") == NULL))
+	if (editor == NULL && (editor = get_env_value("FCEDIT")) == NULL)
 		editor = ft_strdup("/bin/ed");
-  if ((fd = open(tmp_filename, O_CREAT, S_IRUSR | S_IWUSR)) < 0)
+  if (editor == NULL
+    || (fd = open(tmp_filename, O_CREAT, S_IRUSR | S_IWUSR)) < 0)
   {
     ft_strdel(&tmp_filename);
     ft_strdel(&editor);
   }
-  while (lines)
+  while (hist)
   {
-    write(fd, *lines, ft_strlen(*lines));
-    ++lines;
+    write(fd, *hist, ft_strlen(*hist));
+    ++hist;
   } 
   close(fd);
   args[0] = editor;

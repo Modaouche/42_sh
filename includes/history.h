@@ -58,6 +58,7 @@ int						get_options(char **args);
 int						get_argument_starting_index(char **args,\
 		char force_letter);
 int						get_option(int options, char letter);
+int						ft_echo(void *ptr);
 
 /*
 ** fc functions

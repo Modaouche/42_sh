@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <unistd.h>
 
 int			get_first_word(char **str, int *check)
 {
@@ -33,19 +34,20 @@ int			get_first_word(char **str, int *check)
 	return (i + 1);
 }
 
-void		ft_echo(char **str)
+void		ft_echo(void *str)
 {
 	int i;
 	int check;
+	char **args;
 
-	if (!str || !*str)
+	if (!(args = str) || !*args)
 		return ;
 	check = 0;
-	i = get_first_word(str + 1, &check);
-	while (str[i])
+	i = get_first_word(args + 1, &check);
+	while (args[i])
 	{
-		ft_putstr(str[i]);
-		(str[i + 1]) ? write(1, " ", 1) : 0;
+		ft_putstr(args[i]);
+		(args[i + 1]) ? write(1, " ", 1) : 0;
 		i++;
 	}
 	if (check != 1)

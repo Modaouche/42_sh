@@ -216,6 +216,7 @@ int						unbrlen(unsigned long long n);
 int						ft_atoi(const char *str);
 unsigned long			ft_atoi_base(const char *str, unsigned int base);
 char					*ft_itoa(int n);
+void					ft_itoa_str(int n, char *str, unsigned int maxlen);
 long long				ft_power(int nb, int power);
 int						get_next_line(const int fd, char **line);
 
