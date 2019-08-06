@@ -122,7 +122,7 @@ void	edit_line(char **hist, char *editor)
   if ((tmp_filename = generate_random_filename()) == NULL)
     return ;
 	if (editor == NULL && (editor = get_env_value("FCEDIT")) == NULL)
-		editor = ft_strdup("/usr/bin/vim");
+		editor = ft_strdup("/bin/ed");
   if (editor == NULL
     || (fd = open(tmp_filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)) < 0)
   {
