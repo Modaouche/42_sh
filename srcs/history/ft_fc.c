@@ -56,12 +56,14 @@ int			ft_fc(void *ptr)
 	options = get_options(args);	
 	if (get_range(args, &a, &b, get_argument_starting_index(args, 'l')) == -1)
 		return (-1);
-  if (get_option(options, 's'))
-    return (exec_by_fc(options, args));
 	hist = get_history_field(a, b, NULL, (a > b));
 	if (get_option(options, 'l'))
   {
 		print_history(options, hist, a, b);
+  }
+  else if (get_option(options, 's'))
+  {
+    return (exec_by_fc(options, args));
   }
   else
 	{
@@ -93,9 +95,13 @@ void  exec_file(char *filename)
   char   *line;
   
   if ((fd = open(filename, O_RDONLY)) < 0)
+  {
+    ft_printf_fd(2, "fc: Error, could not execute modified history.\n");
     return ;
+  }
   while (get_next_line(fd, &line) > 0)
   {
+      ft_printf("Executing [%s]\n", line);
       ft_strdel(&g_shell.line_e->line);
       g_shell.line_e->line = line;
       line_parser(g_shell.line_e);
@@ -116,7 +122,7 @@ void	edit_line(char **hist, char *editor)
   if ((tmp_filename = generate_random_filename()) == NULL)
     return ;
 	if (editor == NULL && (editor = get_env_value("FCEDIT")) == NULL)
-		editor = ft_strdup("/bin/ed");
+		editor = ft_strdup("/usr/bin/vim");
   if (editor == NULL
     || (fd = open(tmp_filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)) < 0)
   {
@@ -133,8 +139,23 @@ void	edit_line(char **hist, char *editor)
   args[0] = editor;
   args[1] = tmp_filename;
   args[2] = NULL;
-  //appel a lexecution
-  
+  fd = fork();
+  if (fd == 0)
+  {
+    execve(editor, args, g_shell.envp);
+    ft_printf_fd(2, "fc: Error, could execute %s for some reason.\n", editor);
+    fexit(NULL);
+  }
+  else
+  {
+      if (fd == -1)
+        ft_printf_fd(2, "fc: Error, not enough ressources to fork.\n");
+      else
+      {
+        waitpid(fd, NULL, P_PID);
+        exec_file(tmp_filename);
+      }
+  }
   unlink(tmp_filename);
   ft_strdel(&tmp_filename);
   ft_strdel(&editor);
