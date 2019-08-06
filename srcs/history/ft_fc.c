@@ -107,10 +107,41 @@ void  exec_file(char *filename)
       line_parser(g_shell.line_e);
       line_execution();
       write_history(line);
-      ft_strdel(&line);
   }
-  ft_strdel(&line);
+  //ft_strdel(&line);
   close(fd);
+}
+
+char *generate_tmp_hist_file(char **hist)
+{
+  char *filename;
+  int tries;
+  int fd;
+
+  if ((filename = generate_random_filename()) == NULL)
+    return (NULL);
+  fd = open(filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+  tries = 0;
+  while (fd < 0 && tries++ < 3)
+  {
+      ft_strdel(&filename);
+      if ((filename = generate_random_filename()) == NULL)
+        return (NULL);
+      fd = open(filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+  }
+  if (fd < 0)
+    ft_strdel(&filename);
+  else
+  {
+      while (*hist)
+      {
+        write(fd, *hist, ft_strlen(*hist));
+        write(fd, "\n", 1);
+        ++hist;
+      } 
+      close(fd);
+  }
+  return (filename);
 }
 
 void	edit_line(char **hist, char *editor)
@@ -119,23 +150,13 @@ void	edit_line(char **hist, char *editor)
   char *args[3];
   int   fd;
   
-  if ((tmp_filename = generate_random_filename()) == NULL)
-    return ;
 	if (editor == NULL && (editor = get_env_value("FCEDIT")) == NULL)
 		editor = ft_strdup("/bin/ed");
-  if (editor == NULL
-    || (fd = open(tmp_filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)) < 0)
+  if (editor == NULL || (tmp_filename = generate_tmp_hist_file(hist)) == NULL)
   {
-    ft_strdel(&tmp_filename);
     ft_strdel(&editor);
-  } 
-  while (*hist)
-  {
-    write(fd, *hist, ft_strlen(*hist));
-    write(fd, "\n", 1);
-    ++hist;
-  } 
-  close(fd);
+    return ;
+  }
   args[0] = editor;
   args[1] = tmp_filename;
   args[2] = NULL;
