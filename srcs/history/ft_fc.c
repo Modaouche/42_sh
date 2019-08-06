@@ -96,7 +96,10 @@ void  exec_file(char *filename)
     return ;
   while (get_next_line(fd, &line) > 0)
   {
-      //TODO: re-exec line
+      ft_strdel(&g_shell.line_e->line);
+      g_shell.line_e->line = line;
+      line_parser(g_shell.line_e);
+      line_execution();
       write_history(line);
       ft_strdel(&line);
   }
@@ -115,14 +118,15 @@ void	edit_line(char **hist, char *editor)
 	if (editor == NULL && (editor = get_env_value("FCEDIT")) == NULL)
 		editor = ft_strdup("/bin/ed");
   if (editor == NULL
-    || (fd = open(tmp_filename, O_CREAT, S_IRUSR | S_IWUSR)) < 0)
+    || (fd = open(tmp_filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)) < 0)
   {
     ft_strdel(&tmp_filename);
     ft_strdel(&editor);
-  }
-  while (hist)
+  } 
+  while (*hist)
   {
     write(fd, *hist, ft_strlen(*hist));
+    write(fd, "\n", 1);
     ++hist;
   } 
   close(fd);
