@@ -109,6 +109,7 @@ typedef struct			s_sh
 	uint8_t				errorno;
 	bool				tc_onoff;//for termcap like "dumb" , to have a usable shell
 	bool				in_bg;//in proc struct
+	bool				isnt_interactive;
 	struct s_history	*history;
 	t_fptr				*fptr;
 }				t_sh;

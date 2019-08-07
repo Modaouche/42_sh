@@ -109,6 +109,7 @@ void  exec_file(char *filename)
       write_history(line);
   }
   //ft_strdel(&line);
+  g_shell.isnt_interactive = 1;
   close(fd);
 }
 
