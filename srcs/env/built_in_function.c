@@ -26,6 +26,7 @@ int			fexit(void *ptr)
 		toexit(0, "tcsetattr", 1);
 	free_env();
 	free_history();
+	i = 0;
 	if (p && p[0])
 	{
 		i = p[1] ? ft_atoi(p[1]) : 0;

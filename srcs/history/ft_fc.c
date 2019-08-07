@@ -102,7 +102,7 @@ void  exec_file(char *filename)
   while (get_next_line(fd, &line) > 0)
   {
       ft_printf("Executing [%s]\n", line);
-      ft_strdel(&g_shell.line_e->line);
+      init_line(g_shell.line_e);
       g_shell.line_e->line = line;
       line_parser(g_shell.line_e);
       line_execution();
@@ -139,8 +139,9 @@ char *generate_tmp_hist_file(char **hist)
         write(fd, "\n", 1);
         ++hist;
       } 
-      close(fd);
+      //close(fd);
   }
+  close(fd);
   return (filename);
 }
 
@@ -148,8 +149,9 @@ void	edit_line(char **hist, char *editor)
 {
   char *tmp_filename;
   char *args[3];
-  int   fd;
+  int   pid;
   
+  errno = 0;
 	if (editor == NULL && (editor = get_env_value("FCEDIT")) == NULL)
 		editor = ft_strdup("/bin/ed");
   if (editor == NULL || (tmp_filename = generate_tmp_hist_file(hist)) == NULL)
@@ -160,24 +162,30 @@ void	edit_line(char **hist, char *editor)
   args[0] = editor;
   args[1] = tmp_filename;
   args[2] = NULL;
-  fd = fork();
-  if (fd == 0)
+  ft_printf("Errno = %d\n", errno);
+  pid = fork();
+  if (pid == 0)
   {
+    if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
+      toexit(0, "tcsetattr", 1);
+    if (tcsetattr(STDIN_FILENO, TCSADRAIN, g_shell.termiold) == -1)
+      toexit(0, "tcsetattr", 1);
     execve(editor, args, g_shell.envp);
     ft_printf_fd(2, "fc: Error, could execute %s for some reason.\n", editor);
     fexit(NULL);
   }
   else
   {
-      if (fd == -1)
+      if (pid == -1)
         ft_printf_fd(2, "fc: Error, not enough ressources to fork.\n");
       else
       {
-        waitpid(fd, NULL, P_PID);
+        waitpid(pid, NULL, 0);
         exec_file(tmp_filename);
       }
   }
   unlink(tmp_filename);
   ft_strdel(&tmp_filename);
   ft_strdel(&editor);
+  ft_printf("Errno = %d\n", errno);
 }
