@@ -47,6 +47,7 @@ void					write_history(char *line);
 int						build_node(char *line, t_list **node);
 off_t					get_hist_size(void);
 char					*get_hist_line_from_end(int position);
+char					*get_hist_line_from_str(char *str);
 
 /*
 ** ft_option funcitons

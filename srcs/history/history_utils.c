@@ -12,6 +12,16 @@
 
 #include "history.h"
 
+char		*get_hist_line_from_str(char *str)
+{
+	t_list	*head;
+
+	head = g_shell.history->hist;
+	while (head && !ft_strstr_nocase(((t_hnode*)head->content)->cmd, str))
+		head = head->next;
+	return (head ? ((t_hnode*)head->content)->cmd : NULL);
+}
+
 char		*get_hist_line_from_end(int position)
 {
 	t_list	*head;

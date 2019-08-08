@@ -20,6 +20,9 @@ void		init_line(t_edit *line_e)
 	line_e->cursor_pos = 0;
 	line_e->ofst = 0;
 	line_e->len = 0;
+	line_e->autocomp = 0;
+	line_e->search_mode = 0;
+	line_e->history_pos = 0;
 }
 
 t_edit	*st_line(void)

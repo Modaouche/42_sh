@@ -66,6 +66,7 @@ int						ft_rcfind(char *str, char c);
 char					*ft_strchr(const char *str, int character);
 char					*ft_strrchr(const char *str, int character);
 char					*ft_strstr(const char *str1, const char *str2);
+char					*ft_strstr_nocase(const char *str1, const char *str2);
 char					*ft_strnstr(const char *s1, const char *s2,
 						size_t length);
 int						ft_strcmp(const char *str1, const char *str2);

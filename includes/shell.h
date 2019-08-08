@@ -92,6 +92,7 @@ typedef struct			s_edit
 	unsigned int		len_max;
 	unsigned int		winsize_col;
 	unsigned int		winsize_row;
+	int					search_mode;
 }						t_edit;
 
 typedef struct			s_sh
@@ -137,7 +138,6 @@ void					free_for_ft_built_in(t_fptr *func);
 void					re_print_prompt(t_edit *line_e);
 void					re_print_line(t_edit *line_e);
 int						line_edition(t_edit *line_e);
-void					cursor_reposition(size_t n);
 int						is_arrow(char *key);
 int						ft_puti(int i);
 void					ft_nlcr(void);
@@ -147,10 +147,13 @@ void					cursor_end(t_edit *line_e);
 void					cursor_after(t_edit *line_e);
 void					cursor_move_to(t_edit *line_e, uint pos);
 void					cursor_move_from_to(t_edit *line_e, uint from, uint to);
+void					cursor_move_from_to2(t_edit *line_e, int prefix, char *str, uint from, uint to);
 void					cursor_reset_x_pos(t_edit *line_e);
 uint					get_line_height(t_edit *line, uint end);
+uint        			get_str_height(t_edit *line_e, unsigned int prefix, char *str, unsigned int end);
 uint					get_index_x_pos(t_edit *line_e, uint pos);
 void					print_line(t_edit *line_e, unsigned int start);
+void					show_hist_line(t_edit *line_e);
 
 /*
 **  Line edition - Autocompletion
