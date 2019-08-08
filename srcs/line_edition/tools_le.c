@@ -31,7 +31,7 @@ uint         get_line_height(t_edit *line_e, unsigned int end)
     unsigned int height;
 
     if (line_e->line == NULL)
-        return (0);
+        return (1);
     i = 0;
     x = g_shell.prompt_size;
     height = 1;
@@ -55,7 +55,7 @@ uint         get_str_height(t_edit *line_e, unsigned int x, char *str, unsigned 
     unsigned int height;
 
     if (str == NULL)
-        return (0);
+        return (1);
     i = 0;
     height = 1;
     while (i < end && str[i])
@@ -79,7 +79,7 @@ uint         get_index_x_pos(t_edit *line_e, unsigned int pos)
     unsigned int n;
 
     if (line_e->line == NULL)
-        return (0);
+        return (g_shell.prompt_size);
     i = 0;
     x = g_shell.prompt_size;
     n = 0;
@@ -101,7 +101,7 @@ uint         get_str_index_x_pos(t_edit *line_e, unsigned int x, char *str, unsi
     unsigned int n;
 
     if (line_e->line == NULL)
-        return (0);
+        return (x);
     i = 0;
     n = 0;
     while (i < pos && str[i])

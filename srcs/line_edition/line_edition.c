@@ -353,7 +353,7 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 	}
 	else if (ft_strlen(key) == 1)
 	{
-		if (*key == 18 && line_e->search_mode != 1 && line_e->line != NULL)
+		if (*key == 18 && line_e->search_mode != 1)
 		{
 			cancel_autocompletion(line_e);
 			line_e->search_mode = 1;
@@ -366,9 +366,9 @@ void	show_hist_line(t_edit *line_e)
 {
 	char	*str;
 
-	if (line_e->len == 0)
-		return ;
-	if ((str = get_hist_line_from_str(line_e->line)) == NULL)
+	if (line_e->len == 0 || line_e->line == NULL)
+		str = "";
+	else if ((str = get_hist_line_from_str(line_e->line)) == NULL)
 		str = "Not found.";
 	cursor_after(line_e);
 	ft_putstr("History search: ");
@@ -494,14 +494,14 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	{
 		if (line_e->line == NULL)
 			return ;
-		if (line_e->cursor_pos <= 1 && line_e->autocomp > 0)
-			cancel_autocompletion(line_e);
-		if (line_e->cursor_pos == 0)
+		if (line_e->cursor_pos <= 1)
 		{
+			if (line_e->autocomp > 0 || line_e->search_mode)
+				cancel_autocompletion(line_e);
 			line_e->history_pos = 0;
-			line_e->search_mode = 0;
-			return ;
 		}
+		if (line_e->cursor_pos == 0)
+			return ;
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
 		cursor_move_to(line_e, line_e->cursor_pos - 1);
@@ -515,11 +515,27 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		}
 		print_line(line_e, line_e->cursor_pos);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
-		if (line_e->search_mode != 0)
+		if (line_e->search_mode == 1)
 			show_hist_line(line_e);
 	}
 	// ft_putstr("key too long comming soon - ");
 }//in tabptrfct
+
+void	replace_line_with_search(t_edit *line_e)
+{
+	char *str;
+
+	if (!line_e->line || !(str = get_hist_line_from_str(line_e->line)))
+		str = "";
+	cursor_start(line_e);
+	ft_strdel(&line_e->line);
+	line_e->line = ft_strdup(str);
+	line_e->len = ft_strlen(str);
+	line_e->cursor_pos = line_e->len;
+	line_e->search_mode = 0;
+	print_line(line_e, 0);
+	cancel_autocompletion(line_e);
+}
 
 /*
  **  line_edition
@@ -549,14 +565,19 @@ int		line_edition(t_edit *line_e)
 		ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
 		if (ret == -1)
 			toexit(line_e, "key:", 1);
-		if (key[0] == S_KEY_ENTER && !key[1])
+		if (key[0] == S_KEY_ENTER && !key[1] && line_e->search_mode == 1)
+			replace_line_with_search(line_e);
+		else
 		{
-			if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-				toexit(line_e, "tcsetattr", 1);//maybe turn off termcap no exit
-			break ;
+			if (key[0] == S_KEY_ENTER && !key[1])
+			{
+				if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
+					toexit(line_e, "tcsetattr", 1);//maybe turn off termcap no exit
+				break ;
+			}
+			on_key_press(line_e, prevkey, key);
+			ft_memcpy(prevkey, key, MAX_KEY_LEN);
 		}
-		on_key_press(line_e, prevkey, key);
-		ft_memcpy(prevkey, key, MAX_KEY_LEN);
 	}
 	if (line_e->line) 
 		cursor_after(line_e);
