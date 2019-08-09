@@ -66,9 +66,9 @@ void	launch_process(process *p, pid_t pgid,
 
 void		launch_job (job *j, int foreground)
 {
-	process *p;
-	pid_t pid;
-	int mypipe[2], infile, outfile;
+	process	*p;
+	pid_t	pid;
+	int	mypipe[2], infile, outfile;
 
 	infile = j->stdin;
 	for (p = j->first_process; p; p = p->next)

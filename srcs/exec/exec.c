@@ -32,7 +32,7 @@ void	ast_execution(t_ast *ast)
 		ft_putendl("                           -- redir pipe");//exec_redirec(ast);//tobuild
 	else if (is_other_exec(ast->token->tokind))
 	{
-		ft_printf("                           -- other %d\n", ast->token->tokind);
+		ft_printf("                            -- other %d\n", ast->token->tokind);
 		exec_cmd(ast);
 	}
 }
@@ -43,8 +43,6 @@ void		line_execution(void)
 	if (!g_shell.ast)
 		return ;
 	ast_execution(g_shell.ast);
-	//ast_free(g_shell.ast);to build
-	g_shell.ast = NULL;//leaks to remove use the fct above
-//	ft_putendl("Comming Soon ;)");
+	ast_free(&(g_shell.ast));
 	ft_putendl("----------------------------------End-------------------------------");
 }

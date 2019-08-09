@@ -13,16 +13,6 @@
 #include "shell.h"
 #include "jobs.h"
 
-When a foreground process is launched, the shell must block until all of the processes in that job have either terminated or stopped. It can do this by calling the waitpid function; see Process Completion. Use the WUNTRACED option so that status is reported for processes that stop as well as processes that terminate.
-
-The shell must also check on the status of background jobs so that it can report terminated and stopped jobs to the user; this can be done by calling waitpid with the WNOHANG option. A good place to put a such a check for terminated and stopped jobs is just before prompting for a new command.
-
-The shell can also receive asynchronous notification that there is status information available for a child process by establishing a handler for SIGCHLD signals. See Signal Handling.
-
-In the sample shell program, the SIGCHLD signal is normally ignored. This is to avoid reentrancy problems involving the global data structures the shell manipulates. But at specific times when the shell is not using these data structures—such as when it is waiting for input on the terminal—it makes sense to enable a handler for SIGCHLD. The same function that is used to do the synchronous status checks (do_job_notification, in this case) can also be called from within this handler.
-
-Here are the parts of the sample shell program that deal with checking the status of jobs and reporting the information to the user.
-
 /* Store the status of the process pid that was returned by waitpid.
    Return 0 if all went well, nonzero otherwise.  */
 
@@ -45,9 +35,10 @@ int	mark_process_status (pid_t pid, int status)
 					else
 					{
 						p->completed = 1;
+						ft_printf("TEST\n");//look here
 						if (WIFSIGNALED (status))
-							fprintf (stderr, "%d: Terminated by signal %d.\n",
-									(int) pid, WTERMSIG (p->status));
+							fprintf(stderr, "%d: Terminated by signal %d.\n",
+								(int) pid, WTERMSIG (p->status));
 					}
 					return 0;
 				}
@@ -110,8 +101,11 @@ void	format_job_info (job *j, const char *status)
 }
 
 
-/* Notify the user about stopped or terminated jobs.
-   Delete terminated jobs from the active job list.  */
+/* 
+   Notify the user about stopped or terminated jobs.
+   Delete terminated jobs from the active job list.  
+   maybe it's the builtin job 
+   */
 
 void		do_job_notification (void)
 {

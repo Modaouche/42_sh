@@ -25,7 +25,7 @@
 # include "token_and_ast.h"
 # include "signal_handler.h"
 # include "error_handler.h"
-
+# include "job.h"
 
 # define S_KEY_ARW_UP			65
 # define S_KEY_ARW_DOWN			66
@@ -75,7 +75,7 @@ typedef struct			s_sh
 	char			**envp;
 	t_edit			*line_e;
 	t_ast			*ast;
-	job			*first_job;
+	t_job			*first_job;
 	char			**buff_cmd;
 	pid_t			pid;
 	uint16_t		tty;
@@ -163,7 +163,6 @@ int					is_separator(char c);
 **  Line edition - File list
 */
 
-
 t_file					*ft_file_list_append(t_file **list, char *name, int type);
 t_file					*ft_file_list_at(t_file *list, unsigned int idx);
 t_file					*ft_file_list_create(char *name, int type);
@@ -247,6 +246,7 @@ void					ast_right_insert(t_token *tok);
 void					ast_next_cmd(t_token *tok);
 void					infix_print_ast(t_ast *node);
 void					rm_last_leaf(void);
+void					ast_free(t_ast **root);
 int					last_token(t_ast *node);
 t_ast					*last_node(t_ast *node);
 void					bind_last_head(void);
@@ -256,7 +256,6 @@ t_ast					*get_curr_head(void);
 /*
 ** Line Execution 
 */
-
 
 void					line_execution(void);
 void					ast_execution(t_ast *ast);

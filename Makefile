@@ -62,7 +62,7 @@ LIB = $(LIBFT)/libft.a
 
 HEADERS = includes/shell.h includes/token_and_ast.h\
 		includes/signal_handler.h includes/error_handler.h\
-		#includes/jobs.h
+		includes/job.h
 
 
 
@@ -72,8 +72,8 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 
 CC = gcc
 
-CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)\
-			-g3 -fsanitize=address\
+CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
+	#		-g3 -fsanitize=address\
 			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 

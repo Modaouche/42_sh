@@ -22,6 +22,7 @@ static int		line_parser_prime(t_edit *line_e)
 		return (0);
 	return (1);
 }
+extern int test;
 
 void	line_parser(t_edit *line_e)
 {
@@ -30,7 +31,7 @@ void	line_parser(t_edit *line_e)
 
 	ast_head = st_ast();
 	ast_head->curr_head = NULL;
-	ast_head->root = NULL;//leaks !!!//to remove and create a free fct
+	ast_head->root = NULL;
 	if (line_parser_prime(line_e))
 	{
 		if (!(ast_head->root))
@@ -42,9 +43,18 @@ void	line_parser(t_edit *line_e)
 	}
 	else
 	{
+		if (!(ast_head->root))
+			ast_head->root = ast_head->curr_head;
 		last = last_node(ast_head->root);
-		ft_printf_fd(2, "42sh : parse error near `%s'\n",\
+		ft_printf_fd(2, "42sh : parse error near `%s'\n",
 				last->token->lexeme);
-		//ast_free(ast_head->root);
+		ast_free(&(ast_head->root));
 	}
 }
+/*
+	if (test == 1)
+	{	ft_printf("LEAK_TEST: \n");
+		//infix_print_ast(ast_head->root);
+		exit (0);
+	}
+*/
