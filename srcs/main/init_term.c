@@ -50,26 +50,26 @@ static int		init_tc(void)
 	return (-1);
 }
 
-void				init_term(t_edit *line_e, char **envp)
+void		init_term(t_edit *line_e, char **envp)
 {
 	ft_bzero(&g_shell, sizeof(g_shell));
 	ft_bzero(line_e, sizeof(line_e));
-	if (!isatty(STDERR_FILENO))
+	g_shell.fd = STDERR_FILENO;//add fd var in params to run '.sh' file
+	if (!(g_shell.tty = isatty(g_shell.fd)))
 		le_exit(ER_NOT_TTY);
-	g_shell.fd = STDERR_FILENO;
-	g_shell.pid = getpgrp();//tocheck
+	if (init_tc() == -1)
+		error_msg(".42sh");
+	g_shell.pid = getpgrp();
 	while (tcgetpgrp(g_shell.fd) != g_shell.pid)
 		kill(-g_shell.pid, SIGTTIN);
 	signal_handler(REGULAR);
 	g_shell.pid = getpid();
-	setpgid(g_shell.pid, g_shell.pid);//tocheck
-	tcsetpgrp(g_shell.fd, g_shell.pid);//tocheck
+	setpgid(g_shell.pid, g_shell.pid);
+	tcsetpgrp(g_shell.fd, g_shell.pid);
 	line_e = st_line();
 	init_line(line_e);
 	fill_token_tab();
-	g_shell.tc_onoff = (init_tc() == -1) ? 1 : 0;//set off termcaps
 	g_shell.envp = envp;
 	g_shell.termiold = term_backup();
 	g_shell.termios = term_raw();
-
 }

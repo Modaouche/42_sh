@@ -51,8 +51,15 @@ void			signal_handler(uint8_t state)
 		signal(SIGINT,	prompt);
 		return ;
 	}
-	signal(SIGINT, SIG_IGN);
+	if (state == EXEC)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGTSTP, SIG_DFL);
+		signal(SIGCONT, SIG_DFL);
+		return ;
+	}
 	signal(SIGCONT,	SIG_IGN);
+	signal(SIGINT, SIG_IGN);
 	signal(SIGTERM, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);

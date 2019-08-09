@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "shell.h"
+#include <sys/wait.h>
 //#include "proc.h"
 
 bool		access_verification(char *cmd)
@@ -71,38 +72,35 @@ static bool	cmd_verification(char **envp)
 bool		exec_cmd(t_ast *ast)
 {
 	//t_proc	*proc;
-	//pid_t	pid;
-	int8_t	ret;
+	pid_t	pid;
+	int	status;
 
 	ft_putendl("                           -- IN EXEC CMD ---");
 	g_shell.buff_cmd = get_cmd(ast);
-	if ((ret = exec_builtin()) != -1)
-		return (ret);
-	ft_putendl("                           ~~{ok}~~");
+	if ((status = exec_builtin()) != -1)
+		return (status);
 	if (!cmd_verification(g_shell.envp))
 	{
 		error_msg("./42sh");
 		return (false);
 	}
-	for (int i = 0; g_shell.buff_cmd[i] != NULL ; i++)//rm
-		ft_putendl(g_shell.buff_cmd[i]);//rm
-	return (true);//rm
-	
-	/*
-	
-	g_shell.errorno = NOERROR;
+	ft_putendl("                           ~~{ok}~~");
+	g_shell.errorno = NO_ERROR;
 	if ((pid = fork()) == 0)
 	{
+		signal_handler(EXEC);
 		if (execve(g_shell.buff_cmd[0],\
 				g_shell.buff_cmd, g_shell.envp) == -1)
 			g_shell.errorno = ER_EXECVE;
 	}
-	if (father < 0)
+	if (pid < 0)
 		g_shell.errorno = ER_FORK;
-	free_tabstr(g_shell.buff_cmd);
+	free_tabstr(&g_shell.buff_cmd);
 	if (g_shell.errorno)
 		to_exit(0);
-	signal_handler(EXEC);*/
+	signal_handler(REGULAR);
+	waitpid(WAIT_ANY, &status, WUNTRACED);
+	return (g_shell.errorno ? 0 : 1);//retour en verifiant ret avec les macro (voir man waitpid)
 	//wait vv
 	//proc_add(proc, pid, g_shell.in_bg);//in this fct > waitpid(proc->status, proc->pid, WUNTRACED | WNOHANG);
 }

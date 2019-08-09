@@ -28,8 +28,8 @@ int main(int ac, char **av, char **envp)
 {
 	t_edit	*line_e;
 
-	(void)av;//to init in g_shell with set_term fct
-	(void)ac;//to init in g_shell with set_term fct
+	(void)av;//we might add possibility to use '.sh' file
+	(void)ac;
 	line_e = st_line();
 	init_term(line_e, envp);
 	while (1)
