@@ -4,10 +4,10 @@
 #include <termios.h>
 #include <unistd.h>
 
-pid_t shell_pgid;
-struct termios shell_tmodes;
-int shell_terminal;
-int shell_is_interactive;
+pid_t shell_pgid;//pid
+struct termios shell_tmodes;//termiold
+int shell_terminal;//fd
+int shell_is_interactive;//tty
 //in sh
 
 /* Make sure the shell is running interactively as the foreground job

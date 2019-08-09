@@ -13,42 +13,6 @@
 #include "shell.h"
 #include "jobs.h"
 
-28.5.3 Launching Jobs
-
-Once the shell has taken responsibility for performing job control on its controlling terminal, it can launch jobs in response to commands typed by the user.
-
-To create the processes in a process group, you use the same fork and exec functions described in Process Creation Concepts. Since there are multiple child processes involved, though, things are a little more
-complicated and you must be careful to do things in the right order. Otherwise, nasty race conditions can result.
-
-You have two choices for how to structure the tree of parent-child relationships among the processes. You can either make all the processes in the process group be children of the shell process, or you can make
-one process in group be the ancestor of all the other processes in that group. The sample shell program presented in this chapter uses the first approach because it makes bookkeeping somewhat simpler.
-
-As each process is forked, it should put itself in the new process group by calling setpgid; see Process Group Functions. The first process in the new group becomes its process group leader, and its process ID
-becomes the process group ID for the group.
-
-The shell should also call setpgid to put each of its child processes into the new process group. This is because there is a potential timing problem: each child process must be put in the process group before
-it begins executing a new program, and the shell depends on having all the child processes in the group before it continues executing. If both the child processes and the shell call setpgid, this ensures that
-the right things happen no matter which process gets to it first.
-
-If the job is being launched as a foreground job, the new process group also needs to be put into the foreground on the controlling terminal using tcsetpgrp. Again, this should be done by the shell
-as well as by each of its child processes, to avoid race conditions.
-
-The next thing each child process should do is to reset its signal actions.
-
-During initialization, the shell process set itself to ignore job control signals; see Initializing the Shell. As a result, any child processes it creates also ignore these signals by inheritance.
-This is definitely undesirable, so each child process should explicitly set the actions for these signals back to SIG_DFL just after it is forked.
-
-Since shells follow this convention, applications can assume that they inherit the correct handling of these signals from the parent process. But every application has a responsibility not to mess up
-the handling of stop signals. Applications that disable the normal interpretation of the SUSP character should provide some other mechanism for the user to stop the job. When the user invokes this mechanism,
-the program should send a SIGTSTP signal to the process group of the process, not just to the process itself. See Signaling Another Process.
-
-Finally, each child process should call exec in the normal way. This is also the point at which redirection of the standard input and output channels should be handled. See Duplicating Descriptors,
-for an explanation of how to do this.
-
-Here is the function from the sample shell program that is responsible for launching a program. The function is executed by each child process immediately after it has been forked by the shell,
-and never returns.
-
-
 void	launch_process(process *p, pid_t pgid,
 		int infile, int outfile, int errfile,
 		int foreground)
@@ -82,17 +46,17 @@ void	launch_process(process *p, pid_t pgid,
 	{
 		dup2 (infile, STDIN_FILENO);
 		close (infile);
-	}
+	}//(useful for redir)
 	if (outfile != STDOUT_FILENO)
 	{
 		dup2 (outfile, STDOUT_FILENO);
 		close (outfile);
-	}
+	}//(useful for redir)
 	if (errfile != STDERR_FILENO)
 	{
 		dup2 (errfile, STDERR_FILENO);
 		close (errfile);
-	}
+	}//(useful for redir)
 
 	/* Exec the new process.  Make sure we exit.  */
 	execvp (p->argv[0], p->argv);
@@ -115,12 +79,12 @@ void		launch_job (job *j, int foreground)
 			if (pipe (mypipe) < 0)
 			{
 				perror ("pipe");
-				exit (1);
+				exit (1);				//example : 
 			}
-			outfile = mypipe[1];						//		p1   |    p2
+			outfile = mypipe[1];				//	process 1   |   process 2
 		}
-		else									//	in = stdin    	in = pipe[0]
-			outfile = j->stdout;						//      out = pipe[1]   out = stdout
+		else							//	in = stdin    	in = pipe[0]
+			outfile = j->stdout;				//      out = pipe[1]   out = stdout
 
 		/* Fork the child processes.  */
 		pid = fork ();

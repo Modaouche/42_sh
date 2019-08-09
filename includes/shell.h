@@ -75,6 +75,7 @@ typedef struct			s_sh
 	char			**envp;
 	t_edit			*line_e;
 	t_ast			*ast;
+	job			*first_job;
 	char			**buff_cmd;
 	pid_t			pid;
 	uint16_t		tty;
