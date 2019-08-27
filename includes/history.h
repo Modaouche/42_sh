@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 01:10:02 by araout            #+#    #+#             */
-/*   Updated: 2019/07/31 05:17:17 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/27 07:58:50 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,6 @@ int						ft_fc(void *ptr);
 void					print_rev(char **field, int a, int b, int flag);
 void					print_field(char **field, int a, int b, int flag);
 int						print_history(int flag, char **field, int a, int b);
+void					set_a_b_under_zero(int *a, int *b);
+int						get_index_fc_by_string(char *arg);
 #endif

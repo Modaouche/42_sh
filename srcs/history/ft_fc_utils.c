@@ -6,13 +6,13 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/20 11:16:47 by araout            #+#    #+#             */
-/*   Updated: 2019/07/31 06:15:49 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/27 11:25:11 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
 
-static void		set_a_b_under_zero(int *a, int *b)
+void			set_a_b_under_zero(int *a, int *b)
 {
 	if (*a == 0 || *b == 0)
 	{
@@ -45,6 +45,15 @@ int				get_range(char **args, int *a, int *b, int i)
 {
 	if (!valid_operand(args, i))
 	{
+		if (args[i])
+		{
+			*a = get_index_fc_by_string(args[i]);
+			if (args[i + 1])
+				*b = get_index_fc_by_string(args[i + 1]);
+			else
+				*b = get_hist_nbline();
+			return (1);
+		}
 		ft_putstr_fd("bash: fc: history specification out of range\n", 2);
 		return (-1);
 	}
@@ -76,8 +85,7 @@ char			**get_history_field(int a, int b, char **ret, int reverse)
 	int		i;
 
 	reverse = (a > b);
-	if (reverse)
-		ft_swap_int(&a, &b);
+	(reverse) ? ft_swap_int(&a, &b) : 0;
 	size = b - a;
 	if (!(ret = (char **)ft_memalloc(sizeof(char *) * (size + 2))))
 		return (NULL);
