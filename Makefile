@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/07/31 05:16:20 by araout           ###   ########.fr        #
+#    Updated: 2019/08/28 02:15:35 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,8 @@ SRC =	srcs/main/main.c\
 		srcs/history/ft_fc_utils.c\
 		srcs/history/ft_fc_error.c\
 		srcs/history/ft_build_history.c\
+		srcs/history/ft_fc_s.c\
+		srcs/history/ft_fc_editor.c\
 		srcs/env/misc_env.c\
 		srcs/env/init_env.c\
 		srcs/env/ft_cd.c\

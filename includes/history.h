@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 01:10:02 by araout            #+#    #+#             */
-/*   Updated: 2019/08/27 07:58:50 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/28 03:14:58 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define HISTORY_H
 
 # include "shell.h"
-
+# define GASI get_argument_starting_index
 typedef struct			s_hnode
 {
 	char		*cmd;
@@ -29,6 +29,14 @@ typedef struct			s_history
 	off_t				size;
 }						t_history;
 
+typedef struct			s_fc
+{
+	int		a;
+	int		b;
+	char	**hist;
+	int		options;
+	char	**args;
+}						t_fc;
 
 /*
 ** history functions
@@ -76,4 +84,8 @@ void					print_field(char **field, int a, int b, int flag);
 int						print_history(int flag, char **field, int a, int b);
 void					set_a_b_under_zero(int *a, int *b);
 int						get_index_fc_by_string(char *arg);
+int						exec_fc_s(char **args, char *line, int index);
+int						get_index_fc_by_string(char *arg);
+void					edit_line(char **hist, char *editor);
+void					exec_file(char *filename);
 #endif
