@@ -6,20 +6,17 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
-/*   Updated: 2019/08/30 08:59:53 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 09:47:11 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 
-t_fptr	*init_fptr(void)
+int				alloc_flag_fptr(t_fptr *func)
 {
-	t_fptr		*func;
+	int		i;
 
-	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
-		return (NULL);
-	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 10)))
-		return (NULL);
+	i = -1;
 	func->flag[0] = ft_strdup("cd");
 	func->flag[1] = ft_strdup("set");
 	func->flag[2] = ft_strdup("clear");
@@ -30,6 +27,27 @@ t_fptr	*init_fptr(void)
 	func->flag[7] = ft_strdup("fc");
 	func->flag[8] = ft_strdup("echo");
 	func->flag[9] = NULL;
+	while (++i < 9)
+	{
+		if (!func->flag)
+			return (-1);
+	}
+	return (1);
+}
+
+t_fptr			*init_fptr(void)
+{
+	t_fptr		*func;
+
+	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
+		return (NULL);
+	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 10)))
+		return (NULL);
+	if (alloc_flag_fptr(func) == -1)
+	{
+		ft_putstr_fd("error, memory allocation for structure t_fptr", 2);
+		return (NULL);
+	}
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
 	func->f[2] = &ft_clear;
@@ -42,7 +60,7 @@ t_fptr	*init_fptr(void)
 	return (func);
 }
 
-void		free_for_ft_built_in(t_fptr *func)
+void			free_for_ft_built_in(t_fptr *func)
 {
 	int		i;
 
@@ -53,7 +71,7 @@ void		free_for_ft_built_in(t_fptr *func)
 	ft_memdel((void **)&func);
 }
 
-void	free_tmp(char **s)
+void			free_tmp(char **s)
 {
 	int		i;
 
