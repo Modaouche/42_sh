@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 11:43:36 by araout            #+#    #+#             */
-/*   Updated: 2019/08/30 12:25:02 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 12:49:15 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,16 @@ int			check_built_in(char *args)
 			ft_printf("%s is a shell builtin\n", args);
 			return (1);
 		}
+	}
+	return (0);
+}
+
+int			check_path_abs(char *args)
+{
+	if (!access(args, X_OK))
+	{
+		ft_printf("%s is %s\n", args, args);
+		return (1);
 	}
 	return (0);
 }
@@ -77,6 +87,8 @@ int			type_main(void *ptr)
 		if (check_built_in(args[i]))
 			flag = 1;
 		else if (check_path_var(args[i]))
+			flag = 1;
+		else if (check_path_abs(args[i]))
 			flag = 1;
 		if (!flag)
 			ft_printf("%s not found\n", args[i]);
