@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 06:36:44 by araout            #+#    #+#             */
-/*   Updated: 2019/08/28 03:14:30 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 09:14:49 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int				check_args_nbr(int options, char **args, int *a)
 		return (1);
 }
 
-int				ft_fc_2(t_fc *fc_struct)
+static int			ft_fc_2(t_fc *fc_struct)
 {
 	free(fc_struct->hist);
 	if (check_args_nbr(fc_struct->options,\
@@ -75,12 +75,13 @@ t_fc			*build_struct_fc(char **args)
 				validate_options(args, "elnrs"));
 		return (NULL);
 	}
-	if (!(fc_struct = (t_fc *)ft_memalloc(sizeof(t_fc))))
+	if (!(fc_struct = (t_fc *)malloc(sizeof(t_fc))))
 		return (NULL);
 	fc_struct->args = args;
 	fc_struct->options = get_options(args);
 	fc_struct->a = 0;
 	fc_struct->b = 0;
+	fc_struct->hist = NULL;
 	return (fc_struct);
 }
 
@@ -92,12 +93,12 @@ int				ft_fc(void *ptr)
 	args = (char **)ptr;
 	if ((fc_struct = build_struct_fc(args)) == NULL)
 		return (-1);
-	if (get_option(fc_struct->options, 's'))
+	if (get_option(fc_struct->options, 's') && (free_fc(fc_struct) == -1))
 		return (exec_fc_s(args, NULL, 0));
 	if (get_range(args, &fc_struct->a, &fc_struct->b,
 				get_argument_starting_index(args, 'l')\
 				+ get_option(fc_struct->options, 'e')) == -1)
-		return (-1);
+		return (free_fc(fc_struct));
 	fc_struct->hist = get_history_field(fc_struct->a, fc_struct->b, NULL,\
 			(fc_struct->a > fc_struct->b));
 	if (get_option(fc_struct->options, 'l'))
@@ -105,8 +106,7 @@ int				ft_fc(void *ptr)
 				fc_struct->a, fc_struct->b);
 	else
 		ft_fc_2(fc_struct);
-	free(fc_struct->hist);
-	free(fc_struct);
+	free_fc(fc_struct);
 	return (1);
 }
 

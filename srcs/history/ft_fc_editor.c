@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/28 02:14:05 by araout            #+#    #+#             */
-/*   Updated: 2019/08/28 03:30:09 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 09:39:52 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,27 @@ static char		*generate_tmp_hist_file(char **hist, int tries, char *f, int fd)
 	return (f);
 }
 
-static void		edit_line_2(char **args, char **editor, char **hist, char **t)
+static int		edit_line_2(char **args, char **editor, char **hist, char **t)
 {
+	int		flag;
+
+	flag = 0;
 	errno = 0;
 	if (*editor == NULL && (*editor = get_env_value("FCEDIT")) == NULL)
+	{
 		*editor = ft_strdup("/bin/ed");
+		flag = 1;
+	}
 	if (*editor == NULL \
 			|| (*t = generate_tmp_hist_file(hist, 0, NULL, 0)) == NULL)
 	{
 		ft_strdel(editor);
-		return ;
+		return (flag);
 	}
 	args[0] = *editor;
 	args[1] = *t;
 	args[2] = NULL;
+	return (flag);
 }
 
 void			fork_fc_edit(char *tmp_filename, char **args, char *editor)
@@ -103,11 +110,13 @@ void			edit_line(char **hist, char *editor)
 {
 	char	*tmp_filename;
 	char	*args[3];
+	int		flag_free_ed;
 
-	edit_line_2((char **)&args, &editor, hist, &tmp_filename);
+	flag_free_ed = edit_line_2((char **)&args, &editor, hist, &tmp_filename);
 	fork_fc_edit(tmp_filename, args, editor);
 	unlink(tmp_filename);
 	ft_strdel(&tmp_filename);
-	ft_strdel(&editor);
+	if (flag_free_ed)
+		ft_strdel(&editor);
 	ft_printf("Errno = %d\n", errno);
 }

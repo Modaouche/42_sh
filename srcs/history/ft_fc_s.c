@@ -6,11 +6,20 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/28 02:11:29 by araout            #+#    #+#             */
-/*   Updated: 2019/08/28 03:41:21 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 09:40:13 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
+
+int		free_fc(t_fc *fc_struct)
+{
+	if (fc_struct && fc_struct->hist)
+		free(fc_struct->hist);
+	if (fc_struct)
+		free(fc_struct);
+	return (-1);
+}
 
 int		get_index_fc_by_string(char *arg)
 {

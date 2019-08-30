@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 01:10:02 by araout            #+#    #+#             */
-/*   Updated: 2019/08/28 03:14:58 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 09:15:06 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,5 @@ int						exec_fc_s(char **args, char *line, int index);
 int						get_index_fc_by_string(char *arg);
 void					edit_line(char **hist, char *editor);
 void					exec_file(char *filename);
+int						free_fc(t_fc *fc_struct);
 #endif
