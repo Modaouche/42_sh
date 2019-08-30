@@ -6,7 +6,7 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/02 02:17:36 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/08/02 02:43:47 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/08/30 12:25:27 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ int			get_first_word(char **str, int *check)
 
 void		ft_echo(void *str)
 {
-	int i;
-	int check;
-	char **args;
+	int		i;
+	int		check;
+	char	**args;
 
 	if (!(args = str) || !*args)
 		return ;

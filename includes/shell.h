@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/12 01:52:06 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 12:30:31 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <errno.h>// to remove
 # include "env.h"
 # include "history.h"
+# include "built_in.h"
 
 # define S_KEY_ARW_UP			65
 # define S_KEY_ARW_DOWN			66
@@ -108,12 +109,12 @@ typedef struct			s_sh
 	uint16_t			fd;
 	uint8_t				prompt_size;
 	uint8_t				errorno;
-	bool				tc_onoff;//for termcap like "dumb" , to have a usable shell
+	bool				tc_onoff;//for termcap like "dumb",to have a usable shel
 	bool				in_bg;//in proc struct
 	bool				isnt_interactive;
 	struct s_history	*history;
 	t_fptr				*fptr;
-}				t_sh;
+}						t_sh;
 
 t_sh			g_shell;
 
@@ -147,10 +148,12 @@ void					cursor_end(t_edit *line_e);
 void					cursor_after(t_edit *line_e);
 void					cursor_move_to(t_edit *line_e, uint pos);
 void					cursor_move_from_to(t_edit *line_e, uint from, uint to);
-void					cursor_move_from_to2(t_edit *line_e, int prefix, char *str, uint from, uint to);
+void					cursor_move_from_to2(t_edit *line_e, int prefix,\
+		char *str, uint from, uint to);
 void					cursor_reset_x_pos(t_edit *line_e);
 uint					get_line_height(t_edit *line, uint end);
-uint        			get_str_height(t_edit *line_e, unsigned int prefix, char *str, unsigned int end);
+uint					get_str_height(t_edit *line_e, unsigned int prefix,\
+		char *str, unsigned int end);
 uint					get_index_x_pos(t_edit *line_e, uint pos);
 void					print_line(t_edit *line_e, unsigned int start);
 void					show_hist_line(t_edit *line_e);
@@ -167,10 +170,10 @@ void					show_hist_line(t_edit *line_e);
 # define AUTOCOMP_TYPE_BLOCK_FILE		6
 # define AUTOCOMP_TYPE_FOLDER2			8
 
-t_file					*build_completion_list(int *cont, char *str, int len, char **env,\
-					unsigned int *list_size);
-t_file					*build_completion_list_files(int *cont, char *str, int len,\
-					unsigned int *list_size);
+t_file					*build_completion_list(int *cont, char *str, int len,\
+		char **env, unsigned int *list_size);
+t_file					*build_completion_list_files(int *cont, char *str,\
+		int len, unsigned int *list_size);
 void					print_comp_list(t_edit *line_e, int highlight);
 int						get_last_common_char(t_file *list);
 int						build_list_from_word(t_edit *line_e);
@@ -181,8 +184,8 @@ void					replace_word_from_completion(t_edit *line_e);
 char					*escape_name(char *name, char *escaped_chars,\
 						unsigned int length);
 char					*escape_singlequote(char *name, unsigned int max);
-int						search_similar_env_var(int *cont, t_file **list, char *str,\
-					int len, char **env);
+int						search_similar_env_var(int *cont, t_file **list,\
+		char *str, int len, char **env);
 void					cancel_autocompletion(t_edit *line_e);
 
 /*

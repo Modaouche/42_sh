@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/07 22:35:51 by araout            #+#    #+#             */
-/*   Updated: 2019/07/18 06:13:20 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 12:20:07 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int						ft_setenv(void *ptr);
 int						ft_unsetenv(void *ptr);
 int						ft_unsetenv_cmd(void *ptr);
 void					free_env();
+void					free_tmp(char **s);
 int						ft_setenv_equal(char *cmd, int flag);
 char					*get_env_value(char *varname);
 

@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
-/*   Updated: 2019/08/30 09:47:11 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 11:49:23 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ int				alloc_flag_fptr(t_fptr *func)
 	func->flag[6] = ft_strdup("history");
 	func->flag[7] = ft_strdup("fc");
 	func->flag[8] = ft_strdup("echo");
-	func->flag[9] = NULL;
-	while (++i < 9)
+	func->flag[9] = ft_strdup("type");
+	func->flag[10] = NULL;
+	while (++i < 10)
 	{
 		if (!func->flag)
 			return (-1);
@@ -41,7 +42,7 @@ t_fptr			*init_fptr(void)
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 10)))
+	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 11)))
 		return (NULL);
 	if (alloc_flag_fptr(func) == -1)
 	{
@@ -57,6 +58,7 @@ t_fptr			*init_fptr(void)
 	func->f[6] = &ft_history;
 	func->f[7] = &ft_fc;
 	func->f[8] = &ft_echo;
+	func->f[9] = &type_main;
 	return (func);
 }
 

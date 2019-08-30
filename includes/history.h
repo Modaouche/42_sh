@@ -1,4 +1,4 @@
-	/* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   history.h                                          :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 01:10:02 by araout            #+#    #+#             */
-/*   Updated: 2019/08/30 09:15:06 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 12:28:11 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "shell.h"
 # define GASI get_argument_starting_index
+
 typedef struct			s_hnode
 {
 	char		*cmd;
@@ -67,7 +68,6 @@ int						get_options(char **args);
 int						get_argument_starting_index(char **args,\
 		char force_letter);
 int						get_option(int options, char letter);
-int						ft_echo(void *ptr);
 
 /*
 ** fc functions
