@@ -14,12 +14,11 @@
 #include "jobs.h"
 
 void	launch_process(process *p, pid_t pgid,
-		int infile, int outfile, int errfile,
-		int foreground)
+		int infile, int outfile, int errfile)
 {
 	pid_t pid;
 
-	if (shell_is_interactive)
+	if (g_shell.is_interactive)
 	{
 		/* Put the process into the process group and give the process group
 		   the terminal, if appropriate.
@@ -29,16 +28,11 @@ void	launch_process(process *p, pid_t pgid,
 		if (pgid == 0)
 			pgid = pid;
 		setpgid (pid, pgid);
-		if (foreground)
-			tcsetpgrp (shell_terminal, pgid);
+		if (g_shell.in_fg)
+			tcsetpgrp (g_shell.fd, pgid);
 
 		/* Set the handling for job control signals back to the default.  */
-		signal (SIGINT, SIG_DFL);
-		signal (SIGQUIT, SIG_DFL);
-		signal (SIGTSTP, SIG_DFL);
-		signal (SIGTTIN, SIG_DFL);
-		signal (SIGTTOU, SIG_DFL);
-		signal (SIGCHLD, SIG_DFL);
+		signal_handler(EXEC);
 	}
 
 	/* Set the standard input/output channels of the new process.  */
@@ -46,17 +40,17 @@ void	launch_process(process *p, pid_t pgid,
 	{
 		dup2 (infile, STDIN_FILENO);
 		close (infile);
-	}//(useful for redir)
+	}
 	if (outfile != STDOUT_FILENO)
 	{
 		dup2 (outfile, STDOUT_FILENO);
 		close (outfile);
-	}//(useful for redir)
+	}
 	if (errfile != STDERR_FILENO)
 	{
 		dup2 (errfile, STDERR_FILENO);
 		close (errfile);
-	}//(useful for redir)
+	}
 
 	/* Exec the new process.  Make sure we exit.  */
 	execvp (p->argv[0], p->argv);
@@ -64,7 +58,7 @@ void	launch_process(process *p, pid_t pgid,
 	exit (1);
 }
 
-void		launch_job (job *j, int foreground)
+void		launch_job (job *j)
 {
 	process	*p;
 	pid_t	pid;
@@ -78,31 +72,30 @@ void		launch_job (job *j, int foreground)
 		{
 			if (pipe (mypipe) < 0)
 			{
-				perror ("pipe");
-				exit (1);				//example : 
-			}
-			outfile = mypipe[1];				//	process 1   |   process 2
+				g_shell.errorno = ER_PIPE;
+				return ;
+			}				//example : 
+			outfile = mypipe[1];		//	process 1   |   process 2
 		}
-		else							//	in = stdin    	in = pipe[0]
-			outfile = j->stdout;				//      out = pipe[1]   out = stdout
+		else					//	in = stdin    	in = pipe[0]
+			outfile = j->stdout;		//      out = pipe[1]   out = stdout
 
 		/* Fork the child processes.  */
 		pid = fork ();
 		if (pid == 0)
 			/* This is the child process.  */
 			launch_process (p, j->pgid, infile,
-					outfile, j->stderr, foreground);
+					outfile, j->stderr);
 		else if (pid < 0)
 		{
-			/* The fork failed.  */
-			perror ("fork");
-			exit (1);
+			g_shell.errorno = ER_FORK;
+			return ;
 		}
 		else
 		{
 			/* This is the parent process.  */
 			p->pid = pid;
-			if (shell_is_interactive)
+			if (g_shell.is_interactive)
 			{
 				if (!j->pgid)
 					j->pgid = pid;
@@ -120,11 +113,12 @@ void		launch_job (job *j, int foreground)
 
 	format_job_info (j, "launched");
 
-	if (!shell_is_interactive)
+	if (!g_shell.is_interactive)
 		wait_for_job (j)  ;
-	else if (foreground)
+	else if (g_shell.in_fg)
 		put_job_in_foreground (j, 0);
 	else
 		put_job_in_background (j, 0);
+	g_shell.in_fg = true;
 }
 

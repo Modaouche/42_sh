@@ -1,0 +1,12 @@
+ [V] mettre en place le free
+ [v] fct creer les jobs
+ [v] fct init les jobs
+ [] faire une fusion avec le code actuel
+ [] faire le tour des fct pour voir si il y a un pb
+ [] test exec et check si sa marche
+ [] voir le mode non interactif avec les erreur sur les line_edite avec ' / " / (
+ [] go voir le parser et check les erreurs line_edite, voir le newline (SI c'est reparable)
+ [] voir les heredoc 
+ [] deleakser
+ [] norme
+ [] end

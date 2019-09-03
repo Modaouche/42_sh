@@ -49,3 +49,4 @@ void	init_shell ()
 		tcgetattr (shell_terminal, &shell_tmodes);
 	}
 }
+useless

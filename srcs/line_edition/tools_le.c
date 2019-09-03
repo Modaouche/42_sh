@@ -98,8 +98,6 @@ size_t		print_prompt(unsigned int btn)
 	    prompt = ft_strdup("heredoc $> ");
     else if (btn == 7)
 	    prompt = ft_strdup("$> ");
-//    else if (btn == 6)
-//	    prompt = ft_strdup("bquote $> ");//not sure
     len = ft_strlen(prompt);
     ft_putstr(prompt);
     ft_strdel(&prompt);

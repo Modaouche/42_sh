@@ -36,7 +36,7 @@ typedef struct		s_job
 	t_process	*first_process;	/* list of processes in this job */
 	pid_t		pgid;		/* process group ID */
 	bool		notified;	/* true if user told about stopped job */
-	struct termios tmodes;		/* saved terminal modes */
+	struct termios	tmodes;		/* saved terminal modes */
 	int		stdin;		/* standard input channels (useful for redir)*/
 	int		stdout;		/* standard output channels (useful for redir)*/
 	int		stderr;		/* standard error channels (useful for redir)*/
@@ -49,6 +49,7 @@ t_job			*find_job (pid_t pgid);
 int			job_is_stopped(t_job *j);
 int			job_is_completed(t_job *j);
 void			free_job(t_job *j);
+void			free_jobs(void);
 void			free_process(t_process *p);
 void			put_job_in_foreground(t_job *j, int cont);
 void			put_job_in_background(t_job *j, int cont);

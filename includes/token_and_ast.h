@@ -62,4 +62,10 @@ typedef void		(*t_token_tab)(t_token *token, char *line,\
 
 extern t_token_tab	g_token_tab[128];
 
+static int		word_or_none[2] =
+{
+			0,
+			0
+};
+
 #endif

@@ -15,9 +15,9 @@
 bool		is_slice_exec(t_tok tokind)
 {
 	if (tokind == T_AMPER)
-		ft_printf("ok");//g_shell.in_bg = true;
-	else if (token_cmp(tokind, T_SEMI, T_NEWL, T_EOF,-1))
-		ft_printf("kok");//g_shell.in_bg = false;
+		g_shell.in_bg = true;
+	else if (token_cmp(tokind, T_SEMI, T_NEWL, T_EOF, -1))
+		g_shell.in_bg = false;
 	if (token_cmp(tokind, T_SEMI, T_AMPER, T_NEWL, T_EOF, -1))
 		return (true);
 	return (false);
@@ -45,4 +45,11 @@ bool		is_other_exec(t_tok tokind)
 		&& !is_redir_pipe_exec(tokind))//add more condition (check for assign)
 		return (true);
 	return (false);
+}
+
+bool		ft_strcmp_ret(char *to_cmp, char *with, bool ret)
+{
+	if (!ft_strcmp(to_cmp, with) && ret == 0)
+		return (true);
+	return (ret);
 }

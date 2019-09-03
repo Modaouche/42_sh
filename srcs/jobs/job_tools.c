@@ -1,0 +1,101 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   jobs_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/04 11:57:20 by modaouch          #+#    #+#             */
+/*   Updated: 2019/07/04 18:19:03 by modaouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "shell.h"
+#include "jobs.h"
+
+static bool button_for_cmd;
+
+t_job		*last_job(void)
+{
+	t_job		*j;
+
+	j = g_shell.first_job;
+	while (j)
+		j = j->next;
+	return (j);
+}
+
+void			push_back_process(t_process **p)
+{
+	t_process	*new;
+
+	ft_printf("push process\n");
+	if (!(new = (t_process *)ft_memalloc(sizeof(t_process))))
+		to_exit(ER_MALLOC);
+	while (p)
+		p = p->next;
+	p = new;
+}
+
+void		realloc_argv(t_process **process, char *to_add)
+{
+	char		**new;
+	int 		len;
+	t_process	*p;
+
+	p = *process;
+	while (p && p->next)
+		p = p->next;
+	len = tablen(p->argv);
+	if (!(new = (char **)ft_memalloc(sizeof(char *) * (len + 2))))
+		to_exit(ER_MALLOC);
+	len = 0;
+	while (p->argv[len])
+		new[len] = p->argv[len++];
+       	new[len++] = ft_strdup(to_add);
+       	new[len] = NULL;
+	ft_memdel((void **)&(p->argv));
+	p->argv = new;
+	len = 0;//test<< VV
+	ft_putstr("realloc_argv for process ->");
+	while (p->argv[len])
+		ft_printf("[%s]  ", p->argv[len++]);
+	ft_putendl("");
+}
+
+void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
+{
+	if (!ast)
+		return ;
+	if (ast->left)
+		add_process_and_msg_cmd(ast->left, job);
+	if (j->command)
+		j->command = ft_strdup(ast->token->lexeme);
+	else if (!(j->command = ft_multijoin(3, j->command, " ",\
+			ast->token->lexeme)))
+		to_exit(ER_MALLOC);
+	if (button_for_cmd == true)
+		push_back_process(&(j->first_process));
+	if (ast->token->tokind == T_WORD)
+		realloc_argv(&(j->first_process), ast->token->lexeme);
+	button_for_cmd = (ast->token->tokind != T_PIPE
+			&& !is_and_or_exec(ast->token->tokind)
+			&& !is_slice_exec(ast->token->tokind))
+			? false : true;
+	if (ast->right)
+		add_process_and_msg_cmd(ast->right, job);
+}
+
+void		push_back_job(t_ast *ast)
+{
+	t_job	*new;
+	t_job	*j;
+
+	if (!(new = (t_job *)ft_memalloc(sizeof(t_ast))))
+		to_exit(ER_MALLOC);
+	j = last_job();
+	button_for_cmd = true;
+	add_process_and_msg_cmd(ast, j);
+	ft_printf("test job command message -> %s\n", new->command);
+}
+

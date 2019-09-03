@@ -19,7 +19,7 @@ bool		exec_and_or(t_ast *ast)
 	if (ast->token->tokind == T_AND_IF)
 	{
 		ft_putendl("                           -- and");
-		if (exec_and_or(ast->left) && exec_and_or(ast->right))//here
+		if (exec_and_or(ast->left) && exec_and_or(ast->right))
 			return (true);
 	}
 	else if (ast->token->tokind == T_OR_IF)

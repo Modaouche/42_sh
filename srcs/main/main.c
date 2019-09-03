@@ -24,8 +24,6 @@ void	line_edit(t_edit *line_e)
 	signal_handler(REGULAR);
 }//cree une fonction generique (tu as le meme genre de code dans le parser)
 
-int test = 0;
-
 int main(int ac, char **av, char **envp)
 {
 	t_edit	*line_e;
@@ -38,10 +36,7 @@ int main(int ac, char **av, char **envp)
 	{
 		line_edit(line_e);
 		line_parser(line_e);
-		//if (test)
-		//	exit(0);
 		line_execution();
-		test = 1;
 		if (line_e->line && !ft_strcmp(line_e->line, "clear"))//buitin
 			tputs(tgetstr("cl", NULL), 1, ft_puti);
 		if (line_e->line && !ft_strcmp(line_e->line, "exit"))//buitin

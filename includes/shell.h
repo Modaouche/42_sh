@@ -34,7 +34,6 @@
 # define S_KEY_ENTER			10
 # define S_KEY_ERASE			127
 
-
 # define MAX_KEY_LEN			12
 # define BUFFER_LEN			255
 # define TOKEN_CMP			";\n&|!<>"
@@ -76,13 +75,13 @@ typedef struct			s_sh
 	t_edit			*line_e;
 	t_ast			*ast;
 	t_job			*first_job;
-	char			**buff_cmd;
 	pid_t			pid;
-	uint16_t		tty;
+	uint16_t		is_interactive;
 	uint16_t		fd;
 	uint8_t			ret;
 	uint8_t			prompt_size;
 	uint8_t			errorno;
+	bool			in_fg;
 }				t_sh;
 
 t_sh			g_shell;

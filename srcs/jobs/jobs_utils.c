@@ -79,10 +79,7 @@ process		*free_process(process *p)
 
 	next = p->next;
 	free_tabstr(p->argv);
-	ft_bzero(p);
-	free(p);
-	j = NULL;
-	ft_printf("free process next = %p\n", next);//rm
+	ft_memdel((void **)&p);
 	return (next);
 }
 
@@ -92,12 +89,21 @@ void		free_job(job *j)
 
 	p = j->first_process;
 	while (p)
-	{
 		p = free_process(&p);
-		ft_printf("next = %p\n", next);
-		//rm and 2line loop
-	}
 	ft_strdel(j->command);
-	free(j);
-	j = NULL;
+	ft_memdel((void **)&j);
+}
+
+void		free_jobs(void)
+{
+	t_job j;
+	t_job save;
+
+	j = g_shell.first_job;
+	while (j)
+	{
+		save = j->next;
+		free_job(j);
+		j = save;
+	}
 }

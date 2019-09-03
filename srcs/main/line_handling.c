@@ -12,6 +12,12 @@
 
 #include "shell.h"
 
+static int word_or_none[2] =
+{
+	0,
+	0
+};
+
 static int		line_parser_prime(t_edit *line_e)
 {
 	g_shell.errorno = 0;
@@ -22,7 +28,6 @@ static int		line_parser_prime(t_edit *line_e)
 		return (0);
 	return (1);
 }
-extern int test;
 
 void	line_parser(t_edit *line_e)
 {
@@ -43,18 +48,10 @@ void	line_parser(t_edit *line_e)
 	}
 	else
 	{
-		if (!(ast_head->root))
-			ast_head->root = ast_head->curr_head;
+		(!(ast_head->root)) ? ast_head->root = ast_head->curr_head : 0;
 		last = last_node(ast_head->root);
 		ft_printf_fd(2, "42sh : parse error near `%s'\n",
 				last->token->lexeme);
 		ast_free(&(ast_head->root));
 	}
 }
-/*
-	if (test == 1)
-	{	ft_printf("LEAK_TEST: \n");
-		//infix_print_ast(ast_head->root);
-		exit (0);
-	}
-*/
