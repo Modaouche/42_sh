@@ -27,8 +27,10 @@ int				alloc_flag_fptr(t_fptr *func)
 	func->flag[7] = ft_strdup("fc");
 	func->flag[8] = ft_strdup("echo");
 	func->flag[9] = ft_strdup("type");
-	func->flag[10] = NULL;
-	while (++i < 10)
+	func->flag[10] = ft_strdup("alias");
+	func->flag[11] = ft_strdup("unalias");
+	func->flag[12] = NULL;
+	while (++i < 12)
 	{
 		if (!func->flag)
 			return (-1);
@@ -42,7 +44,7 @@ t_fptr			*init_fptr(void)
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 11)))
+	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 13)))
 		return (NULL);
 	if (alloc_flag_fptr(func) == -1)
 	{
@@ -59,6 +61,8 @@ t_fptr			*init_fptr(void)
 	func->f[7] = &ft_fc;
 	func->f[8] = &ft_echo;
 	func->f[9] = &type_main;
+	func->f[10] = &ft_alias;
+	func->f[11] = &ft_unalias;
 	return (func);
 }
 

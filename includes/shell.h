@@ -101,6 +101,7 @@ typedef struct			s_sh
 	struct termios		*termiold;
 	struct termios		*termios;
 	char				**envp;
+	char				**aliasp;
 	char				**intern_var;
 	t_edit				*line_e;
 	t_ast				*ast;

@@ -28,4 +28,16 @@ int					check_path_abs(char *args);
 */
 int					ft_echo(void *ptr);
 
+
+/*
+** alias functions
+*/
+char				*concat_alias_string(char *name, char *value);
+void				set_alias_value(char *name, char *value);
+char				**copy_alias_tab(char **array, char *newelem);
+int					remove_alias(char *name);
+char				*get_alias_value(char *name);
+int					ft_alias(void *str);
+int					ft_unalias(void *str);
+
 #endif

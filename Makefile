@@ -70,7 +70,9 @@ SRC =	srcs/main/main.c\
 		srcs/env/setenv.c\
 		srcs/env/setenv_equal.c\
 		srcs/builtin/echo/main_echo.c\
-		srcs/builtin/type/type.c
+		srcs/builtin/type/type.c\
+		srcs/builtin/alias/alias.c\
+		srcs/builtin/alias/alias_utils.c
 #srcs/exec/exec_cmd.c\ to replace above
 OBJ = $(SRC:.c=.o)
 
