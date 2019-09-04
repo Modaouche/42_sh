@@ -29,7 +29,6 @@ int				alloc_flag_fptr(t_fptr *func)
 	func->flag[9] = ft_strdup("type");
 	func->flag[10] = ft_strdup("alias");
 	func->flag[11] = ft_strdup("unalias");
-	func->flag[12] = NULL;
 	while (++i < 12)
 	{
 		if (!func->flag)

@@ -41,13 +41,20 @@ int		print_alias(char *alias, int *errcode)
 	return (0);
 }
 
-void	set_alias(char *alias)
+void	set_alias(char *alias, int *errcode)
 {
 	unsigned int separator;
 
 	separator = ft_cfind(alias, '=');
 	alias[separator] = '\0';
-	set_alias_value(alias, &alias[separator + 1]);
+	if (str_match_charset("\\\"'();", alias))
+	{
+		ft_printf("alias: %s: invalid alias name\n", alias);
+		*errcode = 1;
+	}
+	else
+		set_alias_value(alias, &alias[separator + 1]);
+	alias[separator] = '=';
 }
 
 int		ft_alias(void *str)
@@ -68,7 +75,7 @@ int		ft_alias(void *str)
 		if (ft_cfind(args[i], '=') == -1)
 			print_alias(args[i], &errcode);
 		else
-			set_alias(args[i]);
+			set_alias(args[i], &errcode);
 		++i;
 	}
 	return (errcode);
