@@ -47,7 +47,7 @@ void	set_alias(char *alias, int *errcode)
 
 	separator = ft_cfind(alias, '=');
 	alias[separator] = '\0';
-	if (str_match_charset("\\\"'();", alias))
+	if (str_match_charset("\\\"'();&$|<> \t\n\r\v`", alias))
 	{
 		ft_printf("alias: %s: invalid alias name\n", alias);
 		*errcode = 1;

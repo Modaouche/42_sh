@@ -35,6 +35,8 @@ int			fexit(void *ptr)
 	}
 	ft_memdel((void **)&p);
 	free_for_ft_built_in(g_shell.fptr);
+	ft_free_tab(g_shell.aliasp);
+	//TODO: Free env??
 	exit(i);
 	return (0);
 }
