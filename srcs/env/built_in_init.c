@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "env.h"
+#include "built_in.h"
 
 int				alloc_flag_fptr(t_fptr *func)
 {
@@ -43,13 +44,9 @@ t_fptr			*init_fptr(void)
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	if (!(func->flag = (char **)ft_memalloc(sizeof(char *) * 13)))
+	;
+	if (!(func->flag = ft_split(BUILTIN_LIST, " ")))
 		return (NULL);
-	if (alloc_flag_fptr(func) == -1)
-	{
-		ft_putstr_fd("error, memory allocation for structure t_fptr", 2);
-		return (NULL);
-	}
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
 	func->f[2] = &ft_clear;
