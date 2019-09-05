@@ -35,6 +35,7 @@ int		main(int ac, char **av, char **envp)
 	while (1)
 	{
 		line_edit(line_e);
+		replace_aliases(line_e);
 		//line_parser(line_e);
 		g_shell.line_e = line_e;
 		ft_built_in(line_e->line);
