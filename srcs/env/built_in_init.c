@@ -13,38 +13,12 @@
 #include "env.h"
 #include "built_in.h"
 
-int				alloc_flag_fptr(t_fptr *func)
-{
-	int		i;
-
-	i = -1;
-	func->flag[0] = ft_strdup("cd");
-	func->flag[1] = ft_strdup("set");
-	func->flag[2] = ft_strdup("clear");
-	func->flag[3] = ft_strdup("pwd");
-	func->flag[4] = ft_strdup("export");
-	func->flag[5] = ft_strdup("unset");
-	func->flag[6] = ft_strdup("history");
-	func->flag[7] = ft_strdup("fc");
-	func->flag[8] = ft_strdup("echo");
-	func->flag[9] = ft_strdup("type");
-	func->flag[10] = ft_strdup("alias");
-	func->flag[11] = ft_strdup("unalias");
-	while (++i < 12)
-	{
-		if (!func->flag)
-			return (-1);
-	}
-	return (1);
-}
-
 t_fptr			*init_fptr(void)
 {
 	t_fptr		*func;
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	;
 	if (!(func->flag = ft_split(BUILTIN_LIST, " ")))
 		return (NULL);
 	func->f[0] = &ft_cd;
