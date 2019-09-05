@@ -112,16 +112,16 @@ int				search_similar_env_var(int *cont, t_file **list,
 }
 
 /*
-**  build_completion_list
+**  search_similar_builtin_aliases
 **
-**  - Builds the completion list by looking into the environment,
-**    identifying each path and feeding them to the above function.
+**  - Adds builtins and alises into the autocompletion list
 */
 
-int				search_similar_builtin(int *cont, t_file **list, char *str, int len)
+int				search_similar_builtin_aliases(int *cont, t_file **list, char *str, int len)
 {
 	int size;
 	int	i;
+	int n;
 
 	size = 0;
 	i = 0;
@@ -132,8 +132,26 @@ int				search_similar_builtin(int *cont, t_file **list, char *str, int len)
 			++size;
 		++i;
 	}
+	i = -1;
+	while (g_shell.aliasp && g_shell.aliasp[++i])
+	{
+		if ((n = ft_cfind(g_shell.aliasp[i], '=')) == -1)
+			continue ;
+		g_shell.aliasp[i][n] = '\0';
+		if (ft_strncmp_case(str, g_shell.aliasp[i], len) == 0
+			&& ft_file_list_append(list, g_shell.aliasp[i], 0))
+			++size;
+		g_shell.aliasp[i][n] = '=';
+	}
 	return (size);
 }
+
+/*
+**  build_completion_list
+**
+**  - Builds the completion list by looking into the environment,
+**    identifying each path and feeding them to the above function.
+*/
 
 t_file			*build_completion_list(int *cont, char *str,
 				int len, char **env, unsigned int *list_size)
@@ -167,7 +185,7 @@ t_file			*build_completion_list(int *cont, char *str,
 			*list_size += search_similar_files(cont, &list, path, str, len);
 		path += i;
 	}
-	*list_size += search_similar_builtin(cont, &list, str, len);
+	*list_size += search_similar_builtin_aliases(cont, &list, str, len);
 	return (list);
 }
 
