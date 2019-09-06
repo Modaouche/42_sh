@@ -66,6 +66,7 @@ int						ft_rcfind(char *str, char c);
 char					*ft_strchr(const char *str, int character);
 char					*ft_strrchr(const char *str, int character);
 char					*ft_strstr(const char *str1, const char *str2);
+char					*ft_strstr_nocase(const char *str1, const char *str2);
 char					*ft_strnstr(const char *s1, const char *s2,
 						size_t length);
 int						ft_strcmp(const char *str1, const char *str2);
@@ -216,6 +217,7 @@ int						unbrlen(unsigned long long n);
 int						ft_atoi(const char *str);
 unsigned long			ft_atoi_base(const char *str, unsigned int base);
 char					*ft_itoa(int n);
+void					ft_itoa_str(int n, char *str, unsigned int maxlen);
 long long				ft_power(int nb, int power);
 int						get_next_line(const int fd, char **line);
 

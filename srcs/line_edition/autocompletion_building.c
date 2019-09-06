@@ -112,49 +112,56 @@ int				search_similar_env_var(int *cont, t_file **list,
 }
 
 /*
+**  search_similar_builtin_aliases
+**
+**  - Adds builtins and alises into the autocompletion list
+*/
+
+int				search_similar_builtin_aliases(int *cont, t_file **list, char *str, int len)
+{
+	int size;
+	int	i;
+	int n;
+
+	size = 0;
+	i = -1;
+	while (g_shell.fptr->flag[++i] && *cont != 0)
+	{
+		if (ft_strncmp_case(str, g_shell.fptr->flag[i], len) == 0
+			&& ft_file_list_append(list, g_shell.fptr->flag[i], 0))
+			++size;
+	}
+	i = -1;
+	while (g_shell.aliasp && g_shell.aliasp[++i])
+	{
+		if ((n = ft_cfind(g_shell.aliasp[i], '=')) == -1)
+			continue ;
+		g_shell.aliasp[i][n] = '\0';
+		if (ft_strncmp_case(str, g_shell.aliasp[i], len) == 0
+			&& ft_file_list_append(list, g_shell.aliasp[i], 0))
+			++size;
+		g_shell.aliasp[i][n] = '=';
+	}
+	i = -1;
+	while (g_shell.intern_var && g_shell.intern_var[++i])
+	{
+		if ((n = ft_cfind(g_shell.intern_var[i], '=')) == -1)
+			continue ;
+		g_shell.intern_var[i][n] = '\0';
+		if (ft_strncmp_case(str, g_shell.intern_var[i], len) == 0
+			&& ft_file_list_append(list, g_shell.intern_var[i], 0))
+			++size;
+		g_shell.intern_var[i][n] = '=';
+	}
+	return (size);
+}
+
+/*
 **  build_completion_list
 **
 **  - Builds the completion list by looking into the environment,
 **    identifying each path and feeding them to the above function.
 */
-
-#define BUILTIN_COUNT 17
-const char *builtins[BUILTIN_COUNT] = {
-	"cd",
-	"export",
-	"set",
-	"unset",
-	"echo",
-	"env",
-	"test",
-	"type",
-	"hash",
-	"pwd",
-	"alias",
-	"unalias",
-	"jobs",
-	"fg",
-	"bg",
-	".",
-	"exit"
-};
-
-int				search_similar_builtin(int *cont, t_file **list, char *str, int len)
-{
-	int size;
-	int	i;
-
-	size = 0;
-	i = 0;
-	while (i < BUILTIN_COUNT && *cont != 0)
-	{
-		if (ft_strncmp_case(str, builtins[i], len) == 0
-			&& ft_file_list_append(list, (char*)builtins[i], 0))
-			++size;
-		++i;
-	}
-	return (size);
-}
 
 t_file			*build_completion_list(int *cont, char *str,
 				int len, char **env, unsigned int *list_size)
@@ -188,7 +195,7 @@ t_file			*build_completion_list(int *cont, char *str,
 			*list_size += search_similar_files(cont, &list, path, str, len);
 		path += i;
 	}
-	*list_size += search_similar_builtin(cont, &list, str, len);
+	*list_size += search_similar_builtin_aliases(cont, &list, str, len);
 	return (list);
 }
 

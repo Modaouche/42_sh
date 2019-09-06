@@ -18,15 +18,6 @@ int     is_arrow(char *key)
     ? key[2] : 0);
 }
 
-void    cursor_reposition(size_t n)
-{
-    while (n)
-    {
-        tputs(tgetstr("le", NULL), 1, ft_puti);
-        n--;
-    }
-}
-
 void        ft_nlcr(void)
 {
     tputs(tgetstr("do", NULL), 1, ft_puti);
@@ -40,7 +31,7 @@ uint         get_line_height(t_edit *line_e, unsigned int end)
     unsigned int height;
 
     if (line_e->line == NULL)
-        return (0);
+        return (1);
     i = 0;
     x = g_shell.prompt_size;
     height = 1;
@@ -58,6 +49,29 @@ uint         get_line_height(t_edit *line_e, unsigned int end)
     return (height);
 }
 
+uint         get_str_height(t_edit *line_e, unsigned int x, char *str, unsigned int end)
+{
+    unsigned int i;
+    unsigned int height;
+
+    if (str == NULL)
+        return (1);
+    i = 0;
+    height = 1;
+    while (i < end && str[i])
+    {
+        ++x;
+        if (str[i] == '\t')
+            x += TAB_LEN - 1;
+        if (str[i++] == '\n' || x >= line_e->winsize_col)
+        {
+            x = 0;
+            ++height;
+        }
+    }
+    return (height);
+}
+
 uint         get_index_x_pos(t_edit *line_e, unsigned int pos)
 {
     unsigned int i;
@@ -65,7 +79,7 @@ uint         get_index_x_pos(t_edit *line_e, unsigned int pos)
     unsigned int n;
 
     if (line_e->line == NULL)
-        return (0);
+        return (g_shell.prompt_size);
     i = 0;
     x = g_shell.prompt_size;
     n = 0;
@@ -76,6 +90,27 @@ uint         get_index_x_pos(t_edit *line_e, unsigned int pos)
         if (x++ >= line_e->winsize_col)
             ++n;
         if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
+            x = 0;
+    }
+    return (x + n);
+}
+
+uint         get_str_index_x_pos(t_edit *line_e, unsigned int x, char *str, unsigned int pos)
+{
+    unsigned int i;
+    unsigned int n;
+
+    if (line_e->line == NULL)
+        return (x);
+    i = 0;
+    n = 0;
+    while (i < pos && str[i])
+    {
+        if (str[i] == '\t')
+            x += TAB_LEN - 1;
+        if (x++ >= line_e->winsize_col)
+            ++n;
+        if (str[i++] == '\n' || x >= line_e->winsize_col)
             x = 0;
     }
     return (x + n);

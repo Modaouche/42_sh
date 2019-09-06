@@ -62,6 +62,7 @@ int		append_to_line(t_edit *line_e, const char to_add)
 void	cancel_autocompletion(t_edit *line_e)
 {
 	line_e->autocomp = 0;
+	line_e->search_mode = 0;
 	cursor_after(line_e);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
 	tputs(tgetstr("up", NULL), 1, ft_puti);
@@ -124,6 +125,8 @@ void	insert_char(t_edit *line_e, char c)
 	if (get_line_height(line_e, line_e->len) != get_line_height(line_e, line_e->len - 1)
 		&& c != '\n')
 		ft_nlcr();
+	if (line_e->search_mode == 1)
+		show_hist_line(line_e);
 }
 
 /*
@@ -348,6 +351,32 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 			line_e->autocomp = 2;
 		change_autocomp_idx(line_e, -1);
 	}
+	else if (ft_strlen(key) == 1)
+	{
+		if (*key == 18 && line_e->search_mode != 1)
+		{
+			cancel_autocompletion(line_e);
+			line_e->search_mode = 1;
+			show_hist_line(line_e);
+		}
+	}
+}
+
+void	show_hist_line(t_edit *line_e)
+{
+	char	*str;
+
+	if (line_e->len == 0 || line_e->line == NULL)
+		str = "";
+	else if ((str = get_hist_line_from_str(line_e->line)) == NULL)
+		str = "Not found.";
+	cursor_after(line_e);
+	ft_putstr("History search: ");
+	ft_putstr(str);
+	tputs(tgetstr("cd", NULL), 1, ft_puti);
+	cursor_move_from_to2(line_e, ft_strlen("History search: "), str, ft_strlen(str), 0);
+	cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
+	tputs(tgetstr("up", NULL), 1, ft_puti);
 }
 
 void	get_hist_line(t_edit *line_e, int offset)
@@ -465,13 +494,14 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	{
 		if (line_e->line == NULL)
 			return ;
-		if (line_e->cursor_pos <= 1 && line_e->autocomp > 0)
-			cancel_autocompletion(line_e);
-		if (line_e->cursor_pos == 0)
+		if (line_e->cursor_pos <= 1)
 		{
+			if (line_e->autocomp > 0 || line_e->search_mode)
+				cancel_autocompletion(line_e);
 			line_e->history_pos = 0;
-			return ;
 		}
+		if (line_e->cursor_pos == 0)
+			return ;
 		if (line_e->autocomp > 0)
 			line_e->autocomp = 0;
 		cursor_move_to(line_e, line_e->cursor_pos - 1);
@@ -485,9 +515,27 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		}
 		print_line(line_e, line_e->cursor_pos);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
+		if (line_e->search_mode == 1)
+			show_hist_line(line_e);
 	}
 	// ft_putstr("key too long comming soon - ");
 }//in tabptrfct
+
+void	replace_line_with_search(t_edit *line_e)
+{
+	char *str;
+
+	if (!line_e->line || !(str = get_hist_line_from_str(line_e->line)))
+		str = "";
+	cursor_start(line_e);
+	ft_strdel(&line_e->line);
+	line_e->line = ft_strdup(str);
+	line_e->len = ft_strlen(str);
+	line_e->cursor_pos = line_e->len;
+	line_e->search_mode = 0;
+	print_line(line_e, 0);
+	cancel_autocompletion(line_e);
+}
 
 /*
  **  line_edition
@@ -517,14 +565,19 @@ int		line_edition(t_edit *line_e)
 		ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
 		if (ret == -1)
 			toexit(line_e, "key:", 1);
-		if (key[0] == S_KEY_ENTER && !key[1])
+		if (key[0] == S_KEY_ENTER && !key[1] && line_e->search_mode == 1)
+			replace_line_with_search(line_e);
+		else
 		{
-			if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-				toexit(line_e, "tcsetattr", 1);//maybe turn off termcap no exit
-			break ;
+			if (key[0] == S_KEY_ENTER && !key[1])
+			{
+				if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
+					toexit(line_e, "tcsetattr", 1);//maybe turn off termcap no exit
+				break ;
+			}
+			on_key_press(line_e, prevkey, key);
+			ft_memcpy(prevkey, key, MAX_KEY_LEN);
 		}
-		on_key_press(line_e, prevkey, key);
-		ft_memcpy(prevkey, key, MAX_KEY_LEN);
 	}
 	if (line_e->line) 
 		cursor_after(line_e);

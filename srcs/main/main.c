@@ -35,11 +35,15 @@ int		main(int ac, char **av, char **envp)
 	while (1)
 	{
 		line_edit(line_e);
-		line_parser(line_e);
+		replace_aliases(line_e);
+		//line_parser(line_e);
 		g_shell.line_e = line_e;
-		write_history(line_e->line);
 		ft_built_in(line_e->line);
-		line_execution();
+		if (g_shell.isnt_interactive == 1)
+			g_shell.isnt_interactive = 0;
+		else
+			write_history(line_e->line);
+		//line_execution();
 	//	ft_putendl("");//to make after command exec
 	}
 	//free et exit dan fonction fexit OK !

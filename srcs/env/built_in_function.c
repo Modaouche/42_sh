@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:00:02 by araout            #+#    #+#             */
-/*   Updated: 2019/07/18 03:57:40 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/07 02:02:08 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,17 @@ int			fexit(void *ptr)
 		toexit(0, "tcsetattr", 1);
 	free_env();
 	free_history();
-	i = p[1] ? ft_atoi(p[1]) : 0;
-	while (p[j])
-		ft_strdel(&(p[j++]));
+	i = 0;
+	if (p && p[0])
+	{
+		i = p[1] ? ft_atoi(p[1]) : 0;
+		while (p[j])
+			ft_strdel(&(p[j++]));
+	}
 	ft_memdel((void **)&p);
+	free_for_ft_built_in(g_shell.fptr);
+	ft_free_tab(g_shell.aliasp);
+	//TODO: Free env??
 	exit(i);
 	return (0);
 }

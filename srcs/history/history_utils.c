@@ -6,16 +6,26 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/10 07:17:53 by araout            #+#    #+#             */
-/*   Updated: 2019/07/18 07:47:45 by araout           ###   ########.fr       */
+/*   Updated: 2019/07/31 05:14:11 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "history.h"
 
+char		*get_hist_line_from_str(char *str)
+{
+	t_list	*head;
+
+	head = g_shell.history->hist;
+	while (head && !ft_strstr_nocase(((t_hnode*)head->content)->cmd, str))
+		head = head->next;
+	return (head ? ((t_hnode*)head->content)->cmd : NULL);
+}
+
 char		*get_hist_line_from_end(int position)
 {
 	t_list	*head;
-	int 	size;
+	int		size;
 
 	size = get_hist_nbline() + 1;
 	head = g_shell.history->hist;

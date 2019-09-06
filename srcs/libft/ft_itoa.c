@@ -50,3 +50,22 @@ char		*ft_itoa(int n)
 	}
 	return (output);
 }
+
+void		ft_itoa_str(int n, char *str, unsigned int maxlen)
+{
+	int len;
+
+	len = nbr_length(n);
+	if (maxlen <= 1)
+		return ;
+	str[0] = '0';
+	if (n < 0)
+		str[0] = '-';
+	str[len] = 0;
+	n = ft_abs(n);
+	while (--maxlen != 0 && n != 0)
+	{
+		str[--len] = '0' + (n % 10);
+		n /= 10;
+	}
+}

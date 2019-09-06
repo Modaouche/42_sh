@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/07 22:35:51 by araout            #+#    #+#             */
-/*   Updated: 2019/07/18 06:13:20 by araout           ###   ########.fr       */
+/*   Updated: 2019/08/30 12:20:07 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,7 @@
 # include <sys/stat.h>
 # include "shell.h"
 
-
-
 typedef struct s_edit	t_edit;
-
-typedef struct			s_fptr
-{
-	char	**flag;
-	int		(*f[255])(void *);
-}						t_fptr;
 
 char					**set_var_env(char *varname, char *value, char **env);
 int						is_var(char *s1, char *s2);
@@ -44,6 +36,7 @@ int						ft_setenv(void *ptr);
 int						ft_unsetenv(void *ptr);
 int						ft_unsetenv_cmd(void *ptr);
 void					free_env();
+void					free_tmp(char **s);
 int						ft_setenv_equal(char *cmd, int flag);
 char					*get_env_value(char *varname);
 

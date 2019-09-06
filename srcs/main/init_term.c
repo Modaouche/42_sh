@@ -75,4 +75,5 @@ void				init_term(t_edit *line_e, char **envp)
 	setpgid(g_shell.pid, g_shell.pid);//tocheck
 	tcsetpgrp(g_shell.fd, g_shell.pid);//tocheck
 	init_history();
+	g_shell.fptr = init_fptr();
 }

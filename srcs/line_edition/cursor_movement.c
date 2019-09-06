@@ -69,15 +69,18 @@ void		cursor_after(t_edit *line_e)
 {
 	unsigned int	i;
 
-	if (line_e->line == NULL)
-		return ;
-	i = get_line_height(line_e, line_e->len) + 1
-		- get_line_height(line_e, line_e->cursor_pos);
-	while (i != 0)
+	if (line_e->line != NULL)
 	{
-		tputs(tgetstr("do", NULL), 1, ft_puti);
-		--i;
+		i = get_line_height(line_e, line_e->len) + 1
+			- get_line_height(line_e, line_e->cursor_pos);
+		while (i != 0)
+		{
+			tputs(tgetstr("do", NULL), 1, ft_puti);
+			--i;
+		}
 	}
+	else
+		tputs(tgetstr("do", NULL), 1, ft_puti);
 	tputs(tgetstr("cr", NULL), 1, ft_puti);
 }
 
@@ -131,14 +134,42 @@ void		cursor_move_to(t_edit *line_e, uint to)
 	line_e->cursor_pos = to;
 }
 
+/*
+**  cursor_move_from_to
+**
+**  - Move the cursor to a specific position from a specific other pos
+**    Doesn't rely on cursor_pos or modify it in the process.
+*/
+
 void		cursor_move_from_to(t_edit *line_e, uint from, uint to)
 {
 	int x;
 
-	if (line_e->line == NULL)
-		return ;
 	x = get_line_height(line_e, to)
 		- get_line_height(line_e, from);
+	while (x > 0)
+	{
+		tputs(tgetstr("do", NULL), 1, ft_puti);
+		--x;
+	}
+	while (x < 0)
+	{
+		tputs(tgetstr("up", NULL), 1, ft_puti);
+		++x;
+	}
+	tputs(tgetstr("cr", NULL), 1, ft_puti);
+	x = get_index_x_pos(line_e, to);
+	while (x-- > 0)
+		tputs(tgetstr("nd", NULL), 1, ft_puti);
+}
+
+
+void		cursor_move_from_to2(t_edit *line_e, int prefix, char *str, uint from, uint to)
+{
+	int x;
+
+	x = get_str_height(line_e, prefix, str, to)
+		- get_str_height(line_e, prefix, str, from);
 	while (x > 0)
 	{
 		tputs(tgetstr("do", NULL), 1, ft_puti);
