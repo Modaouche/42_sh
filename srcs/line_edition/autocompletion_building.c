@@ -124,13 +124,12 @@ int				search_similar_builtin_aliases(int *cont, t_file **list, char *str, int l
 	int n;
 
 	size = 0;
-	i = 0;
-	while (g_shell.fptr->flag[i] && *cont != 0)
+	i = -1;
+	while (g_shell.fptr->flag[++i] && *cont != 0)
 	{
 		if (ft_strncmp_case(str, g_shell.fptr->flag[i], len) == 0
 			&& ft_file_list_append(list, g_shell.fptr->flag[i], 0))
 			++size;
-		++i;
 	}
 	i = -1;
 	while (g_shell.aliasp && g_shell.aliasp[++i])
@@ -142,6 +141,17 @@ int				search_similar_builtin_aliases(int *cont, t_file **list, char *str, int l
 			&& ft_file_list_append(list, g_shell.aliasp[i], 0))
 			++size;
 		g_shell.aliasp[i][n] = '=';
+	}
+	i = -1;
+	while (g_shell.intern_var && g_shell.intern_var[++i])
+	{
+		if ((n = ft_cfind(g_shell.intern_var[i], '=')) == -1)
+			continue ;
+		g_shell.intern_var[i][n] = '\0';
+		if (ft_strncmp_case(str, g_shell.intern_var[i], len) == 0
+			&& ft_file_list_append(list, g_shell.intern_var[i], 0))
+			++size;
+		g_shell.intern_var[i][n] = '=';
 	}
 	return (size);
 }
