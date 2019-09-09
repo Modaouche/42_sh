@@ -6,11 +6,31 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 11:43:36 by araout            #+#    #+#             */
-/*   Updated: 2019/08/30 12:49:15 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/09 23:41:01 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in.h"
+
+int			check_alias(char *args)
+{
+	int		i;
+
+	i = -1;
+	if (!g_shell.aliasp)
+		return (0);
+	while (g_shell.aliasp[++i])
+	{
+		if ((ft_strlen(g_shell.aliasp[i]) > ft_strlen(args))\
+				&& (!ft_strncmp(args, g_shell.aliasp[i], ft_strlen(args))))
+		{
+			ft_printf("%s is aliased to \'%s\'\n", args, ((g_shell.aliasp[i])\
+						+ 1 + ft_strlen(args)));
+			return (1);
+		}
+	}
+	return (0);
+}
 
 int			check_built_in(char *args)
 {
@@ -89,6 +109,8 @@ int			type_main(void *ptr)
 		else if (check_path_var(args[i]))
 			flag = 1;
 		else if (check_path_abs(args[i]))
+			flag = 1;
+		else if (check_alias(args[i]))
 			flag = 1;
 		if (!flag)
 			ft_printf("%s not found\n", args[i]);

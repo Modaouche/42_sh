@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 11:41:48 by araout            #+#    #+#             */
-/*   Updated: 2019/08/30 12:48:29 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/09 23:20:35 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int					check_built_in(char *args);
 int					type_main(void *ptr);
 int					check_path(char *args);
 int					check_path_abs(char *args);
+int					check_alias(char *args);
 
 /*
 **	echo functions
