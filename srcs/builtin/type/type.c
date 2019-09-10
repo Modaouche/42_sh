@@ -12,20 +12,22 @@
 
 #include "built_in.h"
 
-int			check_alias(char *args)
+int			check_alias(char *str)
 {
-	int		i;
+	int				i;
+	unsigned int	len;
 
 	i = -1;
 	if (!g_shell.aliasp)
 		return (0);
+	len = ft_strlen(str);
 	while (g_shell.aliasp[++i])
 	{
-		if ((ft_strlen(g_shell.aliasp[i]) > ft_strlen(args))\
-				&& (!ft_strncmp(args, g_shell.aliasp[i], ft_strlen(args))))
+		if ((ft_strlen(g_shell.aliasp[i]) > len)\
+				&& (!ft_strncmp(str, g_shell.aliasp[i], len)))
 		{
-			ft_printf("%s is aliased to \'%s\'\n", args, ((g_shell.aliasp[i])\
-						+ 1 + ft_strlen(args)));
+			ft_printf("%s is aliased to \'%s\'\n", str,
+				&g_shell.aliasp[i][len + 1]);
 			return (1);
 		}
 	}
