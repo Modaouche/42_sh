@@ -93,29 +93,26 @@ int			check_path_var(char *args)
 	return (0);
 }
 
+
 int			type_main(void *ptr)
 {
 	char	**args;
 	int		i;
-	int		flag;
+	int		ret;
 
-	flag = 0;
+	ret = 0;
 	args = ptr;
 	i = 0;
 	if (!args || !args[0] || !args[1])
-		return (-1);
+		return (1);
 	while (args[++i])
 	{
-		if (check_built_in(args[i]))
-			flag = 1;
-		else if (check_path_var(args[i]))
-			flag = 1;
-		else if (check_path_abs(args[i]))
-			flag = 1;
-		else if (check_alias(args[i]))
-			flag = 1;
-		if (!flag)
+		if (!check_built_in(args[i]) && !check_path_var(args[i])
+			&& !check_path_abs(args[i]) && !check_alias(args[i]))
+		{
+			ret = 1;
 			ft_printf("%s not found\n", args[i]);
+		}
 	}
-	return (flag);
+	return (ret);
 }
