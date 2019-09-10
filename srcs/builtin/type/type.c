@@ -80,7 +80,7 @@ int			check_path_var(char *args)
 		ft_strdel(&path);
 		path = ft_strjoin(tmp, args);
 		ft_strdel(&tmp);
-		if (!access(path, X_OK))
+		if (path && !access(path, X_OK))
 		{
 			ft_printf("%s is %s\n", args, path);
 			ft_strdel(&path);
