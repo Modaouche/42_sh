@@ -33,6 +33,7 @@ t_fptr			*init_fptr(void)
 	func->f[9] = &type_main;
 	func->f[10] = &ft_alias;
 	func->f[11] = &ft_unalias;
+	func->f[12] = &ft_test_main;
 	return (func);
 }
 

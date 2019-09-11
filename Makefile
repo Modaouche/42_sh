@@ -73,7 +73,17 @@ SRC =	srcs/main/main.c\
 		srcs/builtin/type/type.c\
 		srcs/builtin/alias/alias.c\
 		srcs/builtin/alias/alias_utils.c\
-		srcs/alias/alias.c
+		srcs/alias/alias.c\
+		srcs/builtin/test/test.c\
+		srcs/builtin/test/ft_file_type.c\
+		srcs/builtin/test/ft_file_type_bis.c\
+		srcs/builtin/test/ft_chmod_file.c\
+		srcs/builtin/test/ft_chmod_file_bis.c\
+		srcs/builtin/test/test_flag_file.c\
+		srcs/builtin/test/test_flag_str.c\
+		srcs/builtin/test/test_flag_nbr.c\
+		srcs/builtin/test/test_flag_tools.c\
+		srcs/builtin/test/tools.c
 #srcs/exec/exec_cmd.c\ to replace above
 OBJ = $(SRC:.c=.o)
 
@@ -82,7 +92,7 @@ LIBFT = srcs/libft
 LIB = $(LIBFT)/libft.a
 
 HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h \
-		includes/history.h includes/env.h includes/built_in.h
+		includes/history.h includes/env.h includes/built_in.h includes/ft_test.h
 
 INCLUDES = -Iincludes -I$(LIBFT)
 
