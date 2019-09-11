@@ -31,13 +31,12 @@ bool		exec_and_or(t_ast *ast)
 	else if (is_redir_pipe_exec(ast->token->tokind))//add eof tokentocmp
 	{
 		ft_putendl("                           -- redir pipe2");
-		return (true);//ret fct directly exec_redir_pipe(ast))//to_build
+		return true;//(exec_redir_pipe(ast));//to_build
 	}
 	else if (is_other_exec(ast->token->tokind))
 	{
 		ft_printf("                           -- other2 %d\n", ast->token->tokind);
-		if (exec_cmd(ast))//to finish
-			return (true);
+		return (exec_cmd(ast, 0));//to finish
 	}
 	return (false);
 }

@@ -259,13 +259,14 @@ t_ast					*get_curr_head(void);
 void					line_execution(void);
 void					ast_execution(t_ast *ast);
 bool					exec_and_or(t_ast *ast);
-bool					exec_cmd(t_ast *ast);
+bool					exec_cmd(t_ast *ast, bool is_redir_pipe );
 bool					exec_redir(t_ast *ast);
 bool					is_slice_exec(t_tok tokind);
 bool					is_and_or_exec(t_tok tokind);
 bool					is_redir_pipe_exec(t_tok tokind);
 bool					is_other_exec(t_tok tokind);
-ssize_t					exec_builtin(void);
+bool					exec_builtin(t_ast *ast);
+bool					is_builtin(t_ast *ast, char *bu);
 char					**get_cmd(t_ast *ast);
 char					*find_var(char **envp, char *with);
 

@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "shell.h"
-#include "jobs.h"
+#include "job.h"
 
 void	launch_process(process *p, pid_t pgid,
 		int infile, int outfile, int errfile)
@@ -53,7 +53,7 @@ void	launch_process(process *p, pid_t pgid,
 	}
 
 	/* Exec the new process.  Make sure we exit.  */
-	execvp (p->argv[0], p->argv);
+	execvp (p->argv[0], p->argv);// add env fct
 	perror ("execvp");
 	exit (1);
 }
@@ -83,9 +83,14 @@ void		launch_job (job *j)
 		/* Fork the child processes.  */
 		pid = fork ();
 		if (pid == 0)
+		{
+			if (!cmds_verif(p, g_shell.envp))
+				error_msg("./42sh");//dans une ternaire
 			/* This is the child process.  */
-			launch_process (p, j->pgid, infile,
+			else
+				launch_process (p, j->pgid, infile,
 					outfile, j->stderr);
+		}
 		else if (pid < 0)
 		{
 			g_shell.errorno = ER_FORK;
@@ -114,7 +119,7 @@ void		launch_job (job *j)
 	format_job_info (j, "launched");
 
 	if (!g_shell.is_interactive)
-		wait_for_job (j)  ;
+		wait_for_job (j);
 	else if (g_shell.in_fg)
 		put_job_in_foreground (j, 0);
 	else

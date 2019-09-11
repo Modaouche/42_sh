@@ -51,13 +51,14 @@ int			job_is_completed(t_job *j);
 void			free_job(t_job *j);
 void			free_jobs(void);
 void			free_process(t_process *p);
+t_job			*last_job(void);
 void			put_job_in_foreground(t_job *j, int cont);
 void			put_job_in_background(t_job *j, int cont);
 void			mark_job_as_running(t_job *j);
 void			continue_job(t_job *j, int foreground);
 void			launch_process(t_process *p, pid_t,\
 				int , int , int , int );
-void			launch_job (t_job *j, int foreground);
+void			launch_job (t_job *j);
 int			mark_process_status (pid_t pid, int status);
 void			update_status (void);
 void			wait_for_job (t_job *j);
@@ -65,6 +66,7 @@ void			format_job_info (t_job *j, const char *status);
 void			do_job_notification (void);
 t_job			*create_job(t_job *j, t_ast *ast);
 t_job			*add_job(t_job *j, t_ast *ast);
-
+void			push_back_job(t_ast *ast);
+void			push_back_process(t_process **p);
 
 #endif

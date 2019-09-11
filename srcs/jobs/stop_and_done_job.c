@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "shell.h"
-#include "jobs.h"
+#include "job.h"
 
 /* Store the status of the process pid that was returned by waitpid.
    Return 0 if all went well, nonzero otherwise.  */
@@ -104,7 +104,7 @@ void	format_job_info (job *j, const char *status)
 /* 
    Notify the user about stopped or terminated jobs.
    Delete terminated jobs from the active job list.  
-   maybe it's the builtin job 
+   maybe it's the builtin 'jobs' 
    */
 
 void		do_job_notification (void)

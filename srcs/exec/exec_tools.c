@@ -35,28 +35,23 @@ char			**get_cmd(t_ast *ast)
 {
 	char		**cmd;
 	t_ast		*tmptr;
-	size_t		len;
+	ssize_t		len;
 
 	tmptr = ast;
 	len = 0;
 	while (tmptr)
 	{
-		if (is_other_exec(tmptr->token->tokind)\
-			&& !token_cmp(ast->token->tokind,\
-			T_IO_NB, T_ASGMT_WRD, -1))
+		if (tmptr->token->tokind == T_WORD)
 			len++;
 		tmptr = tmptr->left;
 	}
-	len = get_len_cmd(ast, &len);
 	if (!(cmd = (char **)malloc(sizeof(char *) * (len + 1))))
 		to_exit(ER_MALLOC);
 	cmd[len--] = NULL;
 	tmptr = ast;
 	while (tmptr && len >= 0)
 	{
-		if (is_other_exec(tmptr->token->tokind)\
-			&& !token_cmp(ast->token->tokind,\
-			T_IO_NB, T_ASGMT_WRD, -1))
+		if (tmptr->token->tokind == T_WORD)
 			if (!(cmd[len--] = ft_strdup(tmptr->token->lexeme)))
 				to_exit(ER_MALLOC);
 		tmptr = tmptr->left;

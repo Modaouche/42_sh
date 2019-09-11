@@ -12,12 +12,6 @@
 
 #include "shell.h"
 
-static int word_or_none[2] =
-{
-	0,
-	0
-};
-
 static int		line_parser_prime(t_edit *line_e)
 {
 	g_shell.errorno = 0;

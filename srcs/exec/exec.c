@@ -29,11 +29,14 @@ void	ast_execution(t_ast *ast)
 	else if (is_and_or_exec(ast->token->tokind))
 		exec_and_or(ast);
 	else if (is_redir_pipe_exec(ast->token->tokind))
-		ft_putendl("                           -- redir pipe");//exec_redirec(ast);//tobuild
+	{
+		ft_printf("                            -- redir pipe %d\n", ast->token->tokind);
+//		exec_redir_pipe(ast);
+	}
 	else if (is_other_exec(ast->token->tokind))
 	{
 		ft_printf("                            -- other %d\n", ast->token->tokind);
-		exec_cmd(ast);
+		exec_cmd(ast, 0);
 	}
 }
 

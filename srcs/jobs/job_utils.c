@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   jobs_utils.c                                       :+:      :+:    :+:   */
+/*   job_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,17 +11,17 @@
 /* ************************************************************************** */
 
 #include "shell.h"
-#include "jobs.h"
+#include "job.h"
 
-/* Find the active job with the indicated pgid.  */
-job		*find_job (pid_t pgid)
+/* Find the active job with the indicated pgid.   useful option "jobs" builtin*/
+t_job		*find_job (pid_t pgid)
 {
-	job		*j;
+	t_job		*j;
 
-	j = shell->first_job;	
+	j = g_shell.first_job;	
 	while (j)
 	{
-		if (j->pgid = pgid)
+		if (j->pgid == pgid)
 			return (j);
 		j = j->next;
 	}
@@ -30,13 +30,13 @@ job		*find_job (pid_t pgid)
 		if (j->pgid == pgid)
 			return j;
 	*/
-	return NULL;
+	return (NULL);
 }
 
 /* Return true if all processes in the job have stopped or completed.  */
-int		job_is_stopped(job *j)
+int		job_is_stopped(t_job *j)
 {
-	process	*p;
+	t_process	*p;
 
 	p = j->first_process;
 	while (p)
@@ -50,13 +50,13 @@ int		job_is_stopped(job *j)
 		if (!p->completed && !p->stopped)
 			return 0;
 	*/
-	return 1;
+	return (1);
 }
 
 /* Return true if all processes in the job have completed.  */
-int		job_is_completed(job *j)
+int		job_is_completed(t_job *j)
 {
-	process	*p;
+	t_process	*p;
 
 	p = j->first_process;
 	while (p)
@@ -70,12 +70,12 @@ int		job_is_completed(job *j)
 		if (!p->completed)
 			return 0;
 	*/
-	return 1;
+	return (1);
 }
 
-process		*free_process(process *p)
+t_process		*free_process(t_process *p)
 {
-	process *next;
+	t_process *next;
 
 	next = p->next;
 	free_tabstr(p->argv);
@@ -83,9 +83,9 @@ process		*free_process(process *p)
 	return (next);
 }
 
-void		free_job(job *j)
+void		free_job(t_job *j)
 {
-	process *p;
+	t_process *p;
 
 	p = j->first_process;
 	while (p)
@@ -96,8 +96,8 @@ void		free_job(job *j)
 
 void		free_jobs(void)
 {
-	t_job j;
-	t_job save;
+	t_job *j;
+	t_job *save;
 
 	j = g_shell.first_job;
 	while (j)

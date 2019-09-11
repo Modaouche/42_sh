@@ -12,7 +12,7 @@
 
 #include "shell.h"
 #include <sys/wait.h>
-//#include "proc.h"
+#include "job.h"
 
 bool		access_verification(char *cmd)
 {
@@ -69,57 +69,25 @@ static bool	cmd_verif_prime(char **envp, char **argv)
 	return (access_verification(argv[0]));
 }
 
-bool		cmds_verif(char **envp)
+bool		cmds_verif(t_process *p, char **envp)
 {
-	t_job		*j;
-	t_process	*p;
-
-	j = last_job();
-	p = j->first_process;
-	while (p->next)
-	{
-		if (!is_builtin(p->argv[0]) && cmd_verif_prime(envp, p->argv) == false)
-			return (false);
-		p = p->next;
-	}
+	if (!is_builtin(0, p->argv[0]) && cmd_verif_prime(envp, p->argv) == false)
+		return (false);
 	return (true);
 }
 
 bool		exec_cmd(t_ast *ast, bool is_redir_pipe) 
 {
 	ft_putendl(" -- IN EXEC CMD ---");
-	if (!is_redir_pipe && is_builtin(ast))
+	if (!is_redir_pipe && is_builtin(ast, 0))
 		return (exec_builtin(ast));
-	if (!is_redir_pipe)
-		push_back_job(ast);
-	if (!cmds_verif(g_shell.envp))
-	{
-		error_msg("./42sh");
-		return (false);
-	}
+	push_back_job(ast);
 	g_shell.errorno = NO_ERROR;
-	launch_job(last_job(g_shell.first_job));
+	launch_job(last_job());
 	if (g_shell.errorno)
 	{
 		free_job(last_job());
-		error_msg();
+		error_msg("./42sh");
 	}
 	return (g_shell.errorno ? 0 : 1);
-	/*
-	if ((pid = fork()) == 0)
-	{
-		signal_handler(EXEC);
-		if (execve(g_shell.buff_cmd[0],\
-				g_shell.buff_cmd, g_shell.envp) == -1)
-			g_shell.errorno = ER_EXECVE;
-	}
-	if (pid < 0)
-		g_shell.errorno = ER_FORK;
-	free_tabstr(&g_shell.buff_cmd);
-	if (g_shell.errorno)
-		to_exit(0);
-	signal_handler(REGULAR);
-	waitpid(WAIT_ANY, &status, WUNTRACED);
-	return (g_shell.errorno ? 0 : 1);
-*/
 }

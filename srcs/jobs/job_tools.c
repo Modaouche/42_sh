@@ -11,9 +11,9 @@
 /* ************************************************************************** */
 
 #include "shell.h"
-#include "jobs.h"
+#include "job.h"
 
-static bool button_for_cmd;
+static bool is_pipe;
 
 t_job		*last_job(void)
 {
@@ -32,12 +32,12 @@ void			push_back_process(t_process **p)
 	ft_printf("push process\n");
 	if (!(new = (t_process *)ft_memalloc(sizeof(t_process))))
 		to_exit(ER_MALLOC);
-	while (p)
-		p = p->next;
-	p = new;
+	while (*p)
+		*p = *(p->next);
+	*p = new;
 }
 
-void		realloc_argv(t_process **process, char *to_add)
+static void		realloc_argv(t_process **process, char *to_add)
 {
 	char		**new;
 	int 		len;
@@ -50,10 +50,10 @@ void		realloc_argv(t_process **process, char *to_add)
 	if (!(new = (char **)ft_memalloc(sizeof(char *) * (len + 2))))
 		to_exit(ER_MALLOC);
 	len = 0;
-	while (p->argv[len])
+	while (p->argv && p->argv[len])
 		new[len] = p->argv[len++];
-       	new[len++] = ft_strdup(to_add);
-       	new[len] = NULL;
+       	new[len] = ft_strdup(to_add);
+       	new[++len] = NULL;
 	ft_memdel((void **)&(p->argv));
 	p->argv = new;
 	len = 0;//test<< VV
@@ -63,7 +63,7 @@ void		realloc_argv(t_process **process, char *to_add)
 	ft_putendl("");
 }
 
-void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
+static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 {
 	if (!ast)
 		return ;
@@ -74,14 +74,11 @@ void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 	else if (!(j->command = ft_multijoin(3, j->command, " ",\
 			ast->token->lexeme)))
 		to_exit(ER_MALLOC);
-	if (button_for_cmd == true)
+	if (is_pipe == true)
 		push_back_process(&(j->first_process));
 	if (ast->token->tokind == T_WORD)
 		realloc_argv(&(j->first_process), ast->token->lexeme);
-	button_for_cmd = (ast->token->tokind != T_PIPE
-			&& !is_and_or_exec(ast->token->tokind)
-			&& !is_slice_exec(ast->token->tokind))
-			? false : true;
+	is_pipe = (ast->token->tokind != T_PIPE) ? false : true;
 	if (ast->right)
 		add_process_and_msg_cmd(ast->right, job);
 }
@@ -91,11 +88,14 @@ void		push_back_job(t_ast *ast)
 	t_job	*new;
 	t_job	*j;
 
-	if (!(new = (t_job *)ft_memalloc(sizeof(t_ast))))
+	if (!(new = (t_job *)ft_memalloc(sizeof(t_job))))
 		to_exit(ER_MALLOC);
 	j = last_job();
-	button_for_cmd = true;
-	add_process_and_msg_cmd(ast, j);
+	is_pipe = true;
+	add_process_and_msg_cmd(ast, new);
+	(!j) ? j = new : j->next = new;
+	new->stdout = STDOUT_FILENO;
+	new->stderr = STDERR_FILENO;
 	ft_printf("test job command message -> %s\n", new->command);
 }
 

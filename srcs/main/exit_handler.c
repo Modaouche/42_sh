@@ -18,8 +18,6 @@ void		error_msg(char *cmd)
 
 	er = g_shell.errorno;
 	ft_printf_fd(STDERR_FILENO, "\n%s : ", cmd);
-	(er == ER_SYNTAX) ? ft_printf_fd(STDERR_FILENO,\
-			"parse error near `%s'.",g_shell.buff_cmd[0]) : 0;
 	(er == ER_MALLOC) ? ft_putstr_fd("memory allocation failed.",\
 		STDERR_FILENO) : 0;
 	(er == ER_ACCES) ? ft_putstr_fd("permission denied.",
@@ -36,18 +34,24 @@ void		error_msg(char *cmd)
 	(er == ER_NOT_TTY) ? ft_putstr_fd("not a tty.", STDERR_FILENO) : 0;
 }
 
+static void	le_free(t_edit *line_e)
+{
+	ft_strdel(&(line_e->line));
+	if (line_e->autocomp_list)
+		ft_file_list_delete(&(line_e->autocomp_list));
+	ft_memdel((void **)&line_e);
+}
+
 void	to_exit(uint8_t bt)
 {
-	//ajouter free :...
+	//ajouter free :... a voir
 	if (bt == 1)
 		g_shell.errorno = ER_MALLOC;
 	error_msg(".42sh");
-	if (g_shell.buff_cmd)
-		free_tabstr(&(g_shell.buff_cmd));
-	le_free();
-	ast_free(g_shell.ast);
+	le_free(g_shell.line_e);
+	ast_free(&(g_shell.ast));
 	free_jobs();
-	free_tabstr(g_shell.envp);
+	free_tabstr(&(g_shell.envp));
 	exit(EXIT_FAILURE);
 }
 
@@ -60,17 +64,9 @@ void	le_exit(uint8_t bt)
 		error_msg("./42sh");
 	else
 		ft_putstr_fd("\n./42sh : line edition : fail\n", STDERR_FILENO);
-	le_free();
-	ast_free(g_shell.ast);
+	le_free(g_shell.line_e);
+	ast_free(&(g_shell.ast));
 	free_jobs();
-	free_tabstr(g_shell.envp);
+	free_tabstr(&(g_shell.envp));
 	exit(EXIT_FAILURE);
-}
-
-void	le_free(t_edit *line_e)
-{
-	ft_strdel(line_e->line);
-	if (line_e->autocomp_list)
-		ft_file_list_delete(&(line_e->autocomp_list));
-	ft_memdel(&line_e);
 }

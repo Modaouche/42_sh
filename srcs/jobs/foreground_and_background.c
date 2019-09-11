@@ -11,22 +11,22 @@
 /* ************************************************************************** */
 
 #include "shell.h"
-#include "jobs.h"
+#include "job.h"
 
 /* Put job j in the foreground.  If cont is nonzero,
    restore the saved terminal modes and send the process group a
    SIGCONT signal to wake it up before we block.  */
 
-void	put_job_in_foreground (job *j, int cont)
+void	put_job_in_foreground (t_job *j, int cont)
 {
 	/* Put the job into the foreground.  */
-	tcsetpgrp (shell_terminal, j->pgid);
+	tcsetpgrp (g_shell.fd, j->pgid);
 
 
 	/* Send the job a continue signal, if necessary.  */
 	if (cont)
 	{
-		tcsetattr (shell_terminal, TCSADRAIN, &j->tmodes);
+		tcsetattr (g_shell.fd, TCSADRAIN, &j->tmodes);
 		if (kill (- j->pgid, SIGCONT) < 0)
 			perror ("kill (SIGCONT)");
 	}
@@ -36,17 +36,17 @@ void	put_job_in_foreground (job *j, int cont)
 	wait_for_job (j);
 
 	/* Put the shell back in the foreground.  */
-	tcsetpgrp (shell_terminal, shell_pgid);
+	tcsetpgrp (g_shell.fd, g_shell.pid);
 
 	/* Restore the shell’s terminal modes.  */
-	tcgetattr (shell_terminal, &j->tmodes);
-	tcsetattr (shell_terminal, TCSADRAIN, &shell_tmodes);
+	tcgetattr (g_shell.fd, &(j->tmodes));
+	tcsetattr (g_shell.fd, TCSADRAIN, g_shell.termios);
 }
 
 /* Put a job in the background.  If the cont argument is true, send
    the process group a SIGCONT signal to wake it up.  */
 
-void	put_job_in_background (job *j, int cont)
+void	put_job_in_background (t_job *j, int cont)
 {
 	/* Send the job a continue signal, if necessary.  */
 	if (cont)
@@ -57,9 +57,9 @@ void	put_job_in_background (job *j, int cont)
 
 /* Mark a stopped job J as being running again.  */
 
-void		mark_job_as_running (job *j)
+void		mark_job_as_running (t_job *j)
 {
-	Process *p;
+	t_process *p;
 
 	for (p = j->first_process; p; p = p->next)
 		p->stopped = 0;
@@ -67,9 +67,9 @@ void		mark_job_as_running (job *j)
 }
 
 
-/* Continue the job J.  */
+/* Continue the job J.   is 'fg or bg'*/
 
-void	continue_job (job *j, int foreground)
+void	continue_job (t_job *j, int foreground)
 {
 	mark_job_as_running (j);
 	if (foreground)

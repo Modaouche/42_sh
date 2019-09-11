@@ -15,9 +15,9 @@
 bool		is_slice_exec(t_tok tokind)
 {
 	if (tokind == T_AMPER)
-		g_shell.in_bg = true;
+		g_shell.in_fg = false;
 	else if (token_cmp(tokind, T_SEMI, T_NEWL, T_EOF, -1))
-		g_shell.in_bg = false;
+		g_shell.in_fg = true;
 	if (token_cmp(tokind, T_SEMI, T_AMPER, T_NEWL, T_EOF, -1))
 		return (true);
 	return (false);

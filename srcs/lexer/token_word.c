@@ -43,7 +43,14 @@ int    isassign(int c)
 	return ((ft_isalnum(c) || c == '_'));
 }
 
-unsigned int     token_isassignmt(t_token *actual_token, char *line, unsigned int *i)
+static bool	is_arg_cmd(void)
+{
+	if (last_token(0) == T_WORD)
+		return (true);
+	return (false);		
+}
+
+unsigned int	token_isassignmt(t_token *actual_token, char *line, unsigned int *i)
 {
 	unsigned int len;
 
@@ -51,7 +58,7 @@ unsigned int     token_isassignmt(t_token *actual_token, char *line, unsigned in
 	if (ft_isdigit(line[len]) || line[len] == '=')
 		return (0);
 	skip_predicat(&line, &len, &isassign);
-	if (line[len] != '=') 
+	if (line[len] != '=' || (line[len] == '=' && is_arg_cmd())) 
 		return (0);
 	len++;
 	actual_token->tokind = T_ASGMT_WRD;

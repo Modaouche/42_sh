@@ -24,7 +24,7 @@ void	line_edit(t_edit *line_e)
 	signal_handler(REGULAR);
 }//cree une fonction generique (tu as le meme genre de code dans le parser)
 
-int main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
 	t_edit	*line_e;
 
