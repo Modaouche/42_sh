@@ -83,25 +83,24 @@ t_process	*free_process(t_process *p)
 	return (next);
 }
 
-t_job		*free_job(t_job *j)
+void free_job(t_job *j)
 {
 	t_process	*p;
-	t_job		*next;
 
-	next = j->next;
+	if (!j)
+		return ;
 	p = j->first_process;
 	while (p)
 		p = free_process(p);
 	ft_strdel(&(j->command));
 	ft_memdel((void **)&j);
-	return (next);
 }
 
 void		free_jobs(void)
 {
-	t_job *j;
-
-	j = g_shell.first_job;
-	while (j)
-		j = free_job(j);
+	while (g_shell.first_job)
+	{
+		free_job(g_shell.first_job);
+		g_shell.first_job = g_shell.first_job->next;
+	}
 }

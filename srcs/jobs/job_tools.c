@@ -107,3 +107,22 @@ void		push_back_job(t_ast *ast)
 	ft_printf("test job command message -> %s\n", new->command);
 }
 
+void		remove_last_job(t_job **job)
+{
+	t_job *prev;
+	t_job *curr;
+
+	if (!job || !(curr = *job))
+		return ;
+	prev = NULL;
+	while (curr->next)
+	{
+		prev = curr;
+		curr = curr->next;
+	}
+	if (prev)
+		prev->next = NULL;
+	else
+		*job = NULL;
+	free_job(curr);
+}

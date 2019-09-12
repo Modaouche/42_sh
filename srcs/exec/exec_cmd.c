@@ -86,7 +86,7 @@ bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 	launch_job(last_job());
 	if (g_shell.errorno)
 	{
-		free_job(last_job());
+		remove_last_job(&g_shell.first_job);
 		error_msg("./42sh");
 	}
 	return (g_shell.errorno ? 0 : 1);

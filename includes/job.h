@@ -49,7 +49,7 @@ t_job			*find_job (pid_t pgid);
 int			job_is_stopped(t_job *j);
 int			job_is_completed(t_job *j);
 t_process		*free_process(t_process *p);
-t_job			*free_job(t_job *j);
+void			free_job(t_job *j);
 void			free_jobs(void);
 t_job			*last_job(void);
 void			put_job_in_foreground(t_job *j, int cont);
@@ -68,5 +68,5 @@ t_job			*create_job(t_job *j, t_ast *ast);
 t_job			*add_job(t_job *j, t_ast *ast);
 void			push_back_job(t_ast *ast);
 void			push_back_process(t_process **p);
-
+void			remove_last_job(t_job **job);
 #endif
