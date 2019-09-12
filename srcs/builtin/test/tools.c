@@ -102,7 +102,7 @@ int			ft_strgetlastocc(char *s, char c)
 			save = i;
 		i++;
 	}
-	return (save);
+	return ((save == -1) ? i : save);
 }
 
 int			ft_strchri(char *str, char c)
