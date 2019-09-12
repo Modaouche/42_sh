@@ -64,11 +64,9 @@ int				check_perms(char *path)
 {
 	struct stat	buf;
 	int			flag;
-	int			s;
 
 	flag = 0;
 	buf.st_mode = 0;
-	s = stat(path, &buf);
 	if (S_ISREG(buf.st_mode) && !access(path, X_OK))
 		flag = 1;
 	if (!access(path, F_OK) && access(path, X_OK))

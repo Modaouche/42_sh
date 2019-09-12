@@ -14,7 +14,7 @@
 # define HISTORY_H
 
 # include "shell.h"
-# define GASI get_argument_starting_index
+# include <sys/wait.h>
 
 typedef struct			s_hnode
 {

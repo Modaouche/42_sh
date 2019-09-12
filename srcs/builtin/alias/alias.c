@@ -22,7 +22,7 @@ void	print_alias_list(void)
 	i = 0;
 	while (g_shell.aliasp[i])
 	{
-		if (g_shell.aliasp[i] != '\0')
+		if (g_shell.aliasp[i][0] != '\0')
 			ft_putendl(g_shell.aliasp[i]);
 		++i;
 	}

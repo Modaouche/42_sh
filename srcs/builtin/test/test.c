@@ -15,9 +15,7 @@
 char			ft_test(uint16_t flag, char **arg)
 {
 	char		(*tabfct[3])(uint16_t flag, void *arg);
-	char		res;
 
-	res = FALSE;
 	tabfct[0] = test_flag_file;
 	tabfct[1] = test_flag_str;
 	tabfct[2] = test_flag_nbr;

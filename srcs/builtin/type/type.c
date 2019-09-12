@@ -36,12 +36,8 @@ int			check_alias(char *str)
 
 int			check_built_in(char *args)
 {
-	int		i;
 	int		j;
-	int		flag;
 
-	i = 0;
-	flag = 0;
 	j = -1;
 	while (g_shell.fptr->flag[++j])
 	{
