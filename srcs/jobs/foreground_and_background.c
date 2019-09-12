@@ -40,7 +40,7 @@ void	put_job_in_foreground (t_job *j, int cont)
 
 	/* Restore the shell’s terminal modes.  */
 	tcgetattr (g_shell.fd, &(j->tmodes));
-	tcsetattr (g_shell.fd, TCSADRAIN, g_shell.termios);
+	tcsetattr (g_shell.fd, TCSADRAIN, g_shell.termiold);//to check not sur
 }
 
 /* Put a job in the background.  If the cont argument is true, send
