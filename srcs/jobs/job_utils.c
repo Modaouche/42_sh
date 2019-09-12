@@ -98,9 +98,12 @@ void free_job(t_job *j)
 
 void		free_jobs(void)
 {
+	t_job *next;
+
 	while (g_shell.first_job)
 	{
+		next = g_shell.first_job->next;
 		free_job(g_shell.first_job);
-		g_shell.first_job = g_shell.first_job->next;
+		g_shell.first_job = next;
 	}
 }
