@@ -100,10 +100,10 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 
 CC = gcc
 
-CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
-			-g -fsanitize=address
-	#		-fno-omit-frame-pointer\
+CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES) \
+			-g -fsanitize=address \
 			-fsanitize-address-use-after-scope
+	#		-fno-omit-frame-pointer
 
 all: lib $(NAME)
 

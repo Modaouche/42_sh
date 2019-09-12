@@ -56,11 +56,9 @@ void		init_history(void)
 int			build_node(char *line, t_list **node)
 {
 	t_hnode		*content;
-	int			i;
 
 	if (line == NULL)
 		return (-1);
-	i = 0;
 	if (!(content = (t_hnode *)ft_memalloc(sizeof(t_hnode))))
 		return (-1);
 	content->cmd = ft_strdup(line);
