@@ -36,6 +36,8 @@ void		error_msg(char *cmd)
 
 static void	le_free(t_edit *line_e)
 {
+	if (!line_e)
+		return ;
 	ft_strdel(&(line_e->line));
 	if (line_e->autocomp_list)
 		ft_file_list_delete(&(line_e->autocomp_list));
