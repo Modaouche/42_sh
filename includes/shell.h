@@ -22,6 +22,7 @@
 # include <curses.h>
 # include "libft.h"
 # include <stdbool.h>
+# include <sys/wait.h>
 # include "token_and_ast.h"
 # include "signal_handler.h"
 # include "error_handler.h"
@@ -268,6 +269,7 @@ bool					is_other_exec(t_tok tokind);
 bool					exec_builtin(t_ast *ast);
 bool					is_builtin(t_ast *ast, char *bu);
 char					**get_cmd(t_ast *ast);
+bool					cmds_verif(t_process *p, char **envp);
 char					*find_var(char **envp, char *with);
 
 /*

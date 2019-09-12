@@ -13,7 +13,7 @@
 #include "shell.h"
 #include "job.h"
 
-void	launch_process(process *p, pid_t pgid,
+void	launch_process(t_process *p, pid_t pgid,
 		int infile, int outfile, int errfile)
 {
 	pid_t pid;
@@ -58,12 +58,13 @@ void	launch_process(process *p, pid_t pgid,
 	exit (1);
 }
 
-void		launch_job (job *j)
+void		launch_job (t_job *j)
 {
-	process	*p;
+	t_process	*p;
 	pid_t	pid;
 	int	mypipe[2], infile, outfile;
 
+	getchar();
 	infile = j->stdin;
 	for (p = j->first_process; p; p = p->next)
 	{

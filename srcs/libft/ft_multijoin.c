@@ -12,6 +12,7 @@
 
 #include "libft.h"
 #include <stdarg.h>
+#include <stdio.h>//to rm
 
 char		*ft_multijoin(unsigned int nb, ...)
 {
@@ -21,9 +22,11 @@ char		*ft_multijoin(unsigned int nb, ...)
 	va_start(params, nb);
 	str = ft_strdup(va_arg(params, char *));
 	nb--;
-	while (nb-- > 0)
+	while (str && nb-- > 0)
+	{
 		if (!(str = ft_strjoin_free(str, va_arg(params, char *), 1)))
-			return (0);
+			break ;
+	}
 	va_end(params);
 	return (str);
 }

@@ -73,37 +73,35 @@ int		job_is_completed(t_job *j)
 	return (1);
 }
 
-t_process		*free_process(t_process *p)
+t_process	*free_process(t_process *p)
 {
 	t_process *next;
 
 	next = p->next;
-	free_tabstr(p->argv);
+	free_tabstr(&(p->argv));
 	ft_memdel((void **)&p);
 	return (next);
 }
 
-void		free_job(t_job *j)
+t_job		*free_job(t_job *j)
 {
-	t_process *p;
+	t_process	*p;
+	t_job		*next;
 
+	next = j->next;
 	p = j->first_process;
 	while (p)
-		p = free_process(&p);
-	ft_strdel(j->command);
+		p = free_process(p);
+	ft_strdel(&(j->command));
 	ft_memdel((void **)&j);
+	return (next);
 }
 
 void		free_jobs(void)
 {
 	t_job *j;
-	t_job *save;
 
 	j = g_shell.first_job;
 	while (j)
-	{
-		save = j->next;
-		free_job(j);
-		j = save;
-	}
+		j = free_job(j);
 }

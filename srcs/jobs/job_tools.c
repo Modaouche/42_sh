@@ -33,7 +33,7 @@ void			push_back_process(t_process **p)
 	if (!(new = (t_process *)ft_memalloc(sizeof(t_process))))
 		to_exit(ER_MALLOC);
 	while (*p)
-		*p = *(p->next);
+		*p = (*p)->next;
 	*p = new;
 }
 
@@ -46,14 +46,17 @@ static void		realloc_argv(t_process **process, char *to_add)
 	p = *process;
 	while (p && p->next)
 		p = p->next;
-	len = tablen(p->argv);
+	len = ft_tablen(p->argv);
 	if (!(new = (char **)ft_memalloc(sizeof(char *) * (len + 2))))
 		to_exit(ER_MALLOC);
 	len = 0;
 	while (p->argv && p->argv[len])
-		new[len] = p->argv[len++];
-       	new[len] = ft_strdup(to_add);
-       	new[++len] = NULL;
+	{
+		new[len] = p->argv[len];
+		len++;
+	}
+       	new[len++] = ft_strdup(to_add);
+       	new[len] = NULL;
 	ft_memdel((void **)&(p->argv));
 	p->argv = new;
 	len = 0;//test<< VV
@@ -68,8 +71,8 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 	if (!ast)
 		return ;
 	if (ast->left)
-		add_process_and_msg_cmd(ast->left, job);
-	if (j->command)
+		add_process_and_msg_cmd(ast->left, j);
+	if (!(j->command))
 		j->command = ft_strdup(ast->token->lexeme);
 	else if (!(j->command = ft_multijoin(3, j->command, " ",\
 			ast->token->lexeme)))
@@ -80,7 +83,7 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 		realloc_argv(&(j->first_process), ast->token->lexeme);
 	is_pipe = (ast->token->tokind != T_PIPE) ? false : true;
 	if (ast->right)
-		add_process_and_msg_cmd(ast->right, job);
+		add_process_and_msg_cmd(ast->right, j);
 }
 
 void		push_back_job(t_ast *ast)
@@ -93,7 +96,10 @@ void		push_back_job(t_ast *ast)
 	j = last_job();
 	is_pipe = true;
 	add_process_and_msg_cmd(ast, new);
-	(!j) ? j = new : j->next = new;
+	if (!j)
+		j = new;
+	else
+		j->next = new;
 	new->stdout = STDOUT_FILENO;
 	new->stderr = STDERR_FILENO;
 	ft_printf("test job command message -> %s\n", new->command);

@@ -20,10 +20,6 @@ void	ast_execution(t_ast *ast)
 	{
 		ft_putendl("                           -- slice");
 		ast_execution(ast->left);
-	}
-	if (is_slice_exec(ast->token->tokind))
-	{
-		ft_putendl("                           -- slice2");
 		ast_execution(ast->right);
 	}
 	else if (is_and_or_exec(ast->token->tokind))

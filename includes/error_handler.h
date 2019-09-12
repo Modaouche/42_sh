@@ -29,7 +29,8 @@ typedef enum
                                         ER_PIPE,
                                         ER_ACCES,
                                         ER_ISDIR,
-                                        ER_NOENT
+                                        ER_NOENT,
+					ER_CHILD
 }                                       t_errorno;
 
 void					le_exit(uint8_t bt);
