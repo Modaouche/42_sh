@@ -148,7 +148,6 @@ void	ast_free(t_ast **root)
 	to_free = *root;
 	ast_free(&(to_free->left));
 	ast_free(&(to_free->right));
-	ft_printf("free -> [%s]\n", to_free->token->lexeme);
 	ft_strdel(&(to_free->token->lexeme));
 	ft_memdel((void **)&(to_free->token));
 	ft_memdel((void **)&(to_free));

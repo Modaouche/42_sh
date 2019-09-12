@@ -48,11 +48,7 @@ int	mark_process_status (pid_t pid, int status)
 	else if (pid == 0 || g_shell.errorno == ER_CHILD)
 		/* No processes ready to report.  */
 		return -1;
-	else {//useless
-		/* Other weird errors.  */
-		perror ("waitpid");
-		return -1;
-	}
+	return -1;
 }
 
 
@@ -79,6 +75,7 @@ void		wait_for_job (t_job *j)
 	pid_t pid;
 
 	pid = waitpid(WAIT_ANY, &status, WUNTRACED);
+	ft_printf("pid : %d\n" , pid);
 	while (!mark_process_status(pid, status)
 			&& !job_is_stopped(j)
 			&& !job_is_completed(j))

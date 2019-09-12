@@ -53,7 +53,7 @@ void	launch_process(t_process *p, pid_t pgid,
 	}
 
 	/* Exec the new process.  Make sure we exit.  */
-	execvp (p->argv[0], p->argv);// add env fct
+	execve(p->argv[0], p->argv, g_shell.envp);
 	perror ("execvp");
 	exit (1);
 }

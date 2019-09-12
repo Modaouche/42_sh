@@ -78,7 +78,7 @@ bool		cmds_verif(t_process *p, char **envp)
 
 bool		exec_cmd(t_ast *ast, bool is_redir_pipe) 
 {
-	ft_putendl(" -- IN EXEC CMD ---");
+	ft_putendl("-----------------[ exec cmd ]");
 	if (!is_redir_pipe && is_builtin(ast, 0))
 		return (exec_builtin(ast));
 	push_back_job(ast);

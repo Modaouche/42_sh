@@ -83,7 +83,7 @@ t_process	*free_process(t_process *p)
 	return (next);
 }
 
-void free_job(t_job *j)
+void		free_job(t_job *j)
 {
 	t_process	*p;
 
