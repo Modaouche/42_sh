@@ -64,7 +64,6 @@ void		launch_job (t_job *j)
 	pid_t	pid;
 	int	mypipe[2], infile, outfile;
 
-	getchar();
 	infile = j->stdin;
 	for (p = j->first_process; p; p = p->next)
 	{

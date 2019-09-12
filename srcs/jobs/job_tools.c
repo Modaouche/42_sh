@@ -20,7 +20,7 @@ t_job		*last_job(void)
 	t_job		*j;
 
 	j = g_shell.first_job;
-	while (j)
+	while (j && j->next)
 		j = j->next;
 	return (j);
 }
@@ -93,7 +93,8 @@ void		push_back_job(t_ast *ast)
 
 	if (!(new = (t_job *)ft_memalloc(sizeof(t_job))))
 		to_exit(ER_MALLOC);
-	j = last_job();
+	if (!(j = last_job()))
+		g_shell.first_job = new;
 	is_pipe = true;
 	add_process_and_msg_cmd(ast, new);
 	if (!j)
@@ -102,6 +103,7 @@ void		push_back_job(t_ast *ast)
 		j->next = new;
 	new->stdout = STDOUT_FILENO;
 	new->stderr = STDERR_FILENO;
+
 	ft_printf("test job command message -> %s\n", new->command);
 }
 
