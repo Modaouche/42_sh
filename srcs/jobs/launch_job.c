@@ -81,11 +81,11 @@ void		launch_job (t_job *j)
 			outfile = j->stdout;		//      out = pipe[1]   out = stdout
 
 		/* Fork the child processes.  */
-		pid = fork ();
+		pid = fork();
 		if (pid == 0)
 		{
 			if (!cmds_verif(p, g_shell.envp))
-				error_msg("./42sh");//dans une ternaire
+				to_exit(0);//dans une ternaire
 			/* This is the child process.  */
 			else
 				launch_process (p, j->pgid, infile,
