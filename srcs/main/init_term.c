@@ -17,7 +17,7 @@ struct termios			*term_backup(void)
 	static struct termios	termiold;
 
 	if (tcgetattr(STDERR_FILENO, &termiold) == -1)
-		toexit(0, "tcgetattr", 1);
+		le_exit(0);
 	return (&termiold);
 }
 
@@ -26,7 +26,7 @@ struct termios			*term_raw(void)
 	static struct termios	termios;
 
 	if (tcgetattr(STDERR_FILENO, &termios) == -1)
-		toexit(0, "tcgetattr", 1);
+		le_exit(0);
 	termios.c_lflag |= IEXTEN;
 	termios.c_lflag &= ~(ICANON | ECHO);
 	termios.c_oflag &= ~(OPOST);
@@ -50,30 +50,29 @@ static int		init_tc(void)
 	return (-1);
 }
 
-void				init_term(t_edit *line_e, char **envp)
+void		init_term(t_edit *line_e, char **envp)
 {
-	if (!isatty(STDERR_FILENO))
-		toexit(line_e, "isatty", 1);
-	line_e = st_line();
-	ft_bzero(line_e, sizeof(line_e));
 	ft_bzero(&g_shell, sizeof(g_shell));
-	init_line(line_e);
-	fill_token_tab();
-	g_shell.tc_onoff = (init_tc() == -1) ? 1 : 0;//set off termcaps
-	init_env(envp);
-	g_shell.fd = STDERR_FILENO;
-	g_shell.termiold = term_backup();
-	g_shell.termios = term_raw();
-	g_shell.pid = getpgrp();//tocheck
+	ft_bzero(line_e, sizeof(line_e));
+	g_shell.fd = STDERR_FILENO;//add fd var in params to run '.sh' file
+	if (!(g_shell.is_interactive = isatty(g_shell.fd)))// a enlever et mettre sur les line_edit() une condition if(!g_shell.is_interactive) (dans le parser on quitte avec un msg d'erreur type [error with \"/'/( in non-tty])
+		le_exit(ER_NOT_TTY);//just a return ; if ^^^
+	if (init_tc() == -1)
+		error_msg("./42sh");
+	g_shell.pid = getpgrp();
 	while (tcgetpgrp(g_shell.fd) != g_shell.pid)
-	{
-		ft_printf("PGRP != PID\n");
 		kill(-g_shell.pid, SIGTTIN);
-	}//tocheck
 	signal_handler(REGULAR);
 	g_shell.pid = getpid();
-	setpgid(g_shell.pid, g_shell.pid);//tocheck
-	tcsetpgrp(g_shell.fd, g_shell.pid);//tocheck
+	setpgid(g_shell.pid, g_shell.pid);
+	tcsetpgrp(g_shell.fd, g_shell.pid);
+	line_e = st_line();
+	init_line(line_e);
+	fill_token_tab();
+	init_env(envp);
+	g_shell.termiold = term_backup();
+	g_shell.termios = term_raw();
+	g_shell.in_fg = true;
 	init_history();
 	g_shell.fptr = init_fptr();
 }

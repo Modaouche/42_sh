@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_and_or.c                                       :+:      :+:    :+:   */
+/*   exec_and_or.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,23 +14,29 @@
 
 bool		exec_and_or(t_ast *ast)
 {
+	if (ast->token->tokind == T_EOF)
+		return (exec_and_or(ast->left));
 	if (ast->token->tokind == T_AND_IF)
 	{
+		ft_putendl("---------------------------~ and");
 		if (exec_and_or(ast->left) && exec_and_or(ast->right))
 			return (true);
 	}
 	else if (ast->token->tokind == T_OR_IF)
 	{
+		ft_putendl("---------------------------~ or");
 		if (exec_and_or(ast->left) || exec_and_or(ast->right))		
 			return (true);
 	}
-	else if (is_redir_pipe_exec(ast->token->tokind))
+	else if (is_redir_pipe_exec(ast->token->tokind))//add eof tokentocmp
 	{
-//		if (exec_redir(ast))//to_build
-//			return (true);
+		ft_putendl("---------------------------~ redir pipe2");
+		return true;//(exec_redir_pipe(ast));//to_build
 	}
-	//else
-		//if (exec_cmd(ast))//to finish
-		//	return (true);
+	else if (is_other_exec(ast->token->tokind))
+	{
+		ft_printf("----------------------------~ other2 %d\n", ast->token->tokind);
+		return (exec_cmd(ast, 0));//to finish
+	}
 	return (false);
 }

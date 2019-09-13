@@ -1,39 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_tab.c                                      :+:      :+:    :+:   */
+/*   tabstr_to_str.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/24 03:39:07 by kicausse          #+#    #+#             */
-/*   Updated: 2019/07/06 16:56:18 by araout           ###   ########.fr       */
+/*   Created: 2018/10/20 17:02:37 by modaouch          #+#    #+#             */
+/*   Updated: 2019/04/25 20:15:18 by modaouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-void	ft_free_tab(char **tab)
+char			*tabstr_to_str(char **tab, char *sep)
 {
-	unsigned int	i;
+	char		*str;
+	int 		i;
 
-	if (tab == 0)
-		return ;
 	i = 0;
-	while (tab[i])
+	str = ft_strdup(tab[i++]);
+	while (str && tab[i])
 	{
-		ft_strdel(&tab[i]);
-		++i;
+		if (sep)
+			str = ft_strjoin_free(str, sep, 1);
+		str = ft_strjoin_free(str, tab[i++], 1);
 	}
-	free(tab);
-}
-
-char	**reverse_free_tab(char **tab, int size)
-{
-	if (tab == 0)
-		return (NULL);
-	while (size >= 0)
-		free(tab[--size]);
-	free(tab);
-	return (NULL);
+	return (str);
 }

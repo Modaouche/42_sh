@@ -115,6 +115,7 @@ char					*ft_strjoinfree_last(const char *source, char *concat);
 char					*ft_strjoin_free(char *s1, char *s2, size_t bt);
 char					*ft_strjoin_if(char *source, char *concat,
 						int (*f)(int));
+char					*ft_multijoin(unsigned int n, ...);
 char					*ft_strtrim(char const *s);
 char					**ft_strsplit(char const *s, char c);
 char					**ft_split(char const *s, char *c);

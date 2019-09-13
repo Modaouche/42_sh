@@ -12,7 +12,7 @@
 
 #include "shell.h"
 
-void		init_line(t_edit *line_e)
+void				init_line(t_edit *line_e)
 {
 	if (line_e->line)
 		ft_strdel(&line_e->line);
@@ -25,9 +25,9 @@ void		init_line(t_edit *line_e)
 	line_e->history_pos = 0;
 }
 
-t_edit	*st_line(void)
+t_edit				*st_line(void)
 {
-	static t_edit line_e;
+	static t_edit		line_e;
 	return (&line_e);
 }
 

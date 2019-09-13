@@ -26,7 +26,7 @@ void        cmd_suffix_prime_fct(t_edit *line_e)
 			T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS,\
 			T_LESSAND, T_DLESSDASH, T_SEMI, T_AMPER, -1))
 		{
-		 	if (save->right)
+		 	if (ast_head->curr_head->right)
 				ast_head->curr_head\
 					= ast_head->curr_head->right;
 			ast_left_insert(get_next_token(&(line_e->line),\

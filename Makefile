@@ -15,9 +15,9 @@ NAME = 42sh
 SRC =	srcs/main/main.c\
 		srcs/main/init_term.c\
 		srcs/main/init_tool.c\
+		srcs/main/exit_handler.c\
 		srcs/main/line_handling.c\
 		srcs/line_edition/line_edition.c\
-		srcs/line_edition/exit_le.c\
 		srcs/line_edition/tools_le.c\
 		srcs/line_edition/autocompletion.c\
 		srcs/line_edition/autocompletion_building.c\
@@ -46,7 +46,15 @@ SRC =	srcs/main/main.c\
 		srcs/signals/signal_handler.c\
 		srcs/exec/exec.c\
 		srcs/exec/exec_and_or.c\
+		srcs/exec/exec_cmd.c\
 		srcs/exec/exec_cmp.c\
+		srcs/exec/exec_tools.c\
+		srcs/exec/exec_builtin.c\
+		srcs/jobs/foreground_and_background.c\
+		srcs/jobs/job_utils.c\
+		srcs/jobs/job_tools.c\
+		srcs/jobs/launch_job.c\
+		srcs/jobs/stop_and_done_job.c\
 		srcs/inhibitor/inhibitors.c\
 		srcs/inhibitor/quote_handling.c\
 		srcs/inhibitor/word_handling.c\
@@ -92,7 +100,10 @@ LIBFT = srcs/libft
 LIB = $(LIBFT)/libft.a
 
 HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h \
-		includes/history.h includes/env.h includes/built_in.h includes/ft_test.h
+		includes/history.h includes/env.h includes/built_in.h includes/ft_test.h \
+        includes/error_handler.h includes/job.h
+
+
 
 INCLUDES = -Iincludes -I$(LIBFT)
 
@@ -100,8 +111,9 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 
 CC = gcc
 
-CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES) \
-			-g -fsanitize=address \
+CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
+#			-g3 -fsanitize=address\
+			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 	#		-fno-omit-frame-pointer
 

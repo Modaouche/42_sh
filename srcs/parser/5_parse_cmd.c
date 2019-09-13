@@ -37,7 +37,7 @@ void        command_fct(t_edit *line_e)
 			save->right = ast_head->curr_head;
 			ast_head->curr_head = save;
 		}
-		else
+		else 
 			ast_left_insert(lookahead);//in one fct
 		cmd_suffix_opt_fct(line_e);
 	}

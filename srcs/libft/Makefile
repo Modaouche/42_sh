@@ -6,7 +6,7 @@
 #    By: kicausse <kicausse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/13 13:08:47 by kicausse          #+#    #+#              #
-#    Updated: 2019/04/25 20:16:26 by modaouch         ###   ########.fr        #
+#    Updated: 2019/06/19 22:22:55 by kaboujna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,16 +23,18 @@ SRC		=	ft_abs.c ft_adv_memcmp.c ft_atoi.c ft_atoi_base.c ft_bzero.c ft_ceil.c  \
 			ft_putnstr_fd.c ft_putnstr_non_printable.c ft_putstr.c ft_putstr_fd.c  \
 			ft_putstr_non_printable.c ft_putstr_non_printable_fd.c ft_memdup.c  \
 			ft_set_bit.c ft_strcat.c ft_strchr.c ft_strclr.c ft_strcmp.c ft_strcpy.c  \
-			ft_strcut.c ft_strdel.c ft_strdup.c ft_strdup_if.c ft_strequ.c  \
-			ft_strins.c ft_striter.c ft_striteri.c ft_strjoin.c ft_strjoin_if.c  \
-			ft_strjoin_free.c ft_strjoinfree.c ft_strlcat.c ft_strlen.c ft_strlen_if.c\
-			ft_strmap.c ft_strmapi.c ft_strncat.c ft_strncmp.c ft_strncpy.c ft_strnequ.c  \
-			ft_strnew.c ft_strnstr.c ft_strrchr.c ft_strsplit.c ft_strstr.c  \
-			ft_strsub.c ft_strtolower.c ft_strtoupper.c ft_strtrim.c ft_swap.c  \
-			ft_tolower.c ft_toupper.c read_memory_int.c read_memory_unsigned_int.c  \
-			ft_list_create.c ft_list_append.c ft_list_delete.c ft_list_at.c ft_ccount.c \
+			ft_strcut.c ft_tablen.c ft_strdel.c ft_strdup.c ft_strdup_if.c ft_strequ.c  \
+			ft_strcut.c ft_tablen.c ft_strdel.c ft_strdup.c ft_strdup_if.c ft_strequ.c  \
+			ft_strins.c ft_striter.c ft_striteri.c ft_strjoin.c ft_strjoin_if.c ft_multijoin.c \
+			ft_strjoin_free.c ft_strjoinfree.c tabstr_to_str.c ft_strlcat.c ft_strlen.c\
+			ft_strlen_if.c ft_strmap.c ft_strmapi.c ft_strncat.c ft_strncmp.c\
+		   	ft_strncpy.c ft_strnequ.c ft_strnew.c ft_strnstr.c\
+			ft_strrchr.c ft_strsplit.c ft_strstr.c ft_strsub.c ft_strtolower.c\
+			ft_strtoupper.c ft_strtrim.c ft_swap.c ft_tolower.c\
+			ft_toupper.c read_memory_int.c read_memory_unsigned_int.c  \
+			ft_list_create.c ft_list_append.c ft_list_delete.c ft_list_at.c \
 			charset_match.c ft_strlcpy.c ft_realloc.c ft_strndup.c \
-			unicode.c unicode_2.c nbrlen.c ft_cfind.c ft_free_tab.c ft_split.c \
+			unicode.c unicode_2.c nbrlen.c ft_cfind.c ft_free_tabstr.c ft_split.c \
 			print_srcs/colors.c print_srcs/flags.c print_srcs/flags_utils.c  \
 			print_srcs/ft_printf.c print_srcs/function_pointers.c  \
 			print_srcs/get_nbr_len.c print_srcs/list.c print_srcs/nbr_utils.c  \
