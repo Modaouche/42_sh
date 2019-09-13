@@ -51,8 +51,8 @@ char			**get_cmd(t_ast *ast)
 	tmptr = ast;
 	while (tmptr && len >= 0)
 	{
-		if (tmptr->token->tokind == T_WORD)
-			if (!(cmd[len--] = ft_strdup(tmptr->token->lexeme)))
+		if (tmptr->token->tokind == T_WORD
+			&& !(cmd[len--] = ft_strdup(tmptr->token->lexeme)))
 				to_exit(ER_MALLOC);
 		tmptr = tmptr->left;
 	}

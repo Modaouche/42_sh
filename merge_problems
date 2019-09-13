@@ -1,4 +1,3 @@
-empty quotes = crash
 leaks in ast_execution.
 ==77406==    by 0x100016D8B: ft_strdup (in /Users/kicausse/Desktop/Projects/42sh/42sh)
 ==77406==    by 0x10000CAED: add_process_and_msg_cmd (in /Users/kicausse/Desktop/Projects/42sh/42sh)

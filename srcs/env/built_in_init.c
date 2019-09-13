@@ -70,6 +70,8 @@ int				ft_built_in(char *cmd)
 	int			i;
 	char		**args;
 
+	if (cmd == NULL)
+		return (0);
 	i = 0;
 	args = (char**)cmd;
 	while (g_shell.fptr->f[i])

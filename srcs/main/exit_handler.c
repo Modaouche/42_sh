@@ -52,16 +52,13 @@ void	le_free(t_edit *line_e)
 
 void	to_exit(uint8_t bt)
 {
-	//ajouter free :... a voir
-	if (bt == 1)
-		g_shell.errorno = ER_MALLOC;
+	g_shell.errorno = bt;
 	error_msg("./42sh");
 	fexit(ft_split("exit 1", " "));
 }
 
 void	le_exit(uint8_t bt)
 {
-	//ajouter free : ...
 	if (g_shell.termiold)
 		tcsetattr(STDERR_FILENO, TCSAFLUSH, g_shell.termiold);
 	if ((g_shell.errorno = bt))
