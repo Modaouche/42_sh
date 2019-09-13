@@ -38,7 +38,7 @@ void	ast_execution(t_ast *ast)
 
 void		line_execution(void)
 {
-	ft_putendl("----------------------------------Beginning-------------------------------");
+	ft_putendl("\n----------------------------------Beginning-------------------------------");
 	if (!g_shell.ast)
 		return ;
 	ast_execution(g_shell.ast);

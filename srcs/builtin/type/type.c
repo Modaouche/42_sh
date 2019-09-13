@@ -52,7 +52,9 @@ int			check_built_in(char *args)
 
 int			check_path_abs(char *args)
 {
-	if (!access(args, X_OK))
+	struct stat	buf;
+
+	if (!stat(args, &buf) && S_ISREG(buf.st_mode))
 	{
 		ft_printf("%s is %s\n", args, args);
 		return (1);
@@ -66,6 +68,7 @@ int			check_path_var(char *args)
 	char	**split_path;
 	int		i;
 	char	*tmp;
+	struct stat	buf;
 
 	i = -1;
 	path = get_env_value("PATH");
@@ -76,7 +79,7 @@ int			check_path_var(char *args)
 		ft_strdel(&path);
 		path = ft_strjoin(tmp, args);
 		ft_strdel(&tmp);
-		if (path && !access(path, X_OK))
+		if (path && !stat(path, &buf) && S_ISREG(buf.st_mode))
 		{
 			ft_printf("%s is %s\n", args, path);
 			ft_strdel(&path);

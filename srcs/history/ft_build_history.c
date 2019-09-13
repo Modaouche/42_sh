@@ -43,6 +43,7 @@ void		init_history(void)
 	if (!home_path)
 	{
 		ft_putstr_fd("error : history need HOME env variable", 2);
+		g_shell.history = (t_history *)ft_memalloc(sizeof(t_history));
 		return ;
 	}
 	if (!(g_shell.history = (t_history *)ft_memalloc(sizeof(t_history))))

@@ -383,6 +383,8 @@ void	get_hist_line(t_edit *line_e, int offset)
 {
 	char	*str;
 
+	if (!g_shell.history)
+		return ;
 	str = get_hist_line_from_end(line_e->history_pos + offset);
 	if (str == NULL)
 	{
