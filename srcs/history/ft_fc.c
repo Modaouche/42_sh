@@ -122,14 +122,13 @@ void			exec_file(char *filename)
 	}
 	while (get_next_line(fd, &line) > 0)
 	{
-		ft_printf("Executing [%s]\n", line);
 		init_line(g_shell.line_e);
 		g_shell.line_e->line = line;
 		line_parser(g_shell.line_e);
 		line_execution();
 		write_history(line);
 	}
-//	ft_strdel(&line);
+	ft_strdel(&g_shell.line_e->line);
 	g_shell.isnt_interactive = 1;
 	close(fd);
 }

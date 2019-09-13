@@ -14,6 +14,8 @@
 
 void				init_line(t_edit *line_e)
 {
+	if (!g_shell.line_e)
+		g_shell.line_e = st_line();
 	if (line_e->line)
 		ft_strdel(&line_e->line);
 	line_e->len_max = BUFFER_LEN;

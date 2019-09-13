@@ -61,7 +61,6 @@ static int		edit_line_2(char **args, char **editor, char **hist, char **t)
 	int		flag;
 
 	flag = 0;
-	errno = 0;
 	if (*editor == NULL && (*editor = get_env_value("FCEDIT")) == NULL)
 	{
 		*editor = ft_strdup("/bin/ed");
@@ -118,5 +117,4 @@ void			edit_line(char **hist, char *editor)
 	ft_strdel(&tmp_filename);
 	if (flag_free_ed)
 		ft_strdel(&editor);
-	ft_printf("Errno = %d\n", errno);
 }
