@@ -18,6 +18,8 @@ void		free_history(void)
 	t_list		*tmp;
 	t_hnode		*n;
 
+	if (g_shell.history == NULL)
+		return ;
 	head = g_shell.history->hist;
 	while (head)
 	{
