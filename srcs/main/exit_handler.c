@@ -34,7 +34,7 @@ void		error_msg(char *cmd)
 	(er == ER_NOT_TTY) ? ft_putendl_fd("not a tty", STDERR_FILENO) : 0;
 }
 
-static void	le_free(t_edit *line_e)
+void	le_free(t_edit *line_e)
 {
 	if (!line_e)
 		return ;
@@ -50,11 +50,7 @@ void	to_exit(uint8_t bt)
 	if (bt == 1)
 		g_shell.errorno = ER_MALLOC;
 	error_msg("./42sh");
-	le_free(g_shell.line_e);
-	ast_free(&(g_shell.ast));
-	free_jobs();
-	ft_free_tab(g_shell.envp);
-	exit(EXIT_FAILURE);
+	fexit(ft_split("exit 1", " "));
 }
 
 void	le_exit(uint8_t bt)
@@ -66,9 +62,5 @@ void	le_exit(uint8_t bt)
 		error_msg("./42sh");
 	else
 		ft_putendl_fd("\n./42sh : line edition : fail\n", STDERR_FILENO);
-	le_free(g_shell.line_e);
-	ast_free(&(g_shell.ast));
-	free_jobs();
-	ft_free_tab(g_shell.envp);
-	exit(EXIT_FAILURE);
+	fexit(ft_split("exit 1", " "));
 }

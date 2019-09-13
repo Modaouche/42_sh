@@ -72,7 +72,6 @@ int				ft_built_in(char *cmd)
 
 	i = 0;
 	args = (char**)cmd;
-	ft_printf("[%s]\n", *args);
 	while (g_shell.fptr->f[i])
 	{
 		if (!(ft_strcmp(g_shell.fptr->flag[i], args[0])))

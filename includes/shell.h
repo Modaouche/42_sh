@@ -149,15 +149,15 @@ void					cursor_after(t_edit *line_e);
 void					cursor_move_to(t_edit *line_e, uint pos);
 void					cursor_move_from_to(t_edit *line_e, uint from, uint to);
 void					cursor_move_from_to2(t_edit *line_e, int prefix,\
-		char *str, uint from, uint to);
+						char *str, uint from, uint to);
 void					cursor_reset_x_pos(t_edit *line_e);
 uint					get_line_height(t_edit *line, uint end);
 uint					get_str_height(t_edit *line_e, unsigned int prefix,\
-		char *str, unsigned int end);
+						char *str, unsigned int end);
 uint					get_index_x_pos(t_edit *line_e, uint pos);
 void					print_line(t_edit *line_e, unsigned int start);
 void					show_hist_line(t_edit *line_e);
-
+void					le_free(t_edit *line_e);
 /*
 **  Line edition - Autocompletion
 */
