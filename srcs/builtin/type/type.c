@@ -62,21 +62,19 @@ int			check_path_abs(char *args)
 	return (0);
 }
 
-int			check_path_var(char *args)
+int			check_path_var(char *args, char *path)
 {
-	char	*path;
 	char	**split_path;
 	int		i;
 	char	*tmp;
 	struct stat	buf;
 
 	i = -1;
-	path = get_env_value("PATH");
 	split_path = ft_split(path, ":");
+	ft_strdel(&path);
 	while (split_path[++i])
 	{
 		tmp = ft_strjoin(split_path[i], "/");
-		ft_strdel(&path);
 		path = ft_strjoin(tmp, args);
 		ft_strdel(&tmp);
 		if (path && !stat(path, &buf) && S_ISREG(buf.st_mode))
@@ -106,7 +104,8 @@ int			type_main(void *ptr)
 		return (1);
 	while (args[++i])
 	{
-		if (!check_built_in(args[i]) && !check_path_var(args[i])
+		if (!check_built_in(args[i])
+			&& !check_path_var(args[i], get_env_value("PATH"))
 			&& !check_path_abs(args[i]) && !check_alias(args[i]))
 		{
 			ret = 1;
