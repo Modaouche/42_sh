@@ -56,13 +56,13 @@ int			ft_export_inner_var(char *cmd)
 	value = NULL;
 	if (!g_shell.intern_var)
 		return (0);
-	else if (g_shell.intern_var[find_var(cmd, g_shell.intern_var)])
+	else if (g_shell.intern_var[find_var_idx(cmd, g_shell.intern_var)])
 	{
 		value = get_env_value(cmd);
 		ft_unsetenv(cmd);
 		g_shell.envp = set_var_env(cmd, value, g_shell.envp);
 	}
-	else if (!g_shell.envp[find_var(cmd, g_shell.envp)])
+	else if (!g_shell.envp[find_var_idx(cmd, g_shell.envp)])
 		g_shell.envp = set_var_env(cmd, NULL, g_shell.envp);
 	ft_strdel(&value);
 	return (1);
@@ -82,7 +82,7 @@ int			ft_setenv_equal(char *cmd, int flag)
 		ft_export_inner_var(cmd);
 	else if (flag == 0 && value)
 	{
-		if (g_shell.envp[find_var(cmd, g_shell.envp)])
+		if (g_shell.envp[find_var_idx(cmd, g_shell.envp)])
 		{
 			g_shell.envp = set_var_env(varname, value, g_shell.envp);
 			ft_strdel(&varname);

@@ -53,7 +53,7 @@ void	to_exit(uint8_t bt)
 	le_free(g_shell.line_e);
 	ast_free(&(g_shell.ast));
 	free_jobs();
-	free_tabstr(&(g_shell.envp));
+	ft_free_tab(g_shell.envp);
 	exit(EXIT_FAILURE);
 }
 
@@ -69,6 +69,6 @@ void	le_exit(uint8_t bt)
 	le_free(g_shell.line_e);
 	ast_free(&(g_shell.ast));
 	free_jobs();
-	free_tabstr(&(g_shell.envp));
+	ft_free_tab(g_shell.envp);
 	exit(EXIT_FAILURE);
 }

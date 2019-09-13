@@ -78,7 +78,7 @@ t_process	*free_process(t_process *p)
 	t_process *next;
 
 	next = p->next;
-	free_tabstr(&(p->argv));
+	ft_free_tab(p->argv);
 	ft_memdel((void **)&p);
 	return (next);
 }

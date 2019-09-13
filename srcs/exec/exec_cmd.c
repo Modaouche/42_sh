@@ -58,14 +58,14 @@ static bool	cmd_verif_prime(char **envp, char **argv)
 			to_exit(1);
 		if (!access(to_check, F_OK | X_OK) && !g_shell.errorno)
 		{
-			free_tabstr(&sliced_path);
+			ft_free_tab(sliced_path);
 			ft_strdel(&(argv[0]));
 			argv[0] = to_check;
 			return (true);
 		}
 		ft_strdel(&to_check);
 	}
-	free_tabstr(&sliced_path);
+	ft_free_tab(sliced_path);
 	return (access_verification(argv[0]));
 }
 

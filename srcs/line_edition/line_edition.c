@@ -572,7 +572,7 @@ int		line_edition(t_edit *line_e)
 			if (key[0] == S_KEY_ENTER && !key[1])
 			{
 				if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-			        le_exit(ERR_MALLOC);
+			        le_exit(ER_MALLOC);
 				break ;
 			}
 			on_key_press(line_e, prevkey, key);

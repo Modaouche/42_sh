@@ -23,7 +23,7 @@ int			fexit(void *ptr)
 	write_history(NULL);
 	ft_strdel(&(g_shell.line_e->line));
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-		toexit(0, "tcsetattr", 1);
+		le_exit(0);
 	free_env();
 	free_history();
 	i = 0;

@@ -34,6 +34,7 @@ t_fptr			*init_fptr(void)
 	func->f[10] = &ft_alias;
 	func->f[11] = &ft_unalias;
 	func->f[12] = &ft_test_main;
+	func->f[13] = &fexit;
 	return (func);
 }
 
@@ -67,25 +68,16 @@ void			free_tmp(char **s)
 int				ft_built_in(char *cmd)
 {
 	int			i;
-	char		**tmp;
+	char		**args;
 
 	i = 0;
-	if (!(tmp = ft_split(cmd, " ")))
-		return (-1);
-	if (!ft_strcmp(tmp[0], "exit"))
-		fexit(tmp);
+	args = (char**)cmd;
+	ft_printf("[%s]\n", *args);
 	while (g_shell.fptr->f[i])
 	{
-		if (!(ft_strcmp(g_shell.fptr->flag[i], tmp[0])))
-		{
-			g_shell.fptr->f[i](tmp);
-			free_tmp(tmp);
-			return (1);
-		}
-		i++;
+		if (!(ft_strcmp(g_shell.fptr->flag[i], args[0])))
+			return (g_shell.fptr->f[i](args));
+		++i;
 	}
-	free_tmp(tmp);
-	if (ft_setenv_equal(cmd, 0))
-		return (1);
 	return (0);
 }

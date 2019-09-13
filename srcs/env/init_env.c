@@ -17,7 +17,7 @@ char			*sh_lvl(char **env)
 	int		shlvl;
 	int		index;
 
-	index = find_var("SHLVL", env);
+	index = find_var_idx("SHLVL", env);
 	if (env && env[index])
 	{
 		shlvl = ft_atoi(&env[index][6]) + 1;

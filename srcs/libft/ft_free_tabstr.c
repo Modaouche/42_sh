@@ -13,25 +13,27 @@
 #include <stdlib.h>
 #include "libft.h"
 
-void	free_tabstr(char ***tab)
+void	ft_free_tab(char **tab)
 {
 	unsigned int	i;
 
-	if (tab || *tab)
+	if (tab == 0)
 		return ;
-	i = -1;
-	while (tab[0][++i])
-		ft_strdel(&tab[0][i]);
-	free(*tab);
-	*tab = NULL;
+	i = 0;
+	while (tab[i])
+	{
+		ft_strdel(&tab[i]);
+		++i;
+	}
+	free(tab);
 }
 
-void	reverse_free_tabstr(char ***tab, int size)
+char	**reverse_free_tab(char **tab, int size)
 {
-	if (tab || *tab)
-		return ;
+	if (tab == 0)
+		return (NULL);
 	while (size >= 0)
-		ft_strdel(&tab[0][--size]);
-	free(*tab);
-	*tab = NULL;
+		free(tab[--size]);
+	free(tab);
+	return (NULL);
 }

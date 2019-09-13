@@ -82,8 +82,8 @@ int				ft_unsetenv_cmd(void *ptr)
 		ft_printf("unset error: Take 1 argument\n");
 		return (0);
 	}
-	index = find_var(cmd[1], g_shell.envp);
-	index2 = find_var(cmd[1], g_shell.intern_var);
+	index = find_var_idx(cmd[1], g_shell.envp);
+	index2 = find_var_idx(cmd[1], g_shell.intern_var);
 	if (g_shell.envp && g_shell.envp[index])
 		g_shell.envp = dump_env_unset(index, g_shell.envp);
 	else if (g_shell.intern_var && g_shell.intern_var[index2])
@@ -103,8 +103,8 @@ int				ft_unsetenv(void *ptr)
 		ft_printf("unset error: Take 1 argument\n");
 		return (0);
 	}
-	index = find_var(cmd, g_shell.envp);
-	index2 = find_var(cmd, g_shell.intern_var);
+	index = find_var_idx(cmd, g_shell.envp);
+	index2 = find_var_idx(cmd, g_shell.intern_var);
 	if (g_shell.envp && g_shell.envp[index])
 		g_shell.envp = dump_env_unset(index, g_shell.envp);
 	else if (g_shell.intern_var && g_shell.intern_var[index2])
