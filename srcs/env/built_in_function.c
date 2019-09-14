@@ -37,7 +37,8 @@ int			fexit(void *ptr)
 	ft_free_tab(g_shell.aliasp);
 	ast_free(&(g_shell.ast));
 	free_jobs();
-	return (((int(*)(int))&exit)(i));
+	exit(i);
+	return (i);
 }
 
 void		cd_set_env(int exec_flag, char *pwd)

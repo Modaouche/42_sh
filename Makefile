@@ -92,7 +92,7 @@ SRC =	srcs/main/main.c\
 		srcs/builtin/test/test_flag_nbr.c\
 		srcs/builtin/test/test_flag_tools.c\
 		srcs/builtin/test/tools.c
-#srcs/exec/exec_cmd.c\ to replace above
+
 OBJ = $(SRC:.c=.o)
 
 LIBFT = srcs/libft
@@ -101,7 +101,7 @@ LIB = $(LIBFT)/libft.a
 
 HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h \
 		includes/history.h includes/env.h includes/built_in.h includes/ft_test.h \
-        includes/error_handler.h includes/job.h
+	        includes/error_handler.h includes/job.h
 
 
 
@@ -112,7 +112,7 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 CC = gcc
 
 CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)
-			-g3 -fsanitize=address\
+		#	-g3 -fsanitize=address\
 			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
 

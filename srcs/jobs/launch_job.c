@@ -84,9 +84,9 @@ void		launch_job (t_job *j)
 		pid = fork();
 		if (pid == 0)
 		{
+			/* This is the child process.  */
 			if (!cmds_verif(p, g_shell.envp))
 				to_exit(0);//dans une ternaire
-			/* This is the child process.  */
 			else
 				launch_process (p, j->pgid, infile,
 					outfile, j->stderr);
