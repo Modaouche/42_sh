@@ -77,12 +77,12 @@ void		wait_for_job (t_job *j)
 	pid_t pid;
 
 	ft_printf("command : %s\n" , j->command);
-	pid = waitpid(-j->pgid, &status, WUNTRACED);
+	pid = waitpid(WAIT_ANY, &status, WUNTRACED);
 	ft_printf("pid : %d\n" , pid);
 	while (!mark_process_status(pid, status)
 			&& !job_is_stopped(j)
 			&& !job_is_completed(j))
-		pid = waitpid(-j->pgid, &status, WUNTRACED);
+		pid = waitpid(WAIT_ANY, &status, WUNTRACED);
 
 
 	/*do
