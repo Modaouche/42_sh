@@ -34,9 +34,11 @@ void		error_msg(char *cmd)
 	else if (er == ER_ISDIR)
 		ft_putendl_fd("is a directory", STDERR_FILENO);
 	else if (er == ER_NOENT)
-		ft_putendl_fd("comand not found", STDERR_FILENO);
+		ft_putendl_fd("command not found", STDERR_FILENO);
 	else if (er == ER_NOT_TTY)
 		ft_putendl_fd("not a tty", STDERR_FILENO);
+	else if (er == ER_WAITPID)
+		ft_putendl_fd("waitpid failed", STDERR_FILENO);
 	else
 		ft_putendl_fd("unknown error", STDERR_FILENO);
 }

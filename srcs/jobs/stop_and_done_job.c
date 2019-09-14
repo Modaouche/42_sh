@@ -45,11 +45,9 @@ int	mark_process_status (pid_t pid, int status)
 		fprintf (stderr, "No child process %d.\n", pid);
 		return -1;
 	}
-	else if (pid == 0 || g_shell.errorno == ER_CHILD)
+	else if (pid == 0 || g_shell.errorno == ER_WAITPID)
 		/* No processes ready to report.  */
-		return -1;
-	else
-		perror("waitpid");
+		error_msg("42sh");
 	return -1;
 }
 
@@ -62,9 +60,11 @@ void		update_status (void)
 	int	status;
 	pid_t	pid;
 
-	pid = waitpid (WAIT_ANY, &status, WUNTRACED | WNOHANG);
+	if ((pid = waitpid (WAIT_ANY, &status, WUNTRACED | WNOHANG)) == -1)
+		g_shell.errorno = ER_WAITPID;
 	while (!mark_process_status (pid, status))
-		pid = waitpid (WAIT_ANY, &status, WUNTRACED | WNOHANG);
+		if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG)) == -1)
+			g_shell.errorno = ER_WAITPID;
 }
 
 
@@ -77,13 +77,14 @@ void		wait_for_job (t_job *j)
 	pid_t pid;
 
 	ft_printf("command : %s\n" , j->command);
-	pid = waitpid(WAIT_ANY, &status, WUNTRACED);
+	if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED)) == -1)
+		g_shell.errorno = ER_WAITPID;
 	ft_printf("pid : %d\n" , pid);
 	while (!mark_process_status(pid, status)
 			&& !job_is_stopped(j)
 			&& !job_is_completed(j))
-		pid = waitpid(WAIT_ANY, &status, WUNTRACED);
-
+	   if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED)) == -1)
+			g_shell.errorno = ER_WAITPID;
 
 	/*do
 		pid = waitpid (WAIT_ANY, &status, WUNTRACED);

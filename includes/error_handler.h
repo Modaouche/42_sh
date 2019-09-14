@@ -30,6 +30,7 @@ typedef enum
                                         ER_ACCES,
                                         ER_ISDIR,
                                         ER_NOENT,
+					ER_WAITPID,
 					ER_CHILD
 }                                       t_errorno;
 
