@@ -48,6 +48,7 @@ int				check_args_nbr(int options, char **args, int *a)
 static int			ft_fc_2(t_fc *fc_struct)
 {
 	free(fc_struct->hist);
+	fc_struct->hist = NULL;
 	if (check_args_nbr(fc_struct->options,\
 				fc_struct->args, &fc_struct->a) == -1)
 		return (0);
@@ -59,7 +60,8 @@ static int			ft_fc_2(t_fc *fc_struct)
 		fc_struct->hist = get_history_field(fc_struct->a,\
 				fc_struct->a, NULL, 1);
 	if (get_option(fc_struct->options, 'e'))
-		edit_line(fc_struct->hist, fc_struct->args[get_argument_starting_index(fc_struct->args, 'e')]);
+		edit_line(fc_struct->hist,\
+		fc_struct->args[get_argument_starting_index(fc_struct->args, 'e')]);
 	else
 		edit_line(fc_struct->hist, NULL);
 	return (1);
