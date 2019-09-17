@@ -1,0 +1,1 @@
+delete key during line edition only delete visually, the command is still stored and can still be sent
