@@ -511,9 +511,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		line_e->len -= 1;
 		if (line_e->line[0])
 		{
-			ft_memmove(line_e->line + (line_e->cursor_pos),\
-					line_e->line + (line_e->cursor_pos + 1),\
-					line_e->len - line_e->cursor_pos);
+			ft_strcpy(line_e->line + (line_e->cursor_pos),\
+					line_e->line + (line_e->cursor_pos + 1));
 		}
 		print_line(line_e, line_e->cursor_pos);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
