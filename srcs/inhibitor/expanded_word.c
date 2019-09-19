@@ -54,10 +54,13 @@ int    backslash_end(t_edit *line_e, unsigned int *i, int *ret)
 
 void    dollars_cmd(const char *line, char **word, unsigned int *i)
 {
-	++(*i);    
+	++(*i);
 	if (line[*i] == '$')
 		*word = (!*word) ? ft_itoa(g_shell.pid)
 			: ft_strjoin_free(*word, ft_itoa(g_shell.pid), 3);
+	else if (line[*i] == '?')
+		*word = (!*word) ? ft_itoa(g_shell.ret)
+			: ft_strjoin_free(*word, ft_itoa(g_shell.ret), 3);
 	else if (line[*i] == '(')
 		ft_putstr("~[  $(  ]~\n");//substition(word, line[*i], i);//to creat
 	else if (line[*i] == '{')

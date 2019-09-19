@@ -35,14 +35,14 @@ int	mark_process_status (pid_t pid, int status)
 					else
 					{
 						p->completed = 1;
-						ft_printf("TEST\n");//look here
 						if (WIFSIGNALED (status))
-							fprintf(stderr, "%d: Terminated by signal %d.\n",
+							ft_printf_fd(STDERR_FILENO,
+								"%d: Terminated by signal %d.\n",
 								(int) pid, WTERMSIG (p->status));
 					}
-					return 0;
+					return (0);
 				}
-		fprintf (stderr, "No child process %d.\n", pid);
+		ft_printf_fd(STDERR_FILENO, "No child process %d.\n", pid);
 		return -1;
 	}
 	else if (pid == 0 || g_shell.errorno == ER_WAITPID)
@@ -63,8 +63,14 @@ void		update_status (void)
 	if ((pid = waitpid (WAIT_ANY, &status, WUNTRACED | WNOHANG)) == -1)
 		g_shell.errorno = ER_WAITPID;
 	while (!mark_process_status (pid, status))
+	{
+		if (pid > 0)
+			g_shell.ret = WEXITSTATUS(status);
 		if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG)) == -1)
 			g_shell.errorno = ER_WAITPID;
+	}
+	if (pid > 0)
+		g_shell.ret = WEXITSTATUS(status);
 }
 
 
@@ -76,16 +82,19 @@ void		wait_for_job (t_job *j)
 	int status;
 	pid_t pid;
 
-	ft_printf("command : %s\n" , j->command);
 	if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED)) == -1)
 		g_shell.errorno = ER_WAITPID;
-	ft_printf("pid : %d\n" , pid);
 	while (!mark_process_status(pid, status)
 			&& !job_is_stopped(j)
 			&& !job_is_completed(j))
-	   if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED)) == -1)
+	{
+		if (pid > 0)
+			g_shell.ret = WEXITSTATUS(status);
+		if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED)) == -1)
 			g_shell.errorno = ER_WAITPID;
-
+	}
+	if (pid > 0)
+		g_shell.ret = WEXITSTATUS(status);
 	/*do
 		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
 	while (!mark_process_status (pid, status)
@@ -98,7 +107,8 @@ void		wait_for_job (t_job *j)
 
 void	format_job_info (t_job *j, const char *status)
 {
-	fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);//utiliser fd_printf
+	ft_printf_fd(STDERR_FILENO, "%ld (%s): %s\n", (long)j->pgid,\
+			status, j->command);//utiliser fd_printf
 }
 
 

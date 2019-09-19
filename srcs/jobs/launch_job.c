@@ -53,7 +53,9 @@ void	launch_process(t_process *p, pid_t pgid,
 	}
 
 	/* Exec the new process.  Make sure we exit.  */
-	execve(p->argv[0], p->argv, g_shell.envp);
+	
+	(!is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, g_shell.envp)\
+		: exit(exec_builtin(p->argv));
 	perror ("execvp");
 	exit (1);
 }
@@ -70,7 +72,7 @@ void		launch_job (t_job *j)
 		/* Set up pipes, if necessary.  */
 		if (p->next)
 		{
-			if (pipe (mypipe) < 0)
+			if (pipe(mypipe) < 0)
 			{
 				g_shell.errorno = ER_PIPE;
 				return ;

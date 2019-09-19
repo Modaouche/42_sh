@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_builtin.c                                     :+:      :+:    :+:   */
+/*   exec_cmd_and_bu.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,42 +12,49 @@
 
 #include "shell.h"
 
-bool		is_builtin(t_ast *ast, char *bu)
+bool		is_builtin(char *bu)
 {
 	unsigned int	i;
-	char			**args;
 
 	if (!g_shell.fptr || !g_shell.fptr->flag)
 		return (0);
-	if (bu == NULL)
-	{
-		args = get_cmd(ast);
-		bu = args[0];
-	}
-	else
-		args = NULL;
 	i = 0;
 	while (g_shell.fptr->flag[i])
 	{
 		if (ft_strcmp(bu, g_shell.fptr->flag[i]) == 0)
-		{
-			ft_free_tab(args);
 			return (1);
-		}
 		++i;
 	}
-	ft_free_tab(args);
 	return (0);
 }
 
-bool		exec_builtin(t_ast *ast)
+bool		exec_builtin(char **args)
 {
 	char		ret;
-	char		**args;
 
-	args = get_cmd(ast);
 	ret = ft_built_in((char*)args);
 	ft_free_tab(args);
-	g_shell.ret = ret;
+	ft_putendl("-----------------[ bu ]");
+	g_shell.ret = (ret == 0);
 	return (ret == 0);
+}
+
+bool		exec_cmd(t_ast *ast, bool is_redir_pipe) 
+{
+	char **args;
+
+	args = get_cmd(ast);
+	ft_putendl("-----------------[ exec cmd ]");
+	if (!is_redir_pipe && is_builtin(args[0]))
+		return (exec_builtin(args));
+	ft_free_tab(args);
+	push_back_job(ast);
+	g_shell.errorno = NO_ERROR;
+	launch_job(last_job());
+	if (g_shell.errorno)
+	{
+		remove_last_job(&g_shell.first_job);
+		error_msg("./42sh");
+	}
+	return (g_shell.errorno ? 0 : 1);
 }

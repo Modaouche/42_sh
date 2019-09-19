@@ -15,7 +15,6 @@
 
 # include "shell.h" //some includes...
 
-
 /* A process is a single process.  */
 typedef struct		s_p
 {

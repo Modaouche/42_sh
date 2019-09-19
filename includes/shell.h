@@ -102,15 +102,15 @@ typedef struct			s_sh
 	t_edit				*line_e;
 	t_ast				*ast;
 	char				**buff_cmd;
+	t_job				*first_job;
+	struct s_history		*history;
 	pid_t				pid;
-	t_job			*first_job;
 	uint16_t			fd;
 	uint8_t				prompt_size;
 	uint8_t				errorno;
 	bool				tc_onoff;//for termcap like "dumb",to have a usable shel
 	bool				in_bg;//in proc struct
 	bool				isnt_interactive;
-	struct s_history	*history;
 	uint16_t		is_interactive;
 	uint8_t			ret;
 	bool			in_fg;
@@ -324,8 +324,8 @@ bool					is_slice_exec(t_tok tokind);
 bool					is_and_or_exec(t_tok tokind);
 bool					is_redir_pipe_exec(t_tok tokind);
 bool					is_other_exec(t_tok tokind);
-bool					exec_builtin(t_ast *ast);
-bool					is_builtin(t_ast *ast, char *bu);
+bool					exec_builtin(char **args);
+bool					is_builtin(char *bu);
 char					**get_cmd(t_ast *ast);
 bool					cmds_verif(t_process *p, char **envp);
 char					*find_var(char **envp, char *with);

@@ -44,8 +44,5 @@ int		main(int ac, char **av, char **envp)
 			write_history(line_e->line);
 	}
 	//free et exit dan fonction fexit OK !
-	//un free de tout donc les ligne ci dessous sont a virer
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-	        le_exit(0);//idem
 	return (0);
 }

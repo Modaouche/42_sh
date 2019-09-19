@@ -1,4 +1,5 @@
-leaks in ast_execution.
+1)  leaks in ast_execution.
+
 ==77406==    by 0x100016D8B: ft_strdup (in /Users/kicausse/Desktop/Projects/42sh/42sh)
 ==77406==    by 0x10000CAED: add_process_and_msg_cmd (in /Users/kicausse/Desktop/Projects/42sh/42sh)
 ==77406==    by 0x10000CACF: add_process_and_msg_cmd (in /Users/kicausse/Desktop/Projects/42sh/42sh)
@@ -28,3 +29,46 @@ leaks in ast_execution.
 ==77406==    by 0x10000B96E: line_execution (in /Users/kicausse/Desktop/Projects/42sh/42sh)
 ==77406==    by 0x10000F17A: exec_file (in /Users/kicausse/Desktop/Projects/42sh/42sh)
 ==77406==    by 0x100010397: fork_fc_edit (in /Users/kicausse/Desktop/Projects/42sh/42sh
+
+
+/*  *******************************************************************************************   */
+
+2) printing issue due to an execution of "ls -la" in background
+                                                                                              42sh (current path) 12$> total 244
+                                                                                                                                drwxr-xr-x  6 mohammed mohammed   4096 16 sept. 19:32 .
+                                                                                                                                                                                       drwxr-xr-x  7 mohammed mohammed   4096 16 sept. 08:50 ..
+                           -rwxr-xr-x  1 mohammed mohammed 168640 16 sept. 19:32 42sh
+                                                                                     -rwxr-xr-x  1 mohammed mohammed  16584 14 sept. 08:56 a.out
+                                                                                                                                                -rw-r--r--  1 mohammed mohammed     34 14 sept. 00:41 auteur
+                                                                                                                                                                                                            drwxr-xr-x  8 mohammed mohammed   4096 16 sept. 19:32 .git
+                                                  -rw-r--r--  1 mohammed mohammed     63 16 juil. 02:00 .gitignore
+                                                                                                                  drwxr-xr-x  2 mohammed mohammed   4096 16 sept. 13:41 includes
+                                                                                                                                                                                -rw-r--r--  1 mohammed mohammed   1073 16 juil. 02:00 LICENSE
+                         -rw-r--r--  1 mohammed mohammed   4129 16 sept. 08:55 Makefile
+                                                                                       -rw-r--r--  1 mohammed mohammed   2514 14 sept. 00:41 merge_problems
+                                                                                                                                                           -rw-r--r--  1 mohammed mohammed   2090 16 juil. 02:00 README.md
+      drwxr-xr-x 18 mohammed mohammed   4096 14 sept. 00:41 srcs
+                                                                -rw-r--r--  1 mohammed mohammed    226 14 sept. 08:56 test.c
+                                                                                                                            drwxr-xr-x  2 mohammed mohammed   4096  7 sept. 03:40 unit_test
+
+/*  *******************************************************************************************   */
+
+3) need to finish assignement , redirections and pipes and ctrl d
+
+
+/*  *******************************************************************************************   */
+
+4) need to add word expansion in the expanded_word.c
+
+/*  *******************************************************************************************   */
+
+5) add fg bg and jobs
+
+/*  *******************************************************************************************   */
+
+6) norm, leaks
+
+/*  *******************************************************************************************   */
+
+7) final check and subscribe to defense
+ 
