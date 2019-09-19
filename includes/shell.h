@@ -39,15 +39,16 @@
 # define S_KEY_ARW_LEFT			68
 # define S_KEY_ENTER			10
 # define S_KEY_ERASE			127
+# define S_KEY_CTRL_D			4
 
 /*
 ** # define S_KEY_PRINTABLE		0
 ** # define S_KEY_SPACE			0
 ** # define S_KEY_ESC			27
-** # define S_KEY_CTRL_D		4
 ** # define S_KEY_END			1
 ** # define S_KEY_NONE			0
 */
+
 # define MAX_KEY_LEN			12
 # define BUFFER_LEN				255
 # define TAB_LEN				7

@@ -414,16 +414,14 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		ft_putendl_fd("error : key :null", STDERR_FILENO);
 		return ;
 	}
-	if (ft_strlen(key) <= 1 && (ft_isprint(key[0])
-		|| (can_insert_tabs(line_e) && key[0] == '\t')))
+	if (ft_strlen(key) <= 1 && (ft_isprint(*key)
+		|| (can_insert_tabs(line_e) && *key == '\t') || *key == 0x0d))
 	{
-		if (*key == '+')
-			*key = '\n';
-		insert_char(line_e, *key);
+		insert_char(line_e, (*key == 0x0d) ? ('\n') : (*key));
 		return ;
 	}
 	key_shortcut_handler(line_e, prevkey, key);
-	if (ft_strlen(key) <= 1 && key[0] == '\t')
+	if (ft_strlen(key) <= 1 && (key[0] == '\t' || key[0] == S_KEY_CTRL_D))
 	{
 		if (line_e->line == NULL)
 			return ;
@@ -563,9 +561,10 @@ int		line_edition(t_edit *line_e)
 	while (1)
 	{
 		ft_bzero(key, MAX_KEY_LEN + 1);
-		ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
-		if (ret == -1)
+		if ((ret = read(STDIN_FILENO, key, MAX_KEY_LEN)) == -1)
 			le_exit(0);
+		if (key[0] == S_KEY_CTRL_D && key[1] == 0 && line_e->len == 0)
+			fexit(0);
 		if (key[0] == S_KEY_ENTER && !key[1] && line_e->search_mode == 1)
 			replace_line_with_search(line_e);
 		else
