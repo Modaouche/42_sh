@@ -121,7 +121,10 @@ void		launch_job (t_job *j)
 	else if (g_shell.in_fg)
 		put_job_in_foreground (j, 0);
 	else
+	{
+		j->started_in_bg = 1;
 		put_job_in_background (j, 0);
+	}
 	g_shell.in_fg = true;
 }
 

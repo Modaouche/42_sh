@@ -15,6 +15,7 @@
 
 int		ft_jobs(char **args)
 {
+	do_job_notification();
 	(void)args;
 	return (0);
 }

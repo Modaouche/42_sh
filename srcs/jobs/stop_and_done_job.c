@@ -35,7 +35,6 @@ int	mark_process_status (pid_t pid, int status)
 					else
 					{
 						p->completed = 1;
-						ft_printf("TEST\n");//look here
 						if (WIFSIGNALED (status))
 							fprintf(stderr, "%d: Terminated by signal %d.\n",
 								(int) pid, WTERMSIG (p->status));
@@ -45,9 +44,6 @@ int	mark_process_status (pid_t pid, int status)
 		fprintf (stderr, "No child process %d.\n", pid);
 		return -1;
 	}
-	else if (pid == 0 || g_shell.errorno == ER_WAITPID)
-		/* No processes ready to report.  */
-		error_msg("42sh");
 	return -1;
 }
 
@@ -124,9 +120,10 @@ void		do_job_notification (void)
 
 		/* If all processes have completed, tell the user the job has
 		   completed and delete it from the list of active jobs.  */
-		if (job_is_completed (j))
+		if (job_is_completed(j))
 		{
-			format_job_info (j, "completed");
+			if (j->started_in_bg)
+				format_job_info(j, "completed");
 			if (jlast)
 				jlast->next = jnext;
 			else
@@ -144,7 +141,11 @@ void		do_job_notification (void)
 		}
 		/* Don’t say anything about jobs that are still running.  */
 		else
+		{
+			format_job_info (j, "running");
+			j->notified = 0;
 			jlast = j;
+		}
 	}
 }
 

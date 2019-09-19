@@ -36,6 +36,7 @@ typedef struct		s_job
 	t_process	*first_process;	/* list of processes in this job */
 	pid_t		pgid;		/* process group ID */
 	bool		notified;	/* true if user told about stopped job */
+	bool		started_in_bg;
 	struct termios	tmodes;		/* saved terminal modes */
 	int		stdin;		/* standard input channels (useful for redir)*/
 	int		stdout;		/* standard output channels (useful for redir)*/
