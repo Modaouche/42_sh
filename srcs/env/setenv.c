@@ -27,11 +27,8 @@ void			free_env(void)
 		free(g_shell.intern_var);
 }
 
-int				ft_setenv(void *ptr)
+int				ft_setenv(char **cmd)
 {
-	char	**cmd;
-
-	cmd = ptr;
 	if (!cmd || !cmd[1])
 	{
 		print_env(NULL);
@@ -70,13 +67,11 @@ static char		**dump_env_unset(int index, char **env)
 	return (new);
 }
 
-int				ft_unsetenv_cmd(void *ptr)
+int				ft_unsetenv_cmd(char **cmd)
 {
 	int		index;
-	char	**cmd;
 	int		index2;
 
-	cmd = ptr;
 	if (!cmd || !cmd[0] || !cmd[1])
 	{
 		ft_printf("unset error: Take 1 argument\n");
@@ -91,13 +86,11 @@ int				ft_unsetenv_cmd(void *ptr)
 	return (1);
 }
 
-int				ft_unsetenv(void *ptr)
+int				ft_unsetenv(char *cmd)
 {
 	int		index;
-	char	*cmd;
 	int		index2;
 
-	cmd = ptr;
 	if (!cmd)
 	{
 		ft_printf("unset error: Take 1 argument\n");

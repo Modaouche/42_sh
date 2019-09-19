@@ -79,7 +79,7 @@ void		write_history(char *line)
 		write_history_tolist(line, head);
 }
 
-int			ft_history(void *ptr)
+int			ft_history(char **ptr)
 {
 	t_list		*head;
 	int			i;

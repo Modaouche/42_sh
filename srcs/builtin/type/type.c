@@ -91,14 +91,12 @@ int			check_path_var(char *args, char *path)
 }
 
 
-int			type_main(void *ptr)
+int			type_main(char **args)
 {
-	char	**args;
 	int		i;
 	int		ret;
 
 	ret = 0;
-	args = ptr;
 	i = 0;
 	if (!args || !args[0] || !args[1])
 		return (1);

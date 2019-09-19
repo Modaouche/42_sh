@@ -29,14 +29,15 @@ char			ft_test(uint16_t flag, char **arg)
 	return (tabfct[2](flag, arg));
 }
 
-int			ft_test_main(void *arg)
+int			ft_test_main(char **av)
 {
 	uint16_t	flag;
 	char		test;
 	uint8_t		bool_test;
-	char		**av;
 
-	av = (char**)arg + 1;
+	if (!av)
+		return (0);
+	av += 1;
 	test = TRUE;
 	bool_test = FALSE;
 	if (!ft_strcmp(*av, "!"))

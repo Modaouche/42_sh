@@ -34,13 +34,12 @@ int			get_first_word(char **str, int *check)
 	return (i + 1);
 }
 
-void		ft_echo(void *str)
+void		ft_echo(char **args)
 {
 	int		i;
 	int		check;
-	char	**args;
 
-	if (!(args = str) || !*args)
+	if (!args || !*args)
 		return ;
 	check = 0;
 	i = get_first_word(args + 1, &check);

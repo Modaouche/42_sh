@@ -91,7 +91,8 @@ SRC =	srcs/main/main.c\
 		srcs/builtin/test/test_flag_str.c\
 		srcs/builtin/test/test_flag_nbr.c\
 		srcs/builtin/test/test_flag_tools.c\
-		srcs/builtin/test/tools.c
+		srcs/builtin/test/tools.c\
+		srcs/builtin/jobs/jobs.c
 
 OBJ = $(SRC:.c=.o)
 

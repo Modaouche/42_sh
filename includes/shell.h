@@ -68,7 +68,7 @@ typedef struct 			s_file
 typedef struct			s_fptr
 {
 	char	**flag;
-	int		(*f[255])(void *);
+	int		(*f[255])(char **);
 }						t_fptr;
 
 typedef struct			s_edit
