@@ -118,8 +118,8 @@ void		rm_last_leaf(void)
 		ast_head->curr_head = tmp->left;
 	}
 	ft_strdel(&(to_free->token->lexeme));
-	ft_memdel((void *)to_free->token);
-	ft_memdel((void *)to_free);
+	ft_memdel((void **)&(to_free->token));
+	ft_memdel((void **)&(to_free));
 }
 
 void	assign_to_word(void)
@@ -133,8 +133,23 @@ void	assign_to_word(void)
 
 t_ast	*get_curr_head(void)
 {
-   t_ast_ptr *ast_head;
+	t_ast_ptr *ast_head;
 
-   ast_head = st_ast();
-   return (ast_head->curr_head);
+	ast_head = st_ast();
+	return (ast_head->curr_head);
+}
+
+void	ast_free(t_ast **root)
+{
+	t_ast *to_free;
+
+	if (!root || !*root)
+		return ;
+	to_free = *root;
+	ast_free(&(to_free->left));
+	ast_free(&(to_free->right));
+	ft_strdel(&(to_free->token->lexeme));
+	ft_memdel((void **)&(to_free->token));
+	ft_memdel((void **)&(to_free));
+	*root = NULL;
 }

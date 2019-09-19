@@ -21,11 +21,8 @@ int			fexit(void *ptr)
 	p = ptr;
 	j = 0;
 	write_history(NULL);
-	ft_strdel(&(g_shell.line_e->line));
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-		toexit(0, "tcsetattr", 1);
-	free_env();
-	free_history();
+	le_free(g_shell.line_e);
+	tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold);
 	i = 0;
 	if (p && p[0])
 	{
@@ -35,10 +32,13 @@ int			fexit(void *ptr)
 	}
 	ft_memdel((void **)&p);
 	free_for_ft_built_in(g_shell.fptr);
+	free_env();
+	free_history();
 	ft_free_tab(g_shell.aliasp);
-	//TODO: Free env??
+	ast_free(&(g_shell.ast));
+	free_jobs();
 	exit(i);
-	return (0);
+	return (i);
 }
 
 void		cd_set_env(int exec_flag, char *pwd)

@@ -19,7 +19,7 @@ typedef struct s_edit	t_edit;
 
 char					**set_var_env(char *varname, char *value, char **env);
 int						is_var(char *s1, char *s2);
-int						find_var(char *varname, char **env);
+int						find_var_idx(char *varname, char **env);
 char					**get_env(char **env);
 char					**dump_env(char **env, int size);
 void					init_env(char **env);

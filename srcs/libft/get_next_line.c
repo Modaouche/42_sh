@@ -65,7 +65,8 @@ int				get_next_line(const int fd, char **line)
 		{
 			ret = read(fd, buffer, BUFF_SIZE);
 			buffer[ft_floor(0, ret)] = '\0';
-			if (ret >= 0 && !(prevbuffer = ft_strjoinfree(prevbuffer, buffer)))
+			if (ret >= 0 && !(prevbuffer =
+				ft_strjoinfree(prevbuffer, buffer)))
 				return (-1);
 		}
 		if (ret == -1)

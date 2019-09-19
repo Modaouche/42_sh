@@ -56,7 +56,8 @@ void    dollars_cmd(const char *line, char **word, unsigned int *i)
 {
 	++(*i);    
 	if (line[*i] == '$')
-		ft_putstr("~[  $$  ]~\n");//pidofshell(word);//to creat
+		*word = (!*word) ? ft_itoa(g_shell.pid)
+			: ft_strjoin_free(*word, ft_itoa(g_shell.pid), 3);
 	else if (line[*i] == '(')
 		ft_putstr("~[  $(  ]~\n");//substition(word, line[*i], i);//to creat
 	else if (line[*i] == '{')

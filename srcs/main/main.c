@@ -28,27 +28,24 @@ int		main(int ac, char **av, char **envp)
 {
 	t_edit	*line_e;
 
-	(void)av;//to init in g_shell with set_term fct
-	(void)ac;//to init in g_shell with set_term fct
+	(void)av;//we might add possibility to use '.sh' file
+	(void)ac;
 	line_e = st_line();
 	init_term(line_e, envp);
 	while (1)
 	{
 		line_edit(line_e);
 		replace_aliases(line_e);
-		//line_parser(line_e);
-		g_shell.line_e = line_e;
-		ft_built_in(line_e->line);
+		line_parser(line_e);
+		line_execution();
 		if (g_shell.isnt_interactive == 1)
 			g_shell.isnt_interactive = 0;
 		else
 			write_history(line_e->line);
-		//line_execution();
-	//	ft_putendl("");//to make after command exec
 	}
 	//free et exit dan fonction fexit OK !
 	//un free de tout donc les ligne ci dessous sont a virer
-	//aussis g_shell.envp a free
-	fexit(NULL);
+	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
+	        le_exit(0);//idem
 	return (0);
 }

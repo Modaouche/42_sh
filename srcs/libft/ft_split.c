@@ -55,6 +55,7 @@ static int		count_words(const char *str, char *limit)
 	return (count + 1);
 }
 
+
 static char		**free_tab(char **tab, int size)
 {
 	int	i;
@@ -68,6 +69,7 @@ static char		**free_tab(char **tab, int size)
 	free(tab);
 	return (NULL);
 }
+
 
 char			**ft_split(char const *s, char *limit)
 {

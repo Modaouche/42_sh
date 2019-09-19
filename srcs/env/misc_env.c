@@ -16,11 +16,11 @@ char			*get_env_value(char *varname)
 {
 	int		vpos;
 
-	vpos = find_var(varname, g_shell.intern_var);
-	if (g_shell.envp && g_shell.envp[find_var(varname, g_shell.envp)])
-		return (ft_strdup(g_shell.envp[find_var(varname, g_shell.envp)]\
+	vpos = find_var_idx(varname, g_shell.intern_var);
+	if (g_shell.envp && g_shell.envp[find_var_idx(varname, g_shell.envp)])
+		return (ft_strdup(g_shell.envp[find_var_idx(varname, g_shell.envp)]\
 					+ ft_strlen(varname) + 1));
-	else if (g_shell.intern_var && g_shell.intern_var[find_var(varname,\
+	else if (g_shell.intern_var && g_shell.intern_var[find_var_idx(varname,\
 				g_shell.intern_var)])
 		return (ft_strdup((g_shell.intern_var[vpos]) + ft_strlen(varname) + 1));
 	return (NULL);
@@ -48,7 +48,7 @@ char			**set_var_env(char *varname, char *value, char **env)
 	char		*tmp;
 	int			index;
 
-	index = find_var(varname, env);
+	index = find_var_idx(varname, env);
 	if (!(tmp = ft_strjoin(varname, "=")))
 		return (NULL);
 	if (env && env[index])
@@ -70,7 +70,7 @@ char			**set_var_env(char *varname, char *value, char **env)
 	return (env);
 }
 
-int				find_var(char *varname, char **env)
+int				find_var_idx(char *varname, char **env)
 {
 	int		i;
 

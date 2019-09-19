@@ -30,7 +30,7 @@ void	line_parser(t_edit *line_e)
 
 	ast_head = st_ast();
 	ast_head->curr_head = NULL;
-	ast_head->root = NULL;//leaks !!!//to remove and create a free fct
+	ast_head->root = NULL;
 	if (line_parser_prime(line_e))
 	{
 		if (!(ast_head->root))
@@ -43,9 +43,10 @@ void	line_parser(t_edit *line_e)
 	}
 	else
 	{
+		(!(ast_head->root)) ? ast_head->root = ast_head->curr_head : 0;
 		last = last_node(ast_head->root);
-		ft_printf_fd(2, "42sh : parse error near `%s'\n",\
+		ft_printf_fd(2, "42sh : parse error near `%s'\n",
 				last->token->lexeme);
-		//ast_free(ast_head->root);
+		ast_free(&(ast_head->root));
 	}
 }

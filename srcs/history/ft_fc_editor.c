@@ -61,7 +61,6 @@ static int		edit_line_2(char **args, char **editor, char **hist, char **t)
 	int		flag;
 
 	flag = 0;
-	errno = 0;
 	if (*editor == NULL && (*editor = get_env_value("FCEDIT")) == NULL)
 	{
 		*editor = ft_strdup("/bin/ed");
@@ -87,9 +86,9 @@ void			fork_fc_edit(char *tmp_filename, char **args, char *editor)
 	if (pid == 0)
 	{
 		if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-			toexit(0, "tcsetattr", 1);
+			le_exit(0);
 		if (tcsetattr(STDIN_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-			toexit(0, "tcsetattr", 1);
+			le_exit(0);
 		execve(editor, args, g_shell.envp);
 		ft_printf_fd(2, "fc: Error, could not execute %s .\n", editor);
 		fexit(NULL);
@@ -118,5 +117,4 @@ void			edit_line(char **hist, char *editor)
 	ft_strdel(&tmp_filename);
 	if (flag_free_ed)
 		ft_strdel(&editor);
-	ft_printf("Errno = %d\n", errno);
 }

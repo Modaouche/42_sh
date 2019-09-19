@@ -105,7 +105,7 @@ void	insert_char(t_edit *line_e, char c)
 {
 
 	if (!(append_to_line(line_e, c)))
-		toexit(line_e, "malloc", 0);
+		le_exit(ER_MALLOC);
 	if (c == '\n')
 	{
 		tputs(tgetstr("ce", NULL), 1, ft_puti);
@@ -383,6 +383,8 @@ void	get_hist_line(t_edit *line_e, int offset)
 {
 	char	*str;
 
+	if (!g_shell.history)
+		return ;
 	str = get_hist_line_from_end(line_e->history_pos + offset);
 	if (str == NULL)
 	{
@@ -509,9 +511,8 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		line_e->len -= 1;
 		if (line_e->line[0])
 		{
-			ft_memmove(line_e->line + (line_e->cursor_pos),\
-					line_e->line + (line_e->cursor_pos + 1),\
-					line_e->len - line_e->cursor_pos);
+			ft_strcpy(line_e->line + (line_e->cursor_pos),\
+					line_e->line + (line_e->cursor_pos + 1));
 		}
 		print_line(line_e, line_e->cursor_pos);
 		cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
@@ -557,14 +558,14 @@ int		line_edition(t_edit *line_e)
 	line_e->autocomp = 0;
 	line_e->history_pos = 0;
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termios) == -1)
-		toexit(0, "tcsetattr", 1);
+		le_exit(0);
 	ft_bzero(prevkey, MAX_KEY_LEN + 1);
 	while (1)
 	{
 		ft_bzero(key, MAX_KEY_LEN + 1);
 		ret = read(STDIN_FILENO, key, MAX_KEY_LEN);
 		if (ret == -1)
-			toexit(line_e, "key:", 1);
+			le_exit(0);
 		if (key[0] == S_KEY_ENTER && !key[1] && line_e->search_mode == 1)
 			replace_line_with_search(line_e);
 		else
@@ -572,7 +573,7 @@ int		line_edition(t_edit *line_e)
 			if (key[0] == S_KEY_ENTER && !key[1])
 			{
 				if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-					toexit(line_e, "tcsetattr", 1);//maybe turn off termcap no exit
+			        le_exit(ER_MALLOC);
 				break ;
 			}
 			on_key_press(line_e, prevkey, key);

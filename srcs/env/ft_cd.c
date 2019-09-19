@@ -18,7 +18,7 @@ static int		ft_cd_home(void)
 	int		exec_flag;
 
 	exec_flag = 0;
-	index = find_var("HOME", g_shell.envp);
+	index = find_var_idx("HOME", g_shell.envp);
 	if (g_shell.envp[index])
 	{
 		exec_flag = check_perms(g_shell.envp[index] + 5);
@@ -90,12 +90,12 @@ static int		ft_cd_minest(void)
 	char	*tmp;
 
 	tmp = NULL;
-	index = find_var("OLDPWD", g_shell.envp);
+	index = find_var_idx("OLDPWD", g_shell.envp);
 	if (g_shell.envp[index])
 		tmp = ft_strdup(g_shell.envp[index] + 7);
 	else
 	{
-		index = find_var("HOME", g_shell.envp);
+		index = find_var_idx("HOME", g_shell.envp);
 		if (g_shell.envp[index])
 			tmp = ft_strdup(g_shell.envp[index] + 5);
 	}

@@ -18,6 +18,8 @@ void		free_history(void)
 	t_list		*tmp;
 	t_hnode		*n;
 
+	if (g_shell.history == NULL)
+		return ;
 	head = g_shell.history->hist;
 	while (head)
 	{
@@ -41,6 +43,7 @@ void		init_history(void)
 	if (!home_path)
 	{
 		ft_putstr_fd("error : history need HOME env variable", 2);
+		g_shell.history = (t_history *)ft_memalloc(sizeof(t_history));
 		return ;
 	}
 	if (!(g_shell.history = (t_history *)ft_memalloc(sizeof(t_history))))

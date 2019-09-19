@@ -14,6 +14,7 @@
 # define SHELL_H
 
 # include <sys/types.h>
+# include <sys/stat.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/ioctl.h>
@@ -21,6 +22,7 @@
 # include <curses.h>
 # include "libft.h"
 # include <stdbool.h>
+# include <sys/wait.h>
 # include "token_and_ast.h"
 # include "signal_handler.h"
 # include <fcntl.h>
@@ -28,6 +30,8 @@
 # include "env.h"
 # include "history.h"
 # include "built_in.h"
+# include "error_handler.h"
+# include "job.h"
 
 # define S_KEY_ARW_UP			65
 # define S_KEY_ARW_DOWN			66
@@ -52,15 +56,7 @@
 # define TOKEN_CMP			";\n&|!<>"
 # define BKSH_DQT_CMP			"\\$\"\'"
 
-typedef enum
-{
-	NO_ERROR,
-	ER_DBACCES,
-	ER_DBINFO,
-	ER_SYNTAX
-}	t_errorno;
-
-typedef struct			s_file
+typedef struct 			s_file
 {
 	char				*name;
 	size_t				len;
@@ -106,7 +102,8 @@ typedef struct			s_sh
 	t_edit				*line_e;
 	t_ast				*ast;
 	char				**buff_cmd;
-	pid_t				pid;//in proc struct
+	pid_t				pid;
+	t_job			*first_job;
 	uint16_t			fd;
 	uint8_t				prompt_size;
 	uint8_t				errorno;
@@ -114,6 +111,9 @@ typedef struct			s_sh
 	bool				in_bg;//in proc struct
 	bool				isnt_interactive;
 	struct s_history	*history;
+	uint16_t		is_interactive;
+	uint8_t			ret;
+	bool			in_fg;
 	t_fptr				*fptr;
 }						t_sh;
 
@@ -124,9 +124,8 @@ t_sh			g_shell;
 */
 
 void					init_term(t_edit *line_e, char **envp);
-void					toexit(t_edit *line_e, char *str, int err);
-struct termios			*term_backup(void);
-struct termios			*term_raw(void);
+struct termios*				term_backup(void);
+struct termios*				term_raw(void);
 void					init_line(t_edit *line_e);
 t_edit					*st_line(void);
 t_ast_ptr				*st_ast(void);
@@ -150,15 +149,15 @@ void					cursor_after(t_edit *line_e);
 void					cursor_move_to(t_edit *line_e, uint pos);
 void					cursor_move_from_to(t_edit *line_e, uint from, uint to);
 void					cursor_move_from_to2(t_edit *line_e, int prefix,\
-		char *str, uint from, uint to);
+						char *str, uint from, uint to);
 void					cursor_reset_x_pos(t_edit *line_e);
 uint					get_line_height(t_edit *line, uint end);
 uint					get_str_height(t_edit *line_e, unsigned int prefix,\
-		char *str, unsigned int end);
+						char *str, unsigned int end);
 uint					get_index_x_pos(t_edit *line_e, uint pos);
 void					print_line(t_edit *line_e, unsigned int start);
 void					show_hist_line(t_edit *line_e);
-
+void					le_free(t_edit *line_e);
 /*
 **  Line edition - Autocompletion
 */
@@ -205,8 +204,7 @@ int						is_separator(char c);
 **  Line edition - File list
 */
 
-t_file					*ft_file_list_append(t_file **list, char *name,
-		int type);
+t_file					*ft_file_list_append(t_file **list, char *name, int type);
 t_file					*ft_file_list_at(t_file *list, unsigned int idx);
 t_file					*ft_file_list_create(char *name, int type);
 void					ft_file_list_delete(t_file **list);
@@ -306,7 +304,8 @@ void					ast_right_insert(t_token *tok);
 void					ast_next_cmd(t_token *tok);
 void					infix_print_ast(t_ast *node);
 void					rm_last_leaf(void);
-int						last_token(t_ast *node);
+void					ast_free(t_ast **root);
+int					last_token(t_ast *node);
 t_ast					*last_node(t_ast *node);
 void					bind_last_head(void);
 void					assign_to_word(void);
@@ -315,14 +314,21 @@ t_ast					*get_curr_head(void);
 /*
 ** Line Execution
 */
+
 void					line_execution(void);
 void					ast_execution(t_ast *ast);
 bool					exec_and_or(t_ast *ast);
-bool					exec_cmd(t_ast *ast);
+bool					exec_cmd(t_ast *ast, bool is_redir_pipe );
 bool					exec_redir(t_ast *ast);
 bool					is_slice_exec(t_tok tokind);
 bool					is_and_or_exec(t_tok tokind);
 bool					is_redir_pipe_exec(t_tok tokind);
+bool					is_other_exec(t_tok tokind);
+bool					exec_builtin(t_ast *ast);
+bool					is_builtin(t_ast *ast, char *bu);
+char					**get_cmd(t_ast *ast);
+bool					cmds_verif(t_process *p, char **envp);
+char					*find_var(char **envp, char *with);
 
 /*
 ** Inhibitor

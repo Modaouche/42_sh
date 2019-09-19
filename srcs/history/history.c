@@ -56,6 +56,8 @@ void		write_history(char *line)
 	t_hnode		*n;
 	int			fd;
 
+	if (!g_shell.history)
+		return ;
 	n = NULL;
 	head = g_shell.history->hist;
 	if (!line)
@@ -83,6 +85,8 @@ int			ft_history(void *ptr)
 	int			i;
 	char		**p;
 
+	if (!g_shell.history)
+		return (1);
 	i = 1;
 	p = ptr;
 	head = g_shell.history->hist;

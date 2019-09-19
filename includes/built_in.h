@@ -15,7 +15,7 @@
 # include "shell.h"
 
 #define BUILTIN_LIST "cd set clear pwd export unset history fc echo type "\
-					 "alias unalias test"
+					 "alias unalias test exit"
 
 /*
 **	type functions
