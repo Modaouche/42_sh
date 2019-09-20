@@ -66,5 +66,5 @@ char    *get_word(unsigned int *i)
 			*i += ret;
 		}
 	}
-	return (word);
+	return (word ? word : ft_strnew(0));
 }

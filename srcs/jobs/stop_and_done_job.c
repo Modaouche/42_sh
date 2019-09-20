@@ -123,7 +123,7 @@ void		do_job_notification(int showpid)
 			if (g_shell.first_job == NULL)
 				return ;
 		}
-		else if (job_is_stopped(j) && !j->notified)
+		else if (job_is_stopped(j) && !j->notified)//here
 		{
 			format_job_info (j, "stopped", showpid, i++);
 			j->notified = 1;
