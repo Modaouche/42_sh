@@ -112,12 +112,17 @@ void		rm_last_leaf(void)
 	}
 	else
 	{
+		if (ast_head->root && tmp == ast_head->root->right)
+			ft_printf("!! ast_head->root->right == ast_head->curr_head !!\n");
+		ft_printf("Freeing ast_head->curr_head (%p)\n", ast_head->curr_head);
 		to_free = tmp;
 		ast_head->curr_head = tmp->left;
 	}
 	ft_strdel(&(to_free->token->lexeme));
 	ft_memdel((void **)&(to_free->token));
 	ft_memdel((void **)&(to_free));
+	if (ast_head->root)
+		ft_printf("ast_head->root->right == %p\n", ast_head->root->right);
 }
 
 void	assign_to_word(void)

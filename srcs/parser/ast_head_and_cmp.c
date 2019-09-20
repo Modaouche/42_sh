@@ -71,7 +71,9 @@ void	bind_last_head(void)
 	t_ast		*last;
 
 	ast_head = st_ast();
-	last = ast_head->root;
+	if (!(last = ast_head->root))
+		return ;
+	ft_printf("Trying to access pointer ast_head->root->right (%p):\n", last->right);
 	ft_printf("%p, %p \n", last->right,last->right->right);
 		getchar();
 	while(last->right && last->right->right)
