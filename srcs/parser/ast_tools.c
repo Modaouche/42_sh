@@ -17,7 +17,7 @@ t_ast       *ast_new(t_token *tok)
 	t_ast *tree;
 
 	if (!(tree = (t_ast *)ft_memalloc(sizeof(t_ast))))
-		return (0);
+		to_exit(ER_MALLOC);
 	tree->token = tok;
 	return (tree);
 }
@@ -29,7 +29,7 @@ void        ast_left_insert(t_token *tok)
 
 	ast_head = st_ast();
 	if (!tok || !(new = ast_new(tok)))
-		return ;//to_exit !
+		to_exit(ER_MALLOC);
 	if (!(ast_head->curr_head))
 		ast_head->curr_head = new;
 	else
@@ -47,7 +47,7 @@ void	ast_right_insert(t_token *tok)
 
 	ast_head = st_ast();
 	if (!tok || !(new = ast_new(tok)))
-		return ;//to_exit !
+		to_exit(ER_MALLOC);
 	if (!(ast_head->curr_head))
 		ast_head->curr_head = new;
 	else
@@ -66,7 +66,7 @@ void	ast_next_cmd(t_token *tok)
 	ast_head = st_ast();
 	last = last_node(0);
 	if (!tok || !(new = ast_new(tok)))
-		return ;//to_exit ! with a garbadge collector
+		to_exit(ER_MALLOC);
 	tok = ft_memdup(last->token, sizeof(*tok));
 	tok->lexeme = ft_strdup(last->token->lexeme);
 	rm_last_leaf();
@@ -75,7 +75,7 @@ void	ast_next_cmd(t_token *tok)
 	if (!ast_head->root)
 		ast_head->root = ast_head->curr_head;
 	else
-		bind_last_head();
+		bind_last_head();//here
 	ast_head->curr_head = ast_head->curr_head->right;
 }
 
@@ -101,10 +101,7 @@ void		rm_last_leaf(void)
 	ast_head = st_ast();
 	tmp = ast_head->curr_head;
 	if (!(ast_head->curr_head))
-	{
-		ft_putendl_fd("node is NULL", 2);//to rm
 		return ;
-	}
 	if (tmp->right)
 	{
 		while (tmp->right->right)

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "shell.h"
+#define DEFAULT_TERM "xterm-256color"
 
 struct termios			*term_backup(void)
 {
@@ -47,6 +48,7 @@ static int		init_tc(void)
 		return (0);
 	g_shell.errorno = (ret > 0 && ft_strcmp("dumb", getenv("TERM")))
 		? ER_DBACCES : ER_DBINFO;
+	error_msg("42sh");
 	return (-1);
 }
 
@@ -54,11 +56,12 @@ void		init_term(t_edit *line_e, char **envp)
 {
 	ft_bzero(&g_shell, sizeof(g_shell));
 	ft_bzero(line_e, sizeof(line_e));
-	g_shell.fd = STDERR_FILENO;//add fd var in params to run '.sh' file
-	if (!(g_shell.is_interactive = isatty(g_shell.fd)))// a enlever et mettre sur les line_edit() une condition if(!g_shell.is_interactive) (dans le parser on quitte avec un msg d'erreur type [error with \"/'/( in non-tty])
-		le_exit(ER_NOT_TTY);//just a return ; if ^^^
+	g_shell.fd = STDERR_FILENO;
+	if (!(g_shell.is_interactive = isatty(g_shell.fd)))
+		le_exit(ER_NOT_TTY);
+	init_env(envp);
 	if (init_tc() == -1)
-		error_msg("./42sh");
+		g_shell.envp = set_var_env("TERM", DEFAULT_TERM, g_shell.envp);
 	g_shell.pid = getpgrp();
 	while (tcgetpgrp(g_shell.fd) != g_shell.pid)
 		kill(-g_shell.pid, SIGTTIN);
@@ -69,7 +72,6 @@ void		init_term(t_edit *line_e, char **envp)
 	line_e = st_line();
 	init_line(line_e);
 	fill_token_tab();
-	init_env(envp);
 	g_shell.termiold = term_backup();
 	g_shell.termios = term_raw();
 	g_shell.in_fg = true;
