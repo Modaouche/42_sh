@@ -86,6 +86,22 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 		add_process_and_msg_cmd(ast->right, j);
 }
 
+t_job		*get_job_by_id(unsigned int id)
+{
+	t_job *j;
+
+	if (id == 0)
+		return (NULL);
+	j = g_shell.first_job;
+	while (j)
+	{
+		if (j->id == id)
+			return (j);
+		j = j->next;
+	}
+	return (NULL);
+}
+
 unsigned int		create_job_id(unsigned int start)
 {
 	unsigned int	id;

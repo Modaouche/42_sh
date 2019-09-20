@@ -48,6 +48,7 @@ typedef struct		s_job
  * Put it in my shell globale */
 
 t_job			*find_job (pid_t pgid);
+t_job			*get_job_by_id(unsigned int id);
 int			job_is_stopped(t_job *j);
 int			job_is_completed(t_job *j);
 t_process		*free_process(t_process *p);
@@ -66,7 +67,8 @@ void			update_status (void);
 void			wait_for_job (t_job *j);
 void			format_job_info (t_job *j, const char *status,
 				int showpid, int showid);
-void			do_job_notification (int showpid);
+void			do_job_notif(t_job *j, int showpid, int update_stat);
+void			do_jobs_notif(int showpid);
 t_job			*create_job(t_job *j, t_ast *ast);
 t_job			*add_job(t_job *j, t_ast *ast);
 unsigned int	create_job_id(unsigned int start);
