@@ -6,19 +6,26 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/13 21:45:50 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/09/18 02:59:00 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/21 00:53:43 by mgheraie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "param_expansion.h"
 
-char		*get_env_value(char *varname)
+/*char		*get_env_value(char *varname)
 {
 	char		**env;
 	size_t		i;
 
 	env = g_env;
 	i = 0;
+	while(g_env[i])
+	{
+		ft_printf("ENV[%s]\n",g_env[i]);
+
+		i++;
+	}
+	return (NULL);
 	while (*env)
 	{
 		i = ft_strchri(*env, '=');
@@ -34,8 +41,8 @@ char		*set_var_env(char *varname, char *value)
 	varname = value;
 	return (NULL);
 }
-
-char		*get_word(char *arg, uint16_t signe)
+*/
+char		*get_word_prm_exp(char *arg, uint16_t signe)
 {
 	arg += (signe & PARAMDEFAULT) ? 1 : 0;
 	arg += (signe & PARAMASSIGN) ? 1 : 0;
@@ -70,15 +77,15 @@ t_param		*init_param(uint16_t signe, char *arg)
 	i = -1;
 	while (arg[++i] && ft_isalnum(arg[i]))
 		;
-	param->word = get_word(&arg[i], signe);
+	param->word = get_word_prm_exp(&arg[i], signe);
 	if (!(param->param = ft_strsub(arg, 0, i)))
 		return (NULL);
 	param->paramvalue = get_env_value(param->param);
 	//    param->paramvalue = ft_strdup("VALUE OF PARAM");
-	//ft_printf("SIGNE = [%d]\n",param->signe);
-	//ft_printf("ARG = [%s]\n",param->line);
-	//ft_printf("PARAM = [%s]\n",param->param);
-	//ft_printf("PARAMVALUE = [%p]\n",param->paramvalue);
-	//ft_printf("WORD = [%s]\n",param->word);
-	return (param);
+	/*ft_printf("SIGNE = [%d]\n",param->signe);
+	ft_printf("ARG = [%s]\n",param->line);
+	ft_printf("PARAM = [%s]\n",param->param);
+	ft_printf("PARAMVALUE = [%p]\n",param->paramvalue);
+	ft_printf("WORD = [%s]\n",param->word);
+	*/return (param);
 }

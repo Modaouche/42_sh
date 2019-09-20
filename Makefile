@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/08/30 11:47:07 by araout           ###   ########.fr        #
+#    Updated: 2019/09/21 00:54:20 by mgheraie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,7 +92,13 @@ SRC =	srcs/main/main.c\
 		srcs/builtin/test/test_flag_nbr.c\
 		srcs/builtin/test/test_flag_tools.c\
 		srcs/builtin/test/tools.c\
-		srcs/builtin/jobs/jobs.c
+		srcs/builtin/jobs/jobs.c\
+		srcs/param_expansion/srcs/main.c\
+		srcs/param_expansion/srcs/param.c\
+		srcs/param_expansion/srcs/parambis.c\
+		srcs/param_expansion/srcs/parsing.c\
+		srcs/param_expansion/srcs/tools.c\
+		srcs/param_expansion/srcs/ft_joinarg.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -102,7 +108,8 @@ LIB = $(LIBFT)/libft.a
 
 HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h \
 		includes/history.h includes/env.h includes/built_in.h includes/ft_test.h \
-	        includes/error_handler.h includes/job.h
+	        includes/error_handler.h includes/job.h\
+		srcs/param_expansion/includes/param_expansion.h
 
 
 

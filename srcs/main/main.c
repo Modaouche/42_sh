@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:16:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/16 04:23:05 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/21 01:51:38 by mgheraie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,3 +49,22 @@ int		main(int ac, char **av, char **envp)
 	        le_exit(0);//idem
 	return (0);
 }
+
+/*Main to test word expansion
+
+int		main(void)
+{
+	char buf[2048];
+
+	for(int i = 0; i< 2048; i++)
+		buf[i] = '\0';
+
+	int r ;
+	if (!(r = read(1, buf, 2048)))
+		return (write(1, "ERROR READ\n",11));
+	buf[r - 1] = '\0';;
+	ft_printf("LINE[%s]\n",buf);
+	char *res = param_expansion(buf);
+	ft_printf("RESULT = [%s]\n",res);
+
+}*/

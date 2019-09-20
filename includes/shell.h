@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/08/30 12:30:31 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/21 01:04:55 by mgheraie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include "built_in.h"
 # include "error_handler.h"
 # include "job.h"
+# include "param_expansion.h"
 
 # define S_KEY_ARW_UP			65
 # define S_KEY_ARW_DOWN			66
