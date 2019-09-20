@@ -88,11 +88,12 @@ void		wait_for_job (t_job *j)
 
 /* Format information about job status for the user to look at.  */
 
-void	format_job_info (t_job *j, const char *status, bool show_pid)
+void	format_job_info (t_job *j, const char *status, int showpid)
 {
-	if (show_pid)
-		ft_printf_fd(STDERR_FILENO, "%ld%c", (long)j->pgid, show_pid == 1 ? ' ' : '\n');
-	ft_printf_fd(STDERR_FILENO, "(%s): %s\n", status, j->command);
+	if (showpid)
+		ft_printf_fd(STDERR_FILENO, "%ld%c", (long)j->pgid, showpid == 2 ? '\n' : ' ');
+	if (showpid != 2)
+		ft_printf_fd(STDERR_FILENO, "(%s): %s\n", status, j->command);
 }
 
 
@@ -102,7 +103,7 @@ void	format_job_info (t_job *j, const char *status, bool show_pid)
    maybe it's the builtin 'jobs' 
    */
 
-void		do_job_notification(bool showpid)
+void		do_job_notification(int showpid)
 {
 	t_job		*j;
 	t_job		*jlast;

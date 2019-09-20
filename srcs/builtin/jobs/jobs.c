@@ -15,9 +15,16 @@
 
 int		ft_jobs(char **args)
 {
-	if (args && *args && ft_strcmp(args[1], "-l") == 0)
-		do_job_notification(1);
-	else
-		do_job_notification(0);
+	int show_pid;
+
+	show_pid = 0;
+	if (args && *args && args[1])
+	{
+		if (ft_strcmp(args[1], "-l") == 0)
+			show_pid = 1;
+		else if (ft_strcmp(args[1], "-p") == 0)
+			show_pid = 2;
+	}
+	do_job_notification(show_pid);
 	return (0);
 }
