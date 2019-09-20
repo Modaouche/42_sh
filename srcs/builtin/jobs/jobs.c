@@ -15,7 +15,9 @@
 
 int		ft_jobs(char **args)
 {
-	do_job_notification();
-	(void)args;
+	if (args && *args && ft_strcmp(args[1], "-l") == 0)
+		do_job_notification(1);
+	else
+		do_job_notification(0);
 	return (0);
 }

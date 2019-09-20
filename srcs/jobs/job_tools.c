@@ -108,22 +108,28 @@ void		push_back_job(t_ast *ast)
 	*/
 }
 
-void		remove_last_job(t_job **job)
+void		remove_completed_job(t_job **job)
 {
 	t_job *prev;
 	t_job *curr;
+	t_job *next;
 
 	if (!job || !(curr = *job))
 		return ;
 	prev = NULL;
-	while (curr->next)
+	while (curr)
 	{
-		prev = curr;
-		curr = curr->next;
+		next = curr->next;
+		if (job_is_completed(curr) && !curr->started_in_bg)
+		{
+			free_job(curr);
+			if (prev)
+				prev->next = next;
+			else
+				(*job) = next;
+		}
+		else
+			prev = curr;
+		curr = next;
 	}
-	if (prev)
-		prev->next = NULL;
-	else
-		*job = NULL;
-	free_job(curr);
 }

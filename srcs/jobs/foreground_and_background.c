@@ -33,7 +33,7 @@ void	put_job_in_foreground (t_job *j, int cont)
 
 
 	/* Wait for it to report.  */
-	wait_for_job (j);
+	wait_for_job(j);
 
 	/* Put the shell back in the foreground.  */
 	tcsetpgrp (g_shell.fd, g_shell.pid);

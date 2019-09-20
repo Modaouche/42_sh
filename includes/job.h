@@ -63,11 +63,12 @@ void			launch_job (t_job *j);
 int			mark_process_status (pid_t pid, int status);
 void			update_status (void);
 void			wait_for_job (t_job *j);
-void			format_job_info (t_job *j, const char *status);
-void			do_job_notification (void);
+void			format_job_info (t_job *j, const char *status,
+				bool showpid);
+void			do_job_notification (bool showpid);
 t_job			*create_job(t_job *j, t_ast *ast);
 t_job			*add_job(t_job *j, t_ast *ast);
 void			push_back_job(t_ast *ast);
 void			push_back_process(t_process **p);
-void			remove_last_job(t_job **job);
+void			remove_completed_job(t_job **job);
 #endif

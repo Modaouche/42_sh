@@ -56,11 +56,9 @@ void		update_status (void)
 	int	status;
 	pid_t	pid;
 
-	if ((pid = waitpid (WAIT_ANY, &status, WUNTRACED | WNOHANG)) == -1)
-		g_shell.errorno = ER_WAITPID;
+	pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG);
 	while (!mark_process_status (pid, status))
-		if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG)) == -1)
-			g_shell.errorno = ER_WAITPID;
+		pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG);
 }
 
 
@@ -73,14 +71,12 @@ void		wait_for_job (t_job *j)
 	pid_t pid;
 
 	ft_printf("command : %s\n" , j->command);
-	if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED)) == -1)
-		g_shell.errorno = ER_WAITPID;
+	pid = waitpid(WAIT_ANY, &status, WUNTRACED);
 	ft_printf("pid : %d\n" , pid);
 	while (!mark_process_status(pid, status)
 			&& !job_is_stopped(j)
 			&& !job_is_completed(j))
-	   if ((pid = waitpid(WAIT_ANY, &status, WUNTRACED)) == -1)
-			g_shell.errorno = ER_WAITPID;
+		pid = waitpid(WAIT_ANY, &status, WUNTRACED);
 
 	/*do
 		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
@@ -92,9 +88,11 @@ void		wait_for_job (t_job *j)
 
 /* Format information about job status for the user to look at.  */
 
-void	format_job_info (t_job *j, const char *status)
+void	format_job_info (t_job *j, const char *status, bool show_pid)
 {
-	fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);//utiliser fd_printf
+	if (show_pid)
+		ft_printf_fd(STDERR_FILENO, "%ld%c", (long)j->pgid, show_pid == 1 ? ' ' : '\n');
+	ft_printf_fd(STDERR_FILENO, "(%s): %s\n", status, j->command);
 }
 
 
@@ -104,14 +102,14 @@ void	format_job_info (t_job *j, const char *status)
    maybe it's the builtin 'jobs' 
    */
 
-void		do_job_notification (void)
+void		do_job_notification(bool showpid)
 {
 	t_job		*j;
 	t_job		*jlast;
 	t_job		*jnext;
 
 	/* Update status information for child processes.  */
-	update_status ();
+	update_status();
 
 	jlast = NULL;
 	for (j = g_shell.first_job; j; j = jnext)
@@ -122,27 +120,26 @@ void		do_job_notification (void)
 		   completed and delete it from the list of active jobs.  */
 		if (job_is_completed(j))
 		{
-			if (j->started_in_bg)
-				format_job_info(j, "completed");
+			format_job_info(j, "completed", showpid);
 			if (jlast)
 				jlast->next = jnext;
 			else
 				g_shell.first_job = jnext;
-			free_job (j);
+			free_job(j);
 		}
 
 		/* Notify the user about stopped jobs,
 		   marking them so that we won’t do this more than once.  */
 		else if (job_is_stopped (j) && !j->notified)
 		{
-			format_job_info (j, "stopped");
+			format_job_info (j, "stopped", showpid);
 			j->notified = 1;
 			jlast = j;
 		}
 		/* Don’t say anything about jobs that are still running.  */
 		else
 		{
-			format_job_info (j, "running");
+			format_job_info (j, "running", showpid);
 			j->notified = 0;
 			jlast = j;
 		}
