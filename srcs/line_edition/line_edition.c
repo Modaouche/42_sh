@@ -417,7 +417,10 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 	if (ft_strlen(key) <= 1 && (ft_isprint(*key)
 		|| (can_insert_tabs(line_e) && *key == '\t') || *key == 0x0d))
 	{
-		insert_char(line_e, (*key == 0x0d) ? ('\n') : (*key));
+		if (*key == 'k')
+			insert_char(line_e, '\n');
+		else
+			insert_char(line_e, (*key == 0x0d) ? ('\n') : (*key));
 		return ;
 	}
 	key_shortcut_handler(line_e, prevkey, key);

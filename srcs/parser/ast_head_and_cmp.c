@@ -72,7 +72,11 @@ void	bind_last_head(void)
 
 	ast_head = st_ast();
 	last = ast_head->root;
+	ft_printf("%p, %p \n", last->right,last->right->right);
+		getchar();
 	while(last->right && last->right->right)
+	{
 		last = last->right;
+	}
 	last->right = ast_head->curr_head;
 }//check if it's ok 
