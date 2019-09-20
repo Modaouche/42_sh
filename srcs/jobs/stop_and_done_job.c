@@ -88,10 +88,10 @@ void		wait_for_job (t_job *j)
 
 /* Format information about job status for the user to look at.  */
 
-void	format_job_info(t_job *j, const char *status, int showpid, int idx)
+void	format_job_info(t_job *j, const char *status, int showpid, int showid)
 {
-	if (idx)
-		ft_printf_fd(STDERR_FILENO, "[%d] ", idx);
+	if (showid)
+		ft_printf_fd(STDERR_FILENO, "[%d] ", j->id);
 	if (showpid && showpid != -1)
 		ft_printf_fd(STDERR_FILENO, "%ld%c", (long)j->pgid, showpid == 2 ? '\n' : ' ');
 	if (showpid != 2)
@@ -108,32 +108,30 @@ void	format_job_info(t_job *j, const char *status, int showpid, int idx)
 void		do_job_notification(int showpid)
 {
 	t_job		*j;
-	int i;
+	t_job		*next;
 
-	i = 1;
 	j = g_shell.first_job;
 	update_status();
 	while (j)
 	{
+		next = j->next;
 		if (job_is_completed(j))
 		{
 			format_job_info(j, "completed", 0, 0);
 			j->started_in_bg = 0;
 			remove_completed_job(&g_shell.first_job);
-			if (g_shell.first_job == NULL)
-				return ;
 		}
 		else if (job_is_stopped(j) && !j->notified)//here
 		{
-			format_job_info (j, "stopped", showpid, i++);
+			format_job_info (j, "stopped", showpid, 1);
 			j->notified = 1;
 		}
 		else
 		{
-			format_job_info (j, "running", showpid, i++);
+			format_job_info (j, "running", showpid, 1);
 			j->notified = 0;
 		}
-		j = j->next;
+		j = next;
 	}
 }
 

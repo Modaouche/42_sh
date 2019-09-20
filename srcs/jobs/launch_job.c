@@ -120,7 +120,7 @@ void		launch_job (t_job *j)
 		put_job_in_foreground (j, 0);
 	else
 	{
-		format_job_info(j, "launched", 1, 0);
+		format_job_info(j, "launched", 0, 1);
 		j->started_in_bg = 1;
 		put_job_in_background (j, 0);
 	}

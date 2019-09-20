@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int			ft_atoi(const char *str)
+int				ft_atoi(const char *str)
 {
 	int result;
 	int i;
@@ -35,4 +35,23 @@ int			ft_atoi(const char *str)
 	while (str[i] >= '0' && str[i] <= '9')
 		result = result * 10 + str[i++] - '0';
 	return (result * mult);
+}
+
+unsigned int	ft_atoui(const char *str)
+{
+	unsigned int result;
+	int i;
+
+	if (str == 0)
+		return (0);
+	i = 0;
+	result = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\v' \
+		|| str[i] == '\n' || str[i] == '\r' || str[i] == '\f')
+		++i;
+	if (str[i] == '+')
+		++i;
+	while (str[i] >= '0' && str[i] <= '9')
+		result = result * 10 + str[i++] - '0';
+	return (result);
 }

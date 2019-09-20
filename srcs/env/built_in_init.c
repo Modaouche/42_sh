@@ -37,7 +37,7 @@ t_fptr			*init_fptr(void)
 	func->f[13] = &fexit;
 	func->f[14] = &ft_jobs;
 	func->f[15] = &ft_fg;
-	func->f[15] = &ft_bg;
+	func->f[16] = &ft_bg;
 	return (func);
 }
 

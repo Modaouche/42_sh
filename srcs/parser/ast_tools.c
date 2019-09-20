@@ -65,6 +65,7 @@ void	ast_next_cmd(t_token *tok)
 
 	ast_head = st_ast();
 	last = last_node(0);
+	new = NULL;
 	if (!tok || !(new = ast_new(tok)))
 		to_exit(ER_MALLOC);
 	tok = ft_memdup(last->token, sizeof(*tok));

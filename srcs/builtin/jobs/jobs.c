@@ -13,16 +13,33 @@
 #include "libft.h"
 #include "built_in.h"
 
+uint	parse_args(char **args)
+{
+	uint id;
+
+	if (args == NULL || *args == NULL || args[1] == NULL)
+		return (0);
+	if (args[1][0] == '%')
+		id = ft_atoui(&args[1][1]);
+	else if (ft_strcmp(args[1], "-p") == 0 && args[2] != NULL)
+		id = ft_atoui(args[2]);
+	else
+		id = 0;
+	return (id);
+}
+
 int		ft_fg(char **args)
 {
-	(void)args;
 	t_job *j;
+	unsigned int jid;
 
+	jid = parse_args(args);
 	j = g_shell.first_job;
 	while (j)
 	{
-		if (!job_is_completed(j))
+		if ((jid == 0 && !job_is_completed(j)) || (jid != 0 && j->id == jid))
 		{
+			ft_printf("Continuing job [%s]\n", j->command);
 			continue_job(j, 0);
 			break ;
 		}
@@ -33,14 +50,17 @@ int		ft_fg(char **args)
 
 int		ft_bg(char **args)
 {
-	(void)args;
 	t_job *j;
+	uint jid;
 
+	jid = parse_args(args);
 	j = g_shell.first_job;
 	while (j)
 	{
-		if (!job_is_completed(j))
+		if ((jid == 0 && !job_is_completed(j))
+			|| (jid != 0 && j->id == jid))
 		{
+			ft_printf("Continuing job [%s]\n", j->command);
 			continue_job(j, 1);
 			break ;
 		}

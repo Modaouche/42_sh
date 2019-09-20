@@ -86,6 +86,22 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 		add_process_and_msg_cmd(ast->right, j);
 }
 
+unsigned int		create_job_id(unsigned int start)
+{
+	unsigned int	id;
+	t_job	*j;
+
+	id = start;
+	j = g_shell.first_job;
+	while (j && id != 0)
+	{
+		if (j->id == start)
+			return (create_job_id(id + 1));
+		j = j->next;
+	}
+	return (id);
+}
+
 void		push_back_job(t_ast *ast)
 {
 	t_job	*new;
@@ -97,15 +113,11 @@ void		push_back_job(t_ast *ast)
 		g_shell.first_job = new;
 	is_pipe = true;
 	add_process_and_msg_cmd(ast, new);
-	if (!j)
-		j = new;
-	else
+	if (j != NULL)
 		j->next = new;
 	new->stdout = STDOUT_FILENO;
 	new->stderr = STDERR_FILENO;
-	/*
-	ft_printf("test job command message -> %s\n", new->command);
-	*/
+	new->id = create_job_id(1);
 }
 
 void		remove_completed_job(t_job **job)

@@ -41,6 +41,7 @@ typedef struct		s_job
 	int		stdin;		/* standard input channels (useful for redir)*/
 	int		stdout;		/* standard output channels (useful for redir)*/
 	int		stderr;		/* standard error channels (useful for redir)*/
+	unsigned int	id;
 }			t_job;
 
 /* The active jobs are linked into a list.  This is its head. 
@@ -64,10 +65,11 @@ int			mark_process_status (pid_t pid, int status);
 void			update_status (void);
 void			wait_for_job (t_job *j);
 void			format_job_info (t_job *j, const char *status,
-				int showpid, int idx);
+				int showpid, int showid);
 void			do_job_notification (int showpid);
 t_job			*create_job(t_job *j, t_ast *ast);
 t_job			*add_job(t_job *j, t_ast *ast);
+unsigned int	create_job_id(unsigned int start);
 void			push_back_job(t_ast *ast);
 void			push_back_process(t_process **p);
 void			remove_completed_job(t_job **job);
