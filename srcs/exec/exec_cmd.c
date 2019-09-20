@@ -76,6 +76,14 @@ bool		cmds_verif(t_process *p, char **envp)
 	return (true);
 }
 
+void		free_completed_jobs()
+{
+	update_status();
+	if (g_shell.errorno)
+		error_msg("./42sh");
+	remove_completed_job(&g_shell.first_job);
+}
+
 bool		exec_cmd(t_ast *ast, bool is_redir_pipe) 
 {
 	ft_putendl("-----------------[ exec cmd ]");
@@ -84,10 +92,6 @@ bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 	push_back_job(ast);
 	g_shell.errorno = NO_ERROR;
 	launch_job(last_job());
-	if (g_shell.errorno)
-	{
-		remove_last_job(&g_shell.first_job);
-		error_msg("./42sh");
-	}
+	free_completed_jobs();
 	return (g_shell.errorno ? 0 : 1);
 }

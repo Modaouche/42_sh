@@ -57,14 +57,13 @@ void	set_alias(char *alias, int *errcode)
 	alias[separator] = '=';
 }
 
-int		ft_alias(void *str)
+int		ft_alias(char **args)
 {
-	char **args;
 	int i;
 	int errcode;
 
 	errcode = 0;
-	if (!(args = str) || !args[0] || !args[1])
+	if (!args || !args[0] || !args[1])
 	{
 		print_alias_list();
 		return (0);
@@ -81,14 +80,13 @@ int		ft_alias(void *str)
 	return (errcode);
 }
 
-int		ft_unalias(void *str)
+int		ft_unalias(char **args)
 {
-	char **args;
 	int i;
 	int errcode;
 
 	errcode = 0;
-	if (!(args = str) || !args[0] || !args[1])
+	if (!args || !args[0] || !args[1])
 	{
 		print_alias_list();
 		return (0);

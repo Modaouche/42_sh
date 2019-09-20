@@ -35,6 +35,9 @@ t_fptr			*init_fptr(void)
 	func->f[11] = &ft_unalias;
 	func->f[12] = &ft_test_main;
 	func->f[13] = &fexit;
+	func->f[14] = &ft_jobs;
+	func->f[15] = &ft_fg;
+	func->f[15] = &ft_bg;
 	return (func);
 }
 

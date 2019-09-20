@@ -87,12 +87,10 @@ t_fc			*build_struct_fc(char **args)
 	return (fc_struct);
 }
 
-int				ft_fc(void *ptr)
+int				ft_fc(char **args)
 {
-	char	**args;
 	t_fc	*fc_struct;
 
-	args = (char **)ptr;
 	if ((fc_struct = build_struct_fc(args)) == NULL)
 		return (-1);
 	if (get_option(fc_struct->options, 's') && (free_fc(fc_struct) == -1))

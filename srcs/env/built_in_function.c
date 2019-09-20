@@ -12,13 +12,11 @@
 
 #include "env.h"
 
-int			fexit(void *ptr)
+int			fexit(char **p)
 {
 	int		i;
-	char	**p;
 	int		j;
 
-	p = ptr;
 	j = 0;
 	write_history(NULL);
 	le_free(g_shell.line_e);
@@ -56,30 +54,28 @@ void		cd_set_env(int exec_flag, char *pwd)
 	ft_strdel(&pwd);
 }
 
-int			print_env(void *ptr)
+int			print_env(char **args)
 {
 	int		i;
 
+	(void)args;
 	i = -1;
-	if (ptr)
-	{
-		while (g_shell.intern_var && g_shell.intern_var[++i])
-			ft_printf("%s\n", g_shell.intern_var[i]);
-	}
-	i = 0;
+	while (g_shell.intern_var && g_shell.intern_var[++i])
+		ft_printf("%s\n", g_shell.intern_var[i]);
+	i = -1;
 	while (g_shell.envp[++i])
 		ft_printf("%s\n", g_shell.envp[i]);
 	return (1);
 }
 
-int			ft_clear(void *ptr)
+int			ft_clear(char **ptr)
 {
 	(void)ptr;
 	tputs(tgetstr("cl", NULL), 1, ft_puti);
 	return (1);
 }
 
-int			ft_pwd(void *ptr)
+int			ft_pwd(char **ptr)
 {
 	char	*str;
 
