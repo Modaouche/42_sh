@@ -15,7 +15,7 @@
 # include "shell.h"
 
 #define BUILTIN_LIST "cd set clear pwd export unset history fc echo type "\
-					 "alias unalias test exit jobs"
+					 "alias unalias test exit jobs fg bg"
 
 /*
 **	type functions
@@ -32,7 +32,12 @@ int					check_alias(char *args);
 */
 int					ft_echo(char **args);
 
+/*
+**	echo functions
+*/
 int					ft_jobs(char **args);
+int					ft_fg(char **args);
+int					ft_bg(char **args);
 
 /*
 **  ft_test

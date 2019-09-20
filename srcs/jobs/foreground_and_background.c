@@ -57,7 +57,7 @@ void	put_job_in_background (t_job *j, int cont)
 
 /* Mark a stopped job J as being running again.  */
 
-void		mark_job_as_running (t_job *j)
+void		mark_job_as_running(t_job *j)
 {
 	t_process *p;
 
@@ -69,9 +69,9 @@ void		mark_job_as_running (t_job *j)
 
 /* Continue the job J.   is 'fg or bg'*/
 
-void	continue_job (t_job *j, int foreground)
+void	continue_job(t_job *j, int foreground)
 {
-	mark_job_as_running (j);
+	mark_job_as_running(j);
 	if (foreground)
 		put_job_in_foreground (j, 1);
 	else

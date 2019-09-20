@@ -13,6 +13,42 @@
 #include "libft.h"
 #include "built_in.h"
 
+int		ft_fg(char **args)
+{
+	(void)args;
+	t_job *j;
+
+	j = g_shell.first_job;
+	while (j)
+	{
+		if (!job_is_completed(j))
+		{
+			continue_job(j, 0);
+			break ;
+		}
+		j = j->next;
+	}
+	return (0);
+}
+
+int		ft_bg(char **args)
+{
+	(void)args;
+	t_job *j;
+
+	j = g_shell.first_job;
+	while (j)
+	{
+		if (!job_is_completed(j))
+		{
+			continue_job(j, 1);
+			break ;
+		}
+		j = j->next;
+	}
+	return (0);
+}
+
 int		ft_jobs(char **args)
 {
 	int show_pid;
