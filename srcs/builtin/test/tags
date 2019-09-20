@@ -1,0 +1,43 @@
+ft_dstrlen	tools.c	/^size_t		ft_dstrlen(char **s)$/
+ft_strchri	tools.c	/^int			ft_strchri(char *str, char c)$/
+ft_strgetlastocc	tools.c	/^int			ft_strgetlastocc(char *s, char c)$/
+ft_test	test.c	/^char			ft_test(uint16_t flag, char **arg)$/
+ft_test_main	test.c	/^int			ft_test_main(char **av)$/
+print_no_int	test_flag_nbr.c	/^void			print_no_int(char **args)$/
+test_blk	ft_file_type_bis.c	/^char		test_blk(mode_t m)$/
+test_check_chmod_file	ft_chmod_file.c	/^char		test_check_chmod_file(struct stat buf, uint8/
+test_check_type_file	ft_file_type.c	/^char		test_check_type_file(uint8_t flag, mode_t m)/
+test_chr	ft_file_type_bis.c	/^char		test_chr(mode_t m)$/
+test_dir	ft_file_type_bis.c	/^char		test_dir(mode_t m)$/
+test_dispatch_file	test_flag_file.c	/^static char			test_dispatch_file(uint16_t flag, st/
+test_fifo	ft_file_type_bis.c	/^char		test_fifo(mode_t m)$/
+test_flag_file	test_flag_file.c	/^char				test_flag_file(uint16_t flag, void *s)$/
+test_flag_nbr	test_flag_nbr.c	/^char			test_flag_nbr(uint16_t flag, void *s)$/
+test_flag_str	test_flag_str.c	/^char			test_flag_str(uint16_t flag, void *s)$/
+test_flag_z	test_flag_str.c	/^char			test_flag_z(uint16_t flag, void *s)$/
+test_get_filename	tools.c	/^char		*test_get_filename(char *s, char *buf)$/
+test_get_id_flag	test_flag_tools.c	/^uint16_t		test_get_id_flag(char *tmp)$/
+test_get_id_flag_file	test_flag_tools.c	/^uint16_t		test_get_id_flag_file(char *tmp)$/
+test_get_id_flag_nbr	test_flag_tools.c	/^uint16_t		test_get_id_flag_nbr(char *tmp)$/
+test_get_id_flag_str	test_flag_tools.c	/^uint16_t		test_get_id_flag_str(char *tmp)$/
+test_get_pathname	tools.c	/^char		*test_get_pathname(char *s)$/
+test_get_stat	tools.c	/^char		test_get_stat(char *path, char *name,$/
+test_get_strflag	test_flag_str.c	/^void			test_get_strflag(uint16_t flag)$/
+test_gid	ft_file_type.c	/^char		test_gid(mode_t m)$/
+test_grpr	ft_chmod_file_bis.c	/^char		test_grpr(mode_t mode)$/
+test_grpw	ft_chmod_file_bis.c	/^char		test_grpw(mode_t mode)$/
+test_grpx	ft_chmod_file.c	/^char		test_grpx(mode_t mode)$/
+test_lnk	ft_file_type.c	/^char		test_lnk(mode_t m)$/
+test_nbr_error	test_flag_nbr.c	/^char			test_nbr_error(char **arg)$/
+test_opendir	tools.c	/^DIR			*test_opendir(char *s)$/
+test_othr	ft_chmod_file_bis.c	/^char		test_othr(mode_t mode)$/
+test_othw	ft_chmod_file_bis.c	/^char		test_othw(mode_t mode)$/
+test_othx	ft_chmod_file_bis.c	/^char		test_othx(mode_t mode)$/
+test_pars_nbr	test_flag_nbr.c	/^char			test_pars_nbr(char **args)$/
+test_reg	ft_file_type_bis.c	/^char		test_reg(mode_t m)$/
+test_set_id_flag	test_flag_tools.c	/^uint16_t		test_set_id_flag(char **s)$/
+test_sock	ft_file_type.c	/^char		test_sock(mode_t m)$/
+test_uid	ft_file_type.c	/^char		test_uid(mode_t m)$/
+test_usrr	ft_chmod_file.c	/^char		test_usrr(mode_t mode)$/
+test_usrw	ft_chmod_file.c	/^char		test_usrw(mode_t mode)$/
+test_usrx	ft_chmod_file.c	/^char		test_usrx(mode_t mode)$/
