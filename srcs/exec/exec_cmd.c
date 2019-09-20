@@ -80,10 +80,8 @@ void		free_completed_jobs()
 {
 	update_status();
 	if (g_shell.errorno)
-	{
-		remove_completed_job(&g_shell.first_job);
 		error_msg("./42sh");
-	}
+	remove_completed_job(&g_shell.first_job);
 }
 
 bool		exec_cmd(t_ast *ast, bool is_redir_pipe) 

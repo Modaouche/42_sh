@@ -88,9 +88,11 @@ void		wait_for_job (t_job *j)
 
 /* Format information about job status for the user to look at.  */
 
-void	format_job_info (t_job *j, const char *status, int showpid)
+void	format_job_info(t_job *j, const char *status, int showpid, int idx)
 {
-	if (showpid)
+	if (idx)
+		ft_printf_fd(STDERR_FILENO, "[%d] ", idx);
+	if (showpid && showpid != -1)
 		ft_printf_fd(STDERR_FILENO, "%ld%c", (long)j->pgid, showpid == 2 ? '\n' : ' ');
 	if (showpid != 2)
 		ft_printf_fd(STDERR_FILENO, "(%s): %s\n", status, j->command);
@@ -106,44 +108,32 @@ void	format_job_info (t_job *j, const char *status, int showpid)
 void		do_job_notification(int showpid)
 {
 	t_job		*j;
-	t_job		*jlast;
-	t_job		*jnext;
+	int i;
 
-	/* Update status information for child processes.  */
+	i = 1;
+	j = g_shell.first_job;
 	update_status();
-
-	jlast = NULL;
-	for (j = g_shell.first_job; j; j = jnext)
+	while (j)
 	{
-		jnext = j->next;
-
-		/* If all processes have completed, tell the user the job has
-		   completed and delete it from the list of active jobs.  */
 		if (job_is_completed(j))
 		{
-			format_job_info(j, "completed", showpid);
-			if (jlast)
-				jlast->next = jnext;
-			else
-				g_shell.first_job = jnext;
-			free_job(j);
+			format_job_info(j, "completed", 0, 0);
+			j->started_in_bg = 0;
+			remove_completed_job(&g_shell.first_job);
+			if (g_shell.first_job == NULL)
+				return ;
 		}
-
-		/* Notify the user about stopped jobs,
-		   marking them so that we won’t do this more than once.  */
-		else if (job_is_stopped (j) && !j->notified)
+		else if (job_is_stopped(j) && !j->notified)
 		{
-			format_job_info (j, "stopped", showpid);
+			format_job_info (j, "stopped", showpid, i++);
 			j->notified = 1;
-			jlast = j;
 		}
-		/* Don’t say anything about jobs that are still running.  */
 		else
 		{
-			format_job_info (j, "running", showpid);
+			format_job_info (j, "running", showpid, i++);
 			j->notified = 0;
-			jlast = j;
 		}
+		j = j->next;
 	}
 }
 
