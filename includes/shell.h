@@ -355,7 +355,8 @@ void					dollars_cmd(const char *line, char **word,\
 int						backslash(const char *line, char **word,
 		unsigned int *i, int qt);
 int						backslash_end(t_edit *line_e, unsigned int *i, int *qt);
-void					insert_home_path(char **word, unsigned int *i);
+void					insert_home_path(const char *line, char **word,
+						unsigned int *i);
 
 /*
 ** Alias

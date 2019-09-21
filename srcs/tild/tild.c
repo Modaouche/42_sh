@@ -53,6 +53,8 @@ char	*tild(char *s)
 	struct passwd	*passwd;
 
 	ft_printf("RECEIVED [%s]\n", s);
+	if (s == NULL)
+		return (NULL);
 	if (ft_strlen(s) == 1)
 		return ((getpwnam(getlogin()))->pw_dir);
 	tmp = s;

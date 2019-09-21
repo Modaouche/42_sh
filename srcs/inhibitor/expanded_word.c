@@ -52,15 +52,27 @@ int    backslash_end(t_edit *line_e, unsigned int *i, int *ret)
 	return (1);
 }
 
-void	insert_home_path(char **word, unsigned int *i)
+void	insert_home_path(const char *line, char **word, unsigned int *i)
 {
-	char	*path;
+	char			*path;
+	unsigned int	x;
+	char			*username;
 
-	path = tild("~");
-	if (path == NULL)
-		return ;
-	*word = (!*word) ? ft_strdup(path) : ft_strjoin_free(*word, path, 1);
 	*i += 1;
+	x = 0;
+	while (ft_isalnum(line[*i + x]))
+		++x;
+	if (x == 0)
+		path = tild("~");
+	else
+	{
+		username = ft_strsub(line, *i, x);
+		path = tild(username);
+		ft_strdel(&username);
+		*i += x;
+	}
+	if (path != NULL)
+		*word = (!*word) ? ft_strdup(path) : ft_strjoin_free(*word, path, 1);
 }
 
 void	insert_env_var_value(const char *line, char **word, unsigned int *i)
