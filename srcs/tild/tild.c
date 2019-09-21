@@ -6,7 +6,7 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/21 01:12:56 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/09/22 00:00:12 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/09/22 01:49:59 by mgheraie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ char	*tild(char *s)
 	if (ft_strlen(s) == 1)
 		return ((getpwnam(getlogin()))->pw_dir);
 	tmp = s;
-	tmp++;
 	if (!(passwd = getpwnam(tmp)))
 		return (NULL);
 	if (!(tmp = ft_strdup(passwd->pw_dir)))
