@@ -16,6 +16,8 @@ char			*get_env_value(char *varname)
 {
 	int		vpos;
 
+	if (varname == NULL)
+		return (NULL);
 	vpos = find_var_idx(varname, g_shell.intern_var);
 	if (g_shell.envp && g_shell.envp[find_var_idx(varname, g_shell.envp)])
 		return (ft_strdup(g_shell.envp[find_var_idx(varname, g_shell.envp)]\
@@ -75,7 +77,7 @@ int				find_var_idx(char *varname, char **env)
 	int		i;
 
 	i = 0;
-	if (!env || !env[i])
+	if (!env || !env[i] || !varname)
 		return (i);
 	while (env && env[i] && !is_var(env[i], varname))
 		i++;
