@@ -62,9 +62,8 @@ void	insert_env_var_value(const char *line, char **word, unsigned int *i)
 	x = 0;
 	while (ft_isalnum(line[*i + x]) || line[*i + x] == '_')
 		++x;
-	varname = ft_strsub(line, *i, x);
-	value = get_env_value(varname);
-	if (value)
+	varname = x == 0 ? NULL : ft_strsub(line, *i, x);
+	if ((value = get_env_value(varname)))
 		*word = (!*word) ? value : ft_strjoin_free(*word, value, 3);
 	ft_strdel(&varname);
 	*i += x;
