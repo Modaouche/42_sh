@@ -98,7 +98,8 @@ SRC =	srcs/main/main.c\
 		srcs/param_expansion/parambis.c\
 		srcs/param_expansion/parsing.c\
 		srcs/param_expansion/tools.c\
-		srcs/param_expansion/ft_joinarg.c
+		srcs/param_expansion/ft_joinarg.c \
+		srcs/tild/tild.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -108,7 +109,8 @@ LIB = $(LIBFT)/libft.a
 
 HEADERS = includes/shell.h includes/token_and_ast.h includes/signal_handler.h \
 		includes/history.h includes/env.h includes/built_in.h includes/ft_test.h \
-	    includes/error_handler.h includes/job.h includes/param_expansion.h
+	    includes/error_handler.h includes/job.h includes/param_expansion.h \
+	    includes/tild.h
 
 
 

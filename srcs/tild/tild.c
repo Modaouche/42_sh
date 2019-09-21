@@ -13,16 +13,14 @@
 
 #include "tild.h"
 #include <pwd.h>
-
-char	**g_env;
-
+/*
 char	*get_env(void)
 {
 	char	**env;
 	int		last;
 
-	env = g_env;
-	while (**env)
+	env = g_shell.envp;
+	while (env && *env)
 	{
 		if (ft_strncmp(*env, "HOME=", 5) == 0)
 		{
@@ -39,16 +37,16 @@ char	*get_home(void)
 {
 	char	**env;
 
-	env = g_env;
-	while (**env)
+	env = g_shell.envp;
+	while (env && *env)
 	{
 		if (ft_strncmp(*env, "HOME=", 5) == 0)
 			return (ft_strdup(*env + 5));
-		env++;
+		++env;
 	}
 	return (NULL);
 }
-
+*/
 char	*tild(char *s)
 {
 	char			*tmp;
@@ -64,16 +62,4 @@ char	*tild(char *s)
 	if (!(tmp = ft_strdup(passwd->pw_dir)))
 		return (NULL);
 	return (tmp);
-}
-
-
-int main(int ac, char **av, char **env)
-{
-	ac++;
-	g_env = env;
-	char *s = ft_strdup(av[1]);
-	char *res = tild(s);
-	ft_printf("[%s]\n",res);
-	ft_strdel(&s);
-	return (EXIT_SUCCESS);
 }

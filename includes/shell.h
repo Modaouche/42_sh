@@ -33,6 +33,7 @@
 # include "error_handler.h"
 # include "job.h"
 # include "param_expansion.h"
+# include "tild.h"
 
 # define S_KEY_ARW_UP			65
 # define S_KEY_ARW_DOWN			66
@@ -354,6 +355,7 @@ void					dollars_cmd(const char *line, char **word,\
 int						backslash(const char *line, char **word,
 		unsigned int *i, int qt);
 int						backslash_end(t_edit *line_e, unsigned int *i, int *qt);
+void					insert_home_path(char **word, unsigned int *i);
 
 /*
 ** Alias

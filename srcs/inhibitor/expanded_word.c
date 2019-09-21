@@ -52,6 +52,17 @@ int    backslash_end(t_edit *line_e, unsigned int *i, int *ret)
 	return (1);
 }
 
+void	insert_home_path(char **word, unsigned int *i)
+{
+	char	*path;
+
+	path = tild("~");
+	if (path == NULL)
+		return ;
+	*word = (!*word) ? ft_strdup(path) : ft_strjoin_free(*word, path, 1);
+	*i += 1;
+}
+
 void	insert_env_var_value(const char *line, char **word, unsigned int *i)
 {
 	unsigned int	x;

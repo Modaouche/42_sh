@@ -12,8 +12,10 @@
 
 #ifndef TILD_H
 # define TILD_H
-
-# include "../libft/libft.h"
+# include "shell.h"
+# include "libft.h"
 # define HOMEENV 5
+
+char	*tild(char *s);
 
 #endif

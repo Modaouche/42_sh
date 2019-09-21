@@ -32,6 +32,8 @@ int    word_handling_prime(const char *line, char **word, unsigned int *i, int q
         if (!backslash(line, word, i, qt))
             return (0);
     }
+    else if (line[*i] == '~')
+        insert_home_path(word, i);
     else if (line[*i] == '$')
         dollars_cmd(line, word, i);
     else
