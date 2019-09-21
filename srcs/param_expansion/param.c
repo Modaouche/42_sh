@@ -64,8 +64,8 @@ char	*param_alternative(t_param *paramstruct)
 
 char	*set_word(t_param *param)
 {
-	param = NULL;
-	return ("SETWORD\n");
+	g_shell.envp = set_var_env(param->param, param->word, g_shell.envp);
+	return (param->word);
 }
 
 char	*param_assign(t_param *param)
@@ -73,7 +73,7 @@ char	*param_assign(t_param *param)
 	size_t	sizeparam;
 
 	if (!(param->paramvalue))
-		return (param->word);
+		return (set_word(param));
 	sizeparam = ft_strlen(param->paramvalue);
 	if (sizeparam > 0)
 		return (param->paramvalue);

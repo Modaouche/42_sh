@@ -62,12 +62,17 @@ void    dollars_cmd(const char *line, char **word, unsigned int *i)
 		ft_putstr("~[  $(  ]~\n");//substition(word, line[*i], i);//to creat
 	else if (line[*i] == '{')
 	{
-		*word = (!*word) ? param_expansion((char*)&line[*i + 1]) :
-		ft_strjoin_free(*word, param_expansion((char*)&line[*i + 1]), 3);
+		char *t;
+		t = param_expansion((char*)&line[*i + 1]);
+		*word = (!*word) ? t :
+		ft_strjoin_free(*word, t, 3);
 	}
 	else if (line[*i] == '\\' || line[*i] == ' '\
 			|| line[*i] == '\t' || !line[*i])
 		*word = (!*word) ? ft_strdup("$") : ft_strjoin_free(*word, "$", 1);
 	else if (ft_isalnum(line[*i]))
+	{
+		//*word = (!*word) ? ft_strdup("VAR_VALUE") : ft_strjoin_free(*word, "VAR_VALUE", 1);
 		ft_putstr("~[  $VAR  ]~\n");//get_varenv();//to creat
+	}
 }
