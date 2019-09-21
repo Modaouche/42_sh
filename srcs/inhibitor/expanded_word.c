@@ -52,6 +52,24 @@ int    backslash_end(t_edit *line_e, unsigned int *i, int *ret)
 	return (1);
 }
 
+void	insert_env_var_value(const char *line, char **word, unsigned int *i)
+{
+	unsigned int	x;
+	char			*varname;
+	char			*value;
+
+
+	x = 0;
+	while (ft_isalnum(line[*i + x]) || line[*i + x] == '_')
+		++x;
+	varname = ft_strsub(line, *i, x);
+	value = get_env_value(varname);
+	if (value)
+		*word = (!*word) ? value : ft_strjoin_free(*word, value, 3);
+	ft_strdel(&varname);
+	*i += x;
+}
+
 void    dollars_cmd(const char *line, char **word, unsigned int *i)
 {
 	++(*i);    
@@ -71,8 +89,5 @@ void    dollars_cmd(const char *line, char **word, unsigned int *i)
 			|| line[*i] == '\t' || !line[*i])
 		*word = (!*word) ? ft_strdup("$") : ft_strjoin_free(*word, "$", 1);
 	else if (ft_isalnum(line[*i]))
-	{
-		//*word = (!*word) ? ft_strdup("VAR_VALUE") : ft_strjoin_free(*word, "VAR_VALUE", 1);
-		ft_putstr("~[  $VAR  ]~\n");//get_varenv();//to creat
-	}
+		insert_env_var_value(line, word, i);
 }
