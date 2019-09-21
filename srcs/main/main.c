@@ -24,6 +24,7 @@ void	line_edit(t_edit *line_e)
 	signal_handler(REGULAR);
 }//cree une fonction generique (tu as le meme genre de code dans le parser)
 
+
 int		main(int ac, char **av, char **envp)
 {
 	t_edit	*line_e;
@@ -35,6 +36,11 @@ int		main(int ac, char **av, char **envp)
 	while (1)
 	{
 		line_edit(line_e);
+
+		//char *res = param_expansion(line_e->line);
+		//ft_printf("RESULT = [%s]\n",res);
+		//ft_strdel(&res);
+
 		replace_aliases(line_e);
 		line_parser(line_e);
 		line_execution();
@@ -50,21 +56,3 @@ int		main(int ac, char **av, char **envp)
 	return (0);
 }
 
-/*Main to test word expansion
-
-int		main(void)
-{
-	char buf[2048];
-
-	for(int i = 0; i< 2048; i++)
-		buf[i] = '\0';
-
-	int r ;
-	if (!(r = read(1, buf, 2048)))
-		return (write(1, "ERROR READ\n",11));
-	buf[r - 1] = '\0';;
-	ft_printf("LINE[%s]\n",buf);
-	char *res = param_expansion(buf);
-	ft_printf("RESULT = [%s]\n",res);
-
-}*/

@@ -61,7 +61,10 @@ void    dollars_cmd(const char *line, char **word, unsigned int *i)
 	else if (line[*i] == '(')
 		ft_putstr("~[  $(  ]~\n");//substition(word, line[*i], i);//to creat
 	else if (line[*i] == '{')
-		ft_putstr("~[  ${  ]~\n");//word_expansion(word, line[*i], i);//to creat
+	{
+		*word = (!*word) ? param_expansion((char*)&line[*i + 1]) :
+		ft_strjoin_free(*word, param_expansion((char*)&line[*i + 1]), 3);
+	}
 	else if (line[*i] == '\\' || line[*i] == ' '\
 			|| line[*i] == '\t' || !line[*i])
 		*word = (!*word) ? ft_strdup("$") : ft_strjoin_free(*word, "$", 1);

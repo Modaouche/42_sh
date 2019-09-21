@@ -12,36 +12,6 @@
 
 #include "param_expansion.h"
 
-/*char		*get_env_value(char *varname)
-{
-	char		**env;
-	size_t		i;
-
-	env = g_env;
-	i = 0;
-	while(g_env[i])
-	{
-		ft_printf("ENV[%s]\n",g_env[i]);
-
-		i++;
-	}
-	return (NULL);
-	while (*env)
-	{
-		i = ft_strchri(*env, '=');
-		if (ft_strncmp(*env, varname, i) == 0)
-			return (ft_strdup(*env + i + 1));
-		env++;
-	}
-	return (ft_strnew(0));
-}
-
-char		*set_var_env(char *varname, char *value)
-{
-	varname = value;
-	return (NULL);
-}
-*/
 char		*get_word_prm_exp(char *arg, uint16_t signe)
 {
 	arg += (signe & PARAMDEFAULT) ? 1 : 0;
