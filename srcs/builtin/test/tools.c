@@ -51,6 +51,8 @@ DIR			*test_opendir(char *s)
 	char	*path;
 	DIR		*dir;
 
+	if (!*s)
+		return (NULL);
 	if ((ft_strchri(s, '/')) == -1)
 		return (opendir("."));
 	save = ft_strgetlastocc(s, '/');

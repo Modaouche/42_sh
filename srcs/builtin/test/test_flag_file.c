@@ -6,7 +6,7 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/16 05:39:36 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/06/16 05:49:43 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/09/21 00:30:34 by mgheraie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char				test_flag_file(uint16_t flag, void *s)
 	if (!s)
 		return (TRUE);
 	if (!(dir = test_opendir((char*)s)))
-		return (ERROR);
+		return (1);
 	ft_strncpy(name, s, ft_strgetlastocc(s, '/'));
 	test_get_filename(s, name);
 	path = test_get_pathname(s);

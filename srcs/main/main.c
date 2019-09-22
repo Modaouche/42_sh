@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:16:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/16 04:23:05 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/21 01:51:38 by mgheraie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	line_edit(t_edit *line_e)
 	signal_handler(REGULAR);
 }//cree une fonction generique (tu as le meme genre de code dans le parser)
 
+
 int		main(int ac, char **av, char **envp)
 {
 	t_edit	*line_e;
@@ -35,6 +36,11 @@ int		main(int ac, char **av, char **envp)
 	while (1)
 	{
 		line_edit(line_e);
+
+		//char *res = param_expansion(line_e->line);
+		//ft_printf("RESULT = [%s]\n",res);
+		//ft_strdel(&res);
+
 		replace_aliases(line_e);
 		line_parser(line_e);
 		line_execution();
@@ -49,3 +55,4 @@ int		main(int ac, char **av, char **envp)
 	        le_exit(0);//idem
 	return (0);
 }
+
