@@ -36,11 +36,6 @@ int		main(int ac, char **av, char **envp)
 	while (1)
 	{
 		line_edit(line_e);
-
-		//char *res = param_expansion(line_e->line);
-		//ft_printf("RESULT = [%s]\n",res);
-		//ft_strdel(&res);
-
 		replace_aliases(line_e);
 		line_parser(line_e);
 		line_execution();
@@ -49,10 +44,6 @@ int		main(int ac, char **av, char **envp)
 		else
 			write_history(line_e->line);
 	}
-	//free et exit dan fonction fexit OK !
-	//un free de tout donc les ligne ci dessous sont a virer
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-	        le_exit(0);//idem
-	return (0);
+	return (fexit(0));
 }
 
