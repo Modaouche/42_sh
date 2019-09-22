@@ -59,7 +59,6 @@ char	*param_expansion(char *arg)
 	t_param		*param;
 	char		*res;
 
-	arg[ft_strlen(arg) - 1] = 0;
 	signe = 0;
 	if (!(pars(arg, &signe)))
 		return (NULL);

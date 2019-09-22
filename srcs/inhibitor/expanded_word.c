@@ -92,6 +92,38 @@ void	insert_env_var_value(const char *line, char **word, unsigned int *i)
 	*i += x;
 }
 
+void	expand_brackets(const char *line, char **word, unsigned int *i)
+{
+	unsigned int	end;
+	bool			escape;
+	char			*params;
+	char			*result;
+
+	*i += 1;
+	end = -1;
+	escape = 0;
+	while (line[*i + ++end])
+	{
+		if (escape)
+		{
+			escape = 0;
+			continue ;
+		}
+		if (line[*i + end] == '\\')
+		{
+			escape = 1;
+			continue ;
+		}
+		if (line[*i + end] == '}')
+			break ;
+	}
+	params = ft_strsub(line, *i, end);
+	if ((result = param_expansion(params)) != NULL)
+		*word = (!*word) ? result : ft_strjoin_free(*word, result, 3);
+	ft_strdel(&params);
+	*i += end;
+}
+
 void    dollars_cmd(const char *line, char **word, unsigned int *i)
 {
 	++(*i);    
@@ -101,12 +133,7 @@ void    dollars_cmd(const char *line, char **word, unsigned int *i)
 	else if (line[*i] == '(')
 		ft_putstr("~[  $(  ]~\n");//substition(word, line[*i], i);//to creat
 	else if (line[*i] == '{')
-	{
-		char *t;
-		t = param_expansion((char*)&line[*i + 1]);
-		*word = (!*word) ? t :
-		ft_strjoin_free(*word, t, 3);
-	}
+		expand_brackets(line, word, i);
 	else if (line[*i] == '\\' || line[*i] == ' '\
 			|| line[*i] == '\t' || !line[*i])
 		*word = (!*word) ? ft_strdup("$") : ft_strjoin_free(*word, "$", 1);
