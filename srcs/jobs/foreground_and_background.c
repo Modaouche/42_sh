@@ -20,13 +20,13 @@
 void	put_job_in_foreground (t_job *j, int cont)
 {
 	/* Put the job into the foreground.  */
-	tcsetpgrp (g_shell.fd, j->pgid);
+	tcsetpgrp(g_shell.fd, j->pgid);
 
 
 	/* Send the job a continue signal, if necessary.  */
 	if (cont)
 	{
-		tcsetattr (g_shell.fd, TCSADRAIN, &j->tmodes);
+		tcsetattr(g_shell.fd, TCSADRAIN, &j->tmodes);
 		if (kill (- j->pgid, SIGCONT) < 0)
 			perror ("kill (SIGCONT)");
 	}
@@ -36,11 +36,11 @@ void	put_job_in_foreground (t_job *j, int cont)
 	wait_for_job(j);
 
 	/* Put the shell back in the foreground.  */
-	tcsetpgrp (g_shell.fd, g_shell.pid);
+	tcsetpgrp(g_shell.fd, g_shell.pid);
 
 	/* Restore the shell’s terminal modes.  */
-	tcgetattr (g_shell.fd, &(j->tmodes));
-	tcsetattr (g_shell.fd, TCSADRAIN, g_shell.termiold);
+	tcgetattr(g_shell.fd, &(j->tmodes));
+	tcsetattr(g_shell.fd, TCSADRAIN, g_shell.termiold);
 }
 
 /* Put a job in the background.  If the cont argument is true, send
