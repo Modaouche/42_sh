@@ -67,7 +67,8 @@ void	insert_home_path(const char *line, char **word, unsigned int *i)
 		username = ft_strsub(line, *i, x);
 		path = tild(username);
 		ft_strdel(&username);
-		*i += x;
+		if (x > 1)
+			*i += x - 1;
 	}
 	if (path != NULL)
 		*word = (!*word) ? ft_strdup(path) : ft_strjoin_free(*word, path, 1);
@@ -86,7 +87,8 @@ void	insert_env_var_value(const char *line, char **word, unsigned int *i)
 	if ((value = get_env_value(varname)))
 		*word = (!*word) ? value : ft_strjoin_free(*word, value, 3);
 	ft_strdel(&varname);
-	*i += x;
+	if (x > 1)
+		*i += x - 1;
 }
 
 void	expand_brackets(const char *line, char **word, unsigned int *i)
