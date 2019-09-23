@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 11:41:48 by araout            #+#    #+#             */
-/*   Updated: 2019/09/09 23:20:35 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 08:00:46 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,14 @@
 # define BUILT_IN_H
 # include "shell.h"
 
-#define BUILTIN_LIST "cd set clear pwd export unset history fc echo type "\
-					 "alias unalias test exit jobs fg bg"
+typedef struct		s_alias
+{
+	unsigned int	i;
+	unsigned int	escape;
+	unsigned int	can_replace;
+	char			*tmp;
+	int				alias_length;
+}					t_alias;
 
 /*
 **	type functions

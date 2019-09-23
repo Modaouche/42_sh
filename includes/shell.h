@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/09/21 01:04:55 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/09/23 07:41:39 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@
 # include "token_and_ast.h"
 # include "signal_handler.h"
 # include <fcntl.h>
-# include <errno.h>// to remove
+
+/*
+**# include <errno.h> to remove
+*/
 # include "env.h"
 # include "history.h"
 # include "built_in.h"
@@ -59,7 +62,7 @@
 # define TOKEN_CMP			";\n&|!<>"
 # define BKSH_DQT_CMP			"\\$\"\'"
 
-typedef struct 			s_file
+typedef struct			s_file
 {
 	char				*name;
 	size_t				len;
@@ -95,6 +98,11 @@ typedef struct			s_edit
 	int					search_mode;
 }						t_edit;
 
+/*
+** struct  s_sh
+** tc_onoff = for termcap like "dumb",to have a usable shell
+**	in_bg = in proc struct
+*/
 typedef struct			s_sh
 {
 	struct termios		*termiold;
@@ -106,17 +114,17 @@ typedef struct			s_sh
 	t_ast				*ast;
 	char				**buff_cmd;
 	pid_t				pid;
-	t_job			*first_job;
+	t_job				*first_job;
 	uint16_t			fd;
 	uint8_t				prompt_size;
 	uint8_t				errorno;
-	bool				tc_onoff;//for termcap like "dumb",to have a usable shel
-	bool				in_bg;//in proc struct
+	bool				tc_onoff;
+	bool				in_bg;
 	bool				isnt_interactive;
 	struct s_history	*history;
-	uint16_t		is_interactive;
-	uint8_t			ret;
-	bool			in_fg;
+	uint16_t			is_interactive;
+	uint8_t				ret;
+	bool				in_fg;
 	t_fptr				*fptr;
 }						t_sh;
 
@@ -127,8 +135,8 @@ t_sh			g_shell;
 */
 
 void					init_term(t_edit *line_e, char **envp);
-struct termios*				term_backup(void);
-struct termios*				term_raw(void);
+struct termios			*term_backup(void);
+struct termios			*term_raw(void);
 void					init_line(t_edit *line_e);
 t_edit					*st_line(void);
 t_ast_ptr				*st_ast(void);
@@ -161,6 +169,8 @@ uint					get_index_x_pos(t_edit *line_e, uint pos);
 void					print_line(t_edit *line_e, unsigned int start);
 void					show_hist_line(t_edit *line_e);
 void					le_free(t_edit *line_e);
+void				replace_word_with_alias(t_edit *line_e, char *alias,\
+		char *value);
 /*
 **  Line edition - Autocompletion
 */
@@ -207,7 +217,8 @@ int						is_separator(char c);
 **  Line edition - File list
 */
 
-t_file					*ft_file_list_append(t_file **list, char *name, int type);
+t_file					*ft_file_list_append(t_file **list, char *name,\
+		int type);
 t_file					*ft_file_list_at(t_file *list, unsigned int idx);
 t_file					*ft_file_list_create(char *name, int type);
 void					ft_file_list_delete(t_file **list);
@@ -308,7 +319,7 @@ void					ast_next_cmd(t_token *tok);
 void					infix_print_ast(t_ast *node);
 void					rm_last_leaf(void);
 void					ast_free(t_ast **root);
-int					last_token(t_ast *node);
+int						last_token(t_ast *node);
 t_ast					*last_node(t_ast *node);
 void					bind_last_head(void);
 void					assign_to_word(void);
@@ -321,7 +332,7 @@ t_ast					*get_curr_head(void);
 void					line_execution(void);
 void					ast_execution(t_ast *ast);
 bool					exec_and_or(t_ast *ast);
-bool					exec_cmd(t_ast *ast, bool is_redir_pipe );
+bool					exec_cmd(t_ast *ast, bool is_redir_pipe);
 bool					exec_redir(t_ast *ast);
 bool					is_slice_exec(t_tok tokind);
 bool					is_and_or_exec(t_tok tokind);
@@ -362,5 +373,5 @@ void					insert_home_path(const char *line, char **word,
 ** Alias
 */
 
-void 	replace_aliases(t_edit *line_e);
+void					replace_aliases(t_edit *line_e);
 #endif

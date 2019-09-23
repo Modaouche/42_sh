@@ -6,12 +6,21 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
-/*   Updated: 2019/08/30 11:49:23 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 07:07:05 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "built_in.h"
+
+char			**build_flag(void)
+{
+	char	s[255];
+	ft_strcpy(s, "cd set clear pwd export unset history fc echo type alias \
+	unalias test exit jobs fg bg\0");
+
+	return (ft_split(s, " "));
+}
 
 t_fptr			*init_fptr(void)
 {
@@ -19,7 +28,7 @@ t_fptr			*init_fptr(void)
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	if (!(func->flag = ft_split(BUILTIN_LIST, " ")))
+	if (!(func->flag = build_flag()))
 		return (NULL);
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
