@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/04 11:57:20 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/04 18:19:03 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/23 10:44:04 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool		exec_and_or(t_ast *ast)
 	else if (ast->token->tokind == T_OR_IF)
 	{
 		ft_putendl("---------------------------~ or");
-		if (exec_and_or(ast->left) || exec_and_or(ast->right))		
+		if (exec_and_or(ast->left) || exec_and_or(ast->right))
 			return (true);
 	}
 	else if (is_redir_pipe_exec(ast->token->tokind))//add eof tokentocmp

@@ -6,7 +6,7 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/02 02:17:36 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/08/30 12:25:27 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 10:56:49 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ int			get_first_word(char **str, int *check)
 	return (i + 1);
 }
 
-void		ft_echo(char **args)
+int			ft_echo(char **args)
 {
 	int		i;
 	int		check;
 
 	if (!args || !*args)
-		return ;
+		return (1);
 	check = 0;
 	i = get_first_word(args + 1, &check);
 	while (args[i])
@@ -51,4 +51,5 @@ void		ft_echo(char **args)
 	}
 	if (check != 1)
 		ft_putendl("");
+	return (0);
 }

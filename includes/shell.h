@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/09/23 08:40:12 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 10:47:36 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,14 @@ typedef struct			s_sh
 }						t_sh;
 
 t_sh			g_shell;
+
+typedef struct			s_cmd_verif_prime
+{
+	char				*path_var;
+	char				**sliced_path;
+	char				*to_check;
+	int					idx;
+}						t_cmd_verif_prime;
 
 /*
 ** Initialization & Co
