@@ -12,37 +12,55 @@
 
 #include "shell.h"
 
-void	line_edit(t_edit *line_e)
+int		is_command_separator(char c)
 {
-	init_line(line_e);
-	signal_handler(LINE_EDIT);
-	while (!line_e->line)
-	{
-		g_shell.prompt_size = print_prompt(0);
-		line_edition(line_e);
-	}
-	signal_handler(REGULAR);
+	return (c == ' ' || c == '\t' || c == '\n' || c == ';');
 }
 
-int		main(int ac, char **av, char **envp)
+void	remove_duplicate_whitespaces(t_edit *line_e)
 {
-	t_edit	*line_e;
+	unsigned int	i;
+	bool			escape;
+	int				count;
 
-	(void)av;
-	(void)ac;
-	line_e = st_line();
-	init_term(line_e, envp);
-	while (1)
+	i = 0;
+	escape = 0;
+	count = 0;
+	while (i < line_e->len && line_e->line[i])
 	{
-		line_edit(line_e);
-		replace_aliases(line_e);
-		remove_duplicate_whitespaces(line_e);
-		line_parser(line_e);
-		line_execution();
-		if (g_shell.isnt_interactive == 1)
-			g_shell.isnt_interactive = 0;
+		if (escape)
+		{
+			count = 0;
+			escape = 0;
+			++i;
+			continue ;
+		}
+		if (line_e->line[i] == '\\')
+		{
+			escape = 1;
+			++i;
+			continue ;
+		}
+		if (line_e->line[i] == '\'' || line_e->line[i] == '"')
+		{
+			quote_match(line_e->line, &i, line_e->len, line_e->line[i]);
+			++i;
+			count = 0;
+			continue ;
+		}
+		if (is_command_separator(line_e->line[i]))
+			++count;
 		else
-			write_history(line_e->line);
+			count = 0;
+		if (count == 2)
+		{
+			ft_strcpy(line_e->line + i, line_e->line + i + 1);
+			line_e->len -= 1;
+			count = 1;
+			continue ;
+		}
+		++i;
 	}
-	return (fexit(0));
+	if (i > 0 && is_command_separator(line_e->line[i - 1]))
+		line_e->line[i - 1] = '\0';
 }
