@@ -120,9 +120,16 @@ size_t		print_prompt(unsigned int btn)
 {
     char	*prompt;
     size_t	len;
-
+    char    *currpath;
+    size_t  offset;
+    if ((currpath = getcwd(NULL, 1023)) == NULL)
+        currpath = "Unknown path";
     if (btn == 0)
-        prompt = ft_strdup("42sh (current path) 12$> ");//ajout du path soon
+    {
+        prompt = ft_multijoin(5, "\033[38;5;6m42sh\033[0m (", currpath, ") ",
+                g_shell.ret == 0 ? "\033[38;5;10m" : "\033[38;5;09m" ,"$>\033[0m ");
+        offset = 27;
+    }
     else if (btn == 1)
 	    prompt = ft_strdup("pipe $> ");
     else if (btn == 2)
@@ -138,6 +145,8 @@ size_t		print_prompt(unsigned int btn)
     else if (btn == 7)
 	    prompt = ft_strdup("$> ");
     len = ft_strlen(prompt);
+    if (btn == 0)
+        len -= offset;
     ft_putstr(prompt);
     ft_strdel(&prompt);
     return (len);

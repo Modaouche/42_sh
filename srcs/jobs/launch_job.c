@@ -13,7 +13,7 @@
 #include "shell.h"
 #include "job.h"
 
-void	launch_process(t_process *p, pid_t pgid,
+void		launch_process(t_process *p, pid_t pgid,
 		int infile, int outfile, int errfile)
 {
 	pid_t pid;
@@ -24,10 +24,10 @@ void	launch_process(t_process *p, pid_t pgid,
 		   the terminal, if appropriate.
 		   This has to be done both by the shell and in the individual
 		   child processes because of potential race conditions.  */
-		pid = getpid ();
+		pid = getpid();
 		if (pgid == 0)
 			pgid = pid;
-		setpgid (pid, pgid);
+		setpgid(pid, pgid);
 		if (g_shell.in_fg)
 			tcsetpgrp (g_shell.fd, pgid);
 
@@ -38,35 +38,39 @@ void	launch_process(t_process *p, pid_t pgid,
 	/* Set the standard input/output channels of the new process.  */
 	if (infile != STDIN_FILENO)
 	{
-		dup2 (infile, STDIN_FILENO);
-		close (infile);
+		dup2(infile, STDIN_FILENO);
+		close(infile);
 	}
 	if (outfile != STDOUT_FILENO)
 	{
-		dup2 (outfile, STDOUT_FILENO);
-		close (outfile);
+		dup2(outfile, STDOUT_FILENO);
+		close(outfile);
 	}
 	if (errfile != STDERR_FILENO)
 	{
-		dup2 (errfile, STDERR_FILENO);
-		close (errfile);
+		dup2(errfile, STDERR_FILENO);
+		close(errfile);
 	}
 
 	/* Exec the new process.  Make sure we exit.  */
 	(!is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, g_shell.envp)\
 		: exit(exec_builtin(p->argv));
-	perror ("execvp");
-	exit (1);
+	g_shell.errorno = ER_EXECVE;
+	error_msg("execvp");
+	fexit(1);
 }
 
 void		launch_job(t_job *j)
 {
 	t_process	*p;
-	pid_t	pid;
-	int	mypipe[2], infile, outfile;
+	pid_t		pid;
+	int			mypipe[2];
+	int			infile;
+	int			outfile;
 
 	infile = j->stdin;
-	for (p = j->first_process; p; p = p->next)
+	p = j->first_process;
+	while (p)
 	{
 		/* Set up pipes, if necessary.  */
 		if (p->next)
@@ -87,7 +91,7 @@ void		launch_job(t_job *j)
 		{
 			/* This is the child process.  */
 			(!cmds_verif(p, g_shell.envp)) ? to_exit(g_shell.errorno)\
-				: launch_process (p, j->pgid, infile,\
+				: launch_process(p, j->pgid, infile,\
 				outfile, j->stderr);
 		}
 		else if (pid < 0)
@@ -103,28 +107,27 @@ void		launch_job(t_job *j)
 			{
 				if (!j->pgid)
 					j->pgid = pid;
-				setpgid (pid, j->pgid);
+				setpgid(pid, j->pgid);
 			}
 		}
 
 		/* Clean up after pipes.  */
 		if (infile != j->stdin)
-			close (infile);
+			close(infile);
 		if (outfile != j->stdout)
-			close (outfile);
+			close(outfile);
 		infile = mypipe[0];
+		p = p->next;
 	}
-
 	if (!g_shell.is_interactive)
-		wait_for_job (j);
+		wait_for_job(j);
 	else if (g_shell.in_fg)
-		put_job_in_foreground (j, 0);
+		put_job_in_foreground(j, 0);
 	else
 	{
 		format_job_info(j, "launched", 0, 1);
 		j->started_in_bg = 1;
-		put_job_in_background (j, 0);
+		put_job_in_background(j, 0);
 	}
 	g_shell.in_fg = true;
 }
-

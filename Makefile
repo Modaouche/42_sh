@@ -109,7 +109,8 @@ SRC =	srcs/main/main.c\
 		srcs/param_expansion/tools.c\
 		srcs/param_expansion/ft_joinarg.c \
 		srcs/param_expansion/param_assign.c\
-		srcs/tild/tild.c
+		srcs/tild/tild.c \
+		srcs/utils/utils.c
 
 OBJ = $(SRC:.c=.o)
 
