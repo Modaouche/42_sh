@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   jobs.c                                            :+:      :+:    :+:   */
+/*   jobs.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/02 02:17:36 by kicausse          #+#    #+#             */
-/*   Updated: 2019/08/30 12:25:27 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 08:25:17 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,52 +26,6 @@ uint	parse_args(char **args)
 	else
 		id = 0;
 	return (id);
-}
-
-int		ft_fg(char **args)
-{
-	t_job *j;
-	unsigned int jid;
-
-	jid = parse_args(args);
-	j = g_shell.first_job;
-	while (j)
-	{
-		if ((jid == 0 && !job_is_completed(j)) || (jid != 0 && j->id == jid))
-		{
-			continue_job(j, 1);
-			return (0);
-		}
-		j = j->next;
-	}
-	ft_putendl_fd("fg: no current job", STDERR_FILENO);
-	return (1);
-}
-
-int		ft_bg(char **args)
-{
-	t_job *j;
-	uint jid;
-
-	jid = parse_args(args);
-	j = g_shell.first_job;
-	while (j)
-	{
-		if ((jid == 0 && !job_is_completed(j) && job_is_stopped(j))
-			|| (jid != 0 && j->id == jid))
-		{
-			if (jid != 0 && !job_is_stopped(j))
-			{
-				ft_putendl_fd("bg: job already in background", STDERR_FILENO);
-				return (1);
-			}
-			continue_job(j, 0);
-			return (0);
-		}
-		j = j->next;
-	}
-	ft_putendl_fd("bg: no current job", STDERR_FILENO);
-	return (1);
 }
 
 int		ft_jobs(char **args)
@@ -99,7 +53,7 @@ int		ft_jobs(char **args)
 	return (0);
 }
 
-void		do_job_notif(t_job *j, int showpid, int update_stat)
+void	do_job_notif(t_job *j, int showpid, int update_stat)
 {
 	if (update_stat)
 		update_status();
@@ -109,19 +63,19 @@ void		do_job_notif(t_job *j, int showpid, int update_stat)
 		j->started_in_bg = 0;
 		remove_completed_job(&g_shell.first_job);
 	}
-	else if (job_is_stopped(j) && !j->notified)//here
+	else if (job_is_stopped(j) && !j->notified)
 	{
-		format_job_info (j, "stopped", showpid, 1);
+		format_job_info(j, "stopped", showpid, 1);
 		j->notified = 1;
 	}
 	else
 	{
-		format_job_info (j, "running", showpid, 1);
+		format_job_info(j, "running", showpid, 1);
 		j->notified = 0;
 	}
 }
 
-void		do_jobs_notif(int showpid)
+void	do_jobs_notif(int showpid)
 {
 	t_job		*j;
 	t_job		*next;

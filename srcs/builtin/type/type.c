@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 11:43:36 by araout            #+#    #+#             */
-/*   Updated: 2019/09/09 23:41:01 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 08:26:05 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ int			check_path_abs(char *args)
 
 int			check_path_var(char *args, char *path)
 {
-	char	**split_path;
-	int		i;
-	char	*tmp;
+	char		**split_path;
+	int			i;
+	char		*tmp;
 	struct stat	buf;
 
 	i = -1;
@@ -89,7 +89,6 @@ int			check_path_var(char *args, char *path)
 	free_tmp(split_path);
 	return (0);
 }
-
 
 int			type_main(char **args)
 {

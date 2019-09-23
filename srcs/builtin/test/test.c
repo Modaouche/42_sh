@@ -6,7 +6,7 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 00:43:44 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/06/16 05:50:34 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/09/23 08:14:12 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,14 @@ char			ft_test(uint16_t flag, char **arg)
 	tabfct[2] = test_flag_nbr;
 	if (arg[1] && flag <= TEST_S)
 		return (tabfct[0](flag, arg[1]));
-	else if (arg[1] && flag == TEST_Z){	
+	else if (arg[1] && flag == TEST_Z)
 		return ((arg[1] && !ft_strlen(arg[1])) ? FALSE : TRUE);
-}
 	else if (arg && flag <= TEST_DIFF)
 		return (tabfct[1](flag, arg));
 	return (tabfct[2](flag, arg));
 }
 
-int			ft_test_main(char **av)
+int				ft_test_main(char **av)
 {
 	uint16_t	flag;
 	char		test;
@@ -47,18 +46,11 @@ int			ft_test_main(char **av)
 	}
 	flag = ERROR;
 	if (av[0] != NULL && av[1] == NULL)
-	{
-	ft_printf("RESULT = 0\n");
 		return (FALSE);
-	}
 	if ((flag = test_set_id_flag(av)) == FALSE)
-	{
-	ft_printf("RESULT = 1\n");
 		return (TRUE);
-	}
 	test = ft_test(flag, av);
 	if (bool_test == TRUE)
 		test = !test;
-	ft_printf("RESULT = %d\n", test);
 	return (test);
 }

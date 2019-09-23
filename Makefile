@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/09/21 00:54:20 by mgheraie         ###   ########.fr        #
+#    Updated: 2019/09/23 08:22:46 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,7 +92,9 @@ SRC =	srcs/main/main.c\
 		srcs/builtin/test/test_flag_nbr.c\
 		srcs/builtin/test/test_flag_tools.c\
 		srcs/builtin/test/tools.c\
+		srcs/builtin/test/tools_2.c\
 		srcs/builtin/jobs/jobs.c\
+		srcs/builtin/jobs/ft_fg_bg.c\
 		srcs/param_expansion/main.c\
 		srcs/param_expansion/param.c\
 		srcs/param_expansion/parambis.c\

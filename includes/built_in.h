@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 11:41:48 by araout            #+#    #+#             */
-/*   Updated: 2019/09/23 08:00:46 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 08:24:52 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,16 @@ typedef struct		s_alias
 }					t_alias;
 
 /*
+**	jobs functions
+*/
+uint				parse_args(char **args);
+int					ft_jobs(char **args);
+int					ft_fg(char **args);
+int					ft_bg(char **args);
+
+/*
 **	type functions
 */
-
 int					check_built_in(char *args);
 int					type_main(char **args);
 int					check_path(char *args);

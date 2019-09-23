@@ -6,7 +6,7 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 15:54:25 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/06/16 05:50:42 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/09/23 08:17:00 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,36 +89,4 @@ size_t		ft_dstrlen(char **s)
 	while (s[++i])
 		;
 	return (i);
-}
-
-int			ft_strgetlastocc(char *s, char c)
-{
-	int i;
-	int save;
-
-	save = -1;
-	i = -1;
-	while (s[i])
-	{
-		if (s[i] == c)
-			save = i;
-		i++;
-	}
-	return ((save == -1) ? i : save);
-}
-
-int			ft_strchri(char *str, char c)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			return (i);
-		i++;
-	}
-	if (str[i] == c)
-		return (i);
-	return (-1);
 }

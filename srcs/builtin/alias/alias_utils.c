@@ -6,7 +6,7 @@
 /*   By: kicausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 02:28:12 by kicausse          #+#    #+#             */
-/*   Updated: 2019/09/04 02:28:12 by kicausse         ###   ########.fr       */
+/*   Updated: 2019/09/23 08:18:49 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 char	*get_alias_value(char *name)
 {
-	unsigned int tmp;
-	char 	**array;
+	unsigned int	tmp;
+	char			**array;
 
 	if ((array = g_shell.aliasp) == NULL)
 		return (NULL);
@@ -29,7 +29,6 @@ char	*get_alias_value(char *name)
 	}
 	return (0);
 }
-
 
 int		remove_alias(char *name)
 {
@@ -105,7 +104,6 @@ void	set_alias_value(char *name, char *value)
 	g_shell.aliasp = copy_alias_tab(tmptab, concat_alias_string(name, value));
 	ft_free_tab(tmptab);
 }
-
 
 char	*concat_alias_string(char *name, char *value)
 {
