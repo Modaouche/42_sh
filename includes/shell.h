@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/09/23 07:41:39 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 08:10:49 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ uint					get_index_x_pos(t_edit *line_e, uint pos);
 void					print_line(t_edit *line_e, unsigned int start);
 void					show_hist_line(t_edit *line_e);
 void					le_free(t_edit *line_e);
-void				replace_word_with_alias(t_edit *line_e, char *alias,\
+void					replace_word_with_alias(t_edit *line_e, char *alias,\
 		char *value);
 /*
 **  Line edition - Autocompletion
