@@ -18,10 +18,13 @@ void	dollars_cmd(const char *line, char **word, unsigned int *i)
 	if (line[*i] == '$')
 		*word = (!*word) ? ft_itoa(g_shell.pid)
 			: ft_strjoin_free(*word, ft_itoa(g_shell.pid), 3);
-	else if (line[*i] == '(')
-		ft_putstr("~[  $(  ]~\n");
 	else if (line[*i] == '{')
 		expand_brackets(line, word, i);
+	else if (line[*i] == '(')
+		ft_putstr_fd("./42sh error\"(\" not supported", STDERR_FILENO);
+	else if (line[*i] == '?')
+		*word = (!*word) ? ft_itoa(g_shell.ret)
+			: ft_strjoin_free(*word, ft_itoa(g_shell.ret), 3);
 	else if (line[*i] == '\\' || line[*i] == ' '\
 			|| line[*i] == '\t' || !line[*i])
 		*word = (!*word) ? ft_strdup("$") : ft_strjoin_free(*word, "$", 1);

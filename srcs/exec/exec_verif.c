@@ -68,27 +68,7 @@ static bool	cmd_verif_prime(char **envp, char **argv)
 
 bool		cmds_verif(t_process *p, char **envp)
 {
-	if (!is_builtin(0, p->argv[0]) && cmd_verif_prime(envp, p->argv) == false)
+	if (!is_builtin(p->argv[0]) && cmd_verif_prime(envp, p->argv) == false)
 		return (false);
 	return (true);
-}
-
-void		free_completed_jobs(void)
-{
-	update_status();
-	if (g_shell.errorno)
-		error_msg("./42sh");
-	remove_completed_job(&g_shell.first_job);
-}
-
-bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
-{
-	ft_putendl("-----------------[ exec cmd ]");
-	if (!is_redir_pipe && is_builtin(ast, 0))
-		return (exec_builtin(ast));
-	push_back_job(ast);
-	g_shell.errorno = NO_ERROR;
-	launch_job(last_job());
-	free_completed_jobs();
-	return (g_shell.errorno ? 0 : 1);
 }

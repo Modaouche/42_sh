@@ -52,10 +52,10 @@ SRC =	srcs/main/main.c\
 		srcs/signals/signal_handler.c\
 		srcs/exec/exec.c\
 		srcs/exec/exec_and_or.c\
-		srcs/exec/exec_cmd.c\
+		srcs/exec/exec_verif.c\
 		srcs/exec/exec_cmp.c\
 		srcs/exec/exec_tools.c\
-		srcs/exec/exec_builtin.c\
+		srcs/exec/exec_cmd_and_bu.c\
 		srcs/jobs/foreground_and_background.c\
 		srcs/jobs/job_utils.c\
 		srcs/jobs/job_tools.c\

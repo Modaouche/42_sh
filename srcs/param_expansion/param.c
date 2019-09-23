@@ -19,7 +19,7 @@ char	*param_error(t_param *param)
 	if (!(param->paramvalue))
 		return (ft_joinarg(4, "42sh: ", param->param, ": ", (!*(param->word))
 			? PARMSTRERROR : param->word));
-		sizeparam = ft_strlen(param->paramvalue);
+	sizeparam = ft_strlen(param->paramvalue);
 	if (sizeparam > 0)
 		return (param->paramvalue);
 	if ((param->signe) & PARAMUNSET)

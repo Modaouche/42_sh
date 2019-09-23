@@ -64,17 +64,17 @@
 
 typedef struct			s_file
 {
-	char				*name;
-	size_t				len;
-	int					type;
+	char			*name;
+	size_t			len;
+	int			type;
 	struct s_file		*next;
-}						t_file;
+}				t_file;
 
 typedef struct			s_fptr
 {
-	char	**flag;
-	int		(*f[255])(char **);
-}						t_fptr;
+	char			**flag;
+	int			(*f[255])(char **);
+}				t_fptr;
 
 typedef struct			s_edit
 {
@@ -107,53 +107,53 @@ typedef struct			s_sh
 {
 	struct termios		*termiold;
 	struct termios		*termios;
-	char				**envp;
-	char				**aliasp;
-	char				**intern_var;
-	t_edit				*line_e;
-	t_ast				*ast;
-	char				**buff_cmd;
-	pid_t				pid;
-	t_job				*first_job;
-	uint16_t			fd;
-	uint8_t				prompt_size;
-	uint8_t				errorno;
-	bool				tc_onoff;
-	bool				in_bg;
-	bool				isnt_interactive;
+	char			**envp;
+	char			**aliasp;
+	char			**intern_var;
+	t_edit			*line_e;
+	t_ast			*ast;
+	char			**buff_cmd;
+	pid_t			pid;
+	t_job			*first_job;
+	uint16_t		fd;
+	uint8_t			prompt_size;
+	uint8_t			errorno;
+	bool			tc_onoff;
+	bool			in_bg;
+	bool			isnt_interactive;
 	struct s_history	*history;
-	uint16_t			is_interactive;
-	uint8_t				ret;
-	bool				in_fg;
-	t_fptr				*fptr;
-}						t_sh;
+	uint16_t		is_interactive;
+	uint8_t			ret;
+	bool			in_fg;
+	t_fptr			*fptr;
+}				t_sh;
 
 t_sh			g_shell;
 
 typedef struct			s_cmd_verif_prime
 {
-	char				*path_var;
-	char				**sliced_path;
-	char				*to_check;
-	int					idx;
-}						t_cmd_verif_prime;
+	char			*path_var;
+	char			**sliced_path;
+	char			*to_check;
+	int			idx;
+}				t_cmd_verif_prime;
 
 typedef struct			s_io_here
 {
-	t_token		*heredoc;
-	char		*cpy;
-	t_token		*to_cmp;
+	t_token			*heredoc;
+	char			*cpy;
+	t_token			*to_cmp;
 	int			begin;
-	t_ast		*next;
-}						t_io_here;
+	t_ast			*next;
+}				t_io_here;
 
 /*
 ** Initialization & Co
 */
 
 void					init_term(t_edit *line_e, char **envp);
-struct termios			*term_backup(void);
-struct termios			*term_raw(void);
+struct termios				*term_backup(void);
+struct termios				*term_raw(void);
 void					init_line(t_edit *line_e);
 t_edit					*st_line(void);
 t_ast_ptr				*st_ast(void);
@@ -336,7 +336,7 @@ void					ast_next_cmd(t_token *tok);
 void					infix_print_ast(t_ast *node);
 void					rm_last_leaf(void);
 void					ast_free(t_ast **root);
-int						last_token(t_ast *node);
+int					last_token(t_ast *node);
 t_ast					*last_node(t_ast *node);
 void					bind_last_head(void);
 void					assign_to_word(void);
@@ -355,8 +355,8 @@ bool					is_slice_exec(t_tok tokind);
 bool					is_and_or_exec(t_tok tokind);
 bool					is_redir_pipe_exec(t_tok tokind);
 bool					is_other_exec(t_tok tokind);
-bool					exec_builtin(t_ast *ast);
-bool					is_builtin(t_ast *ast, char *bu);
+bool					exec_builtin(char **args);
+bool					is_builtin(char *bu);
 char					**get_cmd(t_ast *ast);
 bool					cmds_verif(t_process *p, char **envp);
 char					*find_var(char **envp, char *with);

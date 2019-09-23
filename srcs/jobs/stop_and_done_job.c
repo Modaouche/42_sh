@@ -36,12 +36,14 @@ int	mark_process_status (pid_t pid, int status)
 					{
 						p->completed = 1;
 						if (WIFSIGNALED (status))
-							fprintf(stderr, "%d: Terminated by signal %d.\n",
+							ft_printf_fd(STDERR_FILENO,
+								"%d: Terminated by signal %d.\n",
 								(int) pid, WTERMSIG (p->status));
 					}
 					return 0;
 				}
-		fprintf (stderr, "No child process %d.\n", pid);
+
+		ft_printf_fd(STDERR_FILENO, "No child process %d.\n", pid);
 		return -1;
 	}
 	return -1;
@@ -58,7 +60,13 @@ void		update_status (void)
 
 	pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG);
 	while (!mark_process_status (pid, status))
+	{
+		if (pid > 0)
+			g_shell.ret = WEXITSTATUS(status);
 		pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG);
+	}
+	if (pid > 0)
+		g_shell.ret = WEXITSTATUS(status);
 }
 
 
@@ -70,20 +78,17 @@ void		wait_for_job (t_job *j)
 	int status;
 	pid_t pid;
 
-	ft_printf("command : %s\n" , j->command);
 	pid = waitpid(WAIT_ANY, &status, WUNTRACED);
-	ft_printf("pid : %d\n" , pid);
 	while (!mark_process_status(pid, status)
 			&& !job_is_stopped(j)
 			&& !job_is_completed(j))
+	{
+		if (pid > 0)
+			g_shell.ret = WEXITSTATUS(status);
 		pid = waitpid(WAIT_ANY, &status, WUNTRACED);
-
-	/*do
-		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
-	while (!mark_process_status (pid, status)
-			&& !job_is_stopped (j)
-			&& !job_is_completed (j));
-	*/
+	}
+	if (pid > 0)
+		g_shell.ret = WEXITSTATUS(status);
 }
 
 /* Format information about job status for the user to look at.  */

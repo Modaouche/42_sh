@@ -29,7 +29,6 @@ void			push_back_process(t_process **p)
 {
 	t_process	*new;
 
-	//ft_printf("push process\n");
 	if (!(new = (t_process *)ft_memalloc(sizeof(t_process))))
 		to_exit(ER_MALLOC);
 	while (*p)
@@ -59,11 +58,6 @@ static void		realloc_argv(t_process **process, char *to_add)
        	new[len] = NULL;
 	ft_memdel((void **)&(p->argv));
 	p->argv = new;
-	/*len = 0;//test<< VV
-	ft_putstr("realloc_argv for process ->");
-	while (p->argv[len])
-		ft_printf("[%s]  ", p->argv[len++]);
-	ft_putendl("");*/
 }
 
 static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
