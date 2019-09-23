@@ -1,14 +1,22 @@
-//
-// Created by Gheraieb Mohamed on 2019-07-09.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_joinarg.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/23 09:22:39 by araout            #+#    #+#             */
+/*   Updated: 2019/09/23 09:25:59 by araout           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/*
+** Created by Gheraieb Mohamed on 2019-07-09.
+*/
 
 #include "libft.h"
-
-#include <unistd.h>
-#include <stdlib.h>
-
-
-#include <stdarg.h>
+#include "shell.h"
+#include "param_expansion.h"
 
 char	*ft_strjoin_free2(char **s1, char **s2)
 {
@@ -29,12 +37,12 @@ char	*ft_strjoin_free2(char **s1, char **s2)
 	return (str);
 }
 
-char    *ft_joinarg(size_t nbelem, ...)
+char	*ft_joinarg(size_t nbelem, ...)
 {
-	va_list ap;
-	char    *res;
-	char    *tmp;
-	size_t  i;
+	va_list		ap;
+	char		*res;
+	char		*tmp;
+	size_t		i;
 
 	va_start(ap, nbelem);
 	i = 0;
@@ -48,11 +56,8 @@ char    *ft_joinarg(size_t nbelem, ...)
 				return (NULL);
 			ft_strdel(&tmp);
 		}
-		else
-		{
-			if (!(res = ft_strjoin_free2(&res, &tmp)))
-				return (NULL);
-		}
+		else if (!(res = ft_strjoin_free2(&res, &tmp)))
+			return (NULL);
 		i++;
 	}
 	va_end(ap);

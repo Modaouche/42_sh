@@ -6,12 +6,11 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 01:34:10 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/09/22 00:36:33 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/09/23 09:28:28 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "param_expansion.h"
-
 
 void	set_tab_param(char *(*tabfct[10])(t_param *p))
 {
@@ -43,9 +42,8 @@ char	*dispatch(t_param *param)
 		i++;
 		if (oct & PARAMUNSET)
 			oct = oct << 1;
-		if (oct == (param->signe)) {
+		if (oct == (param->signe))
 			res = ft_strdup((tabfct[i](param)));
-		}
 		oct = oct << 1;
 	}
 	if (!res)
@@ -67,4 +65,9 @@ char	*param_expansion(char *arg)
 	res = dispatch(param);
 	del_struct(&param);
 	return (res);
+}
+
+char	*no_param(t_param *param)
+{
+	return (param->paramvalue);
 }

@@ -6,16 +6,18 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/04 11:57:20 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/04 18:19:03 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/23 08:54:33 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "job.h"
 
-/* Put job j in the foreground.  If cont is nonzero,
-   restore the saved terminal modes and send the process group a
-   SIGCONT signal to wake it up before we block.  */
+/* 
+** Put job j in the foreground.  If cont is nonzero,
+**  restore the saved terminal modes and send the process group a
+** SIGCONT signal to wake it up before we block.
+*/
 
 void	put_job_in_foreground (t_job *j, int cont)
 {

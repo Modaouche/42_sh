@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/09/23 08:22:46 by araout           ###   ########.fr        #
+#    Updated: 2019/09/23 09:30:57 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,7 @@ SRC =	srcs/main/main.c\
 		srcs/inhibitor/quote_handling.c\
 		srcs/inhibitor/word_handling.c\
 		srcs/inhibitor/expanded_word.c\
+		srcs/inhibitor/ft_dollar_cmd.c\
 		srcs/options/options.c\
 		srcs/history/history.c\
 		srcs/history/history_utils.c\
@@ -101,6 +102,7 @@ SRC =	srcs/main/main.c\
 		srcs/param_expansion/parsing.c\
 		srcs/param_expansion/tools.c\
 		srcs/param_expansion/ft_joinarg.c \
+		srcs/param_expansion/param_assign.c\
 		srcs/tild/tild.c
 
 OBJ = $(SRC:.c=.o)

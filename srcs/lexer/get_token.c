@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_token.c                                   :+:      :+:    :+:   */
+/*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/09 08:50:32 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/22 03:22:31 by modaouch         ###   ########.fr       */
+/*   Created: 2019/09/23 08:58:16 by araout            #+#    #+#             */
+/*   Updated: 2019/09/23 08:58:33 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-t_token *get_next_token(char **line, unsigned int *i)
+t_token		*get_next_token(char **line, unsigned int *i)
 {
-	t_token     *actual_token;
+	t_token		*actual_token;
 
 	if (!(actual_token = (t_token*)ft_memalloc(sizeof(t_token))))
 		return (0);

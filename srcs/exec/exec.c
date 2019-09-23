@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/04 11:57:20 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/04 18:19:03 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/23 08:28:54 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ void	ast_execution(t_ast *ast)
 	}
 }
 
-void		line_execution(void)
+void	line_execution(void)
 {
-	ft_putendl("\n----------------------------------Beginning-------------------------------");
+	ft_putendl("\n--------------------------Beginning-----------------------");
 	if (!g_shell.ast)
 		return ;
 	ast_execution(g_shell.ast);
 	ast_free(&(g_shell.ast));
-	ft_putendl("----------------------------------End-------------------------------");
+	ft_putendl("------------------------------End---------------------------");
 }

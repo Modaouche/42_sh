@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:11:12 by araout            #+#    #+#             */
-/*   Updated: 2019/09/23 07:07:05 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 08:27:48 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 char			**build_flag(void)
 {
 	char	s[255];
+
 	ft_strcpy(s, "cd set clear pwd export unset history fc echo type alias \
 	unalias test exit jobs fg bg\0");
-
 	return (ft_split(s, " "));
 }
 

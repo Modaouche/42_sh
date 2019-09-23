@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/11 12:16:34 by modaouch          #+#    #+#             */
-/*   Updated: 2019/08/07 02:56:06 by kicausse         ###   ########.fr       */
+/*   Updated: 2019/09/23 09:20:33 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int		line_parser_prime(t_edit *line_e)
 	return (1);
 }
 
-void	line_parser(t_edit *line_e)
+void			line_parser(t_edit *line_e)
 {
 	t_ast_ptr	*ast_head;
 	t_ast		*last;

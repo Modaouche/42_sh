@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/28 02:14:05 by araout            #+#    #+#             */
-/*   Updated: 2019/08/30 09:39:52 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 08:32:51 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ static char		*generate_tmp_hist_file(char **hist, int tries, char *f, int fd)
 			write(fd, "\n", 1);
 			++hist;
 		}
-		//close(fd);
 	}
 	close(fd);
 	return (f);

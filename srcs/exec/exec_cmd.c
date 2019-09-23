@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/04 11:57:20 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/04 18:19:03 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/23 08:31:59 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 bool		access_verification(char *cmd)
 {
-	struct stat file;
+	struct stat		file;
 
 	if (access(cmd, F_OK) == -1)
 	{
@@ -42,7 +42,7 @@ static bool	cmd_verif_prime(char **envp, char **argv)
 	char	*path_var;
 	char	**sliced_path;
 	char	*to_check;
-	int	idx;
+	int		idx;
 
 	g_shell.errorno = NO_ERROR;
 	idx = 0;
@@ -76,7 +76,7 @@ bool		cmds_verif(t_process *p, char **envp)
 	return (true);
 }
 
-void		free_completed_jobs()
+void		free_completed_jobs(void)
 {
 	update_status();
 	if (g_shell.errorno)
@@ -84,7 +84,7 @@ void		free_completed_jobs()
 	remove_completed_job(&g_shell.first_job);
 }
 
-bool		exec_cmd(t_ast *ast, bool is_redir_pipe) 
+bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 {
 	ft_putendl("-----------------[ exec cmd ]");
 	if (!is_redir_pipe && is_builtin(ast, 0))

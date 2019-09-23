@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/04 11:57:20 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/04 18:19:03 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/23 08:30:59 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char			*find_var(char **envp, char *with)//to_add in env fct or check if araout created it
 {
-	int		idx;
+	int			idx;
 	char		*to_cmp;
 	uint64_t	len;
 
@@ -22,7 +22,7 @@ char			*find_var(char **envp, char *with)//to_add in env fct or check if araout 
 	while (envp[++idx])
 	{
 		len = ((len = (uint64_t)ft_strchr(envp[idx], '=')))\
-		      ? len - (uint64_t)envp[idx] : 0;
+			? len - (uint64_t)envp[idx] : 0;
 		to_cmp = ft_strndup(envp[idx], len);
 		if (!ft_strcmp(to_cmp, with))
 			return (envp[idx]);

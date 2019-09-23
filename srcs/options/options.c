@@ -6,12 +6,11 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 17:03:29 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/31 05:42:47 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 09:22:03 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
 
 /*
 **  count_args
@@ -81,7 +80,7 @@ int		get_options(char **args)
 		while (args[i][x])
 		{
 			if (ft_isalpha(args[i][x]))
-				options |= (1 << (ft_tolower(args[i][x]) - 'a')); 
+				options |= (1 << (ft_tolower(args[i][x]) - 'a'));
 			++x;
 		}
 		++i;
@@ -103,9 +102,6 @@ int		get_option(int options, char letter)
 
 /*
 **  get_argument_starting_index
-**
-**  -
-**   
 */
 
 int		get_argument_starting_index(char **args, char force_letter)
@@ -120,7 +116,8 @@ int		get_argument_starting_index(char **args, char force_letter)
 	}
 	if (args[i] != NULL)
 	{
-		while (args[i] && args[i][0] == '-' && args[i][1] && !(ft_isdigit(args[i][1])))
+		while (args[i] && args[i][0] == '-' && args[i][1]\
+				&& !(ft_isdigit(args[i][1])))
 			i++;
 		return (i);
 	}

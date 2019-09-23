@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/09/23 08:10:49 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 08:40:12 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -368,10 +368,13 @@ int						backslash(const char *line, char **word,
 int						backslash_end(t_edit *line_e, unsigned int *i, int *qt);
 void					insert_home_path(const char *line, char **word,
 						unsigned int *i);
+void					expand_brackets(const char *line,\
+		char **word, unsigned int *i);
+void					insert_env_var_value(const char *line, char **word,\
+		unsigned int *i);
 
 /*
 ** Alias
 */
-
 void					replace_aliases(t_edit *line_e);
 #endif

@@ -6,7 +6,7 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/04 23:45:48 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/07/13 21:38:58 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/09/23 09:34:04 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,24 +123,5 @@ char		check_activeflag(uint16_t signe)
 	}
 	if (checksub > 1)
 		return (0);
-	return (1);
-}
-
-char		pars(char *arg, uint16_t *signe)
-{
-	size_t i;
-
-	i = 0;
-	while (arg[i])
-	{
-		if (!ft_isalnum(arg[i]) && arg[i] != ':')
-			check_flag(arg, signe, i);
-		i++;
-	}
-	if (*signe != 0 && !check_activeflag(*signe))
-	{
-		*signe = UIERROR;
-		return (0);
-	}
 	return (1);
 }

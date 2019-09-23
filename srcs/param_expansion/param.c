@@ -6,16 +6,11 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/13 21:33:20 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/07/13 21:35:10 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/09/23 09:29:54 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "param_expansion.h"
-
-char	*no_param(t_param *param)
-{
-	return (param->paramvalue);
-}
 
 char	*param_error(t_param *param)
 {
@@ -66,18 +61,4 @@ char	*set_word(t_param *param)
 {
 	g_shell.envp = set_var_env(param->param, param->word, g_shell.envp);
 	return (param->word);
-}
-
-char	*param_assign(t_param *param)
-{
-	size_t	sizeparam;
-
-	if (!(param->paramvalue))
-		return (set_word(param));
-	sizeparam = ft_strlen(param->paramvalue);
-	if (sizeparam > 0)
-		return (param->paramvalue);
-	if ((param->signe) & PARAMUNSET)
-		return (set_word(param));
-	return (NULL);
 }

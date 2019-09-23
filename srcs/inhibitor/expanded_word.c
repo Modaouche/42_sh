@@ -6,15 +6,13 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 21:31:42 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/23 09:39:22 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/23 08:48:32 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/shell.h"
+#include "shell.h"
 
-//norme + unleaks + protection malloc
-
-int    backslash(const char *line, char **word, unsigned int *i, int qt)
+int		backslash(const char *line, char **word, unsigned int *i, int qt)
 {
 	(void)qt;
 	++(*i);
@@ -36,7 +34,7 @@ int    backslash(const char *line, char **word, unsigned int *i, int qt)
 	return (1);
 }
 
-int    backslash_end(t_edit *line_e, unsigned int *i, int *ret)
+int		backslash_end(t_edit *line_e, unsigned int *i, int *ret)
 {
 	init_line(line_e);
 	g_shell.prompt_size = print_prompt(7);
@@ -81,7 +79,6 @@ void	insert_env_var_value(const char *line, char **word, unsigned int *i)
 	char			*varname;
 	char			*value;
 
-
 	x = 0;
 	while (ft_isalnum(line[*i + x]) || line[*i + x] == '_')
 		++x;
@@ -109,11 +106,8 @@ void	expand_brackets(const char *line, char **word, unsigned int *i)
 			escape = 0;
 			continue ;
 		}
-		if (line[*i + end] == '\\')
-		{
-			escape = 1;
+		if (line[*i + end] == '\\' && (escape = 1))
 			continue ;
-		}
 		if (line[*i + end] == '}')
 			break ;
 	}
@@ -122,21 +116,4 @@ void	expand_brackets(const char *line, char **word, unsigned int *i)
 		*word = (!*word) ? result : ft_strjoin_free(*word, result, 3);
 	ft_strdel(&params);
 	*i += end;
-}
-
-void    dollars_cmd(const char *line, char **word, unsigned int *i)
-{
-	++(*i);    
-	if (line[*i] == '$')
-		*word = (!*word) ? ft_itoa(g_shell.pid)
-			: ft_strjoin_free(*word, ft_itoa(g_shell.pid), 3);
-	else if (line[*i] == '(')
-		ft_putstr("~[  $(  ]~\n");//substition(word, line[*i], i);//to creat
-	else if (line[*i] == '{')
-		expand_brackets(line, word, i);
-	else if (line[*i] == '\\' || line[*i] == ' '\
-			|| line[*i] == '\t' || !line[*i])
-		*word = (!*word) ? ft_strdup("$") : ft_strjoin_free(*word, "$", 1);
-	else if (ft_isalnum(line[*i]))
-		insert_env_var_value(line, word, i);
 }

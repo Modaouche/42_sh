@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:16:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/09/21 01:51:38 by mgheraie         ###   ########.fr       */
+/*   Updated: 2019/09/23 09:21:07 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,13 @@ void	line_edit(t_edit *line_e)
 		line_edition(line_e);
 	}
 	signal_handler(REGULAR);
-}//cree une fonction generique (tu as le meme genre de code dans le parser)
-
+}
 
 int		main(int ac, char **av, char **envp)
 {
 	t_edit	*line_e;
 
-	(void)av;//we might add possibility to use '.sh' file
+	(void)av;
 	(void)ac;
 	line_e = st_line();
 	init_term(line_e, envp);
@@ -46,4 +45,3 @@ int		main(int ac, char **av, char **envp)
 	}
 	return (fexit(0));
 }
-

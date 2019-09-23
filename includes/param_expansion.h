@@ -6,7 +6,7 @@
 /*   By: mgheraie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/24 23:21:56 by mgheraie          #+#    #+#             */
-/*   Updated: 2019/09/23 07:25:05 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 09:31:45 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PARAM_EXPANSION_H
 # include "libft.h"
 # include "env.h"
+# include "shell.h"
 # include <stdarg.h>
 # include <stdlib.h>
 
@@ -82,6 +83,7 @@ t_param			*init_param(uint16_t signe, char *arg);
 char			*get_word_prm_exp(char *arg, uint16_t signe);
 void			del_struct(t_param **param);
 char			*ft_joinarg(size_t nbelem, ...);
+char			*set_word(t_param *param);
 
 /*
 ** param.c

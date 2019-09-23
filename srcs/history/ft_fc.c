@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 06:36:44 by araout            #+#    #+#             */
-/*   Updated: 2019/08/30 09:14:49 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 08:33:33 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 ** https://www.unix.com/man-page/posix/1p/fc/
 */
 
-int				check_args_nbr(int options, char **args, int *a)
+int					check_args_nbr(int options, char **args, int *a)
 {
 	int		i;
 
@@ -67,7 +67,7 @@ static int			ft_fc_2(t_fc *fc_struct)
 	return (1);
 }
 
-t_fc			*build_struct_fc(char **args)
+t_fc				*build_struct_fc(char **args)
 {
 	t_fc		*fc_struct;
 
@@ -87,7 +87,7 @@ t_fc			*build_struct_fc(char **args)
 	return (fc_struct);
 }
 
-int				ft_fc(char **args)
+int					ft_fc(char **args)
 {
 	t_fc	*fc_struct;
 
@@ -110,7 +110,7 @@ int				ft_fc(char **args)
 	return (1);
 }
 
-void			exec_file(char *filename)
+void				exec_file(char *filename)
 {
 	int			fd;
 	char		*line;

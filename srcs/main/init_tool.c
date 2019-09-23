@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/11 12:49:29 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 02:22:35 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/23 09:20:10 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ void				init_line(t_edit *line_e)
 t_edit				*st_line(void)
 {
 	static t_edit		line_e;
+
 	return (&line_e);
 }
 
-t_ast_ptr	*st_ast(void)
+t_ast_ptr			*st_ast(void)
 {
 	static t_ast_ptr	ast_head;
+
 	return (&ast_head);
 }

@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/06 11:41:46 by modaouch          #+#    #+#             */
-/*   Updated: 2019/07/15 00:33:52 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 09:19:21 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ struct termios			*term_raw(void)
 	return (&termios);
 }
 
-static int		init_tc(void)
+static int				init_tc(void)
 {
 	char		*term_type;
-	int		ret;
+	int			ret;
 
 	if (!(term_type = getenv("TERM")))
 		return (-1);
@@ -52,7 +52,7 @@ static int		init_tc(void)
 	return (-1);
 }
 
-void		init_term(t_edit *line_e, char **envp)
+void					init_term(t_edit *line_e, char **envp)
 {
 	ft_bzero(&g_shell, sizeof(g_shell));
 	ft_bzero(line_e, sizeof(line_e));
