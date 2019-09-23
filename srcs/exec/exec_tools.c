@@ -60,5 +60,3 @@ char			**get_cmd(t_ast *ast)
 	}
 	return (cmd);
 }
-
-

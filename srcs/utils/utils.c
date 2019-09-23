@@ -25,7 +25,7 @@ void	remove_duplicate_whitespaces(t_edit *line_e)
 
 	i = 0;
 	escape = 0;
-	count = 0;
+	count = 1;
 	while (i < line_e->len && line_e->line[i])
 	{
 		if (escape)

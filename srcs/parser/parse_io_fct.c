@@ -63,7 +63,3 @@ void		io_kind_fct(t_edit *line_e)
 		io_here((line_e));
 	assign_to_word();
 }
-/*
-**gerer les heredocd (voir la doc opengrp) et and , once the ctrl v + j set,
-**go make a parser for \n.                  //c'est a revoir...
-*/

@@ -164,7 +164,6 @@ void					free_for_ft_built_in(t_fptr *func);
 ** Line edition
 */
 
-
 void					remove_duplicate_whitespaces(t_edit *line_e);
 void					re_print_prompt(t_edit *line_e);
 void					re_print_line(t_edit *line_e);

@@ -70,7 +70,6 @@ typedef struct		s_job
 ** Put it in my shell globale
 */
 
-t_job				*find_job (pid_t pgid);
 t_job				*get_job_by_id(unsigned int id);
 int					job_is_stopped(t_job *j);
 int					job_is_completed(t_job *j);
