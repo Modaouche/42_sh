@@ -23,28 +23,25 @@ void	remove_duplicate_whitespaces(t_edit *line_e)
 	bool			escape;
 	int				count;
 
-	i = 0;
+	i = -1;
 	escape = 0;
 	count = 1;
-	while (i < line_e->len && line_e->line[i])
+	while (++i < line_e->len && line_e->line[i])
 	{
 		if (escape)
 		{
 			count = 0;
 			escape = 0;
-			++i;
 			continue ;
 		}
 		if (line_e->line[i] == '\\')
 		{
 			escape = 1;
-			++i;
 			continue ;
 		}
 		if (line_e->line[i] == '\'' || line_e->line[i] == '"')
 		{
 			quote_match(line_e->line, &i, line_e->len, line_e->line[i]);
-			++i;
 			count = 0;
 			continue ;
 		}
@@ -57,9 +54,9 @@ void	remove_duplicate_whitespaces(t_edit *line_e)
 			ft_strcpy(line_e->line + i, line_e->line + i + 1);
 			line_e->len -= 1;
 			count = 1;
+			--i;
 			continue ;
 		}
-		++i;
 	}
 	if (i > 0 && is_command_separator(line_e->line[i - 1]))
 		line_e->line[i - 1] = '\0';
