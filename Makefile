@@ -6,7 +6,7 @@
 #    By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/20 17:03:40 by modaouch          #+#    #+#              #
-#    Updated: 2019/09/23 09:30:57 by araout           ###   ########.fr        #
+#    Updated: 2019/09/23 12:20:02 by araout           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,14 +34,20 @@ SRC =	srcs/main/main.c\
 		srcs/lexer/token_redirect_less.c\
 		srcs/lexer/token_word.c\
 		srcs/lexer/token_andor.c\
-		srcs/parser/1_parse_list.c\
-		srcs/parser/2_parse_and_or.c\
-		srcs/parser/3_parse_pipe_seq.c\
-		srcs/parser/4_parse_line_brk.c\
-		srcs/parser/5_parse_cmd.c\
-		srcs/parser/6_parse_cmd_prime.c\
-		srcs/parser/7_parse_io_fct.c\
+		srcs/parser/parse_list.c\
+		srcs/parser/parse_and_or.c\
+		srcs/parser/parse_pipe_seq.c\
+		srcs/parser/parse_line_brk.c\
+		srcs/parser/parse_cmd.c\
+		srcs/parser/parse_cmd_prime.c\
+		srcs/parser/parse_cmd_suffix_prime_fct.c\
+		srcs/parser/parse_cmd_suffix_dprime_fct.c\
+		srcs/parser/parse_cmd_prefix_fct.c\
+		srcs/parser/parse_io_fct.c\
+		srcs/parser/parse_io_file.c\
+		srcs/parser/parse_io_here.c\
 		srcs/parser/ast_tools.c\
+		srcs/parser/ast_tools_2.c\
 		srcs/parser/ast_head_and_cmp.c\
 		srcs/signals/signal_handler.c\
 		srcs/exec/exec.c\

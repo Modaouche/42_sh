@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/08 06:00:02 by araout            #+#    #+#             */
-/*   Updated: 2019/08/07 02:02:08 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 12:43:44 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,14 @@ int			print_env(char **args)
 	i = -1;
 	while (g_shell.envp[++i])
 		ft_printf("%s\n", g_shell.envp[i]);
-	return (1);
+	return (0);
 }
 
 int			ft_clear(char **ptr)
 {
 	(void)ptr;
 	tputs(tgetstr("cl", NULL), 1, ft_puti);
-	return (1);
+	return (0);
 }
 
 int			ft_pwd(char **ptr)
@@ -84,5 +84,5 @@ int			ft_pwd(char **ptr)
 	str = getcwd(str, 1024);
 	ft_printf("%s\n", str);
 	ft_strdel(&str);
-	return (1);
+	return (0);
 }

@@ -6,23 +6,25 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/04 11:57:20 by modaouch          #+#    #+#             */
-/*   Updated: 2019/09/23 08:30:59 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 11:48:30 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-char			*find_var(char **envp, char *with)//to_add in env fct or check if araout created it
+char			*find_var(char **envp, char *with)
 {
 	int			idx;
 	char		*to_cmp;
 	uint64_t	len;
+	uint64_t	tmp;
 
 	idx = -1;
 	while (envp[++idx])
 	{
-		len = ((len = (uint64_t)ft_strchr(envp[idx], '=')))\
-			? len - (uint64_t)envp[idx] : 0;
+		tmp = (uint64_t)ft_strchr(envp[idx], '=');
+		len = tmp;
+		len = (tmp) ? len - (uint64_t)envp[idx] : 0;
 		to_cmp = ft_strndup(envp[idx], len);
 		if (!ft_strcmp(to_cmp, with))
 			return (envp[idx]);
@@ -53,8 +55,10 @@ char			**get_cmd(t_ast *ast)
 	{
 		if (tmptr->token->tokind == T_WORD
 			&& !(cmd[len--] = ft_strdup(tmptr->token->lexeme)))
-				to_exit(ER_MALLOC);
+			to_exit(ER_MALLOC);
 		tmptr = tmptr->left;
 	}
 	return (cmd);
 }
+
+

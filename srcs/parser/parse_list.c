@@ -6,17 +6,16 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 04:54:38 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/23 01:53:57 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/23 12:39:29 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/shell.h"
+#include "shell.h"
 
 void	complet_cmd(t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
-		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS,T_DLESS, T_LESSAND,\
+		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)
 		&& g_shell.errorno != ER_SYNTAX)
 	{
@@ -25,7 +24,6 @@ void	complet_cmd(t_edit *line_e)
 	}
 	else
 	{
-		//add more coherent error msg
 		g_shell.errorno = ER_SYNTAX;
 		return ;
 	}
@@ -33,7 +31,6 @@ void	complet_cmd(t_edit *line_e)
 
 void	list_fct(t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
 		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)
@@ -49,9 +46,8 @@ void	list_fct(t_edit *line_e)
 	}
 }
 
-void					list_prime_fct(t_edit *line_e)
+void	list_prime_fct(t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0), T_SEMI, T_AMPER, -1)\
 			&& g_shell.errorno != ER_SYNTAX)
 	{
@@ -65,9 +61,8 @@ void					list_prime_fct(t_edit *line_e)
 	}
 }
 
-void          list_dprime_fct(t_edit *line_e)
+void	list_dprime_fct(t_edit *line_e)
 {
-	//printf( " %s %d\n", __FILE__, __LINE__);
 	if (token_cmp(last_token(0), T_BANG, T_WORD, T_GREAT, T_GREATAND,\
 		T_DGREAT, T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS, T_LESSAND,\
 		T_DLESSDASH, T_IO_NB, T_ASGMT_WRD, -1)

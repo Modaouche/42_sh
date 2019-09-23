@@ -6,7 +6,7 @@
 /*   By: araout <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 06:36:44 by araout            #+#    #+#             */
-/*   Updated: 2019/09/23 08:33:33 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 12:56:27 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int					ft_fc(char **args)
 	else
 		ft_fc_2(fc_struct);
 	free_fc(fc_struct);
-	return (1);
+	return (0);
 }
 
 void				exec_file(char *filename)

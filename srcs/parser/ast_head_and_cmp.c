@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 06:59:16 by modaouch          #+#    #+#             */
-/*   Updated: 2019/05/14 11:25:11 by modaouch         ###   ########.fr       */
+/*   Updated: 2019/09/23 11:25:32 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 bool	token_cmp(int kind, ...)
 {
-	va_list tokens;
-	int current_token;
+	va_list		tokens;
+	int			current_token;
 
 	va_start(tokens, kind);
 	while ((current_token = va_arg(tokens, int)) != -1)
@@ -31,12 +31,12 @@ bool	token_cmp(int kind, ...)
 	return (FALSE);
 }
 
-int	last_token(t_ast *ast)
+int		last_token(t_ast *ast)
 {
-	t_ast_ptr *ast_head;
+	t_ast_ptr	*ast_head;
 
 	if (!ast)
-	{	
+	{
 		ast_head = st_ast();
 		if (!(ast = ast_head->curr_head))
 			return (0);
@@ -50,16 +50,16 @@ int	last_token(t_ast *ast)
 
 t_ast	*last_node(t_ast *ast)
 {
-	t_ast_ptr *ast_head;
+	t_ast_ptr	*ast_head;
 
 	if (!ast)
-	{	
+	{
 		ast_head = st_ast();
 		if (!(ast = ast_head->curr_head))
 			return (0);
 	}
 	if (ast->right)
-		return (last_node(ast->right));	
+		return (last_node(ast->right));
 	if (!ast->right)
 		return (ast);
 	return (0);
@@ -73,12 +73,13 @@ void	bind_last_head(void)
 	ast_head = st_ast();
 	if (!(last = ast_head->root))
 		return ;
-	ft_printf("Trying to access pointer ast_head->root->right (%p):\n", last->right);
-	ft_printf("%p, %p \n", last->right,last->right->right);
-		getchar();
-	while(last->right && last->right->right)
-	{
+	ft_printf("Try to access ptr ast_head->root->right (%p):\n", last->right);
+	ft_printf("%p, %p \n", last->right, last->right->right);
+	getchar();
+	while (last->right && last->right->right)
 		last = last->right;
-	}
 	last->right = ast_head->curr_head;
-}//check if it's ok 
+}
+/*
+**check if it's ok
+*/

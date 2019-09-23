@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/04 11:57:20 by modaouch          #+#    #+#             */
-/*   Updated: 2019/09/23 10:44:04 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 11:14:08 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ bool		exec_and_or(t_ast *ast)
 	else if (is_redir_pipe_exec(ast->token->tokind))//add eof tokentocmp
 	{
 		ft_putendl("---------------------------~ redir pipe2");
-		return true;//(exec_redir_pipe(ast));//to_build
+		return (true);//(exec_redir_pipe(ast));//to_build
 	}
 	else if (is_other_exec(ast->token->tokind))
 	{
-		ft_printf("----------------------------~ other2 %d\n", ast->token->tokind);
+		ft_printf("-------------------------~ other2 %d\n", ast->token->tokind);
 		return (exec_cmd(ast, 0));//to finish
 	}
 	return (false);

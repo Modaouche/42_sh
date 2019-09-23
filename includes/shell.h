@@ -6,7 +6,7 @@
 /*   By: modaouch <modaouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 11:26:51 by modaouch          #+#    #+#             */
-/*   Updated: 2019/09/23 10:47:36 by araout           ###   ########.fr       */
+/*   Updated: 2019/09/23 12:25:46 by araout           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,15 @@ typedef struct			s_cmd_verif_prime
 	char				*to_check;
 	int					idx;
 }						t_cmd_verif_prime;
+
+typedef struct			s_io_here
+{
+	t_token		*heredoc;
+	char		*cpy;
+	t_token		*to_cmp;
+	int			begin;
+	t_ast		*next;
+}						t_io_here;
 
 /*
 ** Initialization & Co
