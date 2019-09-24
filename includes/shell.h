@@ -187,7 +187,7 @@ void					cursor_end(t_edit *line_e);
 void					cursor_after(t_edit *line_e);
 void					cursor_move_to(t_edit *line_e, uint pos);
 void					cursor_move_from_to(t_edit *line_e, uint from, uint to);
-void					cursor_move_from_to2(t_edit *line_e, int prefix,\
+void					cursor_move_from_to2(int prefix,\
 							char *str, uint from, uint to);
 void					cursor_reset_x_pos(t_edit *line_e);
 uint					get_line_height(t_edit *line, uint end);
@@ -230,6 +230,9 @@ char					*escape_singlequote(char *name, unsigned int max);
 int						search_similar_env_var(int *cont, t_file **list,\
 							char *str, int len);
 void					cancel_autocompletion(t_edit *line_e);
+int						get_list_longest_word(t_file *list);
+void					print_with_pad(t_file *file, int minlen, int selected,
+							unsigned int win_maxlen);
 
 /*
 **  Line edition - Autocompletion parser

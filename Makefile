@@ -19,14 +19,18 @@ SRC =	srcs/main/main.c\
 		srcs/main/line_handling.c\
 		srcs/line_edition/line_edition.c\
 		srcs/line_edition/tools_le.c\
+		srcs/line_edition/tools_le2.c\
 		srcs/line_edition/autocompletion.c\
 		srcs/line_edition/autocompletion_building.c\
 		srcs/line_edition/autocompletion_printing.c\
+		srcs/line_edition/print_comp_list.c\
 		srcs/line_edition/autocompletion_parser.c\
 		srcs/line_edition/cursor_movement.c\
+		srcs/line_edition/cursor_movement_advanced.c\
 		srcs/line_edition/parse_word.c\
 		srcs/line_edition/line_utils.c\
 		srcs/line_edition/file_list.c\
+		srcs/line_edition/list_merge.c\
 		srcs/line_edition/build_list.c\
 		srcs/line_edition/get_autocomp_word.c\
 		srcs/lexer/get_token.c\

@@ -13,6 +13,19 @@
 #include "shell.h"
 #include "libft.h"
 
+int			malloc_new_line(t_edit *line_e)
+{
+	char *new;
+	
+	line_e->len_max += BUFFER_LEN;
+	if (!(new = ft_strnew(line_e->len_max)))
+		return (0);
+	ft_memcpy(new, line_e->line, line_e->len);
+	ft_strdel(&(line_e->line));
+	line_e->line = new;
+	return (1);
+}
+
 /*
 **  append_to_line
 **
@@ -29,18 +42,10 @@ int			append_to_line(t_edit *line_e, const char to_add)
 		if (!(line_e->line = ft_strnew(BUFFER_LEN)))
 			return (0);
 		line_e->line[0] = to_add;
-		line_e->len = 1;
-		return (1);
+		return (line_e->len = 1);
 	}
-	if (line_e->len >= line_e->len_max)
-	{
-		line_e->len_max += BUFFER_LEN;
-		if (!(new = ft_strnew(line_e->len_max)))
-			return (0);
-		ft_memcpy(new, line_e->line, line_e->len);
-		ft_strdel(&(line_e->line));
-		line_e->line = new;
-	}
+	if (line_e->len >= line_e->len_max && !malloc_new_line(line_e))
+		return (0);
 	if (!(new = (char *)ft_memalloc(line_e->len_max)))
 		return (0);
 	ft_memcpy(new, line_e->line, line_e->cursor_pos);
@@ -49,8 +54,7 @@ int			append_to_line(t_edit *line_e, const char to_add)
 			+ line_e->cursor_pos, line_e->len - line_e->cursor_pos);
 	ft_strdel(&(line_e->line));
 	line_e->line = new;
-	line_e->len += 1;
-	return (1);
+	return (!!(line_e->len += 1));
 }
 
 /*
@@ -375,7 +379,7 @@ void		show_hist_line(t_edit *line_e)
 	ft_putstr("History search: ");
 	ft_putstr(str);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
-	cursor_move_from_to2(line_e, ft_strlen("History search: "),
+	cursor_move_from_to2(ft_strlen("History search: "),
 						str, ft_strlen(str), 0);
 	cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	tputs(tgetstr("up", NULL), 1, ft_puti);
