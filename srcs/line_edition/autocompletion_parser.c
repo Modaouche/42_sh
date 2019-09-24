@@ -43,7 +43,7 @@ int		get_last_slash(t_edit *line_e, unsigned int word_start,
 		unsigned int word_end)
 {
 	if (word_end > line_e->len)
-		word_end= line_e->len;
+		word_end = line_e->len;
 	while (word_end > word_start && line_e->line[word_end] != '/')
 		--word_end;
 	if (line_e->line[word_end] == '/')

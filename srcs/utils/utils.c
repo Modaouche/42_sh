@@ -14,7 +14,7 @@
 
 int		is_command_separator(char c)
 {
-	return (c == '\n' || c == ';' || c == '&');
+	return (c == '\n' || c == ';');
 }
 
 int		is_whitespace(char c)
@@ -84,6 +84,6 @@ void	remove_duplicate_whitespaces(t_edit *line_e)
 	if (is_whitespace(line_e->line[0]) || is_command_separator(line_e->line[0]))
 		ft_strcpy(line_e->line, line_e->line + 1);
 	if (i > 0 && (is_command_separator(line_e->line[i - 1])
-		|| is_whitespace(line_e->line[i - 1])) && line_e->line[i - 1] != '&')
+		|| is_whitespace(line_e->line[i - 1])))
 		line_e->line[i - 1] = '\0';
 }
