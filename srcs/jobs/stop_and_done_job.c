@@ -21,7 +21,6 @@ int	mark_process_status (pid_t pid, int status)
 	t_job *j;
 	t_process *p;
 
-
 	if (pid > 0)
 	{
 		/* Update the record for the process.  */
@@ -30,12 +29,12 @@ int	mark_process_status (pid_t pid, int status)
 				if (p->pid == pid)
 				{
 					p->status = status;
-					if (WIFSTOPPED (status))
+					if (WIFSTOPPED(status))
 						p->stopped = 1;
 					else
 					{
 						p->completed = 1;
-						if (WIFSIGNALED (status))
+						if (WIFSIGNALED(status))
 							ft_printf_fd(STDERR_FILENO,
 								"%d: Terminated by signal %d.\n",
 								(int) pid, WTERMSIG (p->status));
@@ -59,7 +58,7 @@ void		update_status (void)
 	pid_t	pid;
 
 	pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG);
-	while (!mark_process_status (pid, status))
+	while (!mark_process_status(pid, status))
 	{
 		if (pid > 0)
 			g_shell.ret = WEXITSTATUS(status);

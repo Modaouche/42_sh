@@ -30,11 +30,9 @@ void		launch_process(t_process *p, pid_t pgid,
 		setpgid(pid, pgid);
 		if (g_shell.in_fg)
 			tcsetpgrp (g_shell.fd, pgid);
-
 		/* Set the handling for job control signals back to the default.  */
 		signal_handler(EXEC);
 	}
-
 	/* Set the standard input/output channels of the new process.  */
 	if (infile != STDIN_FILENO)
 	{
@@ -51,7 +49,6 @@ void		launch_process(t_process *p, pid_t pgid,
 		dup2(errfile, STDERR_FILENO);
 		close(errfile);
 	}
-
 	/* Exec the new process.  Make sure we exit.  */
 	(p->argv && !is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, g_shell.envp)\
 		: exit(exec_builtin(p->argv));
@@ -110,7 +107,6 @@ void		launch_job(t_job *j)
 				setpgid(pid, j->pgid);
 			}
 		}
-
 		/* Clean up after pipes.  */
 		if (infile != j->stdin)
 			close(infile);

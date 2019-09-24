@@ -27,7 +27,9 @@ void	ast_execution(t_ast *ast)
 	else if (is_redir_pipe_exec(ast->token->tokind))
 	{
 		ft_printf("-----------------[ redir pipe %d ]\n", ast->token->tokind);
-//		exec_redir_pipe(ast);
+		/*
+		** exec_redir_pipe(ast);
+		*/
 	}
 	else if (is_other_exec(ast->token->tokind))
 	{

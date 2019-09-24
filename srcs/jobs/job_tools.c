@@ -13,9 +13,9 @@
 #include "shell.h"
 #include "job.h"
 
-static bool is_pipe;
+static bool g_is_pipe;
 
-t_job		*last_job(void)
+t_job			*last_job(void)
 {
 	t_job		*j;
 
@@ -39,7 +39,7 @@ void			push_back_process(t_process **p)
 static void		realloc_argv(t_process **process, char *to_add)
 {
 	char		**new;
-	int 		len;
+	int			len;
 	t_process	*p;
 
 	p = *process;
@@ -54,8 +54,8 @@ static void		realloc_argv(t_process **process, char *to_add)
 		new[len] = p->argv[len];
 		len++;
 	}
-       	new[len++] = ft_strdup(to_add);
-       	new[len] = NULL;
+	new[len++] = ft_strdup(to_add);
+	new[len] = NULL;
 	ft_memdel((void **)&(p->argv));
 	p->argv = new;
 }
@@ -80,7 +80,7 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 		add_process_and_msg_cmd(ast->right, j);
 }
 
-t_job		*get_job_by_id(unsigned int id)
+t_job			*get_job_by_id(unsigned int id)
 {
 	t_job *j;
 
@@ -96,10 +96,10 @@ t_job		*get_job_by_id(unsigned int id)
 	return (NULL);
 }
 
-unsigned int		create_job_id(unsigned int start)
+unsigned int	create_job_id(unsigned int start)
 {
 	unsigned int	id;
-	t_job	*j;
+	t_job			*j;
 
 	id = start;
 	j = g_shell.first_job;
@@ -112,7 +112,7 @@ unsigned int		create_job_id(unsigned int start)
 	return (id);
 }
 
-void		push_back_job(t_ast *ast)
+void			push_back_job(t_ast *ast)
 {
 	t_job	*new;
 	t_job	*j;
@@ -130,7 +130,7 @@ void		push_back_job(t_ast *ast)
 	new->id = create_job_id(1);
 }
 
-void		remove_completed_job(t_job **job)
+void			remove_completed_job(t_job **job)
 {
 	t_job *prev;
 	t_job *curr;

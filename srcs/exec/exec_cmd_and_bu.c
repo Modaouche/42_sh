@@ -46,7 +46,7 @@ bool		exec_builtin(char **args)
 	return (ret == 0);
 }
 
-bool		exec_cmd(t_ast *ast, bool is_redir_pipe) 
+bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 {
 	char **args;
 
@@ -65,4 +65,3 @@ bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 	}
 	return (g_shell.errorno ? 0 : 1);
 }
-
