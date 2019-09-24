@@ -57,7 +57,7 @@ void		launch_process(t_process *p, pid_t pgid,
 		: exit(exec_builtin(p->argv));
 	g_shell.errorno = ER_EXECVE;
 	error_msg("execvp");
-	fexit(1);
+	to_exit(ER_EXECVE);
 }
 
 void		launch_job(t_job *j)
