@@ -68,7 +68,8 @@ static bool	cmd_verif_prime(char **envp, char **argv)
 
 bool		cmds_verif(t_process *p, char **envp)
 {
-	if (!is_builtin(p->argv[0]) && cmd_verif_prime(envp, p->argv) == false)
+	if (p->argv && !is_builtin(p->argv[0])
+		&& cmd_verif_prime(envp, p->argv) == false)
 		return (false);
 	return (true);
 }

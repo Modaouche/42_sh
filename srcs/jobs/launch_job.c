@@ -53,7 +53,7 @@ void		launch_process(t_process *p, pid_t pgid,
 	}
 
 	/* Exec the new process.  Make sure we exit.  */
-	(!is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, g_shell.envp)\
+	(p->argv && !is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, g_shell.envp)\
 		: exit(exec_builtin(p->argv));
 	g_shell.errorno = ER_EXECVE;
 	error_msg("execvp");
