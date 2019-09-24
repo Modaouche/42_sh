@@ -165,12 +165,12 @@ typedef struct			s_autocomp_word
 
 }						t_autocomp_word;
 
-typedef struct s_a
+typedef struct			s_a
 {
-	unsigned int i;
-	unsigned int quote;
-	unsigned int escape;
-} t_a;
+	unsigned int		i;
+	unsigned int		quote;
+	unsigned int		escape;
+}						t_a;
 
 /*
 ** Initialization & Co
