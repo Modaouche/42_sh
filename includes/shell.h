@@ -172,6 +172,8 @@ void					free_for_ft_built_in(t_fptr *func);
 ** Line edition
 */
 
+int						get_last_dollar(t_edit *line_e, unsigned int word_start,
+							unsigned int word_end);
 void					remove_duplicate_whitespaces(t_edit *line_e);
 void					re_print_prompt(t_edit *line_e);
 void					re_print_line(t_edit *line_e);
@@ -209,8 +211,10 @@ void					replace_word_with_alias(t_edit *line_e, char *alias,\
 # define AUTOCOMP_TYPE_BLOCK_FILE		6
 # define AUTOCOMP_TYPE_FOLDER2			8
 
+int						get_last_slash(t_edit *line_e, unsigned int word_start,
+							unsigned int word_end);
 t_file					*build_completion_list(int *cont, char *str, int len,\
-							char **env, unsigned int *list_size);
+							unsigned int *list_size);
 t_file					*build_completion_list_files(int *cont, char *str,\
 							int len, unsigned int *list_size);
 void					print_comp_list(t_edit *line_e, int highlight);
@@ -224,7 +228,7 @@ char					*escape_name(char *name, char *escaped_chars,\
 							unsigned int length);
 char					*escape_singlequote(char *name, unsigned int max);
 int						search_similar_env_var(int *cont, t_file **list,\
-							char *str, int len, char **env);
+							char *str, int len);
 void					cancel_autocompletion(t_edit *line_e);
 
 /*

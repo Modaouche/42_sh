@@ -13,12 +13,6 @@
 #include "shell.h"
 #include "libft.h"
 
-/*
-**  replace_line_raw
-**
-**  - Replaces the whole line with the given string and prints it.
-*/
-
 void	replace_line_raw(t_edit *line_e, char *str)
 {
 	cursor_start(line_e);
@@ -28,13 +22,6 @@ void	replace_line_raw(t_edit *line_e, char *str)
 	line_e->cursor_pos = line_e->len;
 	print_line(line_e, 0);
 }
-
-/*
-**  replace_word
-**
-**  - Replaces the word at the current cursor position with the
-**    given one.
-*/
 
 void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 {
@@ -49,7 +36,7 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	if ((length = ft_strlen(new)) == 0)
 		return ;
 	if (!(str = ft_strnew(line_e->autocomp_point + length + ft_strlen(suffix)
-		+ (line_e->autocomp_quote > 0))))
+					+ (line_e->autocomp_quote > 0))))
 	{
 		ft_strdel(&new);
 		return ;
@@ -65,13 +52,6 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	replace_line_raw(line_e, str);
 }
 
-/*
-**  replace_word_from_completion
-**
-**  - Replaces the word at the current cursor position with
-**    the one at the current autocompletion cursor.
-*/
-
 void	replace_word_from_completion(t_edit *line_e)
 {
 	t_file			*file;
@@ -80,92 +60,11 @@ void	replace_word_from_completion(t_edit *line_e)
 	if (file == NULL)
 		return ;
 	if (line_e->autocomp_size == 1 && (file->type == AUTOCOMP_TYPE_FOLDER
-		|| file->type == AUTOCOMP_TYPE_FOLDER2))
+				|| file->type == AUTOCOMP_TYPE_FOLDER2))
 		replace_word(line_e, file->name, ft_strlen(file->name), "/");
 	else
 		replace_word(line_e, file->name, ft_strlen(file->name), NULL);
 }
-
-t_file	*build_completion_list_env(int *cont, char *str, char **env,
-									uint *list_size, t_edit *line_e)
-{
-	t_file	*list;
-	int		start;
-
-	*list_size = 0;
-	if (*str == '\0' || env == NULL || *env == NULL || *cont == 0)
-		return (NULL);
-	list = NULL;
-	start = 1;
-	if (str[0] != '0' && str[1] == '{')
-	{
-		start = 2;
-		++line_e->autocomp_point;
-	}
-	*list_size = search_similar_env_var(cont, &list, str + start,
-					ft_strlen(str + start), env);
-	return (list);
-}
-
-/*
-**  build_from_word
-**
-**  - The base of autocompletion, is what determines what is
-**    the words that needs to be autocompleted based on
-**    cursor position. Also determines whether it is
-**    autocompleting an argument or an executable name,
-**    and what part of the line is the autocompletion going to
-**    replace.
-*/
-
-int		build_list_from_word(t_edit *line_e)
-{
-	char			*word;
-	unsigned int	comp_type;
-
-	ft_file_list_delete(&line_e->autocomp_list);
-	ft_bzero(&line_e->autocomp_list,
-		(size_t)&line_e->autocomp_quote - (size_t)&line_e->autocomp_list);
-	if ((word = get_autocompletion_word(line_e, &comp_type,
-				&line_e->autocomp_point)) == NULL)
-		return (0);
-	if (word[0] == '/' || word[0] == '.')
-		comp_type = 1;
-	else if (word[0] == '$')
-		comp_type = 2;
-	line_e->autocomp = 1;
-	if (comp_type == 0)
-	{
-		line_e->autocomp_list = build_completion_list(&line_e->autocomp, word,
-						ft_strlen(word), g_shell.envp, &line_e->autocomp_size);
-	}
-	else if (comp_type == 1)
-	{
-		line_e->autocomp_list = build_completion_list_files(&line_e->autocomp,
-								word, ft_strlen(word), &line_e->autocomp_size);
-	}
-	else
-	{
-		line_e->autocomp_list = build_completion_list_env(&line_e->autocomp,
-						word, g_shell.envp, &line_e->autocomp_size, line_e);
-	}
-	line_e->autocomp_list = merge_sort(line_e->autocomp_list);
-	ft_strdel(&word);
-	if (line_e->autocomp_list == NULL || line_e->autocomp == 0)
-	{
-		line_e->autocomp = 0;
-		ft_file_list_delete(&line_e->autocomp_list);
-	}
-	return (line_e->autocomp_list == NULL ? 0 : 1);
-}
-
-/*
-**
-**  escape_singlequote
-**
-**  - Escapes the name's singlequotes by closing them, writing an
-**    escaped singlequote then re-opening singlequotes.
-*/
 
 char	*escape_singlequote(char *name, unsigned int max)
 {
@@ -185,7 +84,7 @@ char	*escape_singlequote(char *name, unsigned int max)
 	{
 		if (*name == '\'')
 		{
-			ft_strcpy(new + x, "'\\''");
+			ft_memcpy(new + x, (char[]){0x27, 0x5c, 0x27, 0x27}, 4);
 			x += 4;
 		}
 		else
@@ -194,14 +93,6 @@ char	*escape_singlequote(char *name, unsigned int max)
 	}
 	return (new);
 }
-
-/*
-**
-**  escape_name
-**
-**  - Escapes the name's special characters for proper autocompletion purposes.
-**    Escapes based on the given charset.
-*/
 
 char	*escape_name(char *name, char *escaped_chars, unsigned int max)
 {

@@ -86,11 +86,14 @@ unsigned int	search_similar_files(int *cont, t_file **list, char *path,
 */
 
 int				search_similar_env_var(int *cont, t_file **list,
-				char *str, int len, char **env)
+				char *str, int len)
 {
 	int		size;
 	int		i;
+	char	**env;
 
+	if ((env = g_shell.envp) == NULL)
+		return (0);
 	size = 0;
 	while (*env != NULL && *cont)
 	{
@@ -165,16 +168,17 @@ int				search_similar_builtin_aliases(int *cont, t_file **list,
 */
 
 t_file			*build_completion_list(int *cont, char *str,
-				int len, char **env, unsigned int *list_size)
+				int len, unsigned int *list_size)
 {
 	t_file	*list;
 	char	*path;
 	int		i;
+	char	**env;
 
-	if (env == NULL)
+	if ((env = g_shell.envp) == NULL)
 		return (NULL);
 	list = NULL;
-	*list_size = search_similar_env_var(cont, &list, str, len, env);
+	*list_size = search_similar_env_var(cont, &list, str, len);
 	while (*env != NULL && ft_strncmp(*env, "PATH=", 5) != 0)
 		++env;
 	if (*env == NULL)

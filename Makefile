@@ -27,6 +27,8 @@ SRC =	srcs/main/main.c\
 		srcs/line_edition/parse_word.c\
 		srcs/line_edition/line_utils.c\
 		srcs/line_edition/file_list.c\
+		srcs/line_edition/build_list.c\
+		srcs/line_edition/get_autocomp_word.c\
 		srcs/lexer/get_token.c\
 		srcs/lexer/get_heredoc.c\
 		srcs/lexer/token_tools.c\
