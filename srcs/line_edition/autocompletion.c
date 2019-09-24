@@ -185,7 +185,7 @@ char	*escape_singlequote(char *name, unsigned int max)
 	{
 		if (*name == '\'')
 		{
-			ft_memcpy(new + x, "'\\''", 4);
+			ft_strcpy(new + x, "'\\''");
 			x += 4;
 		}
 		else

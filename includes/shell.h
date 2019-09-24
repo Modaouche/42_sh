@@ -147,6 +147,14 @@ typedef struct			s_io_here
 	t_ast				*next;
 }						t_io_here;
 
+typedef struct			s_parse_word
+{
+	char				*str;
+	unsigned int		i;
+	unsigned int		x;
+	unsigned int		escape;
+}						t_parse_word;
+
 /*
 ** Initialization & Co
 */
@@ -223,6 +231,7 @@ void					cancel_autocompletion(t_edit *line_e);
 **  Line edition - Autocompletion parser
 */
 
+char					*parse_word(char *line, unsigned int end);
 char					*get_autocompletion_word(t_edit *line_e,\
 							unsigned int *argument,\
 							unsigned int *autocompletion_point);
