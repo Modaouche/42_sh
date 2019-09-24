@@ -171,34 +171,30 @@ int 	build_list_from_word(t_edit *line_e)
 **    escaped singlequote then re-opening singlequotes.
 */
 
-char 	*escape_singlequote(char *name, unsigned int max)
+char	*escape_singlequote(char *name, unsigned int max)
 {
 	unsigned int	x;
 	unsigned int	i;
-	char 			*new;
+	char			*new;
 
 	i = 0;
 	x = 0;
 	while (name[i] && i < max)
-	{
-		if (name[i++] == '\'')
+		if (++x && name[i++] == '\'')
 			x += 3;
-		++x;
-	}
 	if ((new = ft_strnew(x)) == NULL)
 		return (NULL);
 	x = 0;
-	i = 0;
-	while (name[i] && i < max)
+	while (*name && max-- != 0)
 	{ 
-		if (name[i] == '\'')
+		if (*name == '\'')
 		{
 			ft_memcpy(new + x, "'\\''", 4);
 			x += 4;
-			++i;
 		}
 		else
-			new[x++] = name[i++];
+			new[x++] = *name;
+		++name;
 	}
 	return (new);
 }
