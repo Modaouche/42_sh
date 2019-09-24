@@ -40,13 +40,13 @@ static void		le_resume(int sig)
 	(tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termios) == -1)\
 		? le_exit(0) : 0;
 	print_line(line_e, 0);
-	signal(SIGCONT,	le_resume);
+	signal(SIGCONT, le_resume);
 }
 
 static void		window_resize(int sig)
 {
-	t_edit *line_e;
-	struct 	winsize size;
+	t_edit			*line_e;
+	struct winsize	size;
 
 	(void)sig;
 	line_e = st_line();
@@ -62,19 +62,19 @@ void			signal_handler(uint8_t state)
 {
 	if (state == LINE_EDIT)
 	{
-		signal(SIGCONT,	le_resume);
-		signal(SIGINT,	prompt);
+		signal(SIGCONT, le_resume);
+		signal(SIGINT, prompt);
 		signal(SIGWINCH, window_resize);
 		return ;
 	}
 	if (state == EXEC)
 	{
-		signal (SIGINT, SIG_DFL);
-		signal (SIGQUIT, SIG_DFL);
-		signal (SIGTSTP, SIG_DFL);
-		signal (SIGTTIN, SIG_DFL);
-		signal (SIGTTOU, SIG_DFL);
-		signal (SIGCHLD, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGTSTP, SIG_DFL);
+		signal(SIGTTIN, SIG_DFL);
+		signal(SIGTTOU, SIG_DFL);
+		signal(SIGCHLD, SIG_DFL);
 		return ;
 	}
 	signal(SIGINT, SIG_IGN);

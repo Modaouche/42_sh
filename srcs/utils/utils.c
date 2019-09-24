@@ -17,7 +17,6 @@ int		is_command_separator(char c)
 	return (c == '\n' || c == ';' || c == '&');
 }
 
-
 int		is_whitespace(char c)
 {
 	return (c == '\t' || c == ' ');
