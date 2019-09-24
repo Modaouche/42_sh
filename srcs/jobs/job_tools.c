@@ -71,11 +71,11 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 	else if (!(j->command = ft_multijoin(3, j->command, " ",\
 			ast->token->lexeme)))
 		to_exit(ER_MALLOC);
-	if (is_pipe == true)
+	if (g_is_pipe == true)
 		push_back_process(&(j->first_process));
 	if (ast->token->tokind == T_WORD)
 		realloc_argv(&(j->first_process), ast->token->lexeme);
-	is_pipe = (ast->token->tokind != T_PIPE) ? false : true;
+	g_is_pipe = (ast->token->tokind != T_PIPE) ? false : true;
 	if (ast->right)
 		add_process_and_msg_cmd(ast->right, j);
 }
@@ -121,7 +121,7 @@ void			push_back_job(t_ast *ast)
 		to_exit(ER_MALLOC);
 	if (!(j = last_job()))
 		g_shell.first_job = new;
-	is_pipe = true;
+	g_is_pipe = true;
 	add_process_and_msg_cmd(ast, new);
 	if (j != NULL)
 		j->next = new;
