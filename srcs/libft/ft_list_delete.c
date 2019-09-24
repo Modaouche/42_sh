@@ -25,5 +25,5 @@ void					ft_list_delete(t_list **list)
 		*list = (*list)->next;
 		ft_strdel(((char **)&tmp->content));
 		free(tmp);
-	} 
+	}
 }

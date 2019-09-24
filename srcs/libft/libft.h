@@ -20,12 +20,12 @@
 ** Linked lists
 */
 
-typedef struct	s_list
+typedef struct			s_list
 {
 	void			*content;
 	struct s_list	*next;
 	size_t			content_size;
-}				t_list;
+}						t_list;
 
 t_list					*ft_list_create(char *content, size_t content_size);
 t_list					*ft_list_append(t_list **list, char *content,
@@ -57,8 +57,8 @@ void					ft_swap_int(int *str, int *str2);
 */
 
 char					*ft_strmap(char const *s, char (*f)(char));
-char					*ft_strmapi(
-						char const *s, char (*f)(unsigned int, char));
+char					*ft_strmapi(char const *s,
+							char (*f)(unsigned int, char));
 int						ft_strequ(char const *s1, char const *s2);
 int						ft_strnequ(char const *s1, char const *s2, size_t n);
 int						ft_cfind(char *str, char c);
@@ -68,14 +68,14 @@ char					*ft_strrchr(const char *str, int character);
 char					*ft_strstr(const char *str1, const char *str2);
 char					*ft_strstr_nocase(const char *str1, const char *str2);
 char					*ft_strnstr(const char *s1, const char *s2,
-						size_t length);
+							size_t length);
 int						ft_strcmp(const char *str1, const char *str2);
 int						ft_tablen(char **tabb);
 unsigned int			ft_strlcmp(const char *str1, const char *str2);
 int						ft_strncmp(const char *str1, const char *str2,
-						size_t num);
+							size_t num);
 int						ft_strncmp_case(const char *str1, const char *str2,
-						size_t num);
+							size_t num);
 size_t					ft_strlen(const char *s);
 size_t					ft_strclen(const char *s, char c);
 size_t					ft_strlen_if(const char *s, int (*f)(int));

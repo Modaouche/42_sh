@@ -40,7 +40,7 @@ bool		exec_builtin(char **args)
 {
 	char		ret;
 
-	ret = ft_built_in((char*)args);
+	ret = ft_built_in(args);
 	ft_free_tab(args);
 	g_shell.ret = (ret == 0);
 	return (ret == 0);

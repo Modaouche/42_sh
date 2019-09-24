@@ -39,8 +39,8 @@ int				ft_atoi(const char *str)
 
 unsigned int	ft_atoui(const char *str)
 {
-	unsigned int result;
-	int i;
+	unsigned int	result;
+	int				i;
 
 	if (str == 0)
 		return (0);

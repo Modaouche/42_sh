@@ -16,7 +16,7 @@
 char			*tabstr_to_str(char **tab, char *sep)
 {
 	char		*str;
-	int 		i;
+	int			i;
 
 	i = 0;
 	str = ft_strdup(tab[i++]);

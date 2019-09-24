@@ -12,7 +12,6 @@
 
 #include "libft.h"
 #include <stdarg.h>
-#include <stdio.h>//to rm
 
 char		*ft_multijoin(unsigned int nb, ...)
 {

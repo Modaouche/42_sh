@@ -26,7 +26,7 @@ void					init_env(char **env);
 int						check_perms(char *path);
 int						throw_error(char *str, int exec_flag);
 int						ft_cd(char **ptr);
-int						ft_built_in(char *cmd);
+int						ft_built_in(char **cmd);
 int						print_env(char **ptr);
 int						fexit(char **ptr);
 int						ft_clear(char **ptr);

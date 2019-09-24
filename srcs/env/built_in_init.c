@@ -13,13 +13,22 @@
 #include "env.h"
 #include "built_in.h"
 
+char			**build_flag(void)
+{
+	char	s[255];
+
+	ft_strcpy(s, "cd set clear pwd export unset history fc echo type alias ");
+	ft_strcat(s, "unalias test exit jobs fg bg");
+	return (ft_split(s, " "));
+}
+
 t_fptr			*init_fptr(void)
 {
 	t_fptr		*func;
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	if (!(func->flag = ft_split(BUILTIN_LIST BUILTIN_LIST_2, " ")))
+	if (!(func->flag = build_flag()))
 		return (NULL);
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
@@ -68,15 +77,13 @@ void			free_tmp(char **s)
 **	return 1 a built_in has been executed
 */
 
-int				ft_built_in(char *cmd)
+int				ft_built_in(char **args)
 {
 	int			i;
-	char		**args;
 
-	if (cmd == NULL)
+	if (args == NULL)
 		return (0);
 	i = 0;
-	args = (char**)cmd;
 	while (g_shell.fptr->f[i])
 	{
 		if (!(ft_strcmp(g_shell.fptr->flag[i], args[0])))
