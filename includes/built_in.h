@@ -14,6 +14,9 @@
 # define BUILT_IN_H
 # include "shell.h"
 
+# define BUILTIN_LIST "cd set clear pwd export unset history fc echo type "
+# define BUILTIN_LIST_2 "alias unalias test exit jobs fg bg"
+
 typedef struct		s_alias
 {
 	unsigned int	i;

@@ -13,22 +13,13 @@
 #include "env.h"
 #include "built_in.h"
 
-char			**build_flag(void)
-{
-	char	s[255];
-
-	ft_strcpy(s, "cd set clear pwd export unset history fc echo type alias \
-	unalias test exit jobs fg bg\0");
-	return (ft_split(s, " "));
-}
-
 t_fptr			*init_fptr(void)
 {
 	t_fptr		*func;
 
 	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
 		return (NULL);
-	if (!(func->flag = build_flag()))
+	if (!(func->flag = ft_split(BUILTIN_LIST BUILTIN_LIST_2, " ")))
 		return (NULL);
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
