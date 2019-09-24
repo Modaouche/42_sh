@@ -14,7 +14,7 @@
 
 int		is_command_separator(char c)
 {
-	return (c == ' ' || c == '\t' || c == '\n' || c == ';');
+	return (c == '\n' || c == ';' || c == '&');
 }
 
 void	remove_duplicate_whitespaces(t_edit *line_e)
