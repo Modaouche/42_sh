@@ -36,7 +36,7 @@ void		cursor_start(t_edit *line_e)
 		tputs(tgetstr("nd", NULL), 1, ft_puti);
 }
 
-/*	
+/*
 **   cursor_end
 **
 ** - Move the cursor to the last character of the line edition
@@ -57,7 +57,7 @@ void		cursor_end(t_edit *line_e)
 	cursor_reset_x_pos(line_e);
 }
 
-/*	
+/*
 **   cursor_after
 **
 ** - Move the cursor to be a line under the line edition
@@ -163,8 +163,8 @@ void		cursor_move_from_to(t_edit *line_e, uint from, uint to)
 		tputs(tgetstr("nd", NULL), 1, ft_puti);
 }
 
-
-void		cursor_move_from_to2(t_edit *line_e, int prefix, char *str, uint from, uint to)
+void		cursor_move_from_to2(t_edit *line_e, int prefix,
+			char *str, uint from, uint to)
 {
 	int x;
 

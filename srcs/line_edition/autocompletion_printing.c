@@ -36,12 +36,11 @@ void			print_with_pad(t_file *file, int minlen, int selected,
 		ft_putstr_fd("\033[38;5;14m", STDERR_FILENO);
 	if (file->len <= win_maxlen)
 		write(STDERR_FILENO, file->name, file->len);
-	else 
+	else
 	{
 		if (win_maxlen > 4)
-		write(STDERR_FILENO, file->name, win_maxlen - 4);
+			write(STDERR_FILENO, file->name, win_maxlen - 4);
 		write(STDERR_FILENO, "...", 3);
-
 	}
 	if (file->type == 4 || file->type == 8)
 		write(STDERR_FILENO, "\033[0m/", 5);
@@ -52,11 +51,8 @@ void			print_with_pad(t_file *file, int minlen, int selected,
 	else if (file->type == -2)
 		write(STDERR_FILENO, "\033[0m@", 5);
 	i = minlen - file->len - (file->type != 0) - 2;
-	while (minlen > 0 && i > 0)
-	{
+	while (minlen > 0 && i-- > 0)
 		write(STDERR_FILENO, " ", 1);
-		--i;
-	}
 	tputs(tgetstr("me", NULL), 1, ft_puti);
 	if (minlen != 0)
 		write(STDERR_FILENO, "  ", 2);
@@ -68,7 +64,7 @@ void			print_with_pad(t_file *file, int minlen, int selected,
 **  - Gets the longest word in a list, required to have aligned columns.
 */
 
-int     		get_list_longest_word(t_file *list)
+int				get_list_longest_word(t_file *list)
 {
 	unsigned int	longest;
 
@@ -142,7 +138,7 @@ void			print_comp_list(t_edit *line_e, int highlight)
 		tputs(tgetstr("ce", NULL), 1, ft_puti);
 		ft_nlcr();
 	}
-	tputs(tgetstr("vi", NULL), 1, ft_puti); 
+	tputs(tgetstr("vi", NULL), 1, ft_puti);
 	while (column <= column_end)
 	{
 		i = column;

@@ -42,7 +42,7 @@ int				get_last_common_char(t_file *list)
 		}
 		++last;
 	}
-	return (last);  
+	return (last);
 }
 
 /*
@@ -117,7 +117,8 @@ int				search_similar_env_var(int *cont, t_file **list,
 **  - Adds builtins and alises into the autocompletion list
 */
 
-int				search_similar_builtin_aliases(int *cont, t_file **list, char *str, int len)
+int				search_similar_builtin_aliases(int *cont, t_file **list,
+				char *str, int len)
 {
 	int size;
 	int	i;
@@ -210,7 +211,7 @@ t_file			*build_completion_list_files(int *cont, char *str, int len,
 				unsigned int *list_size)
 {
 	t_file	*list;
-	int 	last_slash;
+	int		last_slash;
 
 	last_slash = len - 1;
 	while (last_slash >= 0 && str[last_slash] != '/')

@@ -13,10 +13,10 @@
 #include "shell.h"
 #include "libft.h"
 
-char 	*ft_strdup_printable(char *name)
+char		*ft_strdup_printable(char *name)
 {
-	unsigned int 	x;
-	unsigned int 	i;
+	unsigned int	x;
+	unsigned int	i;
 	char			*new;
 
 	i = 0;
@@ -60,7 +60,6 @@ t_file		*ft_file_list_create(char *name, int type)
 	return (new);
 }
 
-
 t_file		*ft_file_list_append(t_file **list, char *name, int type)
 {
 	t_file *new;
@@ -94,7 +93,7 @@ void		ft_file_list_delete(t_file **list)
 		*list = (*list)->next;
 		ft_strdel(&tmp->name);
 		free(tmp);
-	} 
+	}
 }
 
 t_file		*ft_file_list_at(t_file *list, unsigned int idx)
@@ -108,7 +107,7 @@ t_file		*ft_file_list_at(t_file *list, unsigned int idx)
 	return (NULL);
 }
 
-t_file			*merge(t_file *a, t_file *b, t_file *head)
+t_file		*merge(t_file *a, t_file *b, t_file *head)
 {
 	t_file	**r;
 
@@ -137,7 +136,7 @@ t_file			*merge(t_file *a, t_file *b, t_file *head)
 	return (head);
 }
 
-t_file			*merge_sort(t_file *p)
+t_file		*merge_sort(t_file *p)
 {
 	t_file	*a;
 	t_file	*b;

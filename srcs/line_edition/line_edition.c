@@ -14,15 +14,15 @@
 #include "libft.h"
 
 /*
- **  append_to_line
- **
- **  - Adds a character to the input line, and if necessary, reallocates the
- **  line to fit it's new size.
- */
+**  append_to_line
+**
+**  - Adds a character to the input line, and if necessary, reallocates the
+**  line to fit it's new size.
+*/
 
-int		append_to_line(t_edit *line_e, const char to_add)
+int			append_to_line(t_edit *line_e, const char to_add)
 {
-	char    *new;
+	char	*new;
 
 	if (!line_e->line)
 	{
@@ -54,12 +54,12 @@ int		append_to_line(t_edit *line_e, const char to_add)
 }
 
 /*
- **  cancel_autocompletion
- **
- **  - Hides and free the current autocompletion.
- */
+**  cancel_autocompletion
+**
+**  - Hides and free the current autocompletion.
+*/
 
-void	cancel_autocompletion(t_edit *line_e)
+void		cancel_autocompletion(t_edit *line_e)
 {
 	line_e->autocomp = 0;
 	line_e->search_mode = 0;
@@ -77,7 +77,7 @@ void	cancel_autocompletion(t_edit *line_e)
 **    each encountered newline. Required for proper printing.
 */
 
-void	print_line(t_edit *line_e, unsigned int start)
+void		print_line(t_edit *line_e, unsigned int start)
 {
 	while (start < line_e->len)
 	{
@@ -101,9 +101,8 @@ void	print_line(t_edit *line_e, unsigned int start)
 **  - Called to insert a character to the line and update it visually.
 */
 
-void	insert_char(t_edit *line_e, char c)
+void		insert_char(t_edit *line_e, char c)
 {
-
 	if (!(append_to_line(line_e, c)))
 		le_exit(ER_MALLOC);
 	if (c == '\n')
@@ -122,7 +121,8 @@ void	insert_char(t_edit *line_e, char c)
 	}
 	if (line_e->autocomp != 0)
 		cancel_autocompletion(line_e);
-	if (get_line_height(line_e, line_e->len) != get_line_height(line_e, line_e->len - 1)
+	if (get_line_height(line_e, line_e->len) !=
+		get_line_height(line_e, line_e->len - 1)
 		&& c != '\n')
 		ft_nlcr();
 	if (line_e->search_mode == 1)
@@ -135,7 +135,7 @@ void	insert_char(t_edit *line_e, char c)
 **  - Function that determines whether the line is empty or not.
 */
 
-int		can_insert_tabs(t_edit *line_e)
+int			can_insert_tabs(t_edit *line_e)
 {
 	unsigned int i;
 
@@ -151,7 +151,7 @@ int		can_insert_tabs(t_edit *line_e)
 	return (1);
 }
 
-void	go_to_prev_word(t_edit *line_e)
+void		go_to_prev_word(t_edit *line_e)
 {
 	unsigned int i;
 	unsigned int word_start;
@@ -195,7 +195,7 @@ void	go_to_prev_word(t_edit *line_e)
 	cursor_move_to(line_e, last_word_start);
 }
 
-void	go_to_next_word(t_edit *line_e)
+void		go_to_next_word(t_edit *line_e)
 {
 	unsigned int i;
 	unsigned int quote;
@@ -241,57 +241,57 @@ void	go_to_next_word(t_edit *line_e)
 	cursor_move_to(line_e, i);
 }
 
-void	go_to_prev_line(t_edit *line_e)
+void		go_to_prev_line(t_edit *line_e)
 {
-    unsigned int i;
-    unsigned int x;
-    unsigned int curr_height;
-    unsigned int height;
-    unsigned int newpos;
+	unsigned int i;
+	unsigned int x;
+	unsigned int curr_height;
+	unsigned int height;
+	unsigned int newpos;
 
-    if (line_e->line == NULL)
-        return ;
-    i = 0;
-    newpos = 0;
-    x = g_shell.prompt_size;
-    curr_height = 0;
-    height = get_line_height(line_e, line_e->cursor_pos);
-    while ((i + 1) < line_e->cursor_pos && curr_height < height)
-    {
-        ++x;
-        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
-        {
-            x = 0;
-            if (++curr_height >= height)
-            	break ;
-            newpos = i;
-        }
-    }
-    cursor_move_to(line_e, newpos);
+	if (line_e->line == NULL)
+		return ;
+	i = 0;
+	newpos = 0;
+	x = g_shell.prompt_size;
+	curr_height = 0;
+	height = get_line_height(line_e, line_e->cursor_pos);
+	while ((i + 1) < line_e->cursor_pos && curr_height < height)
+	{
+		++x;
+		if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
+		{
+			x = 0;
+			if (++curr_height >= height)
+				break ;
+			newpos = i;
+		}
+	}
+	cursor_move_to(line_e, newpos);
 }
 
-void	go_to_next_line(t_edit *line_e)
+void		go_to_next_line(t_edit *line_e)
 {
-    unsigned int i;
-    unsigned int x;
+	unsigned int i;
+	unsigned int x;
 
-    if (line_e->line == NULL)
-        return ;
-    i = 0;
-    x = g_shell.prompt_size;
-    while (i < line_e->len)
-    {
-        if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
-        {
-            x = 0;
-            if (i > line_e->cursor_pos)
-            	break ;
-        }
-    }
-    cursor_move_to(line_e, i);
+	if (line_e->line == NULL)
+		return ;
+	i = 0;
+	x = g_shell.prompt_size;
+	while (i < line_e->len)
+	{
+		if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
+		{
+			x = 0;
+			if (i > line_e->cursor_pos)
+				break ;
+		}
+	}
+	cursor_move_to(line_e, i);
 }
 
-void	change_autocomp_idx(t_edit *line_e, int value)
+void		change_autocomp_idx(t_edit *line_e, int value)
 {
 	if (value < 0)
 	{
@@ -306,7 +306,7 @@ void	change_autocomp_idx(t_edit *line_e, int value)
 	print_comp_list(line_e, line_e->autocomp_idx);
 }
 
-void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
+void		key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 {
 	if (ft_strlen(key) == 6)
 	{
@@ -321,7 +321,8 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 			else if (key[5] == 0x42)
 				go_to_next_line(line_e);
 		}
-		else  if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5) && line_e->autocomp >= 2)
+		else if (!ft_memcmp(key, "\x1B\x5B\x31\x3B\x32", 5)
+				&& line_e->autocomp >= 2)
 		{
 			if (key[5] == 0x43 || key[5] == 0x42)
 				change_autocomp_idx(line_e, line_e->winsize_row);
@@ -362,7 +363,7 @@ void	key_shortcut_handler(t_edit *line_e, char *prevkey, char *key)
 	}
 }
 
-void	show_hist_line(t_edit *line_e)
+void		show_hist_line(t_edit *line_e)
 {
 	char	*str;
 
@@ -374,12 +375,13 @@ void	show_hist_line(t_edit *line_e)
 	ft_putstr("History search: ");
 	ft_putstr(str);
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
-	cursor_move_from_to2(line_e, ft_strlen("History search: "), str, ft_strlen(str), 0);
+	cursor_move_from_to2(line_e, ft_strlen("History search: "),
+						str, ft_strlen(str), 0);
 	cursor_move_from_to(line_e, line_e->len, line_e->cursor_pos);
 	tputs(tgetstr("up", NULL), 1, ft_puti);
 }
 
-void	get_hist_line(t_edit *line_e, int offset)
+void		get_hist_line(t_edit *line_e, int offset)
 {
 	char	*str;
 
@@ -401,13 +403,13 @@ void	get_hist_line(t_edit *line_e, int offset)
 }
 
 /*
- **  on_key_press
- **
- **  - Event handler called whenever the user pressed a key.
- **    used to happen input to line or to react to special characters.
- */
+**  on_key_press
+**
+**  - Event handler called whenever the user pressed a key.
+**    used to happen input to line or to react to special characters.
+*/
 
-void	on_key_press(t_edit *line_e, char *prevkey, char *key)
+void		on_key_press(t_edit *line_e, char *prevkey, char *key)
 {
 	if (!key)
 	{
@@ -517,10 +519,9 @@ void	on_key_press(t_edit *line_e, char *prevkey, char *key)
 		if (line_e->search_mode == 1)
 			show_hist_line(line_e);
 	}
-	// ft_putstr("key too long comming soon - ");
-}//in tabptrfct
+}
 
-void	replace_line_with_search(t_edit *line_e)
+void		replace_line_with_search(t_edit *line_e)
 {
 	char *str;
 
@@ -537,18 +538,18 @@ void	replace_line_with_search(t_edit *line_e)
 }
 
 /*
- **  line_edition
- **
- **  - Called to start the line edition, does not exit until the user
- **    presses enter.
- */
+**  line_edition
+**
+**  - Called to start the line edition, does not exit until the user
+**    presses enter.
+*/
 
-int		line_edition(t_edit *line_e)
+int			line_edition(t_edit *line_e)
 {
-	int 	ret;
-	char 	key[MAX_KEY_LEN + 1];
-	char 	prevkey[MAX_KEY_LEN + 1];
-	struct 	winsize size;
+	int				ret;
+	char			key[MAX_KEY_LEN + 1];
+	char			prevkey[MAX_KEY_LEN + 1];
+	struct winsize	size;
 
 	ioctl(0, TIOCGWINSZ, &size);
 	line_e->winsize_col = size.ws_col;
@@ -572,14 +573,14 @@ int		line_edition(t_edit *line_e)
 			if (key[0] == S_KEY_ENTER && !key[1])
 			{
 				if (tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold) == -1)
-			        le_exit(ER_MALLOC);
+					le_exit(ER_MALLOC);
 				break ;
 			}
 			on_key_press(line_e, prevkey, key);
 			ft_memcpy(prevkey, key, MAX_KEY_LEN);
 		}
 	}
-	if (line_e->line) 
+	if (line_e->line)
 		cursor_after(line_e);
 	else
 		ft_nlcr();

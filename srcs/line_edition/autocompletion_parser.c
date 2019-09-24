@@ -32,7 +32,6 @@ int		is_separator(char c)
 }
 
 /*
-**
 **  parse_word
 **
 **  - Takes a part of a line and converts it into a single string.
@@ -85,7 +84,8 @@ char	*parse_word(char *line, unsigned int end)
 			{
 				if (escape == 1)
 				{
-					if (ft_cfind(AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE, line[i]) == -1)
+					if (ft_cfind(AUTOCOMP_ESCAPED_CHARS_IN_DBLQUOTE,
+						line[i]) == -1)
 						str[x++] = '\\';
 					else
 						str[x++] = line[i];
@@ -138,11 +138,11 @@ int		get_last_slash(t_edit *line_e, unsigned int word_start,
 	return (word_end);
 }
 
-int 	get_last_dollar(t_edit *line_e, unsigned int word_start,
+int		get_last_dollar(t_edit *line_e, unsigned int word_start,
 		unsigned int word_end)
 {
-	unsigned int 	i;
-	int 			last_dollar;
+	unsigned int	i;
+	int				last_dollar;
 	unsigned int	escape;
 
 	i = word_start;
@@ -180,7 +180,6 @@ int 	get_last_dollar(t_edit *line_e, unsigned int word_start,
 }
 
 /*
-**
 **  get_autocompletion_word
 **
 **  - Finds the starting and ending point of the word at the current
@@ -204,7 +203,7 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 	word_end = 0;
 	word_idx = 0;
 	while (i < line_e->cursor_pos)
-	{	
+	{
 		word_start = i;
 		word_end = i;
 		while (is_separator(line_e->line[i]) && i < line_e->cursor_pos)
@@ -234,7 +233,8 @@ char	*get_autocompletion_word(t_edit *line_e, unsigned int *argument,
 			}
 			if (line_e->line[i] == '"' || line_e->line[i] == '\'')
 			{
-				quote_match(line_e->line, &i, line_e->cursor_pos, line_e->line[i]);
+				quote_match(line_e->line, &i, line_e->cursor_pos,
+							line_e->line[i]);
 				word_end = i++;
 				continue ;
 			}
