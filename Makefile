@@ -32,6 +32,7 @@ SRC =	srcs/main/main.c\
 		srcs/line_edition/file_list.c\
 		srcs/line_edition/list_merge.c\
 		srcs/line_edition/build_list.c\
+		srcs/line_edition/autocompletion_searching.c\
 		srcs/line_edition/get_autocomp_word.c\
 		srcs/lexer/get_token.c\
 		srcs/lexer/get_heredoc.c\

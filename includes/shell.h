@@ -216,6 +216,8 @@ void					show_hist_line(t_edit *line_e);
 void					le_free(t_edit *line_e);
 void					replace_word_with_alias(t_edit *line_e, char *alias,\
 							char *value);
+unsigned int			search_similar_files(t_file **list, char *path,
+							char *str, int len);
 /*
 **  Line edition - Autocompletion
 */
@@ -230,9 +232,9 @@ void					replace_word_with_alias(t_edit *line_e, char *alias,\
 
 int						get_last_slash(t_edit *line_e, unsigned int word_start,
 							unsigned int word_end);
-t_file					*build_completion_list(int *cont, char *str, int len,\
+t_file					*build_completion_list(char *str, int len,\
 							unsigned int *list_size);
-t_file					*build_completion_list_files(int *cont, char *str,\
+t_file					*build_completion_list_files(char *str,\
 							int len, unsigned int *list_size);
 void					print_comp_list(t_edit *line_e, int highlight);
 int						get_last_common_char(t_file *list);
@@ -244,12 +246,14 @@ void					replace_word_from_completion(t_edit *line_e);
 char					*escape_name(char *name, char *escaped_chars,\
 							unsigned int length);
 char					*escape_singlequote(char *name, unsigned int max);
-int						search_similar_env_var(int *cont, t_file **list,\
+int						search_similar_env_var(t_file **list,\
 							char *str, int len);
 void					cancel_autocompletion(t_edit *line_e);
 int						get_list_longest_word(t_file *list);
 void					print_with_pad(t_file *file, int minlen, int selected,
 							unsigned int win_maxlen);
+int						search_similar_builtin_aliases(t_file **list,
+							char *str, int len);
 
 /*
 **  Line edition - Autocompletion parser

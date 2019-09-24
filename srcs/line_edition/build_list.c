@@ -12,14 +12,14 @@
 
 #include "shell.h"
 
-t_file	*build_completion_list_env(int *cont, char *str,
+t_file	*build_completion_list_env(char *str,
 		uint *list_size, t_edit *line_e)
 {
 	t_file	*list;
 	int		start;
 
 	*list_size = 0;
-	if (!*str || !g_shell.envp || !*g_shell.envp || !*cont)
+	if (!*str || !g_shell.envp || !*g_shell.envp || !g_shell.line_e->autocomp)
 		return (NULL);
 	list = NULL;
 	start = 1;
@@ -28,7 +28,7 @@ t_file	*build_completion_list_env(int *cont, char *str,
 		start = 2;
 		++line_e->autocomp_point;
 	}
-	*list_size = search_similar_env_var(cont, &list, str + start,
+	*list_size = search_similar_env_var(&list, str + start,
 			ft_strlen(str + start));
 	return (list);
 }
@@ -37,18 +37,18 @@ void	call_list_func(t_edit *line_e, unsigned int comp_type, char *word)
 {
 	if (comp_type == 0)
 	{
-		line_e->autocomp_list = build_completion_list(&line_e->autocomp, word,
+		line_e->autocomp_list = build_completion_list(word,
 				ft_strlen(word), &line_e->autocomp_size);
 	}
 	else if (comp_type == 1)
 	{
-		line_e->autocomp_list = build_completion_list_files(&line_e->autocomp,
-				word, ft_strlen(word), &line_e->autocomp_size);
+		line_e->autocomp_list = build_completion_list_files(word,
+			ft_strlen(word), &line_e->autocomp_size);
 	}
 	else
 	{
-		line_e->autocomp_list = build_completion_list_env(&line_e->autocomp,
-				word, &line_e->autocomp_size, line_e);
+		line_e->autocomp_list = build_completion_list_env(word,
+			&line_e->autocomp_size, line_e);
 	}
 }
 
