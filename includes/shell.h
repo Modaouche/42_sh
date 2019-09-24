@@ -155,6 +155,23 @@ typedef struct			s_parse_word
 	unsigned int		escape;
 }						t_parse_word;
 
+typedef struct			s_autocomp_word
+{
+	unsigned int		i;
+	unsigned int		word_start;
+	unsigned int		word_end;
+	unsigned int		escape;
+	unsigned int		word_idx;
+
+}						t_autocomp_word;
+
+typedef struct s_a
+{
+	unsigned int i;
+	unsigned int quote;
+	unsigned int escape;
+} t_a;
+
 /*
 ** Initialization & Co
 */

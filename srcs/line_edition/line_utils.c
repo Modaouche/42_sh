@@ -55,39 +55,29 @@ int		quote_match(char *line, unsigned int *i, unsigned int maxlen, char c)
 
 int		get_idx_quote_type(char *line, unsigned int idx)
 {
-	unsigned int i;
-	unsigned int quote;
-	unsigned int escape;
+	t_a gi;
 
-	i = 0;
-	quote = 0;
-	escape = 0;
-	while (i < idx && line[i])
+	ft_bzero(&gi, sizeof(t_a));
+	while (gi.i < idx && line[gi.i])
 	{
-		if (escape)
+		if (gi.escape || line[gi.i] == '\\')
 		{
-			escape = 0;
-			++i;
-			continue ;
+			gi.escape = !gi.escape;
+			if (line[gi.i] == '\\')
+				gi.quote = 0;
+			++gi.i;
 		}
-		else if (line[i] == '\\')
+		else if (line[gi.i] == '"' || line[gi.i] == '\'')
 		{
-			escape = 1;
-			quote = 0;
-			++i;
-			continue ;
+			gi.quote = quote_match(line, &gi.i, idx, line[gi.i]);
+			++gi.i;
 		}
-		else if (line[i] == '"' || line[i] == '\'')
-		{
-			quote = quote_match(line, &i, idx, line[i]);
-			++i;
-			continue ;
-		}
-		if (i++ >= idx)
+		else if (gi.i++ >= idx)
 			break ;
-		quote = 0;
+		else
+			gi.quote = 0;
 	}
-	return (quote);
+	return (gi.quote);
 }
 
 /*
