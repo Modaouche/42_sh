@@ -122,5 +122,5 @@ int				ft_cd(char **cmd)
 	else if (cmd[1][0] != '/')
 		exec_flag = ft_cd_relative(cmd[1]);
 	cd_set_env(exec_flag, pwd);
-	return (exec_flag);
+	return (exec_flag != 1);
 }
