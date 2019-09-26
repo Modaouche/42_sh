@@ -203,6 +203,19 @@ void					free_for_ft_built_in(t_fptr *func);
 ** Line edition
 */
 
+
+void					start_autocomp(t_edit *line_e, char *prevkey);
+void					arrows_handler(t_edit *line_e, char *key);
+void					replace_line_with_search(t_edit *line_e);
+void					change_autocomp_idx(t_edit *line_e, int value);
+void					get_hist_line(t_edit *line_e, int offset);
+void					on_key_press(t_edit *line_e, char *prevkey, char *key);
+void					go_to_next_line(t_edit *line_e);
+void					go_to_prev_line(t_edit *line_e);
+void					go_to_next_word(t_edit *line_e);
+void					go_to_prev_word(t_edit *line_e);
+int						can_insert_tabs(t_edit *line_e);
+void					insert_char(t_edit *line_e, char c);
 int						get_last_dollar(t_edit *line_e, unsigned int word_start,
 							unsigned int word_end);
 void					remove_duplicate_whitespaces(t_edit *line_e);
