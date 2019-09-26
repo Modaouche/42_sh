@@ -42,8 +42,8 @@ bool		exec_builtin(char **args)
 
 	ret = ft_built_in(args);
 	ft_free_tab(args);
-	g_shell.ret = (ret == 0);
-	return (ret == 0);
+	g_shell.ret = (ret > 0);
+	return (ret > 0);
 }
 
 bool		exec_cmd(t_ast *ast, bool is_redir_pipe)

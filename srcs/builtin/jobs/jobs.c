@@ -53,7 +53,7 @@ int		ft_jobs(char **args)
 	return (0);
 }
 
-void	do_job_notif(t_job *j, int showpid, int update_stat)
+bool	do_job_notif(t_job *j, int showpid, int update_stat)
 {
 	if (update_stat)
 		update_status();
@@ -62,6 +62,7 @@ void	do_job_notif(t_job *j, int showpid, int update_stat)
 		format_job_info(j, "completed", 0, 0);
 		j->started_in_bg = 0;
 		remove_completed_job(&g_shell.first_job);
+		return (false);
 	}
 	else if (job_is_stopped(j) && !j->notified)
 	{
@@ -73,6 +74,7 @@ void	do_job_notif(t_job *j, int showpid, int update_stat)
 		format_job_info(j, "running", showpid, 1);
 		j->notified = 0;
 	}
+	return (true);
 }
 
 void	do_jobs_notif(int showpid)
@@ -85,7 +87,8 @@ void	do_jobs_notif(int showpid)
 	while (j)
 	{
 		next = j->next;
-		do_job_notif(j, showpid, 0);
+		if (!do_job_notif(j, showpid, 0))
+			break ;
 		j = next;
 	}
 }
