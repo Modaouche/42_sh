@@ -12,80 +12,84 @@
 
 #include "shell.h"
 
+int			skip_separators(t_edit *line_e, t_word_mov *pw)
+{
+	if (is_separator(line_e->line[pw->i]))
+	{
+		while (is_separator(line_e->line[pw->i]))
+			++pw->i;
+		pw->last_word_start = pw->word_start;
+		pw->word_start = pw->i;
+		return (1);
+	}
+	return (0);
+}
+
 void		go_to_prev_word(t_edit *line_e)
 {
-	unsigned int i;
-	unsigned int word_start;
-	unsigned int last_word_start;
-	unsigned int escape;
+	t_word_mov	pw;
 
-	i = 0;
-	escape = 0;
-	word_start = 0;
-	last_word_start = 0;
-	while (i < line_e->cursor_pos)
+	ft_bzero(&pw, sizeof(pw));
+	while (pw.i < line_e->cursor_pos)
 	{
-		if (escape == 1 || line_e->line[i] == '\\')
+		if (pw.escape == 1 || line_e->line[pw.i] == '\\')
 		{
-			escape = !escape;
-			++i;
+			pw.escape = !pw.escape;
+			++pw.i;
 			continue ;
 		}
-		if (line_e->line[i] == '"' || line_e->line[i] == '\'')
+		if (line_e->line[pw.i] == '"' || line_e->line[pw.i] == '\'')
 		{
-			quote_match(line_e->line, &i, line_e->cursor_pos, line_e->line[i]);
-			if (i++ >= line_e->cursor_pos)
+			quote_match(line_e->line, &pw.i,
+				line_e->cursor_pos, line_e->line[pw.i]);
+			if (pw.i++ >= line_e->cursor_pos)
 				break ;
 		}
-		if (is_separator(line_e->line[i]))
-		{
-			while (is_separator(line_e->line[i]))
-				++i;
-			last_word_start = word_start;
-			word_start = i;
-			continue ;
-		}
-		++i;
+		if (!skip_separators(line_e, &pw))
+			++pw.i;
 	}
-	cursor_move_to(line_e, last_word_start);
+	cursor_move_to(line_e, pw.last_word_start);
+}
+
+int			match_quotes_and_sep(t_edit *line_e, t_word_mov *pw)
+{
+	if (line_e->line[pw->i] == '"' || line_e->line[pw->i] == '\'')
+	{
+		quote_match(line_e->line, &pw->i, line_e->len, line_e->line[pw->i]);
+		if (pw->i >= line_e->len)
+			return (1);
+	}
+	if (is_separator(line_e->line[pw->i]))
+	{
+		while (is_separator(line_e->line[pw->i]))
+			++pw->i;
+		return (1);
+	}
+	return (0);
 }
 
 void		go_to_next_word(t_edit *line_e)
 {
-	unsigned int i;
-	unsigned int quote;
-	unsigned int escape;
+	t_word_mov	pw;
 
-	i = line_e->cursor_pos;
-	quote = get_idx_quote_type(line_e->line, i);
-	if (quote)
+	pw.i = line_e->cursor_pos;
+	if ((pw.quote = get_idx_quote_type(line_e->line, pw.i)))
 	{
-		quote_match(line_e->line, &i, line_e->len, "'\""[quote - 1]);
-		++i;
+		quote_match(line_e->line, &pw.i, line_e->len, "'\""[pw.quote - 1]);
+		++pw.i;
 	}
-	escape = 0;
-	while (i < line_e->len)
+	pw.escape = 0;
+	while (pw.i < line_e->len)
 	{
-		if (escape == 1 || line_e->line[i] == '\\')
+		if (pw.escape == 1 || line_e->line[pw.i] == '\\')
 		{
-			escape = !escape;
-			++i;
+			pw.escape = !pw.escape;
+			++pw.i;
 			continue ;
 		}
-		if (line_e->line[i] == '"' || line_e->line[i] == '\'')
-		{
-			quote_match(line_e->line, &i, line_e->len, line_e->line[i]);
-			if (i < line_e->len)
-				++i;
-			continue ;
-		}
-		if (is_separator(line_e->line[i]))
-		{
-			while (is_separator(line_e->line[i]))
-				++i;
+		if (match_quotes_and_sep(line_e, &pw))
 			break ;
-		}
-		++i;
+		++pw.i;
 	}
-	cursor_move_to(line_e, i);
+	cursor_move_to(line_e, pw.i);
 }

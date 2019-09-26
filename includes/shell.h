@@ -186,6 +186,16 @@ typedef struct			s_comp_print
 	unsigned int		window_maxrow;
 }						t_comp_print;
 
+
+typedef struct	s_word_mov
+{
+	unsigned int i;
+	unsigned int word_start;
+	unsigned int last_word_start;
+	unsigned int escape;
+	unsigned int quote;
+}				t_word_mov;	
+
 /*
 ** Initialization & Co
 */
