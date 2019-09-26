@@ -23,6 +23,17 @@ void	replace_line_raw(t_edit *line_e, char *str)
 	print_line(line_e, 0);
 }
 
+void	concat_quote(t_edit *line_e, char *str)
+{
+	int quote_type;
+
+	quote_type = get_idx_quote_type(str, ft_strlen(str) - 1);
+	if (quote_type == 1)
+		ft_strcat(str + line_e->autocomp_point, "\"");
+	else if (quote_type == 2)
+		ft_strcat(str + line_e->autocomp_point, "'");
+}
+
 void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 {
 	char			*str;
@@ -44,10 +55,8 @@ void	replace_word(t_edit *line_e, char *new, size_t length, char *suffix)
 	ft_memcpy(str, line_e->line, line_e->autocomp_point);
 	ft_memcpy(str + line_e->autocomp_point, new, length);
 	ft_strcat(str + line_e->autocomp_point + length, suffix);
-	if (line_e->autocomp_quote == 1 && length != 0)
-		ft_strcat(str + line_e->autocomp_point + length, "\"");
-	else if (line_e->autocomp_quote == 2 && length != 0)
-		ft_strcat(str + line_e->autocomp_point + length, "'");
+	if (length != 0 && line_e->autocomp_quote)
+		concat_quote(line_e, str);
 	ft_strdel(&new);
 	replace_line_raw(line_e, str);
 }
@@ -64,59 +73,4 @@ void	replace_word_from_completion(t_edit *line_e)
 		replace_word(line_e, file->name, ft_strlen(file->name), "/");
 	else
 		replace_word(line_e, file->name, ft_strlen(file->name), NULL);
-}
-
-char	*escape_singlequote(char *name, unsigned int max)
-{
-	unsigned int	x;
-	unsigned int	i;
-	char			*new;
-
-	i = 0;
-	x = 0;
-	while (name[i] && i < max)
-		if (++x && name[i++] == '\'')
-			x += 3;
-	if ((new = ft_strnew(x)) == NULL)
-		return (NULL);
-	x = 0;
-	while (*name && max-- != 0)
-	{
-		if (*name == '\'')
-		{
-			ft_memcpy(new + x, (char[]){0x27, 0x5c, 0x27, 0x27}, 4);
-			x += 4;
-		}
-		else
-			new[x++] = *name;
-		++name;
-	}
-	return (new);
-}
-
-char	*escape_name(char *name, char *escaped_chars, unsigned int max)
-{
-	unsigned int	x;
-	unsigned int	i;
-	char			*new;
-
-	i = 0;
-	x = 0;
-	while (name[i] && i < max)
-	{
-		if (ft_cfind(escaped_chars, name[i++]) != -1)
-			++x;
-		++x;
-	}
-	if ((new = ft_strnew(x)) == NULL)
-		return (NULL);
-	x = 0;
-	i = 0;
-	while (name[i] && i < max)
-	{
-		if (ft_cfind(escaped_chars, name[i]) != -1)
-			new[x++] = '\\';
-		new[x++] = name[i++];
-	}
-	return (new);
 }

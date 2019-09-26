@@ -12,88 +12,88 @@
 
 #include "shell.h"
 
-/*
-**  print_comp_list
-**
-**  - Moves the cursor under the line edition, clears everything under
-**    the cursor and prints the list stored in comp_list,
-**    then moves the cursor back to where it was.
-*/
-
-void			print_comp_list(t_edit *line_e, int highlight)
+void			init_column_sizes(t_edit *line_e, t_comp_print *comp)
 {
-	int				i;
-	unsigned int	column;
-	unsigned int	column_end;
-	unsigned int	maxcol;
-	unsigned int	maxrow;
-	unsigned int	max_length;
-	unsigned int	page;
-	unsigned int	maxpage;
-	unsigned int	newlines;
-	unsigned int	window_maxrow;
-
-	if (line_e->autocomp_size <= 1 || line_e->autocomp_list == NULL)
-		return ;
 	cursor_after(line_e);
-	max_length = get_list_longest_word(line_e->autocomp_list);
-	if (max_length > line_e->winsize_col)
+	comp->max_length = get_list_longest_word(line_e->autocomp_list);
+	if (comp->max_length > line_e->winsize_col)
 	{
-		max_length = 0;
-		maxcol = 1;
+		comp->max_length = 0;
+		comp->maxcol = 1;
 	}
 	else
-		maxcol = line_e->winsize_col / max_length;
-	maxrow = (line_e->autocomp_size / maxcol);
-	if (maxrow == 0)
-		maxrow = 1;
-	line_e->autocomp_maxcol = maxcol;
-	line_e->autocomp_maxrow = maxrow;
-	column = 0;
-	column_end = maxrow;
-	page = 0;
-	newlines = 1;
-	if (maxrow >= line_e->winsize_row)
+		comp->maxcol = line_e->winsize_col / comp->max_length;
+	comp->maxrow = (line_e->autocomp_size / comp->maxcol);
+	if (comp->maxrow == 0)
+		comp->maxrow = 1;
+	line_e->autocomp_maxcol = comp->maxcol;
+	line_e->autocomp_maxrow = comp->maxrow;
+	comp->column = 0;
+	comp->column_end = comp->maxrow;
+	comp->page = 0;
+	comp->newlines = 1;
+}
+
+void			get_page_count(t_edit *line_e, t_comp_print *comp)
+{
+	if (comp->maxrow >= line_e->winsize_row)
 	{
 		if (line_e->winsize_row > 2)
-			window_maxrow = (line_e->winsize_row - 2);
+			comp->window_maxrow = (line_e->winsize_row - 2);
 		else
-			window_maxrow = 1;
-		if (window_maxrow > get_line_height(line_e, -1))
-			window_maxrow -= get_line_height(line_e, -1);
-		maxpage = maxrow / window_maxrow;
-		page = (line_e->autocomp_idx % (maxrow + 1)) / window_maxrow;
-		if (page > maxpage)
-			page = maxpage;
-		column = page * window_maxrow;
-		column_end = column + window_maxrow;
-		ft_printf_fd(STDERR_FILENO, "Page %d/%d", page + 1, maxpage + 1);
-		++newlines;
+			comp->window_maxrow = 1;
+		if (comp->window_maxrow > get_line_height(line_e, -1))
+			comp->window_maxrow -= get_line_height(line_e, -1);
+		comp->maxpage = comp->maxrow / comp->window_maxrow;
+		comp->page = (line_e->autocomp_idx
+					% (comp->maxrow + 1)) / comp->window_maxrow;
+		if (comp->page > comp->maxpage)
+			comp->page = comp->maxpage;
+		comp->column = comp->page * comp->window_maxrow;
+		comp->column_end = comp->column + comp->window_maxrow;
+		ft_printf_fd(STDERR_FILENO, "Page %d/%d",
+				comp->page + 1, comp->maxpage + 1);
+		++comp->newlines;
 		tputs(tgetstr("ce", NULL), 1, ft_puti);
 		ft_nlcr();
 	}
 	tputs(tgetstr("vi", NULL), 1, ft_puti);
-	while (column <= column_end)
-	{
-		i = column;
-		while (i < (int)line_e->autocomp_size)
-		{
-			if (i == highlight)
-				tputs(tgetstr("mr", NULL), 1, ft_puti);
-			print_with_pad(ft_file_list_at(line_e->autocomp_list, i),
-							max_length, i == highlight, line_e->winsize_col);
-			i += maxrow + 1;
-		}
-		tputs(tgetstr("ce", NULL), 1, ft_puti);
-		if (++column <= column_end)
-		{
-			++newlines;
-			ft_nlcr();
-		}
-	}
+}
+
+void			go_back_up(t_edit *line_e, int newlines)
+{
 	tputs(tgetstr("cd", NULL), 1, ft_puti);
 	while (newlines-- > 0)
 		tputs(tgetstr("up", NULL), 1, ft_puti);
 	cursor_reset_x_pos(line_e);
 	tputs(tgetstr("ve", NULL), 1, ft_puti);
+}
+
+void			print_comp_list(t_edit *line_e, int highlight)
+{
+	t_comp_print comp;
+
+	if (line_e->autocomp_size <= 1 || line_e->autocomp_list == NULL)
+		return ;
+	init_column_sizes(line_e, &comp);
+	get_page_count(line_e, &comp);
+	while (comp.column <= comp.column_end)
+	{
+		comp.i = comp.column;
+		while (comp.i < (int)line_e->autocomp_size)
+		{
+			if (comp.i == highlight)
+				tputs(tgetstr("mr", NULL), 1, ft_puti);
+			print_with_pad(ft_file_list_at(line_e->autocomp_list, comp.i),
+				comp.max_length, comp.i == highlight, line_e->winsize_col);
+			comp.i += comp.maxrow + 1;
+		}
+		tputs(tgetstr("ce", NULL), 1, ft_puti);
+		if (++comp.column <= comp.column_end)
+		{
+			++comp.newlines;
+			ft_nlcr();
+		}
+	}
+	go_back_up(line_e, comp.newlines);
 }

@@ -172,6 +172,20 @@ typedef struct			s_a
 	unsigned int		escape;
 }						t_a;
 
+typedef struct			s_comp_print
+{
+	int					i;
+	unsigned int		column;
+	unsigned int		column_end;
+	unsigned int		maxcol;
+	unsigned int		maxrow;
+	unsigned int		max_length;
+	unsigned int		page;
+	unsigned int		maxpage;
+	unsigned int		newlines;
+	unsigned int		window_maxrow;
+}						t_comp_print;
+
 /*
 ** Initialization & Co
 */
