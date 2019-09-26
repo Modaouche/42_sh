@@ -56,7 +56,6 @@ void	insert_home_path(const char *line, char **word, unsigned int *i)
 	unsigned int	x;
 	char			*username;
 
-	*i += 1;
 	x = 0;
 	while (ft_isalnum(line[*i + x]))
 		++x;
@@ -67,6 +66,7 @@ void	insert_home_path(const char *line, char **word, unsigned int *i)
 		username = ft_strsub(line, *i, x);
 		path = tild(username);
 		ft_strdel(&username);
+		ft_printf("[%s] - [%s]\n", line + *i, line + *i + x);
 		if (x > 1)
 			*i += x - 1;
 	}
