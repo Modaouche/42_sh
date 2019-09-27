@@ -45,10 +45,6 @@ char			**get_assignments(t_ast *ast)
 	{
 		if (tmptr->token->tokind == T_ASGMT_WRD)
 			len++;
-		if (tmptr->token->tokind == T_ASGMT_WRD)
-			ft_printf("ASSIGN [%d] [%s]\n", len, tmptr->token->lexeme);
-		else if (tmptr->token->tokind == T_WORD)
-			ft_printf("WORD [%d] [%s]\n", len, tmptr->token->lexeme);
 		tmptr = tmptr->left;
 	}
 	if (!len)
