@@ -82,10 +82,9 @@ bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 	char **assigns;
 
 	args = get_cmd(ast);
-	if ((assigns = get_assignments(ast)))
-		is_redir_pipe = 0; //Assignment means a fork!
+	assigns = get_assignments(ast);
 	ft_putendl("-----------------[ exec cmd ]");
-	if (!is_redir_pipe && is_builtin(args[0]))
+	if (!assigns && !is_redir_pipe && is_builtin(args[0]))
 		return (exec_builtin(args));
 	assigns = get_assigned_env(assigns, args);
 	ft_free_tab(args);
