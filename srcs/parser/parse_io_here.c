@@ -71,6 +71,8 @@ void			io_here(t_edit *line_e)
 		(a.heredoc->tokind == T_ASGMT_WRD) ? a.heredoc->tokind = T_WORD : 0;
 		if (a.heredoc->tokind == T_WORD)
 		{
+			while (io_here_loop(line_e, &a) != -1)
+				;
 		}
 		else
 		{

@@ -29,7 +29,7 @@ void	put_job_in_foreground(t_job *j, int cont)
 	{
 		tcsetattr(g_shell.fd, TCSADRAIN, &j->tmodes);
 		if (kill(-(j->pgid), SIGCONT) < 0)
-			perror("kill (SIGCONT)");
+			perror("kill (SIGCONT)");//changer le perror
 	}
 	wait_for_job(j);
 	/*
@@ -52,7 +52,7 @@ void	put_job_in_background(t_job *j, int cont)
 {
 	if (cont)
 		if (kill(-j->pgid, SIGCONT) < 0)
-			perror("kill (SIGCONT)");
+			perror("kill (SIGCONT)");//changer le perror
 }
 
 /*
