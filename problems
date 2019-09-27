@@ -1,5 +1,27 @@
+quote weird behavior:
+
 42sh (/home/mohammed/Documents/42/42sh) $> echo salut"les
 dquote $> amis"'
 quote $> comment
 quote $> allez''
 
+
+
+
+
+comportement redir+ pipes sur bash:
+
+bash-5.0$ ls 2>&1 | cat -e
+archivetempcorrect.pdf$
+AttestationDroits.pdf$
+moslama$
+param_expansion$
+VMware-Player-15.5.0-14665864.x86_64.bundle$
+Win10_1903_V1_French_x64.iso$
+
+bash-5.0$ ls >/dev/null  2>&1 | cat -e
+
+bash-5.0$ ls ewfewf >/dev/null  2>&1 | cat -e
+
+bash-5.0$ ls ewfewf  2>&1 >/dev/null | cat -e
+ls: cannot access 'ewfewf': No such file or directory$

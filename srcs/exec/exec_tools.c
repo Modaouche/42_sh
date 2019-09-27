@@ -51,7 +51,7 @@ char			**get_assignments(t_ast *ast)
 	}
 	if (!len)
 		return (NULL);
-	if (!(cmd = (char **)ft_memmalloc(sizeof(char *) * (len + 1))))
+	if (!(cmd = (char **)ft_memalloc(sizeof(char *) * (len + 1))))
 		to_exit(ER_MALLOC);
 	cmd[len--] = NULL;
 	tmptr = ast;
@@ -83,9 +83,8 @@ char			**get_cmd(t_ast *ast)
 	}
 	if (!len)
 		return (NULL);
-	if (!(cmd = (char **)ft_memmalloc(sizeof(char *) * (len + 1))))
+	if (!(cmd = (char **)ft_memalloc(sizeof(char *) * (len + 1))))
 		to_exit(ER_MALLOC);
-	ft_bzero(cmd, sizeof(char*) * len);
 	cmd[len--] = NULL;
 	tmptr = ast;
 	while (tmptr && len >= 0)

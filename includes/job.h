@@ -29,6 +29,7 @@ typedef struct		s_p
 {
 	struct s_p		*next;
 	char			**argv;
+	char			**envp;
 	pid_t			pid;
 	bool			completed;
 	bool			stopped;
@@ -55,7 +56,6 @@ typedef struct		s_job
 	struct s_job	*next;
 	char			*command;
 	t_process		*first_process;
-	char			**env;
 	pid_t			pgid;
 	bool			notified;
 	bool			started_in_bg;
