@@ -112,7 +112,7 @@ unsigned int	create_job_id(unsigned int start)
 	return (id);
 }
 
-void			push_back_job(t_ast *ast)
+void			push_back_job(t_ast *ast, char **env)
 {
 	t_job	*new;
 	t_job	*j;
@@ -128,6 +128,7 @@ void			push_back_job(t_ast *ast)
 	new->stdout = STDOUT_FILENO;
 	new->stderr = STDERR_FILENO;
 	new->id = create_job_id(1);
+	new->env = env;
 }
 
 void			remove_completed_job(t_job **job)

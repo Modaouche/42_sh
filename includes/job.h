@@ -55,6 +55,7 @@ typedef struct		s_job
 	struct s_job	*next;
 	char			*command;
 	t_process		*first_process;
+	char			**env;
 	pid_t			pgid;
 	bool			notified;
 	bool			started_in_bg;
@@ -82,7 +83,7 @@ void				put_job_in_background(t_job *j, int cont);
 void				mark_job_as_running(t_job *j);
 void				continue_job(t_job *j, int foreground);
 void				launch_process(t_process *p, pid_t pid,\
-					int a, int b, int c);
+					int a, int b, int c, char **env);
 void				launch_job (t_job *j);
 int					mark_process_status (pid_t pid, int status);
 void				update_status (void);
@@ -94,7 +95,7 @@ void				do_jobs_notif(int showpid);
 t_job				*create_job(t_job *j, t_ast *ast);
 t_job				*add_job(t_job *j, t_ast *ast);
 unsigned int		create_job_id(unsigned int start);
-void				push_back_job(t_ast *ast);
+void				push_back_job(t_ast *ast, char **env);
 void				push_back_process(t_process **p);
 void				remove_completed_job(t_job **job);
 #endif

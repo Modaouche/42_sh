@@ -46,16 +46,47 @@ bool		exec_builtin(char **args)
 	return (ret > 0);
 }
 
+
+char			**get_assignments(t_ast *ast);
+
+char			**get_assigned_env(char **assigns)
+{
+	char			**new_env;
+	unsigned int	i;
+	int				c;
+	if (assigns == NULL)
+		return (g_shell.envp);
+	i = 0;
+	if (!(new_env = get_env(g_shell.envp)))
+		to_exit(ER_MALLOC);
+	while (new_env && assigns[i])
+	{
+		if ((c = ft_cfind(assigns[i], '=')) > 0)
+		{
+			assigns[i][c] = '\0';
+			if (!(new_env = set_var_env(assigns[i], &assigns[i][c + 1], new_env)))
+				to_exit(ER_MALLOC);
+			ft_strdel(&assigns[i]);
+		}
+		++i;
+	}
+	ft_memdel((void**)&assigns);
+	return (new_env);
+}
+
 bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 {
 	char **args;
+	char **assigns;
 
 	args = get_cmd(ast);
+	if ((assigns = get_assignments(ast)))
+		is_redir_pipe = 0; //Assignment means a fork!
 	ft_putendl("-----------------[ exec cmd ]");
 	if (!is_redir_pipe && is_builtin(args[0]))
 		return (exec_builtin(args));
 	ft_free_tab(args);
-	push_back_job(ast);
+	push_back_job(ast, get_assigned_env(assigns));
 	g_shell.errorno = NO_ERROR;
 	launch_job(last_job());
 	if (g_shell.errorno)
