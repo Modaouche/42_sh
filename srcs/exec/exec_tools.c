@@ -77,6 +77,8 @@ char			**get_cmd(t_ast *ast)
 			len++;
 		tmptr = tmptr->left;
 	}
+	if (!len)
+		return (NULL);
 	if (!(cmd = (char **)malloc(sizeof(char *) * (len + 1))))
 		to_exit(ER_MALLOC);
 	ft_bzero(cmd, sizeof(char*) * len);

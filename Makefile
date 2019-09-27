@@ -147,7 +147,7 @@ DEPEN = $(OBJ) Makefile $(HEADERS)
 
 CC = gcc
 
-CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)\
+CFLAGS +=  -Wall -Wextra -Werror $(INCLUDES)#\
 			-g3 -fsanitize=address\
 			-fno-omit-frame-pointer\
 			-fsanitize-address-use-after-scope
@@ -168,4 +168,7 @@ fclean:
 	/bin/rm -f $(OBJ)
 	/bin/rm -f ./$(NAME)
 
-re: fclean all
+re: 
+	make -C $(LIBFT) all
+	/bin/rm -f $(OBJ)
+	/bin/rm -f ./$(NAME)
