@@ -24,18 +24,18 @@ void	ast_execution(t_ast *ast)
 	}
 	else if (is_and_or_exec(ast->token->tokind))
 		exec_and_or(ast);
-	else if (is_redir_pipe_exec(ast->token->tokind))
+	else if (is_redir_exec(ast->token->tokind)\
+			|| ast->token->tokind == T_PIPE)
 	{
 		ft_printf("-----------------[ redir pipe %d ]\n", ast->token->tokind);
-		/*
-		** exec_redir_pipe(ast);
-		*/
+		return (exec_cmd(ast, true));
 	}
 	else if (is_other_exec(ast->token->tokind))
 	{
 		ft_printf("-----------------[ other %d ]\n", ast->token->tokind);
-		exec_cmd(ast, 0);
+		return (exec_cmd(ast, false));
 	}
+
 }
 
 void	line_execution(void)

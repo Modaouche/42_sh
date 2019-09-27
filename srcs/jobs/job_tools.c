@@ -25,7 +25,7 @@ t_job			*last_job(void)
 	return (j);
 }
 
-void			push_back_process(t_process **p)
+void			push_back_process(t_process **p, char **envp)
 {
 	t_process	*new;
 
@@ -34,6 +34,7 @@ void			push_back_process(t_process **p)
 	while (*p)
 		*p = (*p)->next;
 	*p = new;
+	(*p)->envp = get_env(envp);
 }
 
 static void		realloc_argv(t_process **process, char *to_add)
@@ -43,7 +44,7 @@ static void		realloc_argv(t_process **process, char *to_add)
 	t_process	*p;
 
 	p = *process;
-	while (p && p->next)
+	while (p && p->next)//check if null ??
 		p = p->next;
 	len = ft_tablen(p->argv);
 	if (!(new = (char **)ft_memalloc(sizeof(char *) * (len + 2))))
@@ -60,6 +61,30 @@ static void		realloc_argv(t_process **process, char *to_add)
 	p->argv = new;
 }
 
+static void		realloc_assign(t_process **process, char *to_add)
+{
+	char		**new;
+	int			len;
+	t_process	*p;
+
+	p = *process;
+	while (p && p->next)//check if null ??
+		p = p->next;
+	len = ft_tablen(p->assign);
+	if (!(new = (char **)ft_memalloc(sizeof(char *) * (len + 2))))
+		to_exit(ER_MALLOC);
+	len = 0;
+	while (p->assign && p->assign[len])
+	{
+		new[len] = p->assign[len];
+		len++;
+	}
+	new[len++] = ft_strdup(to_add);
+	new[len] = NULL;
+	ft_memdel((void **)&(p->assign));
+	p->assign = new;
+}
+
 static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 {
 	if (!ast)
@@ -72,9 +97,11 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 			ast->token->lexeme)))
 		to_exit(ER_MALLOC);
 	if (g_is_pipe == true)
-		push_back_process(&(j->first_process));
+		push_back_process(&(j->first_process), g_shell.envp);
 	if (ast->token->tokind == T_WORD)
 		realloc_argv(&(j->first_process), ast->token->lexeme);
+	if (ast->token->tokind == T_ASGMT_WRD)
+		realloc_assign(&(j->first_process), ast->token->lexeme);
 	g_is_pipe = (ast->token->tokind != T_PIPE) ? false : true;
 	if (ast->right)
 		add_process_and_msg_cmd(ast->right, j);
@@ -112,7 +139,7 @@ unsigned int	create_job_id(unsigned int start)
 	return (id);
 }
 
-void			push_back_job(t_ast *ast, char **env)
+void			push_back_job(t_ast *ast)
 {
 	t_job	*new;
 	t_job	*j;
@@ -122,13 +149,13 @@ void			push_back_job(t_ast *ast, char **env)
 	if (!(j = last_job()))
 		g_shell.first_job = new;
 	g_is_pipe = true;
+	new->stdin = STDIN_FILENO;
+	new->stdout = STDOUT_FILENO;
+	new->stderr = STDERR_FILENO;
 	add_process_and_msg_cmd(ast, new);
 	if (j != NULL)
 		j->next = new;
-	new->stdout = STDOUT_FILENO;
-	new->stderr = STDERR_FILENO;
 	new->id = create_job_id(1);
-	new->env = env;
 }
 
 void			remove_completed_job(t_job **job)

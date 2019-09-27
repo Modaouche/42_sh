@@ -30,11 +30,11 @@ bool		is_and_or_exec(t_tok tokind)
 	return (false);
 }
 
-bool		is_redir_pipe_exec(t_tok tokind)
+bool		is_redir_exec(t_tok tokind)
 {
 	if (token_cmp(tokind, T_GREAT, T_GREATAND, T_DGREAT,\
 			T_CLOBBER, T_LESSGREAT, T_LESS, T_DLESS,\
-			T_LESSAND, T_DLESSDASH, T_PIPE, -1))
+			T_LESSAND, T_DLESSDASH, -1))
 		return (true);
 	return (false);
 }

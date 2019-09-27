@@ -33,6 +33,8 @@ char			*find_var(char **envp, char *with)
 	return (0);
 }
 
+/* Only for builtins unforked */
+
 char			**get_assignments(t_ast *ast)
 {
 	char		**cmd;
@@ -49,7 +51,7 @@ char			**get_assignments(t_ast *ast)
 	}
 	if (!len)
 		return (NULL);
-	if (!(cmd = (char **)malloc(sizeof(char *) * (len + 1))))
+	if (!(cmd = (char **)ft_memmalloc(sizeof(char *) * (len + 1))))
 		to_exit(ER_MALLOC);
 	cmd[len--] = NULL;
 	tmptr = ast;
@@ -62,6 +64,8 @@ char			**get_assignments(t_ast *ast)
 	}
 	return (cmd);
 }
+
+/* Only for builtins unforked */
 
 char			**get_cmd(t_ast *ast)
 {
@@ -79,7 +83,7 @@ char			**get_cmd(t_ast *ast)
 	}
 	if (!len)
 		return (NULL);
-	if (!(cmd = (char **)malloc(sizeof(char *) * (len + 1))))
+	if (!(cmd = (char **)ft_memmalloc(sizeof(char *) * (len + 1))))
 		to_exit(ER_MALLOC);
 	ft_bzero(cmd, sizeof(char*) * len);
 	cmd[len--] = NULL;

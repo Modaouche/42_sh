@@ -86,9 +86,9 @@ bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 	ft_putendl("-----------------[ exec cmd ]");
 	if (!assigns && !is_redir_pipe && is_builtin(args[0]))
 		return (exec_builtin(args));
-	assigns = get_assigned_env(assigns, args);
 	ft_free_tab(args);
-	push_back_job(ast, assigns);
+	ft_free_tab(assigns);
+	push_back_job(ast);
 	g_shell.errorno = NO_ERROR;
 	launch_job(last_job());
 	if (g_shell.errorno)

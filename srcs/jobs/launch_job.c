@@ -89,7 +89,7 @@ void		launch_job(t_job *j)
 			/* This is the child process.  */
 			(!cmds_verif(p, g_shell.envp)) ? to_exit(g_shell.errorno)\
 				: launch_process(p, j->pgid, infile,\
-				outfile, j->stderr, j->env);
+				outfile, j->stderr, p->env);
 		}
 		else if (pid < 0)
 		{

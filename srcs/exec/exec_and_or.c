@@ -29,32 +29,35 @@
 		- peut avoir des assign et/ou word in ast mais le debut = redir_pipe
 		- t_job job = null
  * */
-
-bool		exec_redir_pipe(t_ast *ast, t_job *job, bool is_root)
+/*
+bool		exec_redir_pipe(t_ast *ast, t_process *p, bool is_root)
 {
 	char **args;
 	char **assigns;
 
 	ft_putendl("-----------------[ redir_pipe ]");
 	if (!is_root && ast->left)
-		exec_redir_pipe(ast->left, 0);
+		exec_redir_pipe(ast->left, p, 0);
 	if (!is_root && ast->right)
-		exec_redir_pipe(ast->right, 0);
-	assigns = get_assignments(ast);
-	if (jobs && jobs->assigns)
-		assigns = get_assigned_env(assigns, assigns);
+		exec_redir_pipe(ast->right, p, 0);
+	if (!is_root && p)
+	{
+		assigns = get_assignments(ast);
+		p->assigns = get_assigned_env(assigns, assigns);
+	}
 	if (is_root)
 	{
 		push_back_job(ast, assigns);
 		if (ast->left)
-			exec_redir_pipe(ast->left, 0);
+			exec_redir_pipe(ast->left, p, 0);
 		if (ast->right)
-			exec_redir_pipe(ast->righ,0);
+			exec_redir_pipe(ast->righ, p,0);
 		g_shell.errorno = NO_ERROR;
 		if (args)
 		launch_job(last_job());
 	}
-	/* all ok*/
+
+	* all ok
 
 	if (g_shell.errorno)
 	{
@@ -62,7 +65,7 @@ bool		exec_redir_pipe(t_ast *ast, t_job *job, bool is_root)
 		error_msg("./42sh");
 	}
 	return (g_shell.errorno ? 0 : 1);
-}
+}*/
 
 bool		exec_and_or(t_ast *ast)
 {
@@ -80,14 +83,16 @@ bool		exec_and_or(t_ast *ast)
 		if (exec_and_or(ast->left) || exec_and_or(ast->right))
 			return (true);
 	}
-	else if (is_redir_pipe_exec(ast->token->tokind))//add eof tokentocmp
+	else if (is_redir_exec(ast->token->tokind)\
+			|| ast->token->tokind == T_PIPE)
 	{
-		return (exec_redir_pipe(ast, true));//to_build
+		ft_putendl("---------------------------~ redir_pipe");
+		return (exec_cmd(ast, true));
 	}
 	else if (is_other_exec(ast->token->tokind))
 	{
 		ft_printf("-------------------------~ other2 %d\n", ast->token->tokind);
-		return (exec_cmd(ast, 0));//to finish
+		return (exec_cmd(ast, false));//to finish
 	}
 	return (false);
 }
