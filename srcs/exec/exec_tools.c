@@ -33,7 +33,7 @@ char			*find_var(char **envp, char *with)
 	return (0);
 }
 
-/* Only for builtins unforked */
+/* Only for unforked builtins */
 
 char			**get_assignments(t_ast *ast)
 {
@@ -65,7 +65,7 @@ char			**get_assignments(t_ast *ast)
 	return (cmd);
 }
 
-/* Only for builtins unforked */
+/* Only for unforked builtins */
 
 char			**get_cmd(t_ast *ast)
 {

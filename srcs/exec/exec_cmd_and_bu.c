@@ -81,9 +81,9 @@ bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 	char **args;
 	char **assigns;
 
+	ft_putendl("-----------------[ exec cmd ]");
 	args = get_cmd(ast);
 	assigns = get_assignments(ast);
-	ft_putendl("-----------------[ exec cmd ]");
 	if (!assigns && !is_redir_pipe && is_builtin(args[0]))
 		return (exec_builtin(args));
 	ft_free_tab(args);
