@@ -22,7 +22,7 @@ int		word_handling_prime(const char *line, char **word, unsigned int *i,\
 			++(*i);
 		return (0);
 	}
-	else if (!line[*i] && (*i = 0))
+	else if (!line[*i] && !(*i = 0))
 	{
 		*word = (!*word) ? ft_strdup("\n") : ft_strjoin_free(*word, "\n", 1);
 		return (0);
