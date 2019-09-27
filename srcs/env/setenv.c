@@ -12,7 +12,7 @@
 
 #include "env.h"
 
-void			free_env(void)
+void			free_env(int free_intern_var)
 {
 	int		i;
 
@@ -20,6 +20,8 @@ void			free_env(void)
 	while (g_shell.envp && g_shell.envp[i])
 		free(g_shell.envp[i++]);
 	free(g_shell.envp);
+	if (!free_intern_var)
+		return ;
 	i = 0;
 	while (g_shell.intern_var && g_shell.intern_var[i])
 		free(g_shell.intern_var[i++]);

@@ -22,68 +22,60 @@ int		is_whitespace(char c)
 	return (c == '\t' || c == ' ');
 }
 
-void	remove_duplicate_whitespaces(t_edit *line_e)
+void	remove_extra_seps(t_edit *line_e, t_dup_wspc *wp)
 {
-	unsigned int	i;
-	bool			escape;
-	int				count;
-	int				whitespace_count;
-
-	i = -1;
-	escape = 0;
-	count = 1;
-	whitespace_count = 1;
-	while (++i < line_e->len && line_e->line[i])
+	if (is_command_separator(line_e->line[wp->i]))
+		++wp->count;
+	else if (is_whitespace(line_e->line[wp->i]))
+		++wp->whitespace_count;
+	else
 	{
-		if (escape)
-		{
-			count = 0;
-			whitespace_count = 0;
-			escape = 0;
-			continue ;
-		}
-		if (line_e->line[i] == '\\')
-		{
-			escape = 1;
-			continue ;
-		}
-		if (line_e->line[i] == '\'' || line_e->line[i] == '"')
-		{
-			quote_match(line_e->line, &i, line_e->len, line_e->line[i]);
-			count = 0;
-			whitespace_count = 0;
-			continue ;
-		}
-		if (is_command_separator(line_e->line[i]))
-			++count;
-		else if (is_whitespace(line_e->line[i]))
-			++whitespace_count;
-		else
-		{
-			count = 0;
-			whitespace_count = 0;
-		}
-		if (count == 2 || whitespace_count == 2)
-		{
-			ft_strcpy(line_e->line + i, line_e->line + i + 1);
-			line_e->len -= 1;
-			if (count == 2)
-			{
-				count = 1;
-				whitespace_count = 0;
-			}
-			else
-			{
-				count = 0;
-				whitespace_count = 1;
-			}
-			--i;
-			continue ;
-		}
+		wp->count = 0;
+		wp->whitespace_count = 0;
 	}
+	if (wp->count == 2 || wp->whitespace_count == 2)
+	{
+		ft_strcpy(line_e->line + wp->i, line_e->line + wp->i + 1);
+		line_e->len -= 1;
+		wp->whitespace_count = (wp->count != 2);
+		wp->count = (wp->count == 2);
+		--wp->i;
+	}
+}
+
+void	remove_suffix_seps(t_edit *line_e, t_dup_wspc *wp)
+{
 	if (is_whitespace(line_e->line[0]) || is_command_separator(line_e->line[0]))
 		ft_strcpy(line_e->line, line_e->line + 1);
-	if (i > 0 && (is_command_separator(line_e->line[i - 1])
-		|| is_whitespace(line_e->line[i - 1])))
-		line_e->line[i - 1] = '\0';
+	if (wp->i > 0 && (is_command_separator(line_e->line[wp->i - 1])
+		|| is_whitespace(line_e->line[wp->i - 1])))
+		line_e->line[wp->i - 1] = '\0';
+}
+
+void	remove_duplicate_whitespaces(t_edit *line_e)
+{
+	t_dup_wspc wp;
+
+	wp.i = -1;
+	wp.escape = 0;
+	wp.count = 1;
+	wp.whitespace_count = 1;
+	while (++wp.i < line_e->len && line_e->line[wp.i])
+	{
+		if (wp.escape || line_e->line[wp.i] == '\\')
+		{
+			wp.escape = !wp.escape;
+			if (line_e->line[wp.i] == '\\')
+				ft_bzero(&(wp.count), 8);
+			continue ;
+		}
+		if (line_e->line[wp.i] == '\'' || line_e->line[wp.i] == '"')
+		{
+			quote_match(line_e->line, &wp.i, line_e->len, line_e->line[wp.i]);
+			ft_bzero(&(wp.count), 8);
+			continue ;
+		}
+		remove_extra_seps(line_e, &wp);
+	}
+	remove_suffix_seps(line_e, &wp);
 }

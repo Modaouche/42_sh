@@ -14,7 +14,7 @@
 #include "job.h"
 
 void		launch_process(t_process *p, pid_t pgid,
-		int infile, int outfile, int errfile)
+		int infile, int outfile, int errfile, char **env)
 {
 	pid_t pid;
 
@@ -50,7 +50,7 @@ void		launch_process(t_process *p, pid_t pgid,
 		close(errfile);
 	}
 	/* Exec the new process.  Make sure we exit.  */
-	(p->argv && !is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, g_shell.envp)\
+	(p->argv && !is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, env)\
 		: exit(exec_builtin(p->argv));
 	g_shell.errorno = ER_EXECVE;
 	error_msg("execvp");
@@ -89,7 +89,7 @@ void		launch_job(t_job *j)
 			/* This is the child process.  */
 			(!cmds_verif(p, g_shell.envp)) ? to_exit(g_shell.errorno)\
 				: launch_process(p, j->pgid, infile,\
-				outfile, j->stderr);
+				outfile, j->stderr, j->env);
 		}
 		else if (pid < 0)
 		{
