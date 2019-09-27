@@ -196,6 +196,14 @@ typedef struct	s_word_mov
 	unsigned int quote;
 }				t_word_mov;	
 
+typedef struct	s_dup_wspc
+{
+	unsigned int	i;
+	bool			escape;
+	int				count;
+	int				whitespace_count;
+}				t_dup_wspc;
+
 /*
 ** Initialization & Co
 */

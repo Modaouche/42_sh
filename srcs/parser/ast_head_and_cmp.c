@@ -73,9 +73,6 @@ void	bind_last_head(void)
 	ast_head = st_ast();
 	if (!(last = ast_head->root))
 		return ;
-	ft_printf("Try to access ptr ast_head->root->right (%p):\n", last->right);
-	ft_printf("%p, %p \n", last->right, last->right->right);
-	getchar();
 	while (last->right && last->right->right)
 		last = last->right;
 	last->right = ast_head->curr_head;
