@@ -46,10 +46,7 @@ bool		exec_builtin(char **args)
 	return (ret > 0);
 }
 
-
-char			**get_assignments(t_ast *ast);
-
-char			**get_assigned_env(char **assigns)
+char			**get_assigned_env(char **assigns, char **args)
 {
 	char			**new_env;
 	unsigned int	i;
@@ -70,6 +67,11 @@ char			**get_assigned_env(char **assigns)
 		}
 		++i;
 	}
+	if (args == NULL || *args == NULL)
+	{
+		free_env(0);
+		g_shell.envp = new_env;
+	}
 	ft_memdel((void**)&assigns);
 	return (new_env);
 }
@@ -85,8 +87,9 @@ bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 	ft_putendl("-----------------[ exec cmd ]");
 	if (!is_redir_pipe && is_builtin(args[0]))
 		return (exec_builtin(args));
+	assigns = get_assigned_env(assigns, args);
 	ft_free_tab(args);
-	push_back_job(ast, get_assigned_env(assigns));
+	push_back_job(ast, assigns);
 	g_shell.errorno = NO_ERROR;
 	launch_job(last_job());
 	if (g_shell.errorno)

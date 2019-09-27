@@ -320,6 +320,7 @@ t_file					*merge_sort(t_file *p);
 ** Line Lexing
 */
 
+char					**get_assignments(t_ast *ast);;
 t_token					*get_next_token(char **line, unsigned int *i);
 t_token					*get_heredoc(t_edit *line_e);
 int						line_lexer(t_edit *line_e);

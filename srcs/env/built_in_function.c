@@ -30,7 +30,7 @@ int			fexit(char **p)
 	}
 	ft_memdel((void **)&p);
 	free_for_ft_built_in(g_shell.fptr);
-	free_env();
+	free_env(1);
 	free_history();
 	ft_free_tab(g_shell.aliasp);
 	ast_free(&(g_shell.ast));

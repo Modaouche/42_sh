@@ -83,6 +83,7 @@ char			**get_cmd(t_ast *ast)
 	}
 	if (!(cmd = (char **)malloc(sizeof(char *) * (len + 1))))
 		to_exit(ER_MALLOC);
+	ft_bzero(cmd, sizeof(char*) * len);
 	cmd[len--] = NULL;
 	tmptr = ast;
 	while (tmptr && len >= 0)

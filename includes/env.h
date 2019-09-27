@@ -35,7 +35,7 @@ void					cd_set_env(int exec_flag, char *pwd);
 int						ft_setenv(char **args);
 int						ft_unsetenv(char *cmd);
 int						ft_unsetenv_cmd(char **ptr);
-void					free_env();
+void					free_env(int a);
 void					free_tmp(char **s);
 int						ft_setenv_equal(char *cmd, int flag);
 char					*get_env_value(char *varname);
