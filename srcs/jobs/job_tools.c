@@ -23,7 +23,7 @@ t_job			*last_job(void)
 	while (j && j->next)
 		j = j->next;
 	return (j);
-}
+}//deplacer
 
 void			push_back_process(t_process **p, char **envp)
 {
@@ -59,7 +59,7 @@ static void		realloc_argv(t_process **process, char *to_add)
 	new[len] = NULL;
 	ft_memdel((void **)&(p->argv));
 	p->argv = new;
-}
+}//deplacer
 
 static void		realloc_assign(t_process **process, char *to_add)
 {
@@ -83,7 +83,19 @@ static void		realloc_assign(t_process **process, char *to_add)
 	new[len] = NULL;
 	ft_memdel((void **)&(p->assign));
 	p->assign = new;
-}
+}//deplacer
+
+
+void			add_io_redir(t_ast *ast, t_process **process)
+{
+
+
+
+	//ici on change job->in/out/err en fonction du token de redirection et du io_num
+		
+
+	
+}//deplacer
 
 static void		add_process_and_msg_cmd(t_ast *ast, t_job *j) //TOUT CE PASSE LA !
 {
@@ -99,7 +111,7 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j) //TOUT CE PASSE LA !
 	if (g_is_pipe == true)
 		push_back_process(&(j->first_process), g_shell.envp);
 	if (is_redir_exec(ast->token->tokind))
-		add_io(ast, &(j->first_process));//pour les redirections
+		add_io_redir(ast, j);//pour les redirections
 	if (ast->token->tokind == T_WORD)
 		realloc_argv(&(j->first_process), ast->token->lexeme);
 	if (ast->token->tokind == T_ASGMT_WRD)
@@ -184,4 +196,4 @@ void			remove_completed_job(t_job **job)
 			prev = curr;
 		curr = next;
 	}
-}
+}//a deplacer
