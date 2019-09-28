@@ -12,6 +12,21 @@
 
 #include "env.h"
 
+int			get_exit_return_val(char **p)
+{
+	int ret;
+
+	ret = p[1] ? ft_atoi(p[1]) : 0;
+	if (p[1] && !ft_strisdigit(p[1]) && (ret = 1))
+		ft_printf_fd(2, "exit: numeric argument required\n");
+	else if (p[1] && p[2] && (ret = 1))
+		ft_printf_fd(2, "exit: too many arguments\n");
+	while (p[j])
+		ft_strdel(&(p[j++]));
+	ft_memdel((void **)&p);
+	return (ret);
+}
+
 int			fexit(char **p)
 {
 	int		i;
@@ -23,14 +38,7 @@ int			fexit(char **p)
 	tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold);
 	i = 0;
 	if (p && p[0])
-	{
-		i = p[1] ? ft_atoi(p[1]) : 0;
-		if (p[1] && !ft_strisdigit(p[1]) && (i = 1))
-			ft_printf_fd(2, "exit: numeric argument required\n");
-		while (p[j])
-			ft_strdel(&(p[j++]));
-	}
-	ft_memdel((void **)&p);
+		get_exit_return_val(p);
 	free_for_ft_built_in(g_shell.fptr);
 	free_env(1);
 	free_history();
