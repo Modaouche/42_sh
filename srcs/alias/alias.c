@@ -52,7 +52,7 @@ void	get_to_next_separator(t_edit *line_e, t_alias *al)
 	al->can_replace = 0;
 }
 
-void	skip_quotes_and_replace(t_edit *line_e, t_alias *al,
+int		skip_quotes_and_replace(t_edit *line_e, t_alias *al,
 		char *alias, char *value)
 {
 	if (line_e->line[al->i] == '"' || line_e->line[al->i] == '\'')
@@ -67,7 +67,9 @@ void	skip_quotes_and_replace(t_edit *line_e, t_alias *al,
 		al->tmp = line_e->line;
 		line_e->line = ft_strins_malloc(al->tmp, value, al->i);
 		ft_strdel(&al->tmp);
+		return (1);
 	}
+	return (0);
 }
 
 void	replace_word_with_alias(t_edit *line_e, char *alias, char *value)
@@ -93,8 +95,8 @@ void	replace_word_with_alias(t_edit *line_e, char *alias, char *value)
 			++al.i;
 			continue ;
 		}
-		skip_quotes_and_replace(line_e, &al, alias, value);
+		if (skip_quotes_and_replace(line_e, &al, alias, value))
+			break ;
 		get_to_next_separator(line_e, &al);
 	}
-	line_e->len = ft_strlen(line_e->line);
 }
