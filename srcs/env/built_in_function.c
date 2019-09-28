@@ -38,7 +38,7 @@ int			fexit(char **p)
 	tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold);
 	i = 0;
 	if (p && p[0])
-		get_exit_return_val(p);
+		i = get_exit_return_val(p);
 	free_for_ft_built_in(g_shell.fptr);
 	free_env(1);
 	free_history();
