@@ -25,6 +25,8 @@ int			fexit(char **p)
 	if (p && p[0])
 	{
 		i = p[1] ? ft_atoi(p[1]) : 0;
+		if (p[1] && !ft_strisdigit(p[1]) && (i = 1))
+			ft_printf_fd(2, "exit: numeric argument required\n");
 		while (p[j])
 			ft_strdel(&(p[j++]));
 	}
