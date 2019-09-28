@@ -36,6 +36,7 @@ int		main(int ac, char **av, char **envp)
 	{
 		line_edit(line_e);
 		replace_aliases(line_e);
+		ft_printf("[%s]\n", line_e->line);
 		remove_duplicate_whitespaces(line_e);
 		line_parser(line_e);
 		line_execution();
