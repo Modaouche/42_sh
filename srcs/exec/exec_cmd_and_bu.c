@@ -51,29 +51,28 @@ char			**get_assigned_env(char **assigns, char **args)
 	char			**new_env;
 	unsigned int	i;
 	int				c;
+
 	if (assigns == NULL)
 		return (g_shell.envp);
 	i = 0;
-	if (!(new_env = get_env(g_shell.envp)))
+	if ((args && *args) && !(new_env = get_env(g_shell.envp)))
 		to_exit(ER_MALLOC);
-	while (new_env && assigns[i])
+	while (assigns[i])
 	{
 		if ((c = ft_cfind(assigns[i], '=')) > 0)
 		{
 			assigns[i][c] = '\0';
-			if (!(new_env = set_var_env(assigns[i], &assigns[i][c + 1], new_env)))
+			if (args && *args
+				&& !(new_env = set_var_env(assigns[i], &assigns[i][c + 1], new_env)))
 				to_exit(ER_MALLOC);
-			ft_strdel(&assigns[i]);
+			else if (!args || !*args)
+				g_shell.intern_var = set_var_env(assigns[i], &assigns[i][c + 1], g_shell.intern_var);
 		}
+		ft_strdel(&assigns[i]);
 		++i;
 	}
-	if (args == NULL || *args == NULL)
-	{
-		free_env(0);
-		g_shell.envp = new_env;
-	}
 	ft_memdel((void**)&assigns);
-	return (new_env);
+	return ((args && *args) ? g_shell.envp : new_env);
 }
 
 bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
