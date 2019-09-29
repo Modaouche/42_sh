@@ -50,15 +50,18 @@ void    io_less(t_ast *ast, t_job *j)
 
 void    io_dless(t_ast *ast, t_job *j)
 {
-    int fd;
-    int lex;
+    int     fd;
+    char    *lex;
 
     ft_printf("===[%d]===\n", ast->token->tokind);
-    if ((fd = memfd_create("dless", 0)))
+    lex = generate_random_filename("/tmp/dless_file");
+    if ((fd = open(lex, O_CREAT | O_RDWR, 0644)))
     {
+        ft_strdel(&lex);
         g_shell.errorno = ER_UNKNOW;
         return ;
     }
+    ft_strdel(&lex);
     lex = ast_get_lexeme(ast);
     write(fd, lex, ft_strlen(lex));
     check_opened_fd(j);
