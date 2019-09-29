@@ -32,7 +32,7 @@ int			get_exit_return_val(char **p)
 int			fexit(char **p)
 {
 	int		i;
-	
+
 	write_history(NULL);
 	le_free(g_shell.line_e);
 	tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold);

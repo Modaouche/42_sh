@@ -36,7 +36,7 @@ char		*ft_strtrim(char const *s)
 		end--;
 	while (end > start && is_space(s[end]))
 		end--;
-	output = (char*)malloc(end - start + 2);
+	output = (char*)ft_memalloc(end - start + 2);
 	if (output == NULL)
 		return (NULL);
 	output[end - start + 1] = '\0';

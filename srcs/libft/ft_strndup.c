@@ -21,7 +21,7 @@ char		*ft_strndup(const char *str, size_t n)
 
 	j = 0;
 	i = ft_strlen(str);
-	if (!(dest = (char *)malloc(sizeof(*dest) * (i + 1))))
+	if (!(dest = (char *)ft_memalloc(sizeof(*dest) * (i + 1))))
 		return (0);
 	while (j < i && n--)
 	{

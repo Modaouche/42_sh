@@ -34,10 +34,10 @@ int				ft_test_main(char **av)
 	char		test;
 	uint8_t		bool_test;
 
-	if (!av)
-		return (0);
+	if (!av || !av[0] || !av[1])
+		return (1);
 	av += 1;
-	test = TRUE;
+	test = FALSE;
 	bool_test = FALSE;
 	if (!ft_strcmp(*av, "!"))
 	{

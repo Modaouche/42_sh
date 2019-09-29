@@ -26,7 +26,7 @@ char	*ft_strjoin_free2(char **s1, char **s2)
 	if (!s1 || !s2)
 		return ((str = ft_strdup("")));
 	size = ft_strlen(*s1) + ft_strlen(*s2);
-	if (!(str = (char*)malloc(sizeof(char) * size + 1)))
+	if (!(str = (char*)ft_memalloc(sizeof(char) * size + 1)))
 		return (NULL);
 	if (str)
 		ft_memset(str, '\0', size + 1);

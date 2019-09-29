@@ -19,7 +19,7 @@ static void		prompt(int sig)
 
 	(void)sig;
 	line_e = st_line();
-    g_shell.ret = 1;
+	g_shell.ret = 1;
 	cancel_autocompletion(line_e);
 	if (!line_e->line)
 		ft_nlcr();
