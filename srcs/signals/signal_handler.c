@@ -83,5 +83,4 @@ void			signal_handler(uint8_t state)
 	signal(SIGTTOU, SIG_IGN);
 	signal(SIGTTIN, SIG_IGN);
 	signal(SIGWINCH, SIG_IGN);
-//	signal(SIGCHLD, SIG_IGN);//maybe tochange when we exec or to handle jobs
 }

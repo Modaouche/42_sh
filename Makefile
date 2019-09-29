@@ -108,6 +108,7 @@ SRC =	srcs/main/main.c\
 		srcs/builtin/alias/alias.c\
 		srcs/builtin/alias/alias_utils.c\
 		srcs/alias/alias.c\
+		srcs/builtin/exit.c\
 		srcs/builtin/test/test.c\
 		srcs/builtin/test/ft_file_type.c\
 		srcs/builtin/test/ft_file_type_bis.c\
