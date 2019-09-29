@@ -46,47 +46,39 @@ bool		exec_builtin(char **args)
 	return (ret == 0);
 }
 
-char			**get_assigned_env(char **assigns, char **args)
+int			apply_local_assignments(t_ast *ast)
 {
-	char			**new_env;
+	char			**assignments;
 	unsigned int	i;
 	int				c;
-
-	if (assigns == NULL)
-		return (g_shell.envp);
+	
+	if (!(assignments = get_assignments(ast)))
+		return (1);
 	i = 0;
-	if ((args && *args) && !(new_env = get_env(g_shell.envp)))
-		to_exit(ER_MALLOC);
-	while (assigns[i])
+	while (assignments[i])
 	{
-		if ((c = ft_cfind(assigns[i], '=')) > 0)
+		if ((c = ft_cfind(assignments[i], '=')) > 0)
 		{
-			assigns[i][c] = '\0';
-			if (args && *args
-				&& !(new_env = set_var_env(assigns[i], &assigns[i][c + 1], new_env)))
-				to_exit(ER_MALLOC);
-			else if (!args || !*args)
-				g_shell.intern_var = set_var_env(assigns[i], &assigns[i][c + 1], g_shell.intern_var);
+			assignments[i][c] = '\0';
+			g_shell.intern_var = set_var_env(assignments[i], &assignments[i][c + 1], g_shell.intern_var);
 		}
-		ft_strdel(&assigns[i]);
+		ft_strdel(&assignments[i]);
 		++i;
 	}
-	ft_memdel((void**)&assigns);
-	return ((args && *args) ? g_shell.envp : new_env);
+	ft_free_tab(assignments);
+	return (0);
 }
 
 bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 {
 	char **args;
-//	char **assigns;
 
 	ft_putendl("-----------------[ exec cmd ]");
     args = get_cmd(ast);
-    //assigns = get_assignments(ast);
-    //assigns = get_assigned...(ast);
-    if (/*!assigns &&*/ !is_redir_pipe && is_builtin(args[0]))
+    if (args && !is_redir_pipe && is_builtin(args[0]))
 	    return (exec_builtin(args));
-	//ft_free_tab(assigns);
+	if (!args)
+		return (apply_local_assignments(ast));
 	ft_free_tab(args);
 	push_back_job(ast);
 	if (g_shell.errorno)
