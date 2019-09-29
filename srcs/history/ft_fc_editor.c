@@ -12,7 +12,7 @@
 
 #include "history.h"
 
-static char		*generate_random_filename(char *prefix)
+char			*generate_random_filename(char *prefix)
 {
 	char			n[256];
 	unsigned int	i;
