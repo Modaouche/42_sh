@@ -34,7 +34,7 @@ int				ft_test_main(char **av)
 	char		test;
 	uint8_t		bool_test;
 
-	if (!av)
+	if (!av || !av[0] || !av[1])
 		return (0);
 	av += 1;
 	test = TRUE;
