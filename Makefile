@@ -167,9 +167,11 @@ clean:
 	make clean -C $(LIBFT)
 	rm -f $(OBJ)
 
-fclean:
+fclean: clean
 	make fclean -C $(LIBFT)
 	/bin/rm -f $(OBJ)
 	/bin/rm -f ./$(NAME)
 
-re: fclean all
+re:
+	make fclean
+	make all

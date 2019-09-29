@@ -41,7 +41,7 @@ void    io_great(t_ast *ast, t_job *j)
             check_opened_fd(j, 2, fd);
         return ;
     }
-    check_opened_fd(j, 0, fd);
+    check_opened_fd(j, 1, fd);
     j->stdout = fd;
 }
 

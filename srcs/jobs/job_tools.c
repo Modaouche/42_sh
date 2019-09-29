@@ -62,7 +62,8 @@ static void		realloc_argv(t_process **process, char *to_add)
 		new[len] = p->argv[len];
 		len++;
 	}
-	new[len++] = ft_strdup(to_add);
+	if (!(new[len++] = ft_strdup(to_add)))
+            to_exit(ER_MALLOC);
 	new[len] = NULL;
 	ft_memdel((void **)&(p->argv));
 	p->argv = new;
