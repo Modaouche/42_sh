@@ -61,6 +61,7 @@ void    io_dless(t_ast *ast, t_job *j)
         g_shell.errorno = ER_UNKNOW;
         return ;
     }
+    unlink(lex);
     ft_strdel(&lex);
     lex = ast_get_lexeme(ast);
     write(fd, lex, ft_strlen(lex));
