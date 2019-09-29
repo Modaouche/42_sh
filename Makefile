@@ -102,6 +102,7 @@ SRC =	srcs/main/main.c\
 		srcs/env/built_in_function.c\
 		srcs/env/setenv.c\
 		srcs/env/setenv_equal.c\
+		srcs/builtin/true_false/true_false.c\
 		srcs/builtin/echo/main_echo.c\
 		srcs/builtin/type/type.c\
 		srcs/builtin/alias/alias.c\

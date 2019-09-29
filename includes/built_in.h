@@ -44,6 +44,8 @@ int					check_alias(char *args);
 **	echo functions
 */
 int					ft_echo(char **args);
+int					ft_false(char **p);
+int					ft_true(char **p);
 
 /*
 **	echo functions
