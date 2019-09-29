@@ -25,7 +25,7 @@ char		*ft_strjoin_if(char *source, char *concat, int (*f)(int))
 	{
 		len = ft_strlen(source);
 		len2 = ft_strlen_if(concat, f);
-		output = (char*)malloc(len + len2 + 1);
+		output = (char*)ft_memalloc(len + len2 + 1);
 		ft_memmove(output, source, len);
 		ft_memmove(output + len, concat, len2);
 	}

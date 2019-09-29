@@ -77,7 +77,7 @@ t_fc				*build_struct_fc(char **args)
 				validate_options(args, "elnrs"));
 		return (NULL);
 	}
-	if (!(fc_struct = (t_fc *)malloc(sizeof(t_fc))))
+	if (!(fc_struct = (t_fc *)ft_memalloc(sizeof(t_fc))))
 		return (NULL);
 	fc_struct->args = args;
 	fc_struct->options = get_options(args);

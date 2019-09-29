@@ -21,7 +21,7 @@ char			*ft_strjoin_free(char *s1, char *s2, size_t option)
 	if (!s1 || !s2)
 		return (0);
 	len = ft_strlen(s1) + ft_strlen(s2);
-	if (!(str = (char *)malloc(sizeof(char) * (len + 1))))
+	if (!(str = (char *)ft_memalloc(sizeof(char) * (len + 1))))
 		return (0);
 	ft_memmove(str, s1, ft_strlen(s1) + 1);
 	ft_strncat(str, s2, ft_strlen(s2));

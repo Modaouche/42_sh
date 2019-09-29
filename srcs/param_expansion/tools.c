@@ -40,7 +40,7 @@ t_param		*init_param(uint16_t signe, char *arg)
 	size_t	i;
 
 	param = NULL;
-	if (!(param = (t_param*)malloc(sizeof(t_param))))
+	if (!(param = (t_param*)ft_memalloc(sizeof(t_param))))
 		return (NULL);
 	param->signe = signe;
 	param->line = arg;
@@ -53,19 +53,9 @@ t_param		*init_param(uint16_t signe, char *arg)
 	if ((!ft_strcmp(param->param, "?")))
 	{
 		if (!(param->paramvalue = ft_itoa(g_shell.ret)))
-			return (NULL);//to exit
+			return (NULL);
 	}
 	else
 		param->paramvalue = get_env_value(param->param);
 	return (param);
 }
-/*
-**		BETWEEN LINE 53 AND 54
-**
-** param->paramvalue = ft_strdup("VALUE OF PARAM");
-** ft_printf("SIGNE = [%d]\n",param->signe);
-** ft_printf("ARG = [%s]\n",param->line);
-** ft_printf("PARAM = [%s]\n",param->param);
-** ft_printf("PARAMVALUE = [%p]\n",param->paramvalue);
-** ft_printf("WORD = [%s]\n",param->word);
-*/
