@@ -29,7 +29,7 @@ void    io_less(t_ast *ast, t_job *j)
     int fd;
 
     ft_printf("===[%d]===\n", ast->token->tokind);
-    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)))
+    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)) < 0)
     {
         access_verification(ast_get_lexeme(ast));
         return ;
@@ -55,7 +55,7 @@ void    io_dless(t_ast *ast, t_job *j)
 
     ft_printf("===[%d]===\n", ast->token->tokind);
     lex = generate_random_filename("/tmp/dless_file");
-    if ((fd = open(lex, O_CREAT | O_RDWR, 0644)))
+    if ((fd = open(lex, O_CREAT | O_RDWR, 0644)) < 0)
     {
         ft_strdel(&lex);
         g_shell.errorno = ER_UNKNOW;

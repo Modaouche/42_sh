@@ -89,7 +89,6 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j) //TOUT CE PASSE LA !
 {
 	if (!ast)
 		return ;
-    ft_printf("okok");
 	if (ast->left)
 		add_process_and_msg_cmd(ast->left, j);
 	if (!(j->command))

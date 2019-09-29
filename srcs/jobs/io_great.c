@@ -26,7 +26,7 @@ void    io_great(t_ast *ast, t_job *j)
     int fd;
 
     ft_printf("===[%d]===\n", ast->token->tokind);
-    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)))
+    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)) < 0)
     {
         access_verification(ast_get_lexeme(ast));
         return ;
@@ -50,7 +50,7 @@ void    io_dgreat(t_ast *ast, t_job *j)
     int fd;
 
     ft_printf("===[%d]===\n", ast->token->tokind);
-    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)))
+    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)) < 0)
     {
         access_verification(ast_get_lexeme(ast));
         return ;
