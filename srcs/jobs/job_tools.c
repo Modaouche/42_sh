@@ -28,16 +28,18 @@ t_job			*last_job(void)
 void			push_back_process(t_process **p, char **envp)
 {
 	t_process	*new;
+    t_process   *tmp;
 
+    tmp = *p;
 	if (!(new = (t_process *)ft_memalloc(sizeof(t_process))))
 		to_exit(ER_MALLOC);
-    if (!(*p))
+    if (!tmp)
         *p = new;
     else
     {
-	    while ((*p)->next)
-	    	*p = (*p)->next;
-	    (*p)->next = new;
+	    while (tmp->next)
+	    	tmp = tmp->next;
+	    tmp->next = new;
     }
 	new->envp = get_env(envp);
 }
@@ -171,7 +173,7 @@ void			push_back_job(t_ast *ast)
         i = 0;
         while (p->argv[i])
         {
-            ft_printf("in push_back %d j fct argv => %s\n", i, new->first_process->argv[i]);
+            ft_printf("in push_back %d j fct argv => %s\n", i, p->argv[i]);
             i++;
         }
        p = p->next;
