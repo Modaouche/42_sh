@@ -31,10 +31,15 @@ void			push_back_process(t_process **p, char **envp)
 
 	if (!(new = (t_process *)ft_memalloc(sizeof(t_process))))
 		to_exit(ER_MALLOC);
-	while (*p)
-		*p = (*p)->next;
-	*p = new;
-	(*p)->envp = get_env(envp);
+    if (!(*p))
+        *p = new;
+    else
+    {
+	    while ((*p)->next)
+	    	*p = (*p)->next;
+	    (*p)->next = new;
+    }
+	new->envp = get_env(envp);
 }
 
 static void		realloc_argv(t_process **process, char *to_add)
@@ -105,7 +110,7 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 	if (ast->token->tokind == T_ASGMT_WRD)
 		realloc_assign(&(j->first_process), ast->token->lexeme);
 	g_is_pipe = (ast->token->tokind != T_PIPE) ? false : true;
-	if (ast->right)
+	if (ast->right && !is_redir_exec(ast->token->tokind))
 		add_process_and_msg_cmd(ast->right, j);
 }
 
@@ -158,9 +163,19 @@ void			push_back_job(t_ast *ast)
 	if (j != NULL)
 		j->next = new;
 	new->id = create_job_id(1);
-int i = 0;
-    while(new->first_process->argv[i]){ft_printf("in push_back j fct argv => %s\n", new->first_process->argv[i]);
-    i++;}
+    int i;
+    t_process *p = new->first_process;
+
+    while (p)
+    {
+        i = 0;
+        while (p->argv[i])
+        {
+            ft_printf("in push_back %d j fct argv => %s\n", i, new->first_process->argv[i]);
+            i++;
+        }
+       p = p->next;
+    }
 }
 
 void			remove_completed_job(t_job **job)

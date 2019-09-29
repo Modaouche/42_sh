@@ -25,23 +25,23 @@ void    io_great(t_ast *ast, t_job *j)
 {
     int fd;
 
-    ft_printf("===[%d]===\n", ast->token->tokind);
+    ft_printf("===GREAT===\n");
     if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)) < 0)
     {
         access_verification(ast_get_lexeme(ast));
         return ;
     }
-    check_opened_fd(j);
     if (ast->left->token->tokind == T_IO_NB)
     {
         if (ast->left->token->tokind - 48 == 0)
-             j->stdin = fd;
+            check_opened_fd(j, 0, fd);
         if (ast->left->token->tokind - 48 == 1)
-             j->stdout = fd;
+            check_opened_fd(j, 1, fd);
         if (ast->left->token->tokind - 48 == 2)
-             j->stderr = fd;
+            check_opened_fd(j, 2, fd);
         return ;
     }
+    check_opened_fd(j, 0, fd);
     j->stdout = fd;
 }
 
@@ -49,24 +49,24 @@ void    io_dgreat(t_ast *ast, t_job *j)
 {
     int fd;
 
-    ft_printf("===[%d]===\n", ast->token->tokind);
-    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)) < 0)
+    ft_printf("===DGREAT===\n");
+    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_WRONLY, 0644)) < 0)
     {
         access_verification(ast_get_lexeme(ast));
         return ;
     }
     lseek(fd, 0, SEEK_END);
-    check_opened_fd(j);
     if (ast->left->token->tokind == T_IO_NB)
     {
         if (ast->left->token->tokind - 48 == 0)
-             j->stdin = fd;
+            check_opened_fd(j, 0, fd);
         if (ast->left->token->tokind - 48 == 1)
-             j->stdout = fd;
+            check_opened_fd(j, 1, fd);
         if (ast->left->token->tokind - 48 == 2)
-             j->stderr = fd;
+            check_opened_fd(j, 2, fd);
         return ;
     }
+    check_opened_fd(j, 0, fd);
     j->stdout = fd;
 }
 
@@ -74,19 +74,19 @@ void    io_greatand(t_ast *ast, t_job *j)
 {
     int fd;
 
-    ft_printf("===[%d]===\n", ast->token->tokind);
+    ft_printf("===GREATAND===\n");
     fd = atoi(ast_get_lexeme(ast));
-    check_opened_fd(j);
     if (ast->left->token->tokind == T_IO_NB)
     {
         if (ast->left->token->tokind - 48 == 0)
-             j->stdin = fd;
+            check_opened_fd(j, 0, fd);
         if (ast->left->token->tokind - 48 == 1)
-             j->stdout = fd;
+            check_opened_fd(j, 1, fd);
         if (ast->left->token->tokind - 48 == 2)
-             j->stderr = fd;
+            check_opened_fd(j, 2, fd);
         return ;
     }
+    check_opened_fd(j, 0, fd);
     j->stdout = fd;
 }
 
