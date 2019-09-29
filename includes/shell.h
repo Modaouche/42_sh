@@ -448,6 +448,7 @@ char					**get_cmd(t_ast *ast);
 bool					cmds_verif(t_process *p, char **envp);
 bool            		access_verification(char *cmd);
 char					*find_var(char **envp, char *with);
+char			*generate_random_filename(char *prefix);
 
 /*
 ** Inhibitor

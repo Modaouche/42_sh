@@ -12,13 +12,13 @@
 
 #include "history.h"
 
-static char		*generate_random_filename(void)
+char			*generate_random_filename(char *prefix)
 {
 	char			n[256];
 	unsigned int	i;
 
 	i = 0;
-	ft_strcpy(n, "/tmp/fc42_0");
+	ft_strcpy(n, prefix);
 	while (access(n, F_OK) != -1)
 	{
 		ft_itoa_str(i, n + 10, 250);
@@ -30,13 +30,13 @@ static char		*generate_random_filename(void)
 
 static char		*generate_tmp_hist_file(char **hist, int tries, char *f, int fd)
 {
-	if ((f = generate_random_filename()) == NULL)
+	if ((f = generate_random_filename("/tmp/fc42_0")) == NULL)
 		return (NULL);
 	fd = open(f, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
 	while (fd < 0 && tries++ < 3)
 	{
 		ft_strdel(&f);
-		if ((f = generate_random_filename()) == NULL)
+		if ((f = generate_random_filename("/tmp/fc42_0")) == NULL)
 			return (NULL);
 		fd = open(f, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
 	}
