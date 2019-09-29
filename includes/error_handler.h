@@ -14,7 +14,6 @@
 # define ERROR_HANDLER_H
 
 # include "shell.h"
-# define ENUM_LEN 9
 
 typedef enum
 {

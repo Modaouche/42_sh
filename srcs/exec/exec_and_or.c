@@ -92,7 +92,7 @@ bool		exec_and_or(t_ast *ast)
 	else if (is_other_exec(ast->token->tokind))
 	{
 		ft_printf("-------------------------~ other2 %d\n", ast->token->tokind);
-		return (exec_cmd(ast, false));//to finish
+		return (exec_cmd(ast, false));
 	}
 	return (false);
 }

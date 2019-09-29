@@ -20,20 +20,14 @@ void		launch_process(t_process *p, pid_t pgid,
 
 	if (g_shell.is_interactive)
 	{
-		/* Put the process into the process group and give the process group
-		   the terminal, if appropriate.
-		   This has to be done both by the shell and in the individual
-		   child processes because of potential race conditions.  */
 		pid = getpid();
 		if (pgid == 0)
 			pgid = pid;
 		setpgid(pid, pgid);
 		if (g_shell.in_fg)
 			tcsetpgrp (g_shell.fd, pgid);
-		/* Set the handling for job control signals back to the default.  */
 		signal_handler(EXEC);
 	}
-	/* Set the standard input/output channels of the new process.  */
 	if (infile != STDIN_FILENO)
 	{
 		dup2(infile, STDIN_FILENO);
@@ -49,13 +43,20 @@ void		launch_process(t_process *p, pid_t pgid,
 		dup2(errfile, STDERR_FILENO);
 		close(errfile);
 	}
-	/* Exec the new process.  Make sure we exit.  */
 	(p->argv && !is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, env)\
 		: exit(exec_builtin(p->argv));
 	g_shell.errorno = ER_EXECVE;
 	error_msg("execvp");
 	to_exit(ER_EXECVE);
 }
+
+/*  example for pipe : 
+**
+**  process 1   |   process 2           |           process 3
+**  in = stdin    	in = pipe[0]                    in = pipe[0] (another pipe)
+**  out = pipe[1]   out = pipe[1] (another pipe)    out = stdout
+**	
+*/
 
 void		launch_job(t_job *j)
 {
@@ -69,24 +70,20 @@ void		launch_job(t_job *j)
 	p = j->first_process;
 	while (p)
 	{
-		/* Set up pipes, if necessary.  */
 		if (p->next)
 		{
 			if (pipe(mypipe) < 0)
 			{
 				g_shell.errorno = ER_PIPE;
 				return ;
-			}				//example : 
-			outfile = mypipe[1];		//	process 1   |   process 2
+			}
+			outfile = mypipe[1];
 		}
-		else					//	in = stdin    	in = pipe[0]
-			outfile = j->stdout;		//      out = pipe[1]   out = stdout
-
-		/* Fork the child processes.  */
+		else
+			outfile = j->stdout;
 		pid = fork();
 		if (pid == 0)
 		{
-			/* This is the child process.  */
 			(!cmds_verif(p, g_shell.envp)) ? to_exit(g_shell.errorno)\
 				: launch_process(p, j->pgid, infile,\
 				outfile, j->stderr, p->env);
@@ -98,7 +95,6 @@ void		launch_job(t_job *j)
 		}
 		else
 		{
-			/* This is the parent process.  */
 			p->pid = pid;
 			if (g_shell.is_interactive)
 			{
@@ -107,7 +103,6 @@ void		launch_job(t_job *j)
 				setpgid(pid, j->pgid);
 			}
 		}
-		/* Clean up after pipes.  */
 		if (infile != j->stdin)
 			close(infile);
 		if (outfile != j->stdout)

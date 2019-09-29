@@ -85,18 +85,6 @@ static void		realloc_assign(t_process **process, char *to_add)
 	p->assign = new;
 }//deplacer
 
-
-void			add_io_redir(t_ast *ast, t_process **process)
-{
-
-
-
-	//ici on change job->in/out/err en fonction du token de redirection et du io_num
-		
-
-	
-}//deplacer
-
 static void		add_process_and_msg_cmd(t_ast *ast, t_job *j) //TOUT CE PASSE LA !
 {
 	if (!ast)
@@ -111,7 +99,7 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j) //TOUT CE PASSE LA !
 	if (g_is_pipe == true)
 		push_back_process(&(j->first_process), g_shell.envp);
 	if (is_redir_exec(ast->token->tokind))
-		add_io_redir(ast, j);//pour les redirections
+        g_redir_tab[ast->token->tokind](ast->token->tokind, j);
 	if (ast->token->tokind == T_WORD)
 		realloc_argv(&(j->first_process), ast->token->lexeme);
 	if (ast->token->tokind == T_ASGMT_WRD)

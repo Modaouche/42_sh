@@ -82,15 +82,22 @@ bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 	char **assigns;
 
 	ft_putendl("-----------------[ exec cmd ]");
-	args = get_cmd(ast);
-	assigns = get_assignments(ast);
 	if (!assigns && !is_redir_pipe && is_builtin(args[0]))
+	{
+		args = get_cmd(ast);
+		assigns = get_assignments(ast);
+		ft_free_tab(args);
+		ft_free_tab(assigns);
 		return (exec_builtin(args));
-	ft_free_tab(args);
-	ft_free_tab(assigns);
+	}
 	push_back_job(ast);
-	g_shell.errorno = NO_ERROR;
-	launch_job(last_job());
+	if (g_shell.errorno)
+		error_msg("./42sh");
+	else
+	{
+		g_shell.errorno = NO_ERROR;
+		launch_job(last_job());
+	}
 	if (g_shell.errorno)
 	{
 		remove_completed_job(&g_shell.first_job);

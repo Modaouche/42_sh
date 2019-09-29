@@ -24,6 +24,19 @@ t_token_tab g_token_tab[128] =
 	['>'] = &token_isgreat
 };
 
+t_token_tab g_redir_tab[21] =
+{
+	[T_LESS] = &io_less,
+	[T_DLESS] = &io_dless,
+	[T_DLESSDASH] = &io_dlessdash,
+	[T_LESSAND] = &io_lessand,
+	[T_GEAT] = &io_great,
+	[T_DGEAT] = &io_dgreat,
+	[T_GREATAND] = &io_greatand,
+	[T_LESSGREAT] = &io_lessgreat,
+	[T_CLOBBER] = &io_clobber
+};
+
 void	fill_token_tab(void)
 {
 	size_t	idx;

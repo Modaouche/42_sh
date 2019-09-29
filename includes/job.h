@@ -25,6 +25,7 @@
 **	sopped =  true if process has stopped
 **	status = reported status value
 */
+
 typedef struct		s_p
 {
 	struct s_p		*next;
@@ -65,6 +66,10 @@ typedef struct		s_job
 	int				stderr;
 	unsigned int	id;
 }					t_job;
+
+typedef void		(*t_redir_tab)(t_tok token, t_job *j);
+
+extern t_token_tab	g_redir_tab[21];
 
 /*
 ** The active jobs are linked into a list.  This is its head.
