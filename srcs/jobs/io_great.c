@@ -15,9 +15,9 @@
 
 char    *ast_get_lexeme(t_ast *ast)
 {
-    ast = ast->left;
-    while (ast && ast->right)
-        ast = ast->right;
+    ast = ast->right;
+    while (ast && ast->left)
+        ast = ast->left;
     return (ast->token->lexeme);
 }
 
