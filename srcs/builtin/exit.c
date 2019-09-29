@@ -15,7 +15,9 @@
 int			get_exit_return_val(char **p)
 {
 	int ret;
+	int j;
 
+	j = 0;
 	ret = p[1] ? ft_atoi(p[1]) : 0;
 	if (p[1] && !ft_strisdigit(p[1]) && (ret = 1))
 		ft_printf_fd(2, "exit: numeric argument required\n");
@@ -30,9 +32,7 @@ int			get_exit_return_val(char **p)
 int			fexit(char **p)
 {
 	int		i;
-	int		j;
-
-	j = 0;
+	
 	write_history(NULL);
 	le_free(g_shell.line_e);
 	tcsetattr(STDERR_FILENO, TCSADRAIN, g_shell.termiold);

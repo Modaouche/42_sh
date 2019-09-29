@@ -50,8 +50,8 @@ void    io_less(t_ast *ast, t_job *j)
 
 void    io_dless(t_ast *ast, t_job *j)
 {
-    int fd;
-    int lex;
+    int     fd;
+    char    *lex;
 
     ft_printf("===[%d]===\n", ast->token->tokind);
     if ((fd = memfd_create("dless", 0)))
