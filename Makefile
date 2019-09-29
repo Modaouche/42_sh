@@ -170,7 +170,4 @@ fclean:
 	/bin/rm -f $(OBJ)
 	/bin/rm -f ./$(NAME)
 
-re: 
-	make -C $(LIBFT) all
-	/bin/rm -f $(OBJ)
-	/bin/rm -f ./$(NAME)
+re: fclean all

@@ -43,13 +43,10 @@ void	remove_extra_seps(t_edit *line_e, t_dup_wspc *wp)
 	}
 }
 
-void	remove_suffix_seps(t_edit *line_e, t_dup_wspc *wp)
+void	remove_suffix_seps(t_edit *line_e)
 {
 	if (is_whitespace(line_e->line[0]) || is_command_separator(line_e->line[0]))
 		ft_strcpy(line_e->line, line_e->line + 1);
-	if (wp->i > 0 && (is_command_separator(line_e->line[wp->i - 1])
-		|| is_whitespace(line_e->line[wp->i - 1])))
-		line_e->line[wp->i - 1] = '\0';
 }
 
 void	remove_duplicate_whitespaces(t_edit *line_e)
@@ -77,5 +74,5 @@ void	remove_duplicate_whitespaces(t_edit *line_e)
 		}
 		remove_extra_seps(line_e, &wp);
 	}
-	remove_suffix_seps(line_e, &wp);
+	remove_suffix_seps(line_e);
 }

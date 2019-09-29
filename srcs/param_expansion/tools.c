@@ -45,12 +45,18 @@ t_param		*init_param(uint16_t signe, char *arg)
 	param->signe = signe;
 	param->line = arg;
 	i = -1;
-	while (arg[++i] && ft_isalnum(arg[i]))
+	while (arg[++i] && (ft_isalnum(arg[i]) || arg[i] == '?'))
 		;
 	param->word = get_word_prm_exp(&arg[i], signe);
 	if (!(param->param = ft_strsub(arg, 0, i)))
 		return (NULL);
-	param->paramvalue = get_env_value(param->param);
+	if ((!ft_strcmp(param->param, "?")))
+	{
+		if (!(param->paramvalue = ft_itoa(g_shell.ret)))
+			return (NULL);//to exit
+	}
+	else
+		param->paramvalue = get_env_value(param->param);
 	return (param);
 }
 /*

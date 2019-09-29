@@ -128,7 +128,7 @@ typedef struct			s_sh
 	t_fptr				*fptr;
 }						t_sh;
 
-t_sh			g_shell;
+t_sh					g_shell;
 
 typedef struct			s_cmd_verif_prime
 {
@@ -186,23 +186,22 @@ typedef struct			s_comp_print
 	unsigned int		window_maxrow;
 }						t_comp_print;
 
-
-typedef struct	s_word_mov
+typedef struct			s_word_mov
 {
-	unsigned int i;
-	unsigned int word_start;
-	unsigned int last_word_start;
-	unsigned int escape;
-	unsigned int quote;
-}				t_word_mov;	
+	unsigned int		i;
+	unsigned int		word_start;
+	unsigned int		last_word_start;
+	unsigned int		escape;
+	unsigned int		quote;
+}						t_word_mov;
 
-typedef struct	s_dup_wspc
+typedef struct			s_dup_wspc
 {
-	unsigned int	i;
-	bool			escape;
-	int				count;
-	int				whitespace_count;
-}				t_dup_wspc;
+	unsigned int		i;
+	bool				escape;
+	int					count;
+	int					whitespace_count;
+}						t_dup_wspc;
 
 /*
 ** Initialization & Co
@@ -220,7 +219,6 @@ void					free_for_ft_built_in(t_fptr *func);
 /*
 ** Line edition
 */
-
 
 void					start_autocomp(t_edit *line_e, char *prevkey);
 void					arrows_handler(t_edit *line_e, char *key);
@@ -328,7 +326,7 @@ t_file					*merge_sort(t_file *p);
 ** Line Lexing
 */
 
-char					**get_assignments(t_ast *ast);;
+char					**get_assignments(t_ast *ast);
 t_token					*get_next_token(char **line, unsigned int *i);
 t_token					*get_heredoc(t_edit *line_e);
 int						line_lexer(t_edit *line_e);

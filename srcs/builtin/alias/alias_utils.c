@@ -39,7 +39,8 @@ int		remove_alias(char *name)
 	while (g_shell.aliasp[i])
 	{
 		tmp = ft_strlcmp(g_shell.aliasp[i], name);
-		if (tmp != 0 && (g_shell.aliasp[i])[tmp] == '=')
+		if ((tmp != 0 && (g_shell.aliasp[i])[tmp] == '=')
+			|| ft_strcmp(name, "-a") == 0)
 		{
 			g_shell.aliasp[i][0] = '\0';
 			return (1);
