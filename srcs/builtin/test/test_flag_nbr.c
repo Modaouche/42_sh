@@ -17,7 +17,7 @@ char			test_nbr_error(char **arg)
 	if (arg[0] && test_get_id_flag(arg[0]) != FALSE)
 		ft_printf("ft_test: unknown condition: %s\n", arg[0]);
 	else if (arg[0] && test_get_id_flag(arg[0]) == FALSE)
-		ft_printf("zsh: parse error: condition expected: %s\n", arg[0]);
+		ft_printf("42sh: parse error: condition expected: %s\n", arg[0]);
 	return (FALSE);
 }
 
