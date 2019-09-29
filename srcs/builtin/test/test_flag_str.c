@@ -27,7 +27,7 @@ char			test_flag_str(uint16_t flag, void *s)
 	args = (char**)s;
 	if (!args[1] || !args[2])
 	{
-		ft_printf("zsh: parse error: condition expected: ");
+		ft_printf("42sh: parse error: condition expected: ");
 		test_get_strflag(flag);
 		return (ERROR);
 	}

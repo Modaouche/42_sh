@@ -18,7 +18,7 @@ char			**build_flag(void)
 	char	s[255];
 
 	ft_strcpy(s, "cd set clear pwd export unset history fc echo type alias ");
-	ft_strcat(s, "unalias test exit jobs fg bg");
+	ft_strcat(s, "unalias test exit jobs fg bg false true");
 	return (ft_split(s, " "));
 }
 
@@ -26,9 +26,8 @@ t_fptr			*init_fptr(void)
 {
 	t_fptr		*func;
 
-	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr))))
-		return (NULL);
-	if (!(func->flag = build_flag()))
+	if (!(func = (t_fptr *)ft_memalloc(sizeof(t_fptr)))
+		|| !(func->flag = build_flag()))
 		return (NULL);
 	func->f[0] = &ft_cd;
 	func->f[1] = &print_env;
@@ -47,6 +46,8 @@ t_fptr			*init_fptr(void)
 	func->f[14] = &ft_jobs;
 	func->f[15] = &ft_fg;
 	func->f[16] = &ft_bg;
+	func->f[17] = &ft_false;
+	func->f[18] = &ft_true;
 	return (func);
 }
 
