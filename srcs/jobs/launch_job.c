@@ -86,7 +86,7 @@ void		launch_job(t_job *j)
 		{
 			(!cmds_verif(p, g_shell.envp)) ? to_exit(g_shell.errorno)\
 				: launch_process(p, j->pgid, infile,\
-				outfile, j->stderr, p->env);
+				outfile, j->stderr, p->envp);
 		}
 		else if (pid < 0)
 		{

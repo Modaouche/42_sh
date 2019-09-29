@@ -30,7 +30,8 @@ typedef enum
 	ER_ISDIR,
 	ER_NOENT,
 	ER_WAITPID,
-	ER_CHILD
+	ER_CHILD,
+    ER_UNKNOW
 }	t_errorno;
 
 void					le_exit(uint8_t bt);

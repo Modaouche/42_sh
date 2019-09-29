@@ -70,19 +70,19 @@ static void		realloc_assign(t_process **process, char *to_add)
 	p = *process;
 	while (p && p->next)//check if null ??
 		p = p->next;
-	len = ft_tablen(p->assign);
+	len = ft_tablen(p->envp);
 	if (!(new = (char **)ft_memalloc(sizeof(char *) * (len + 2))))
 		to_exit(ER_MALLOC);
 	len = 0;
-	while (p->assign && p->assign[len])
+	while (p->envp && p->envp[len])
 	{
-		new[len] = p->assign[len];
+		new[len] = p->envp[len];
 		len++;
 	}
 	new[len++] = ft_strdup(to_add);
 	new[len] = NULL;
-	ft_memdel((void **)&(p->assign));
-	p->assign = new;
+	ft_memdel((void **)&(p->envp));
+	p->envp = new;
 }//deplacer
 
 static void		add_process_and_msg_cmd(t_ast *ast, t_job *j) //TOUT CE PASSE LA !
@@ -99,7 +99,7 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j) //TOUT CE PASSE LA !
 	if (g_is_pipe == true)
 		push_back_process(&(j->first_process), g_shell.envp);
 	if (is_redir_exec(ast->token->tokind))
-        g_redir_tab[ast->token->tokind](ast->token->tokind, j);
+        g_redir_tab[ast->token->tokind](ast, j);
 	if (ast->token->tokind == T_WORD)
 		realloc_argv(&(j->first_process), ast->token->lexeme);
 	if (ast->token->tokind == T_ASGMT_WRD)

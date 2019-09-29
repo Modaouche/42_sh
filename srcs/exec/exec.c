@@ -28,12 +28,12 @@ void	ast_execution(t_ast *ast)
 			|| ast->token->tokind == T_PIPE)
 	{
 		ft_printf("-----------------[ redir pipe %d ]\n", ast->token->tokind);
-		return (exec_cmd(ast, true));
+		exec_cmd(ast, true);
 	}
 	else if (is_other_exec(ast->token->tokind))
 	{
 		ft_printf("-----------------[ other %d ]\n", ast->token->tokind);
-		return (exec_cmd(ast, false));
+		exec_cmd(ast, false);
 	}
 
 }

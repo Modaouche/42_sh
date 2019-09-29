@@ -13,17 +13,25 @@
 #include "shell.h"
 #include "job.h"
 
-char    *ast_get_lexeme();//to build
+char    *ast_get_lexeme(t_ast *ast)
+{
+    ast = ast->left;
+    while (ast && ast->right)
+        ast = ast->right;
+    return (ast->token->lexeme);
+}
 
-void    io_great(t_ast ast, t_job *j)
+void    io_great(t_ast *ast, t_job *j)
 {
     int fd;
 
-    if (fd = open(ast_get_lexeme(    ), O_CREAT | O_TRUNC | O_WRONLY, 0644))
+    ft_printf("===[%d]===\n", ast->token->tokind);
+    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)))
     {
-        access_verification(ast_get_lexeme(    ));
+        access_verification(ast_get_lexeme(ast));
         return ;
     }
+    check_opened_fd(j);
     if (ast->left->token->tokind == T_IO_NB)
     {
         if (ast->left->token->tokind - 48 == 0)
@@ -37,16 +45,18 @@ void    io_great(t_ast ast, t_job *j)
     j->stdout = fd;
 }
 
-void    io_dgreat(t_ast ast, t_job *j)
+void    io_dgreat(t_ast *ast, t_job *j)
 {
     int fd;
 
-    if (fd = open(ast_get_lexeme(    ), O_CREAT | O_TRUNC | O_WRONLY, 0644))
+    ft_printf("===[%d]===\n", ast->token->tokind);
+    if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)))
     {
-        access_verification(ast_get_lexeme(    ));
+        access_verification(ast_get_lexeme(ast));
         return ;
     }
     lseek(fd, 0, SEEK_END);
+    check_opened_fd(j);
     if (ast->left->token->tokind == T_IO_NB)
     {
         if (ast->left->token->tokind - 48 == 0)
@@ -60,13 +70,13 @@ void    io_dgreat(t_ast ast, t_job *j)
     j->stdout = fd;
 }
 
-void    io_greatand(t_ast ast, t_job *j)
+void    io_greatand(t_ast *ast, t_job *j)
 {
     int fd;
 
-    fd = atoi(ast_get_lexeme(   ));
-    //if (access_verification(ast_get_lexeme(    )))
-    //  return ;  
+    ft_printf("===[%d]===\n", ast->token->tokind);
+    fd = atoi(ast_get_lexeme(ast));
+    check_opened_fd(j);
     if (ast->left->token->tokind == T_IO_NB)
     {
         if (ast->left->token->tokind - 48 == 0)
@@ -78,16 +88,20 @@ void    io_greatand(t_ast ast, t_job *j)
         return ;
     }
     j->stdout = fd;
-
 }
 
-void    io_lessgreat(t_ast ast, t_job *j)
+void    io_lessgreat(t_ast *ast, t_job *j)
 {
-        //Bonus to do
+    (void)ast;
+    (void)j;
+    ft_printf_fd(STDERR_FILENO, "./42sh: This feature is not supported.");
+    g_shell.errorno = ER_UNKNOW;
 }
 
-void    io_clobber(t_ast ast, t_job *j)
+void    io_clobber(t_ast *ast, t_job *j)
 {
-
-        //Bonus to do
+    (void)ast;
+    (void)j;
+    ft_printf_fd(STDERR_FILENO, "./42sh: This feature is not supported.");
+    g_shell.errorno = ER_UNKNOW;
 }

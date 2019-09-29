@@ -26,6 +26,8 @@
 # include "token_and_ast.h"
 # include "signal_handler.h"
 # include <fcntl.h>
+# include <sys/mman.h>
+# define _GNU_SOURCE
 
 /*
 **# include <errno.h> to remove
@@ -116,6 +118,7 @@ typedef struct			s_sh
 	pid_t				pid;
 	t_job				*first_job;
 	uint16_t			fd;
+    uint16_t            redir_fd[10];
 	uint8_t				prompt_size;
 	uint8_t				errorno;
 	bool				tc_onoff;
@@ -128,7 +131,7 @@ typedef struct			s_sh
 	t_fptr				*fptr;
 }						t_sh;
 
-t_sh					g_shell;
+t_sh			g_shell;
 
 typedef struct			s_cmd_verif_prime
 {
@@ -186,22 +189,23 @@ typedef struct			s_comp_print
 	unsigned int		window_maxrow;
 }						t_comp_print;
 
-typedef struct			s_word_mov
-{
-	unsigned int		i;
-	unsigned int		word_start;
-	unsigned int		last_word_start;
-	unsigned int		escape;
-	unsigned int		quote;
-}						t_word_mov;
 
-typedef struct			s_dup_wspc
+typedef struct	s_word_mov
 {
-	unsigned int		i;
-	bool				escape;
-	int					count;
-	int					whitespace_count;
-}						t_dup_wspc;
+	unsigned int i;
+	unsigned int word_start;
+	unsigned int last_word_start;
+	unsigned int escape;
+	unsigned int quote;
+}				t_word_mov;	
+
+typedef struct	s_dup_wspc
+{
+	unsigned int	i;
+	bool			escape;
+	int				count;
+	int				whitespace_count;
+}				t_dup_wspc;
 
 /*
 ** Initialization & Co
@@ -219,6 +223,7 @@ void					free_for_ft_built_in(t_fptr *func);
 /*
 ** Line edition
 */
+
 
 void					start_autocomp(t_edit *line_e, char *prevkey);
 void					arrows_handler(t_edit *line_e, char *key);
@@ -326,7 +331,7 @@ t_file					*merge_sort(t_file *p);
 ** Line Lexing
 */
 
-char					**get_assignments(t_ast *ast);
+char					**get_assignments(t_ast *ast);;
 t_token					*get_next_token(char **line, unsigned int *i);
 t_token					*get_heredoc(t_edit *line_e);
 int						line_lexer(t_edit *line_e);
@@ -435,12 +440,13 @@ bool					exec_cmd(t_ast *ast, bool is_redir_pipe);
 bool					exec_redir(t_ast *ast);
 bool					is_slice_exec(t_tok tokind);
 bool					is_and_or_exec(t_tok tokind);
-bool					is_redir_pipe_exec(t_tok tokind);
+bool					is_redir_exec(t_tok tokind);
 bool					is_other_exec(t_tok tokind);
 bool					exec_builtin(char **args);
 bool					is_builtin(char *bu);
 char					**get_cmd(t_ast *ast);
 bool					cmds_verif(t_process *p, char **envp);
+bool            		access_verification(char *cmd);
 char					*find_var(char **envp, char *with);
 
 /*

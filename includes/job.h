@@ -67,9 +67,9 @@ typedef struct		s_job
 	unsigned int	id;
 }					t_job;
 
-typedef void		(*t_redir_tab)(t_tok token, t_job *j);
+typedef void		(*t_redir_tab)(t_ast *ast, t_job *j);
 
-extern t_token_tab	g_redir_tab[21];
+extern t_redir_tab	g_redir_tab[21];
 
 /*
 ** The active jobs are linked into a list.  This is its head.
@@ -100,7 +100,23 @@ void				do_jobs_notif(int showpid);
 t_job				*create_job(t_job *j, t_ast *ast);
 t_job				*add_job(t_job *j, t_ast *ast);
 unsigned int		create_job_id(unsigned int start);
-void				push_back_job(t_ast *ast, char **env);
-void				push_back_process(t_process **p);
+void				push_back_job(t_ast *ast);
+void				push_back_process(t_process **p, char **envp);
 void				remove_completed_job(t_job **job);
+
+/*
+** Redirections functions
+*/
+
+char    *ast_get_lexeme(t_ast *ast);
+void    check_opened_fd(t_job *j);
+void    io_great(t_ast *ast, t_job *j);
+void    io_dgreat(t_ast *ast, t_job *j);
+void    io_greatand(t_ast *ast, t_job *j);
+void    io_lessgreat(t_ast *ast, t_job *j);
+void    io_clobber(t_ast *ast, t_job *j);
+void    io_less(t_ast *ast, t_job *j);
+void    io_dless(t_ast *ast, t_job *j);
+void    io_lessand(t_ast *ast, t_job *j);
+
 #endif

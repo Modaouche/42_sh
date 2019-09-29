@@ -78,17 +78,16 @@ char			**get_assigned_env(char **assigns, char **args)
 bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
 {
 	char **args;
-	char **assigns;
+//	char **assigns;
 
 	ft_putendl("-----------------[ exec cmd ]");
-	if (!assigns && !is_redir_pipe && is_builtin(args[0]))
-	{
-		args = get_cmd(ast);
-		assigns = get_assignments(ast);
-		ft_free_tab(args);
-		ft_free_tab(assigns);
-		return (exec_builtin(args));
-	}
+    args = get_cmd(ast);
+    //assigns = get_assignments(ast);
+    //assigns = get_assigned...(ast);
+    if (/*!assigns &&*/ !is_redir_pipe && is_builtin(args[0]))
+	    return (exec_builtin(args));
+	//ft_free_tab(assigns);
+	ft_free_tab(args);
 	push_back_job(ast);
 	if (g_shell.errorno)
 		error_msg("./42sh");

@@ -71,7 +71,7 @@ void					init_term(t_edit *line_e, char **envp)
 	tcsetpgrp(g_shell.fd, g_shell.pid);
 	line_e = st_line();
 	init_line(line_e);
-	fill_ptr_fct_tab(ALL);
+	fill_token_tab();
 	init_env(envp);
 	g_shell.termiold = term_backup();
 	g_shell.termios = term_raw();
