@@ -35,7 +35,6 @@ void	ast_execution(t_ast *ast)
 		ft_printf("-----------------[ other %d ]\n", ast->token->tokind);
 		exec_cmd(ast, false);
 	}
-
 }
 
 void	line_execution(void)

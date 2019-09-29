@@ -85,7 +85,7 @@ static void		realloc_assign(t_process **process, char *to_add)
 	p->envp = new;
 }//deplacer
 
-static void		add_process_and_msg_cmd(t_ast *ast, t_job *j) //TOUT CE PASSE LA !
+static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 {
 	if (!ast)
 		return ;
@@ -93,9 +93,9 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j) //TOUT CE PASSE LA !
 		add_process_and_msg_cmd(ast->left, j);
 	if (!(j->command))
 		j->command = ft_strdup(ast->token->lexeme);
-	else if (!(j->command = ft_multijoin(3, j->command, " ",\
-			ast->token->lexeme)))
-		to_exit(ER_MALLOC);
+	else if (ast->token->tokind != T_EOF && !(j->command = ft_multijoin(3,\
+            j->command, " ", ast->token->lexeme)))
+        to_exit(ER_MALLOC);
 	if (g_is_pipe == true)
 		push_back_process(&(j->first_process), g_shell.envp);
 	if (is_redir_exec(ast->token->tokind))
@@ -158,6 +158,9 @@ void			push_back_job(t_ast *ast)
 	if (j != NULL)
 		j->next = new;
 	new->id = create_job_id(1);
+int i = 0;
+    while(new->first_process->argv[i]){ft_printf("in push_back j fct argv => %s\n", new->first_process->argv[i]);
+    i++;}
 }
 
 void			remove_completed_job(t_job **job)
