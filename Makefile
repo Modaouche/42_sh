@@ -18,6 +18,7 @@ SRC =	srcs/main/main.c\
 		srcs/main/exit_handler.c\
 		srcs/main/line_handling.c\
 		srcs/line_edition/line_edition.c\
+		srcs/line_edition/str_tools.c\
 		srcs/line_edition/tools_le.c\
 		srcs/line_edition/tools_le2.c\
 		srcs/line_edition/autocompletion.c\
