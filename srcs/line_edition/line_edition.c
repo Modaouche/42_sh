@@ -48,10 +48,14 @@ void		change_autocomp_idx(t_edit *line_e, int value)
 
 int			handle_hey(t_edit *line_e, char *key, char *prevkey)
 {
+	int ret;
+
 	ft_bzero(key, MAX_KEY_LEN + 1);
-	if (read(STDIN_FILENO, key, MAX_KEY_LEN) == -1)
+	if ((ret = read(STDIN_FILENO, key, MAX_KEY_LEN)) <= -1)
 		le_exit(0);
-	if (key[0] == S_KEY_CTRL_D && key[1] == 0 && line_e->len == 0)
+	key[ret] = '\0';
+	if (ret == 0 || key[0] == 0
+		|| (key[0] == S_KEY_CTRL_D && key[1] == 0 && line_e->len == 0))
 		fexit(0);
 	if (key[0] == S_KEY_ENTER && !key[1] && line_e->search_mode == 1)
 		replace_line_with_search(line_e);
