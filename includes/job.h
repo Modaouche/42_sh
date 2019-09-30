@@ -108,15 +108,15 @@ void				remove_completed_job(t_job **job);
 ** Redirections functions
 */
 
-char                *ast_get_lexeme(t_ast *ast);
-void                check_opened_fd(t_job *j, int btn, int fd);
-void                io_great(t_ast *ast, t_job *j);
-void                io_dgreat(t_ast *ast, t_job *j);
-void                io_greatand(t_ast *ast, t_job *j);
-void                io_lessgreat(t_ast *ast, t_job *j);
-void                io_clobber(t_ast *ast, t_job *j);
-void                io_less(t_ast *ast, t_job *j);
-void                io_dless(t_ast *ast, t_job *j);
-void                io_lessand(t_ast *ast, t_job *j);
+char				*ast_get_lexeme(t_ast *ast);
+void				check_opened_fd(t_job *j, int btn, int fd);
+void				io_great(t_ast *ast, t_job *j);
+void				io_dgreat(t_ast *ast, t_job *j);
+void				io_greatand(t_ast *ast, t_job *j);
+void				io_lessgreat(t_ast *ast, t_job *j);
+void				io_clobber(t_ast *ast, t_job *j);
+void				io_less(t_ast *ast, t_job *j);
+void				io_dless(t_ast *ast, t_job *j);
+void				io_lessand(t_ast *ast, t_job *j);
 
 #endif

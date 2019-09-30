@@ -15,8 +15,7 @@
 
 # include "shell.h"
 
-typedef enum
-{
+typedef enum {
 	NO_ERROR,
 	ER_DBACCES,
 	ER_DBINFO,
@@ -31,11 +30,11 @@ typedef enum
 	ER_NOENT,
 	ER_WAITPID,
 	ER_CHILD,
-    ER_UNKNOW
+	ER_UNKNOW
 }	t_errorno;
 
-void					le_exit(uint8_t bt);
-void					to_exit(uint8_t bt);
-void					error_msg(char *cmd);
+void	le_exit(uint8_t bt);
+void	to_exit(uint8_t bt);
+void	error_msg(char *cmd);
 
 #endif
