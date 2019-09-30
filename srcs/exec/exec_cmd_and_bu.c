@@ -77,7 +77,7 @@ bool		exec_cmd(t_ast *ast, bool to_fork)
     args = get_cmd(ast);
     if (args && !to_fork && is_builtin(args[0]))
 	    return (exec_builtin(args));
-	if (!args)
+	if (!args && !to_fork)
 		return (apply_local_assignments(ast));
 	ft_free_tab(args);
 	g_shell.errorno = NO_ERROR;
