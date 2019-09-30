@@ -27,7 +27,4 @@ bash-5.0$ ls ewfewf  2>&1 >/dev/null | cat -e
 ls: cannot access 'ewfewf': No such file or directory$
 
 
-exit & = exit le shell entier!!!
-echo a | hexdump = vide!!
-ls | echo a = vide!!!
 ./42sh | ./42sh = boucle infinite
