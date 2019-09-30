@@ -33,8 +33,6 @@ char			*find_var(char **envp, char *with)
 	return (0);
 }
 
-/* Only for unforked builtins */
-
 char			**get_assignments(t_ast *ast)
 {
 	char		**cmd;
@@ -53,19 +51,16 @@ char			**get_assignments(t_ast *ast)
 		return (NULL);
 	if (!(cmd = (char **)ft_memalloc(sizeof(char *) * (len + 1))))
 		to_exit(ER_MALLOC);
-	cmd[len--] = NULL;
 	tmptr = ast;
-	while (tmptr && len >= 0)
+	while (tmptr && --len >= 0)
 	{
 		if (tmptr->token->tokind == T_ASGMT_WRD
-			&& !(cmd[len--] = ft_strdup(tmptr->token->lexeme)))
+			&& !(cmd[len] = ft_strdup(tmptr->token->lexeme)))
 			to_exit(ER_MALLOC);
 		tmptr = tmptr->left;
 	}
 	return (cmd);
 }
-
-/* Only for unforked builtins */
 
 char			**get_cmd(t_ast *ast)
 {
@@ -85,12 +80,11 @@ char			**get_cmd(t_ast *ast)
 		return (NULL);
 	if (!(cmd = (char **)ft_memalloc(sizeof(char *) * (len + 1))))
 		to_exit(ER_MALLOC);
-	cmd[len--] = NULL;
 	tmptr = ast;
-	while (tmptr && len >= 0)
+	while (tmptr && --len >= 0)
 	{
 		if (tmptr->token->tokind == T_WORD
-			&& !(cmd[len--] = ft_strdup(tmptr->token->lexeme)))
+			&& !(cmd[len] = ft_strdup(tmptr->token->lexeme)))
 			to_exit(ER_MALLOC);
 		tmptr = tmptr->left;
 	}

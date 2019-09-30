@@ -22,10 +22,10 @@ void	ft_free_tab(char **tab)
 	i = 0;
 	while (tab[i])
 	{
-        ft_strdel(&tab[i]);
+		ft_strdel(&tab[i]);
 		++i;
 	}
-    free(tab);
+	free(tab);
 }
 
 char	**reverse_free_tab(char **tab, int size)

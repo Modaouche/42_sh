@@ -24,8 +24,7 @@ void	ast_execution(t_ast *ast)
 	else if (is_and_or_exec(ast->token->tokind))
 		exec_and_or(ast);
 	else if (is_redir_exec(ast->token->tokind)\
-			|| ast->token->tokind == T_PIPE
-            || !g_shell.in_fg)
+			|| ast->token->tokind == T_PIPE || !g_shell.in_fg)
 		exec_cmd(ast, true);
 	else if (is_other_exec(ast->token->tokind))
 		exec_cmd(ast, false);

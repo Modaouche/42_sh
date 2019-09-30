@@ -72,7 +72,6 @@ void					init_term(t_edit *line_e, char **envp)
 	line_e = st_line();
 	init_line(line_e);
 	fill_token_tab();
-	init_env(envp);
 	g_shell.termiold = term_backup();
 	g_shell.termios = term_raw();
 	g_shell.in_fg = true;

@@ -126,7 +126,7 @@ char					*ft_strnins(char *dest, const char *src,
 						unsigned int count, unsigned int pos);
 char					*ft_strins_malloc(char *dest, const char *src,
 						unsigned int pos);
-char                    **tabdup(char **tab);
+char					**tabdup(char **tab);
 char					*ft_strdup(const char *s);
 char					*ft_strndup(const char *s, size_t n);
 char					*ft_strcdup(const char *s, char c);

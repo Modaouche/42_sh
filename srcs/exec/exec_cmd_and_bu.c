@@ -51,7 +51,7 @@ int			apply_local_assignments(t_ast *ast)
 	char			**assignments;
 	unsigned int	i;
 	int				c;
-	
+
 	if (!(assignments = get_assignments(ast)))
 		return (1);
 	i = 0;
@@ -61,7 +61,7 @@ int			apply_local_assignments(t_ast *ast)
 		{
 			assignments[i][c] = '\0';
 			g_shell.intern_var = set_var_env(assignments[i],\
-                    &assignments[i][c + 1], g_shell.intern_var);
+				&assignments[i][c + 1], g_shell.intern_var);
 		}
 		ft_strdel(&assignments[i]);
 		++i;
@@ -74,9 +74,9 @@ bool		exec_cmd(t_ast *ast, bool to_fork)
 {
 	char **args;
 
-    args = get_cmd(ast);
-    if (args && !to_fork && is_builtin(args[0]))
-	    return (exec_builtin(args));
+	args = get_cmd(ast);
+	if (args && !to_fork && is_builtin(args[0]))
+		return (exec_builtin(args));
 	if (!args && !to_fork)
 		return (apply_local_assignments(ast));
 	ft_free_tab(args);
