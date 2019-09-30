@@ -16,40 +16,35 @@
 
 void    check_opened_fd(t_job *j, int io_nb, int fd)
 {
-    if ((j->stderr != STDERR_FILENO 
-            && j->stdout != STDOUT_FILENO
-            && j->stdin != STDIN_FILENO ) && io_nb == 0)
+    if (io_nb == 0)
     {
-        ft_printf("in close \n");
-        close(j->stdin);
-    }
-    if(io_nb == 0)
-    {
-        ft_printf("in assi\n");
+        ft_printf("0 = %d\n", fd);
+        if(j->stdin != STDIN_FILENO)
+        {
+            ft_printf("0 close = %d\n", j->stdout);
+            close(j->stdin);
+        }
         j->stdin = fd;
     }
-    if ((j->stderr != STDERR_FILENO
-            && j->stdout != STDOUT_FILENO
-            && j->stdin != STDIN_FILENO ) && io_nb == 1)
+
+    if (io_nb == 1)
     {
-        ft_printf("out close\n");
-        close(j->stdout);
-    }
-    if(io_nb == 1)
-    {
-        ft_printf("out assi\n");
+        if(j->stdout != STDOUT_FILENO)
+        {
+            ft_printf("1 close = %d\n", j->stdout);
+            close(j->stdout);
+        }
+        ft_printf("1 = %d\n", fd);
         j->stdout = fd;
     }
-    if ((j->stderr != STDERR_FILENO
-            && j->stdout != STDOUT_FILENO
-            && j->stdin != STDIN_FILENO ) && io_nb == 2)
+    if (io_nb == 2)
     {
-        ft_printf("err close\n");
-        close(j->stderr);
-    }
-    if(io_nb == 2)
-    {
-        ft_printf("err assi\n");
+        if (j->stderr != STDERR_FILENO)
+        {
+            ft_printf("2 close = %d\n", j->stderr);
+            close(j->stderr);
+        }
+        ft_printf("2 = %d\n", fd);
         j->stderr = fd;
     }
 }
@@ -90,7 +85,7 @@ void    io_dless(t_ast *ast, t_job *j)
     ft_printf("===DLESS===\n");
     prev_tok = ast->left->token;
     lex = generate_random_filename("/tmp/dless_file");
-    if ((fd = open(lex, O_CREAT | O_RDWR, 0644)) < 0)
+    if ((fd = open(lex, O_CREAT | O_RDWR, 0777)) < 0)
     {
         ft_strdel(&lex);
         g_shell.errorno = ER_UNKNOW;
@@ -100,9 +95,7 @@ void    io_dless(t_ast *ast, t_job *j)
     ft_strdel(&lex);
     lex = ast_get_lexeme(ast)->lexeme;
     write(fd, lex, ft_strlen(lex));
-    if (is_redir_exec(prev_tok->tokind))
-        if (ast->left && ast->left->right)
-            prev_tok = ast->left->right->token; 
+    lseek(fd, 0, SEEK_SET);
     if (prev_tok->tokind == T_IO_NB)
     {
         io_nb = ft_atoi(prev_tok->lexeme);

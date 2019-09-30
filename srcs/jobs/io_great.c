@@ -97,7 +97,7 @@ void    io_greatand(t_ast *ast, t_job *j)
     if (prev_tok->tokind == T_IO_NB)
     {
         io_nb = ft_atoi(prev_tok->lexeme);
-        ft_printf("dgr io = %d\n", io_nb);
+        ft_printf("gr_and io = %d\n", io_nb);
         check_opened_fd(j, io_nb, fd);
         return ;
     }

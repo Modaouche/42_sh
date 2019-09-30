@@ -44,6 +44,14 @@ char		**tabdup(char **tab)
 }
 */
 
+/*  example for pipe : 
+**
+**  process 1   |   process 2           |           process 3
+**  in = stdin    	in = pipe[0]                    in = pipe[0] (another pipe)
+**  out = pipe[1]   out = pipe[1] (another pipe)    out = stdout
+**	
+*/
+
 void		launch_process(t_process *p, pid_t pgid,
 		int infile, int outfile, int errfile, char **env)
 {
@@ -81,14 +89,6 @@ void		launch_process(t_process *p, pid_t pgid,
 	to_exit(ER_EXECVE);
 }
 
-/*  example for pipe : 
-**
-**  process 1   |   process 2           |           process 3
-**  in = stdin    	in = pipe[0]                    in = pipe[0] (another pipe)
-**  out = pipe[1]   out = pipe[1] (another pipe)    out = stdout
-**	
-*/
-
 void		launch_job(t_job *j)
 {
 	t_process	*p;
@@ -98,7 +98,7 @@ void		launch_job(t_job *j)
 	int			outfile;
 
 	infile = j->stdin;
-    ft_printf("infile = %d, outfile = %d errfile = %d", j->stdin, j->stdout, j->stderr);
+    ft_printf("\n--< infile = %d, outfile = %d errfile = %d >-- \n", j->stdin, j->stdout, j->stderr);
 	p = j->first_process;
 	while (p)
 	{
