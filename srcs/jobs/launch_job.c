@@ -98,6 +98,7 @@ void		launch_job(t_job *j)
 	int			outfile;
 
 	infile = j->stdin;
+    ft_printf("infile = %d, outfile = %d errfile = %d", j->stdin, j->stdout, j->stderr);
 	p = j->first_process;
 	while (p)
 	{

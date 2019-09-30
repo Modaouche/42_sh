@@ -12,6 +12,16 @@
 
 #include "shell.h"
 
+/*static bool		fd_verif(void)
+{
+	struct stat tmp;
+
+	if (((fstat(0, &tmp) != 0) || (fstat(1, &tmp) != 0))\
+            || (fstat(2, &tmp) != 0))
+		return (0);
+	return (1);
+}*/
+
 void	line_edit(t_edit *line_e)
 {
 	init_line(line_e);
@@ -30,6 +40,8 @@ int		main(int ac, char **av, char **envp)
 
 	(void)av;
 	(void)ac;
+    //if (ac > 1 || fd_verif())
+      //  return (0);
 	line_e = st_line();
 	init_term(line_e, envp);
 	while (1)

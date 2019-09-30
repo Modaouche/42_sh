@@ -62,6 +62,9 @@ void		free_job(t_job *j)
 	while (p)
 		p = free_process(p);
 	ft_strdel(&(j->command));
+    close(j->stdin);
+    close(j->stdout);
+    close(j->stderr);
 	ft_memdel((void **)&j);
 }
 
