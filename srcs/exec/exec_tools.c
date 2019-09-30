@@ -27,7 +27,10 @@ char			*find_var(char **envp, char *with)
 		len = (tmp) ? len - (uint64_t)envp[idx] : 0;
 		to_cmp = ft_strndup(envp[idx], len);
 		if (!ft_strcmp(to_cmp, with))
+		{
+			ft_strdel(&to_cmp);
 			return (envp[idx]);
+		}
 		ft_strdel(&to_cmp);
 	}
 	return (0);

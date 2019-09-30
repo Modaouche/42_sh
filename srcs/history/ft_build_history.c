@@ -30,7 +30,8 @@ void		free_history(void)
 		free(n);
 		free(tmp);
 	}
-	close(g_shell.history->fd);
+	if (g_shell.history->fd != -1)
+		close(g_shell.history->fd);
 	ft_memdel((void **)&(g_shell.history->path));
 	ft_memdel((void **)&(g_shell.history));
 }
@@ -49,8 +50,11 @@ void		init_history(void)
 	if (!(g_shell.history = (t_history *)ft_memalloc(sizeof(t_history))))
 		return ;
 	g_shell.history->path = ft_strjoin(home_path, "/.42sh_history");
-	g_shell.history->fd = open(g_shell.history->path,\
+	if (g_shell.history->path != NULL)
+		g_shell.history->fd = open(g_shell.history->path,\
 			O_CREAT, S_IRUSR | S_IWUSR);
+	else
+		g_shell.history->fd = -1;
 	g_shell.history->hist = build_hist_lst();
 	g_shell.history->size = get_hist_size();
 	ft_strdel(&home_path);

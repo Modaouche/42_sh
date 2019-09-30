@@ -12,49 +12,15 @@
 
 #include "shell.h"
 
-uint		get_index_x_pos(t_edit *line_e, unsigned int pos)
+char		*get_currpath(int status)
 {
-	unsigned int i;
-	unsigned int x;
-	unsigned int n;
+	static char *currpath = NULL;
 
-	if (line_e->line == NULL)
-		return (g_shell.prompt_size);
-	i = 0;
-	x = g_shell.prompt_size;
-	n = 0;
-	while (i < pos && line_e->line[i])
-	{
-		if (line_e->line[i] == '\t')
-			x += TAB_LEN - 1;
-		if (x++ >= line_e->winsize_col)
-			++n;
-		if (line_e->line[i++] == '\n' || x >= line_e->winsize_col)
-			x = 0;
-	}
-	return (x + n);
-}
-
-uint		get_str_index_x_pos(t_edit *line_e, unsigned int x,
-			char *str, unsigned int pos)
-{
-	unsigned int i;
-	unsigned int n;
-
-	if (line_e->line == NULL)
-		return (x);
-	i = 0;
-	n = 0;
-	while (i < pos && str[i])
-	{
-		if (str[i] == '\t')
-			x += TAB_LEN - 1;
-		if (x++ >= line_e->winsize_col)
-			++n;
-		if (str[i++] == '\n' || x >= line_e->winsize_col)
-			x = 0;
-	}
-	return (x + n);
+	if (status == 0)
+		currpath = getcwd(NULL, 1024);
+	else
+		ft_strdel(&currpath);
+	return (currpath);
 }
 
 char		*generate_prompt(unsigned int btn)
@@ -62,7 +28,7 @@ char		*generate_prompt(unsigned int btn)
 	char	*currpath;
 	char	*prompt;
 
-	if ((currpath = getcwd(NULL, 1023)) == NULL)
+	if ((currpath = get_currpath(0)) == NULL)
 		currpath = "Unknown path";
 	if (btn == 0)
 		prompt = ft_multijoin(5, "\033[38;5;6m42sh\033[0m (", currpath, ") ",
@@ -81,6 +47,7 @@ char		*generate_prompt(unsigned int btn)
 		prompt = ft_strdup("heredoc $> ");
 	else
 		prompt = ft_strdup("$> ");
+	get_currpath(1);
 	return (prompt);
 }
 

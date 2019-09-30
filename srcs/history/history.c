@@ -62,11 +62,9 @@ void		write_history(char *line)
 	head = g_shell.history->hist;
 	if (!line)
 	{
-		if (!(fd = open(g_shell.history->path, O_RDWR)))
-		{
-			ft_putstr_fd("cannot open", 2);
+		if (g_shell.history->path == NULL
+			|| (fd = open(g_shell.history->path, O_RDWR)) < 0)
 			return ;
-		}
 		while (head && head->content)
 		{
 			n = head->content;
