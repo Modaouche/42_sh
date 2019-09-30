@@ -17,20 +17,19 @@
 void    check_opened_fd(t_job *j, int btn, int fd)
 {
     if (j->stdin != STDIN_FILENO && btn == 0)
-    {
         close(j->stdin);
+    if(btn == 0) 
         j->stdin = fd;
-    }
+
     if (j->stdout != STDOUT_FILENO && btn == 1)
-    {
         close(j->stdout);
+    if(btn == 1) 
         j->stdout = fd;
-    }
+
     if (j->stderr != STDERR_FILENO && btn == 2)
-    {
         close(j->stderr);
+    if(btn == 2)
         j->stderr = fd;
-    }
 }
 
 void    io_less(t_ast *ast, t_job *j)

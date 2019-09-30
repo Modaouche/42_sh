@@ -19,11 +19,10 @@ int			ft_strgetlastocc(char *s, char c)
 
 	save = -1;
 	i = -1;
-	while (s[i])
+	while (s[++i])
 	{
 		if (s[i] == c)
 			save = i;
-		i++;
 	}
 	return ((save == -1) ? i : save);
 }

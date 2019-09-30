@@ -12,6 +12,37 @@
 
 #include "shell.h"
 #include "job.h"
+/*
+#include <assert.h>
+#undef tab
+
+char		**tabdup(char **tab)
+{
+  assert(tab);
+
+  size_t	array_size = 0;
+
+  for (; tab[array_size]; array_size++){
+
+  }
+  
+  char		**new =	malloc(sizeof(char **) * (array_size + 1));
+
+  if (!new)
+    to_exit(ER_MALLOC);
+  for (size_t i = 0; i < array_size;  i++) {
+    char	*snew = strdup(tab[i]);
+
+    if (!snew) {
+      to_exit(ER_MALLOC);
+    }
+    new[i] = snew;
+  }
+  new[array_size] = NULL;
+  
+  return new;
+}
+*/
 
 void		launch_process(t_process *p, pid_t pgid,
 		int infile, int outfile, int errfile, char **env)
@@ -44,7 +75,7 @@ void		launch_process(t_process *p, pid_t pgid,
 		close(errfile);
 	}
 	(p->argv && !is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, env)\
-		: exit(exec_builtin(p->argv));
+		: exit(exec_builtin(tabdup(p->argv)));
 	g_shell.errorno = ER_EXECVE;
 	error_msg("execvp");
 	to_exit(ER_EXECVE);

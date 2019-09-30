@@ -18,7 +18,6 @@ void	ast_execution(t_ast *ast)
 		return ;
 	if (is_slice_exec(ast->token->tokind))
 	{
-		ft_putendl("-----------------[ slice ]");
 		ast_execution(ast->left);
 		ast_execution(ast->right);
 	}
@@ -26,15 +25,9 @@ void	ast_execution(t_ast *ast)
 		exec_and_or(ast);
 	else if (is_redir_exec(ast->token->tokind)\
 			|| ast->token->tokind == T_PIPE)
-	{
-		ft_printf("-----------------[ redir pipe %d ]\n", ast->token->tokind);
 		exec_cmd(ast, true);
-	}
 	else if (is_other_exec(ast->token->tokind))
-	{
-		ft_printf("-----------------[ other %d ]\n", ast->token->tokind);
 		exec_cmd(ast, false);
-	}
 }
 
 void	line_execution(void)

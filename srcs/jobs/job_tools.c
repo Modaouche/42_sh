@@ -51,7 +51,7 @@ static void		realloc_argv(t_process **process, char *to_add)
 	t_process	*p;
 
 	p = *process;
-	while (p && p->next)//check if null ??
+	while (p && p->next)
 		p = p->next;
 	len = ft_tablen(p->argv);
 	if (!(new = (char **)ft_memalloc(sizeof(char *) * (len + 2))))
@@ -166,7 +166,7 @@ void			push_back_job(t_ast *ast)
 	if (j != NULL)
 		j->next = new;
 	new->id = create_job_id(1);
-    int i;
+/*    int i;
     t_process *p = new->first_process;
 
     while (p)
@@ -178,7 +178,7 @@ void			push_back_job(t_ast *ast)
             i++;
         }
        p = p->next;
-    }
+    }*/
 }
 
 void			remove_completed_job(t_job **job)

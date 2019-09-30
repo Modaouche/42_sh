@@ -30,7 +30,7 @@ SRC		=	ft_abs.c ft_adv_memcmp.c ft_atoi.c ft_atoi_base.c ft_bzero.c ft_ceil.c  \
 			ft_strlen_if.c ft_strmap.c ft_strmapi.c ft_strncat.c ft_strncmp.c\
 		   	ft_strncpy.c ft_strnequ.c ft_strnew.c ft_strnstr.c ft_free_tabstr.c \
 			ft_strrchr.c ft_strsplit.c ft_strstr.c ft_strsub.c ft_strtolower.c\
-			ft_strtoupper.c ft_strtrim.c ft_swap.c ft_tolower.c\
+			ft_strtoupper.c ft_strtrim.c ft_swap.c ft_tolower.c tabdup.c\
 			ft_toupper.c read_memory_int.c read_memory_unsigned_int.c  \
 			ft_list_create.c ft_list_append.c ft_list_delete.c ft_list_at.c \
 			charset_match.c ft_strlcpy.c ft_realloc.c ft_strndup.c \
@@ -48,7 +48,11 @@ OBJ 	= 	$(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS 	=	-Wall -Wextra -Werror -Iincludes -I.
+CFLAGS 	=	-Wall -Wextra -Werror -Iincludes -I.#\
+			-g3 -fsanitize=address\
+			-fno-omit-frame-pointer\
+			-fsanitize-address-use-after-scope
+
 
 all: $(NAME)
 
