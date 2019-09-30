@@ -41,9 +41,8 @@ static bool	cmd_verif_prime(char **envp, char **argv)
 {
 	t_cmd_verif_prime s;
 
+	ft_bzero(&s, sizeof(t_cmd_verif_prime));
 	g_shell.errorno = NO_ERROR;
-	s.idx = 0;
-	s.to_check = 0;
 	if (!(s.path_var = find_var(envp, "PATH")))
 		return (access_verification(argv[0]));
 	if (!(s.sliced_path = ft_split(&(s.path_var[5]), ":")))
