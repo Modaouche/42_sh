@@ -89,7 +89,11 @@ void    io_greatand(t_ast *ast, t_job *j)
 
     ft_printf("===GREATAND===\n");
     prev_tok = ast->left->token;
-    fd = atoi(ast_get_lexeme(ast)->lexeme);
+    if ((fd = get_redir_fd(ast_get_lexeme(ast)->lexeme, 1)) == -1)
+    {
+        ft_printf_fd(STDERR_FILENO, "./42sh : Bad file descriptor.");
+        return ;
+    }
     ft_printf("gr_and fd = %d\n", fd);
     if (is_redir_exec(prev_tok->tokind))
         if (ast->left && ast->left->right)

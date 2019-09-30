@@ -110,6 +110,7 @@ void				remove_completed_job(t_job **job);
 
 t_token				*ast_get_lexeme(t_ast *ast);
 void				check_opened_fd(t_job *j, int btn, int fd);
+int                 get_redir_fd(char *lex, int check);
 void				io_great(t_ast *ast, t_job *j);
 void				io_dgreat(t_ast *ast, t_job *j);
 void				io_greatand(t_ast *ast, t_job *j);

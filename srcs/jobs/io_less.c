@@ -106,13 +106,20 @@ void    io_dless(t_ast *ast, t_job *j)
     check_opened_fd(j, 0, fd);
 }
 
-int     get_redir_fd(char *lex)
+int     get_redir_fd(char *lex, int check)
 {
     int i;
+    struct stat tmp;
 
     i = 0;
-    while (lex && ft_is_digit(lex[i]))
+    while (lex && ft_isdigit(lex[i]))
         i++;
+    if ((fstat(ft_atoi(lex), &tmp) == -1))
+        return (-1);
+    else if (check == 0 && (read(ft_atoi(lex), "", 0) != -1))
+        return (-1);
+    else if (check == 1 && (write(ft_atoi(lex), "", 0) != -1))
+        return (-1);
     if (!lex[i] || (lex[i] == '-' && !lex[i + 1]))
         return (ft_atoi(lex));
     return (-1);
@@ -126,11 +133,12 @@ void    io_lessand(t_ast *ast, t_job *j)
 
     ft_printf("===LESSAND===\n");
     prev_tok = ast->left->token;
-    if ((fd = get_redir_fd(lex) == -1))
+    if ((fd = get_redir_fd(ast_get_lexeme(ast)->lexeme, 0)) == -1)
     {
         ft_printf_fd(STDERR_FILENO, "./42sh : Bad file descriptor.");
         return ;
     }
+    ft_printf("dgr fd = %d\n", fd);
     if (is_redir_exec(prev_tok->tokind))
         if (ast->left && ast->left->right)
             prev_tok = ast->left->right->token; 
