@@ -69,18 +69,24 @@ void		launch_process(t_process *p, pid_t pgid,
 	}
 	if (infile != STDIN_FILENO)
 	{
+        ft_printf("launch process %d\n", errfile);
 		dup2(infile, STDIN_FILENO);
-		close(infile);
+        //if (infile != STDOUT_FILENO && infile != STDERR_FILENO)
+        //    close(infile);
 	}
 	if (outfile != STDOUT_FILENO)
 	{
+        ft_printf("launch process %d\n", errfile);
 		dup2(outfile, STDOUT_FILENO);
-		close(outfile);
+        //if (outfile != STDIN_FILENO && outfile != STDERR_FILENO)
+        //    close(outfile);
 	}
 	if (errfile != STDERR_FILENO)
 	{
+        ft_printf("launch process %d\n", errfile);
 		dup2(errfile, STDERR_FILENO);
-		close(errfile);
+        //if (errfile != STDIN_FILENO && outfile != STDOUT_FILENO)
+        //    close(errfile);
 	}
 	(p->argv && !is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, env)\
 		: exit(exec_builtin(tabdup(p->argv)));
