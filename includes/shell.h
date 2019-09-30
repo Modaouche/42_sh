@@ -434,7 +434,7 @@ t_ast					*get_curr_head(void);
 void					line_execution(void);
 void					ast_execution(t_ast *ast);
 bool					exec_and_or(t_ast *ast);
-bool					exec_cmd(t_ast *ast, bool is_redir_pipe);
+bool					exec_cmd(t_ast *ast, bool to_fork);
 bool					exec_redir(t_ast *ast);
 bool					is_slice_exec(t_tok tokind);
 bool					is_and_or_exec(t_tok tokind);

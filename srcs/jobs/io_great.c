@@ -24,6 +24,7 @@ char    *ast_get_lexeme(t_ast *ast)
 void    io_great(t_ast *ast, t_job *j)
 {
     int fd;
+    int io_nb;
 
     ft_printf("===GREAT===\n");
     if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_TRUNC | O_WRONLY, 0644)) < 0)
@@ -33,21 +34,17 @@ void    io_great(t_ast *ast, t_job *j)
     }
     if (ast->left->token->tokind == T_IO_NB)
     {
-        if (ast->left->token->tokind - 48 == 0)
-            check_opened_fd(j, 0, fd);
-        if (ast->left->token->tokind - 48 == 1)
-            check_opened_fd(j, 1, fd);
-        if (ast->left->token->tokind - 48 == 2)
-            check_opened_fd(j, 2, fd);
+        io_nb = ft_atoi(ast->left->token->lexeme);
+        check_opened_fd(j, io_nb, fd);
         return ;
     }
     check_opened_fd(j, 1, fd);
-    j->stdout = fd;
 }
 
 void    io_dgreat(t_ast *ast, t_job *j)
 {
     int fd;
+    int io_nb;
 
     ft_printf("===DGREAT===\n");
     if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_WRONLY, 0644)) < 0)
@@ -58,36 +55,27 @@ void    io_dgreat(t_ast *ast, t_job *j)
     lseek(fd, 0, SEEK_END);
     if (ast->left->token->tokind == T_IO_NB)
     {
-        if (ast->left->token->tokind - 48 == 0)
-            check_opened_fd(j, 0, fd);
-        if (ast->left->token->tokind - 48 == 1)
-            check_opened_fd(j, 1, fd);
-        if (ast->left->token->tokind - 48 == 2)
-            check_opened_fd(j, 2, fd);
+        io_nb = ft_atoi(ast->left->token->lexeme);
+        check_opened_fd(j, io_nb, fd);
         return ;
     }
-    check_opened_fd(j, 0, fd);
-    j->stdout = fd;
+    check_opened_fd(j, 1, fd);
 }
 
 void    io_greatand(t_ast *ast, t_job *j)
 {
     int fd;
+    int io_nb;
 
     ft_printf("===GREATAND===\n");
     fd = atoi(ast_get_lexeme(ast));
     if (ast->left->token->tokind == T_IO_NB)
     {
-        if (ast->left->token->tokind - 48 == 0)
-            check_opened_fd(j, 0, fd);
-        if (ast->left->token->tokind - 48 == 1)
-            check_opened_fd(j, 1, fd);
-        if (ast->left->token->tokind - 48 == 2)
-            check_opened_fd(j, 2, fd);
+        io_nb = ft_atoi(ast->left->token->lexeme);
+        check_opened_fd(j, io_nb, fd);
         return ;
     }
-    check_opened_fd(j, 0, fd);
-    j->stdout = fd;
+    check_opened_fd(j, 1, fd);
 }
 
 void    io_lessgreat(t_ast *ast, t_job *j)

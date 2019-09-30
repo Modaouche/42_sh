@@ -70,12 +70,12 @@ int			apply_local_assignments(t_ast *ast)
 	return (0);
 }
 
-bool		exec_cmd(t_ast *ast, bool is_redir_pipe)
+bool		exec_cmd(t_ast *ast, bool to_fork)
 {
 	char **args;
 
     args = get_cmd(ast);
-    if (args && !is_redir_pipe && is_builtin(args[0]))
+    if (args && !to_fork && is_builtin(args[0]))
 	    return (exec_builtin(args));
 	if (!args)
 		return (apply_local_assignments(ast));

@@ -18,12 +18,12 @@ void    check_opened_fd(t_job *j, int btn, int fd)
 {
     if (j->stdin != STDIN_FILENO && btn == 0)
         close(j->stdin);
-    if(btn == 0) 
+    if(btn == 0)
         j->stdin = fd;
 
     if (j->stdout != STDOUT_FILENO && btn == 1)
         close(j->stdout);
-    if(btn == 1) 
+    if(btn == 1)
         j->stdout = fd;
 
     if (j->stderr != STDERR_FILENO && btn == 2)
@@ -35,6 +35,7 @@ void    check_opened_fd(t_job *j, int btn, int fd)
 void    io_less(t_ast *ast, t_job *j)
 {
     int fd;
+    int io_nb;
 
     ft_printf("===LESS===\n");
     if ((fd = open(ast_get_lexeme(ast), O_CREAT | O_WRONLY, 0644)) < 0)
@@ -44,22 +45,18 @@ void    io_less(t_ast *ast, t_job *j)
     }
     if (ast->left->token->tokind == T_IO_NB)
     {
-        if (ast->left->token->tokind - 48 == 0)
-            check_opened_fd(j, 0, fd);
-        if (ast->left->token->tokind - 48 == 1)
-            check_opened_fd(j, 1, fd);
-        if (ast->left->token->tokind - 48 == 2)
-            check_opened_fd(j, 2, fd);
+        io_nb = ft_atoi(ast->left->token->lexeme);
+        check_opened_fd(j, io_nb, fd);
         return ;
     }
     check_opened_fd(j, 0, fd);
-    j->stdin = fd;
 }
 
 void    io_dless(t_ast *ast, t_job *j)
 {
     int     fd;
     char    *lex;
+    int io_nb;
 
     ft_printf("===DLESS===\n");
     lex = generate_random_filename("/tmp/dless_file");
@@ -75,12 +72,8 @@ void    io_dless(t_ast *ast, t_job *j)
     write(fd, lex, ft_strlen(lex));
     if (ast->left->token->tokind == T_IO_NB)
     {
-        if (ast->left->token->tokind - 48 == 0)
-            check_opened_fd(j, 0, fd);
-        if (ast->left->token->tokind - 48 == 1)
-            check_opened_fd(j, 1, fd);
-        if (ast->left->token->tokind - 48 == 2)
-            check_opened_fd(j, 2, fd);
+        io_nb = ft_atoi(ast->left->token->lexeme);
+        check_opened_fd(j, io_nb, fd);
         return ;
     }
     check_opened_fd(j, 0, fd);
@@ -89,17 +82,14 @@ void    io_dless(t_ast *ast, t_job *j)
 void    io_lessand(t_ast *ast, t_job *j)
 {
     int fd;
+    int io_nb;
 
     ft_printf("===LESSAND===\n");
     fd = atoi(ast_get_lexeme(ast));
     if (ast->left->token->tokind == T_IO_NB)
     {
-        if (ast->left->token->tokind - 48 == 0)
-            check_opened_fd(j, 0, fd);
-        if (ast->left->token->tokind - 48 == 1)
-            check_opened_fd(j, 1, fd);
-        if (ast->left->token->tokind - 48 == 2)
-            check_opened_fd(j, 2, fd);
+        io_nb = ft_atoi(ast->left->token->lexeme);
+        check_opened_fd(j, io_nb, fd);
         return ;
     }
     check_opened_fd(j, 0, fd);

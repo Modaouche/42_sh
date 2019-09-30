@@ -76,7 +76,7 @@ static void		realloc_assign(t_process **process, char *to_add)
 	t_process	*p;
 
 	p = *process;
-	while (p && p->next)//check if null ??
+	while (p && p->next)
 		p = p->next;
 	len = ft_tablen(p->envp);
 	if (!(new = (char **)ft_memalloc(sizeof(char *) * (len + 2))))
