@@ -32,22 +32,24 @@ char	*get_alias_value(char *name)
 
 int		remove_alias(char *name)
 {
-	unsigned int tmp;
-	unsigned int i;
+	unsigned int	tmp;
+	unsigned int	i;
+	int				removed;
 
 	i = 0;
-	while (g_shell.aliasp[i])
+	removed = ft_strcmp(name, "-a") == 0;
+	while (g_shell.aliasp && g_shell.aliasp[i])
 	{
 		tmp = ft_strlcmp(g_shell.aliasp[i], name);
 		if ((tmp != 0 && (g_shell.aliasp[i])[tmp] == '=')
 			|| ft_strcmp(name, "-a") == 0)
 		{
 			g_shell.aliasp[i][0] = '\0';
-			return (1);
+			removed = 1;
 		}
 		++i;
 	}
-	return (0);
+	return (removed);
 }
 
 char	**copy_alias_tab(char **array, char *newelem)

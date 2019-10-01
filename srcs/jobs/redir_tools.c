@@ -26,11 +26,7 @@ void	handle_err_fd(t_job *j, int io_nb, int fd)
 	if (io_nb == 2)
 	{
 		if (j->stderr != STDERR_FILENO)
-		{
-			ft_printf("2 close = %d\n", j->stderr);
 			close(j->stderr);
-		}
-		ft_printf("2 = %d\n", fd);
 		j->stderr = fd;
 	}
 }
@@ -39,22 +35,14 @@ void	check_opened_fd(t_job *j, int io_nb, int fd)
 {
 	if (io_nb == 0)
 	{
-		ft_printf("0 = %d\n", fd);
 		if (j->stdin != STDIN_FILENO)
-		{
-			ft_printf("0 close = %d\n", j->stdout);
 			close(j->stdin);
-		}
 		j->stdin = fd;
 	}
 	if (io_nb == 1)
 	{
 		if (j->stdout != STDOUT_FILENO)
-		{
-			ft_printf("1 close = %d\n", j->stdout);
 			close(j->stdout);
-		}
-		ft_printf("1 = %d\n", fd);
 		j->stdout = fd;
 	}
 	handle_err_fd(j, io_nb, fd);

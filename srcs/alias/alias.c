@@ -96,7 +96,7 @@ void	replace_word_with_alias(t_edit *line_e, char *alias, char *value)
 			continue ;
 		}
 		if (skip_quotes_and_replace(line_e, &al, alias, value))
-			break ;
+			al.can_replace = 0;
 		get_to_next_separator(line_e, &al);
 	}
 }
