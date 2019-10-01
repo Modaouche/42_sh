@@ -5,6 +5,5 @@
 *.o
 *.a
 *.swn
-minishell
-21sh
+minishel
 42sh
