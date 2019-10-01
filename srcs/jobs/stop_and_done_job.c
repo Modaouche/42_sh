@@ -43,7 +43,7 @@ int		mark_process_status(pid_t pid, int status)
 			while (p)
 			{
 				if (p->pid == pid)
-					return (mark_process_prime(p, pid, status));
+					return (mark_process_prime(p, status, pid));
 				p = p->next;
 			}
 			j = j->next;
