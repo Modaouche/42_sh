@@ -76,10 +76,12 @@ SRC =	srcs/main/main.c\
 		srcs/jobs/foreground_and_background.c\
 		srcs/jobs/job_utils.c\
 		srcs/jobs/job_tools.c\
+		srcs/jobs/job_utils2.c\
 		srcs/jobs/launch_job.c\
 		srcs/jobs/stop_and_done_job.c\
 		srcs/jobs/io_great.c\
 		srcs/jobs/io_less.c\
+		srcs/jobs/redir_tools.c\
 		srcs/inhibitor/inhibitors.c\
 		srcs/inhibitor/quote_handling.c\
 		srcs/inhibitor/word_handling.c\

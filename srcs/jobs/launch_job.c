@@ -12,48 +12,9 @@
 
 #include "shell.h"
 #include "job.h"
-/*
-#include <assert.h>
-#undef tab
 
-char		**tabdup(char **tab)
-{
-  assert(tab);
-
-  size_t	array_size = 0;
-
-  for (; tab[array_size]; array_size++){
-
-  }
-  
-  char		**new =	malloc(sizeof(char **) * (array_size + 1));
-
-  if (!new)
-    to_exit(ER_MALLOC);
-  for (size_t i = 0; i < array_size;  i++) {
-    char	*snew = strdup(tab[i]);
-
-    if (!snew) {
-      to_exit(ER_MALLOC);
-    }
-    new[i] = snew;
-  }
-  new[array_size] = NULL;
-  
-  return new;
-}
-*/
-
-/*  example for pipe : 
-**
-**  process 1   |   process 2           |           process 3
-**  in = stdin    	in = pipe[0]                    in = pipe[0] (another pipe)
-**  out = pipe[1]   out = pipe[1] (another pipe)    out = stdout
-**	
-*/
-
-void		launch_process(t_process *p, pid_t pgid,
-		int infile, int outfile, int errfile, char **env)
+void		launch_process(t_launch_job *lj, pid_t pgid, char **env,
+			int errfile)
 {
 	pid_t pid;
 
@@ -64,32 +25,18 @@ void		launch_process(t_process *p, pid_t pgid,
 			pgid = pid;
 		setpgid(pid, pgid);
 		if (g_shell.in_fg)
-			tcsetpgrp (g_shell.fd, pgid);
+			tcsetpgrp(g_shell.fd, pgid);
 		signal_handler(EXEC);
 	}
-	if (infile != STDIN_FILENO)
-	{
-        ft_printf("launch process %d\n", errfile);
-		dup2(infile, STDIN_FILENO);
-        //if (infile != STDOUT_FILENO && infile != STDERR_FILENO)
-        //    close(infile);
-	}
-	if (outfile != STDOUT_FILENO)
-	{
-        ft_printf("launch process %d\n", errfile);
-		dup2(outfile, STDOUT_FILENO);
-        //if (outfile != STDIN_FILENO && outfile != STDERR_FILENO)
-        //    close(outfile);
-	}
+	if (lj->infile != STDIN_FILENO)
+		dup2(lj->infile, STDIN_FILENO);
+	if (lj->outfile != STDOUT_FILENO)
+		dup2(lj->outfile, STDOUT_FILENO);
 	if (errfile != STDERR_FILENO)
-	{
-        ft_printf("launch process %d\n", errfile);
 		dup2(errfile, STDERR_FILENO);
-        //if (errfile != STDIN_FILENO && outfile != STDOUT_FILENO)
-        //    close(errfile);
-	}
-	(p->argv && !is_builtin(p->argv[0])) ? execve(p->argv[0], p->argv, env)\
-		: exit(exec_builtin(tabdup(p->argv)));
+	(lj->p->argv && !is_builtin(lj->p->argv[0])) ?
+		execve(lj->p->argv[0], lj->p->argv, env)\
+		: exit(exec_builtin(tabdup(lj->p->argv)));
 	g_shell.errorno = ER_EXECVE;
 	error_msg("execvp");
 	to_exit(ER_EXECVE);
@@ -97,56 +44,50 @@ void		launch_process(t_process *p, pid_t pgid,
 
 void		launch_job(t_job *j)
 {
-	t_process	*p;
-	pid_t		pid;
-	int			mypipe[2];
-	int			infile;
-	int			outfile;
+	t_launch_job lj;
 
-	infile = j->stdin;
-    ft_printf("\n--< infile = %d, outfile = %d errfile = %d >-- \n", j->stdin, j->stdout, j->stderr);
-	p = j->first_process;
-	while (p)
+	lj.infile = j->stdin;
+	lj.p = j->first_process;
+	while (lj.p)
 	{
-		if (p->next)
+		if (lj.p->next)
 		{
-			if (pipe(mypipe) < 0)
+			if (pipe(lj.mypipe) < 0)
 			{
 				g_shell.errorno = ER_PIPE;
 				return ;
 			}
-			outfile = mypipe[1];
+			lj.outfile = lj.mypipe[1];
 		}
 		else
-			outfile = j->stdout;
-		pid = fork();
-		if (pid == 0)
+			lj.outfile = j->stdout;
+		lj.pid = fork();
+		if (lj.pid == 0)
 		{
-			(!cmds_verif(p, g_shell.envp)) ? to_exit(g_shell.errorno)\
-				: launch_process(p, j->pgid, infile,\
-				outfile, j->stderr, p->envp);
+			(!cmds_verif(lj.p, g_shell.envp)) ? to_exit(g_shell.errorno)\
+				: launch_process(&lj, j->pgid, lj.p->envp, j->stderr);
 		}
-		else if (pid < 0)
+		else if (lj.pid < 0)
 		{
 			g_shell.errorno = ER_FORK;
 			return ;
 		}
 		else
 		{
-			p->pid = pid;
+			lj.p->pid = lj.pid;
 			if (g_shell.is_interactive)
 			{
 				if (!j->pgid)
-					j->pgid = pid;
-				setpgid(pid, j->pgid);
+					j->pgid = lj.pid;
+				setpgid(lj.pid, j->pgid);
 			}
 		}
-		if (infile != j->stdin)
-			close(infile);
-		if (outfile != j->stdout)
-			close(outfile);
-		infile = mypipe[0];
-		p = p->next;
+		if (lj.infile != j->stdin)
+			close(lj.infile);
+		if (lj.outfile != j->stdout)
+			close(lj.outfile);
+		lj.infile = lj.mypipe[0];
+		lj.p = lj.p->next;
 	}
 	if (!g_shell.is_interactive)
 		wait_for_job(j);

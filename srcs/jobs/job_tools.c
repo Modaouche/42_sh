@@ -13,36 +13,7 @@
 #include "shell.h"
 #include "job.h"
 
-static bool g_is_pipe;
-
-t_job			*last_job(void)
-{
-	t_job		*j;
-
-	j = g_shell.first_job;
-	while (j && j->next)
-		j = j->next;
-	return (j);
-}//deplacer
-
-void			push_back_process(t_process **p, char **envp)
-{
-	t_process	*new;
-    t_process   *tmp;
-
-    tmp = *p;
-	if (!(new = (t_process *)ft_memalloc(sizeof(t_process))))
-		to_exit(ER_MALLOC);
-    if (!tmp)
-        *p = new;
-    else
-    {
-	    while (tmp->next)
-	    	tmp = tmp->next;
-	    tmp->next = new;
-    }
-	new->envp = get_env(envp);
-}
+static bool	g_is_pipe;
 
 static void		realloc_argv(t_process **process, char *to_add)
 {
@@ -63,11 +34,11 @@ static void		realloc_argv(t_process **process, char *to_add)
 		len++;
 	}
 	if (!(new[len++] = ft_strdup(to_add)))
-            to_exit(ER_MALLOC);
+		to_exit(ER_MALLOC);
 	new[len] = NULL;
 	ft_memdel((void **)&(p->argv));
 	p->argv = new;
-}//deplacer
+}
 
 static void		realloc_assign(t_process **process, char *to_add)
 {
@@ -91,7 +62,7 @@ static void		realloc_assign(t_process **process, char *to_add)
 	new[len] = NULL;
 	ft_memdel((void **)&(p->envp));
 	p->envp = new;
-}//deplacer
+}
 
 static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 {
@@ -102,12 +73,12 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 	if (!(j->command))
 		j->command = ft_strdup(ast->token->lexeme);
 	else if (ast->token->tokind != T_EOF && !(j->command = ft_multijoin(3,\
-            j->command, " ", ast->token->lexeme)))
-        to_exit(ER_MALLOC);
+					j->command, " ", ast->token->lexeme)))
+		to_exit(ER_MALLOC);
 	if (g_is_pipe == true)
 		push_back_process(&(j->first_process), g_shell.envp);
 	if (is_redir_exec(ast->token->tokind))
-        g_redir_tab[ast->token->tokind](ast, j);
+		g_redir_tab[ast->token->tokind](ast, j);
 	if (ast->token->tokind == T_WORD)
 		realloc_argv(&(j->first_process), ast->token->lexeme);
 	if (ast->token->tokind == T_ASGMT_WRD)
@@ -115,38 +86,6 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 	g_is_pipe = (ast->token->tokind != T_PIPE) ? false : true;
 	if (ast->right && !is_redir_exec(ast->token->tokind))
 		add_process_and_msg_cmd(ast->right, j);
-}
-
-t_job			*get_job_by_id(unsigned int id)
-{
-	t_job *j;
-
-	if (id == 0)
-		return (NULL);
-	j = g_shell.first_job;
-	while (j)
-	{
-		if (j->id == id)
-			return (j);
-		j = j->next;
-	}
-	return (NULL);
-}
-
-unsigned int	create_job_id(unsigned int start)
-{
-	unsigned int	id;
-	t_job			*j;
-
-	id = start;
-	j = g_shell.first_job;
-	while (j && id != 0)
-	{
-		if (j->id == start)
-			return (create_job_id(id + 1));
-		j = j->next;
-	}
-	return (id);
 }
 
 void			push_back_job(t_ast *ast)
@@ -166,19 +105,6 @@ void			push_back_job(t_ast *ast)
 	if (j != NULL)
 		j->next = new;
 	new->id = create_job_id(1);
-/*    int i;
-    t_process *p = new->first_process;
-
-    while (p)
-    {
-        i = 0;
-        while (p->argv[i])
-        {
-            ft_printf("in push_back %d j fct argv => %s\n", i, p->argv[i]);
-            i++;
-        }
-       p = p->next;
-    }*/
 }
 
 void			remove_completed_job(t_job **job)
@@ -205,4 +131,4 @@ void			remove_completed_job(t_job **job)
 			prev = curr;
 		curr = next;
 	}
-}//a deplacer
+}

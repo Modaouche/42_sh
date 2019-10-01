@@ -67,6 +67,16 @@ typedef struct		s_job
 	unsigned int	id;
 }					t_job;
 
+
+typedef struct		s_launch_job
+{
+	t_process		*p;
+	pid_t			pid;
+	int				mypipe[2];
+	int				infile;
+	int				outfile;
+}					t_launch_job;
+
 typedef void		(*t_redir_tab)(t_ast *ast, t_job *j);
 
 extern t_redir_tab	g_redir_tab[21];
@@ -87,8 +97,8 @@ void				put_job_in_foreground(t_job *j, int cont);
 void				put_job_in_background(t_job *j, int cont);
 void				mark_job_as_running(t_job *j);
 void				continue_job(t_job *j, int foreground);
-void				launch_process(t_process *p, pid_t pid,\
-					int a, int b, int c, char **env);
+void				launch_process(t_launch_job *lj, pid_t pid,\
+					char **env, int errfile);
 void				launch_job (t_job *j);
 int					mark_process_status (pid_t pid, int status);
 void				update_status (void);
@@ -110,7 +120,7 @@ void				remove_completed_job(t_job **job);
 
 t_token				*ast_get_lexeme(t_ast *ast);
 void				check_opened_fd(t_job *j, int btn, int fd);
-int                 get_redir_fd(char *lex, int check);
+int					get_redir_fd(char *lex, int check);
 void				io_great(t_ast *ast, t_job *j);
 void				io_dgreat(t_ast *ast, t_job *j);
 void				io_greatand(t_ast *ast, t_job *j);

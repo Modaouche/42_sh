@@ -13,141 +13,79 @@
 #include "shell.h"
 #include "job.h"
 
-
-void    check_opened_fd(t_job *j, int io_nb, int fd)
+void	io_less(t_ast *ast, t_job *j)
 {
-    if (io_nb == 0)
-    {
-        ft_printf("0 = %d\n", fd);
-        if(j->stdin != STDIN_FILENO)
-        {
-            ft_printf("0 close = %d\n", j->stdout);
-            close(j->stdin);
-        }
-        j->stdin = fd;
-    }
+	int		fd;
+	int		io_nb;
+	t_token	*prev_tok;
 
-    if (io_nb == 1)
-    {
-        if(j->stdout != STDOUT_FILENO)
-        {
-            ft_printf("1 close = %d\n", j->stdout);
-            close(j->stdout);
-        }
-        ft_printf("1 = %d\n", fd);
-        j->stdout = fd;
-    }
-    if (io_nb == 2)
-    {
-        if (j->stderr != STDERR_FILENO)
-        {
-            ft_printf("2 close = %d\n", j->stderr);
-            close(j->stderr);
-        }
-        ft_printf("2 = %d\n", fd);
-        j->stderr = fd;
-    }
-}
-void    io_less(t_ast *ast, t_job *j)
-{
-    int fd;
-    int io_nb;
-    t_token   *prev_tok;
-
-    ft_printf("===LESS===\n");
-    prev_tok = ast->left->token;
-    if ((fd = open(ast_get_lexeme(ast)->lexeme, O_RDONLY, 0644)) < 0)
-    {
-        access_verification(ast_get_lexeme(ast)->lexeme);
-        return ;
-    }
-    ft_printf("less fd = %d\n", fd);
-    if (is_redir_exec(prev_tok->tokind))
-        if (ast->left && ast->left->right)
-            prev_tok = ast->left->right->token; 
-    if (prev_tok->tokind == T_IO_NB)
-    {
-        io_nb = ft_atoi(prev_tok->lexeme);
-        ft_printf("less io = %d\n", io_nb);
-        check_opened_fd(j, io_nb, fd);
-        return ;
-    }
-    check_opened_fd(j, 0, fd);
+	prev_tok = ast->left->token;
+	if ((fd = open(ast_get_lexeme(ast)->lexeme, O_RDONLY, 0644)) < 0)
+	{
+		access_verification(ast_get_lexeme(ast)->lexeme);
+		return ;
+	}
+	if (is_redir_exec(prev_tok->tokind))
+		if (ast->left && ast->left->right)
+			prev_tok = ast->left->right->token;
+	if (prev_tok->tokind == T_IO_NB)
+	{
+		io_nb = ft_atoi(prev_tok->lexeme);
+		check_opened_fd(j, io_nb, fd);
+		return ;
+	}
+	check_opened_fd(j, 0, fd);
 }
 
-void    io_dless(t_ast *ast, t_job *j)
+void	io_dless(t_ast *ast, t_job *j)
 {
-    int     fd;
-    char    *lex;
-    int     io_nb;
-    t_token *prev_tok;
+	int		fd;
+	char	*lex;
+	int		io_nb;
+	t_token	*prev_tok;
 
-    ft_printf("===DLESS===\n");
-    prev_tok = ast->left->token;
-    lex = generate_random_filename("/tmp/dless_file");
-    if ((fd = open(lex, O_CREAT | O_RDWR, 0777)) < 0)
-    {
-        ft_strdel(&lex);
-        g_shell.errorno = ER_UNKNOW;
-        return ;
-    }
-    unlink(lex);
-    ft_strdel(&lex);
-    lex = ast_get_lexeme(ast)->lexeme;
-    write(fd, lex, ft_strlen(lex));
-    lseek(fd, 0, SEEK_SET);
-    if (prev_tok->tokind == T_IO_NB)
-    {
-        io_nb = ft_atoi(prev_tok->lexeme);
-        ft_printf("dgr io = %d\n", io_nb);
-        check_opened_fd(j, io_nb, fd);
-        return ;
-    }
-    check_opened_fd(j, 0, fd);
+	prev_tok = ast->left->token;
+	lex = generate_random_filename("/tmp/dless_file");
+	if ((fd = open(lex, O_CREAT | O_RDWR, 0777)) < 0)
+	{
+		ft_strdel(&lex);
+		g_shell.errorno = ER_UNKNOW;
+		return ;
+	}
+	unlink(lex);
+	ft_strdel(&lex);
+	lex = ast_get_lexeme(ast)->lexeme;
+	write(fd, lex, ft_strlen(lex));
+	lseek(fd, 0, SEEK_SET);
+	if (prev_tok->tokind == T_IO_NB)
+	{
+		io_nb = ft_atoi(prev_tok->lexeme);
+		check_opened_fd(j, io_nb, fd);
+		return ;
+	}
+	check_opened_fd(j, 0, fd);
 }
 
-int     get_redir_fd(char *lex, int check)
+void	io_lessand(t_ast *ast, t_job *j)
 {
-    int i;
-    struct stat tmp;
+	int		fd;
+	int		io_nb;
+	t_token	*prev_tok;
 
-    i = 0;
-    while (lex && ft_isdigit(lex[i]))
-        i++;
-    if ((fstat(ft_atoi(lex), &tmp) == -1))
-        return (-1);
-    else if (check == 0 && (read(ft_atoi(lex), "", 0) != -1))
-        return (-1);
-    else if (check == 1 && (write(ft_atoi(lex), "", 0) != -1))
-        return (-1);
-    if (!lex[i] || (lex[i] == '-' && !lex[i + 1]))
-        return (ft_atoi(lex));
-    return (-1);
-}
-
-void    io_lessand(t_ast *ast, t_job *j)
-{
-    int fd;
-    int io_nb;
-    t_token   *prev_tok;
-
-    ft_printf("===LESSAND===\n");
-    prev_tok = ast->left->token;
-    if ((fd = get_redir_fd(ast_get_lexeme(ast)->lexeme, 0)) == -1)
-    {
-        ft_printf_fd(STDERR_FILENO, "./42sh : Bad file descriptor.");
-        return ;
-    }
-    ft_printf("dgr fd = %d\n", fd);
-    if (is_redir_exec(prev_tok->tokind))
-        if (ast->left && ast->left->right)
-            prev_tok = ast->left->right->token; 
-    if (prev_tok->tokind == T_IO_NB)
-    {
-        io_nb = ft_atoi(prev_tok->lexeme);
-        ft_printf("dgr io = %d\n", io_nb);
-        check_opened_fd(j, io_nb, fd);
-        return ;
-    }
-    check_opened_fd(j, 0, fd);
+	prev_tok = ast->left->token;
+	if ((fd = get_redir_fd(ast_get_lexeme(ast)->lexeme, 0)) == -1)
+	{
+		ft_printf_fd(STDERR_FILENO, "./42sh : Bad file descriptor.");
+		return ;
+	}
+	if (is_redir_exec(prev_tok->tokind))
+		if (ast->left && ast->left->right)
+			prev_tok = ast->left->right->token;
+	if (prev_tok->tokind == T_IO_NB)
+	{
+		io_nb = ft_atoi(prev_tok->lexeme);
+		check_opened_fd(j, io_nb, fd);
+		return ;
+	}
+	check_opened_fd(j, 0, fd);
 }

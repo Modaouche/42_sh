@@ -13,51 +13,27 @@
 #include "shell.h"
 #include "job.h"
 
-/*
-** Put job j in the foreground.  If cont is nonzero,
-** restore the saved terminal modes and send the process group a
-** SIGCONT signal to wake it up before we block.
-*/
-
 void	put_job_in_foreground(t_job *j, int cont)
 {
-	/*
-	** Put the job into the foreground.
-	*/
 	tcsetpgrp(g_shell.fd, j->pgid);
 	if (cont)
 	{
 		tcsetattr(g_shell.fd, TCSADRAIN, &j->tmodes);
 		if (kill(-(j->pgid), SIGCONT) < 0)
-			perror("kill (SIGCONT)");//changer le perror
+			ft_printf_fd(2, "42sh: kill (SIGCONT) error\n");
 	}
 	wait_for_job(j);
-	/*
-	** Put the shell back in the foreground.
-	*/
 	tcsetpgrp(g_shell.fd, g_shell.pid);
-	/*
-	** Restore the shell’s terminal modes.
-	*/
 	tcgetattr(g_shell.fd, &(j->tmodes));
 	tcsetattr(g_shell.fd, TCSADRAIN, g_shell.termiold);
 }
-
-/*
-** Put a job in the background.  If the cont argument is true, send
-** the process group a SIGCONT signal to wake it up.
-*/
 
 void	put_job_in_background(t_job *j, int cont)
 {
 	if (cont)
 		if (kill(-j->pgid, SIGCONT) < 0)
-			perror("kill (SIGCONT)");//changer le perror
+			ft_printf_fd(2, "42sh: kill (SIGCONT) error\n");
 }
-
-/*
-** Mark a stopped job J as being running again.
-*/
 
 void	mark_job_as_running(t_job *j)
 {
@@ -71,10 +47,6 @@ void	mark_job_as_running(t_job *j)
 	}
 	j->notified = 0;
 }
-
-/*
-** Continue the job J.   is 'fg or bg'
-*/
 
 void	continue_job(t_job *j, int foreground)
 {
