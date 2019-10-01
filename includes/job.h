@@ -67,7 +67,6 @@ typedef struct		s_job
 	unsigned int	id;
 }					t_job;
 
-
 typedef struct		s_launch_job
 {
 	t_process		*p;

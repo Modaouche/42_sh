@@ -13,48 +13,50 @@
 #include "shell.h"
 #include "job.h"
 
-/* Store the status of the process pid that was returned by waitpid.
-   Return 0 if all went well, nonzero otherwise.  */
-
-int	mark_process_status (pid_t pid, int status)
+int		mark_process_prime(t_process *p, int status, int pid)
 {
-	t_job *j;
-	t_process *p;
+	p->status = status;
+	if (WIFSTOPPED(status))
+		p->stopped = 1;
+	else
+	{
+		p->completed = 1;
+		if (WIFSIGNALED(status))
+			ft_printf_fd(STDERR_FILENO,
+					"%d: Terminated by signal %d.\n",
+					(int)pid, WTERMSIG(p->status));
+	}
+	return (0);
+}
+
+int		mark_process_status(pid_t pid, int status)
+{
+	t_job		*j;
+	t_process	*p;
 
 	if (pid > 0)
 	{
-		/* Update the record for the process.  */
-		for (j = g_shell.first_job; j; j = j->next)
-			for (p = j->first_process; p; p = p->next)
+		j = g_shell.first_job;
+		while (j)
+		{
+			p = j->first_process;
+			while (p)
+			{
 				if (p->pid == pid)
-				{
-					p->status = status;
-					if (WIFSTOPPED(status))
-						p->stopped = 1;
-					else
-					{
-						p->completed = 1;
-						if (WIFSIGNALED(status))
-							ft_printf_fd(STDERR_FILENO,
-								"%d: Terminated by signal %d.\n",
-								(int) pid, WTERMSIG (p->status));
-					}
-					return 0;
-				}
-
+					return (mark_process_prime(p, pid, status));
+				p = p->next;
+			}
+			j = j->next;
+		}
 		ft_printf_fd(STDERR_FILENO, "No child process %d.\n", pid);
-		return -1;
+		return (-1);
 	}
-	return -1;
+	return (-1);
 }
 
-
-/* Check for processes that have status information available,
-   without blocking.  */
-
-void		update_status (void)
+void	update_status(void)
 {
-	int	status;
+	int		status;
 	pid_t	pid;
 
 	pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG);
@@ -68,14 +70,10 @@ void		update_status (void)
 		g_shell.ret = WEXITSTATUS(status);
 }
 
-
-/* Check for processes that have status information available,
-   blocking until all processes in the given job have reported.  */
-
-void		wait_for_job (t_job *j)
+void	wait_for_job(t_job *j)
 {
-	int status;
-	pid_t pid;
+	int		status;
+	pid_t	pid;
 
 	pid = waitpid(WAIT_ANY, &status, WUNTRACED);
 	while (!mark_process_status(pid, status)
@@ -90,14 +88,13 @@ void		wait_for_job (t_job *j)
 		g_shell.ret = WEXITSTATUS(status);
 }
 
-/* Format information about job status for the user to look at.  */
-
 void	format_job_info(t_job *j, const char *status, int showpid, int showid)
 {
 	if (showid)
 		ft_printf_fd(STDERR_FILENO, "[%d] ", j->id);
 	if (showpid && showpid != -1)
-		ft_printf_fd(STDERR_FILENO, "%ld%c", (long)j->pgid, showpid == 2 ? '\n' : ' ');
+		ft_printf_fd(STDERR_FILENO, "%ld%c",
+					(long)j->pgid, showpid == 2 ? '\n' : ' ');
 	if (showpid != 2)
 		ft_printf_fd(STDERR_FILENO, "(%s): %s\n", status, j->command);
 }

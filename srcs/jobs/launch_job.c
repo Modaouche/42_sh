@@ -42,6 +42,50 @@ void		launch_process(t_launch_job *lj, pid_t pgid, char **env,
 	to_exit(ER_EXECVE);
 }
 
+void		process_fork_dfg(t_launch_job *lj, t_job *j)
+{
+	if (lj->pid == 0)
+	{
+		(!cmds_verif(lj->p, g_shell.envp)) ? to_exit(g_shell.errorno)\
+			: launch_process(lj, j->pgid, lj->p->envp, j->stderr);
+	}
+	else if (lj->pid < 0)
+	{
+		g_shell.errorno = ER_FORK;
+		return ;
+	}
+	else
+	{
+		lj->p->pid = lj->pid;
+		if (g_shell.is_interactive)
+		{
+			if (!j->pgid)
+				j->pgid = lj->pid;
+			setpgid(lj->pid, j->pgid);
+		}
+	}
+	if (lj->infile != j->stdin)
+		close(lj->infile);
+	if (lj->outfile != j->stdout)
+		close(lj->outfile);
+	lj->infile = lj->mypipe[0];
+}
+
+void		save_job_dfg(t_job *j)
+{
+	if (!g_shell.is_interactive)
+		wait_for_job(j);
+	else if (g_shell.in_fg)
+		put_job_in_foreground(j, 0);
+	else
+	{
+		format_job_info(j, "launched", 0, 1);
+		j->started_in_bg = 1;
+		put_job_in_background(j, 0);
+	}
+	g_shell.in_fg = true;
+}
+
 void		launch_job(t_job *j)
 {
 	t_launch_job lj;
@@ -62,42 +106,8 @@ void		launch_job(t_job *j)
 		else
 			lj.outfile = j->stdout;
 		lj.pid = fork();
-		if (lj.pid == 0)
-		{
-			(!cmds_verif(lj.p, g_shell.envp)) ? to_exit(g_shell.errorno)\
-				: launch_process(&lj, j->pgid, lj.p->envp, j->stderr);
-		}
-		else if (lj.pid < 0)
-		{
-			g_shell.errorno = ER_FORK;
-			return ;
-		}
-		else
-		{
-			lj.p->pid = lj.pid;
-			if (g_shell.is_interactive)
-			{
-				if (!j->pgid)
-					j->pgid = lj.pid;
-				setpgid(lj.pid, j->pgid);
-			}
-		}
-		if (lj.infile != j->stdin)
-			close(lj.infile);
-		if (lj.outfile != j->stdout)
-			close(lj.outfile);
-		lj.infile = lj.mypipe[0];
+		process_fork_dfg(&lj, j);
 		lj.p = lj.p->next;
 	}
-	if (!g_shell.is_interactive)
-		wait_for_job(j);
-	else if (g_shell.in_fg)
-		put_job_in_foreground(j, 0);
-	else
-	{
-		format_job_info(j, "launched", 0, 1);
-		j->started_in_bg = 1;
-		put_job_in_background(j, 0);
-	}
-	g_shell.in_fg = true;
+	save_job_dfg(j);
 }

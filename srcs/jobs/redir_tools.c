@@ -21,28 +21,8 @@ t_token	*ast_get_lexeme(t_ast *ast)
 	return (ast->token);
 }
 
-void	check_opened_fd(t_job *j, int io_nb, int fd)
+void	handle_err_fd(t_job *j, int io_nb, int fd)
 {
-	if (io_nb == 0)
-	{
-		ft_printf("0 = %d\n", fd);
-		if(j->stdin != STDIN_FILENO)
-		{
-			ft_printf("0 close = %d\n", j->stdout);
-			close(j->stdin);
-		}
-		j->stdin = fd;
-	}
-	if (io_nb == 1)
-	{
-		if(j->stdout != STDOUT_FILENO)
-		{
-			ft_printf("1 close = %d\n", j->stdout);
-			close(j->stdout);
-		}
-		ft_printf("1 = %d\n", fd);
-		j->stdout = fd;
-	}
 	if (io_nb == 2)
 	{
 		if (j->stderr != STDERR_FILENO)
@@ -55,10 +35,35 @@ void	check_opened_fd(t_job *j, int io_nb, int fd)
 	}
 }
 
-int     get_redir_fd(char *lex, int check)
+void	check_opened_fd(t_job *j, int io_nb, int fd)
 {
-	int i;
-	struct stat tmp;
+	if (io_nb == 0)
+	{
+		ft_printf("0 = %d\n", fd);
+		if (j->stdin != STDIN_FILENO)
+		{
+			ft_printf("0 close = %d\n", j->stdout);
+			close(j->stdin);
+		}
+		j->stdin = fd;
+	}
+	if (io_nb == 1)
+	{
+		if (j->stdout != STDOUT_FILENO)
+		{
+			ft_printf("1 close = %d\n", j->stdout);
+			close(j->stdout);
+		}
+		ft_printf("1 = %d\n", fd);
+		j->stdout = fd;
+	}
+	handle_err_fd(j, io_nb, fd);
+}
+
+int		get_redir_fd(char *lex, int check)
+{
+	int			i;
+	struct stat	tmp;
 
 	i = 0;
 	while (lex && ft_isdigit(lex[i]))

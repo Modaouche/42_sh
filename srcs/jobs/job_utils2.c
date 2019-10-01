@@ -13,7 +13,7 @@
 #include "shell.h"
 #include "job.h"
 
-t_job	*last_job(void)
+t_job			*last_job(void)
 {
 	t_job	*j;
 
@@ -23,7 +23,7 @@ t_job	*last_job(void)
 	return (j);
 }
 
-void	push_back_process(t_process **p, char **envp)
+void			push_back_process(t_process **p, char **envp)
 {
 	t_process	*new;
 	t_process	*tmp;
