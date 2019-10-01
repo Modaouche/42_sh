@@ -28,7 +28,6 @@ char				test_flag_file(uint16_t flag, void *s)
 	DIR				*dir;
 	struct stat		buf;
 	char			name[1024];
-	char			*path;
 	char			res;
 
 	if (!s)
@@ -37,10 +36,8 @@ char				test_flag_file(uint16_t flag, void *s)
 		return (1);
 	ft_strncpy(name, s, ft_strgetlastocc(s, '/'));
 	test_get_filename(s, name);
-	path = test_get_pathname(s);
 	res = test_get_stat(s, name, &buf, dir);
 	(res == TRUE) ? res = (test_dispatch_file(flag, buf)) : 0;
-	ft_strdel(&path);
 	closedir(dir);
 	return (res);
 }
