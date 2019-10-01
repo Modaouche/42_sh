@@ -112,6 +112,7 @@ unsigned int		create_job_id(unsigned int start);
 void				push_back_job(t_ast *ast);
 void				push_back_process(t_process **p, char **envp);
 void				remove_completed_job(t_job **job);
+char				*arg_join(char *s1, char *s2, char *s3);
 
 /*
 ** Redirections functions

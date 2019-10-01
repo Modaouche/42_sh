@@ -72,7 +72,7 @@ static void		add_process_and_msg_cmd(t_ast *ast, t_job *j)
 		add_process_and_msg_cmd(ast->left, j);
 	if (!(j->command))
 		j->command = ft_strdup(ast->token->lexeme);
-	else if (ast->token->tokind != T_EOF && !(j->command = ft_multijoin(3,\
+	else if (ast->token->tokind != T_EOF && !(j->command = arg_join(\
 					j->command, " ", ast->token->lexeme)))
 		to_exit(ER_MALLOC);
 	if (g_is_pipe == true)

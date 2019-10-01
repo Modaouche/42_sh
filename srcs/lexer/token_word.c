@@ -65,7 +65,7 @@ unsigned int	token_isassignmt(t_token *actual_token, char *line,\
 	len++;
 	actual_token->tokind = T_ASGMT_WRD;
 	actual_token->lexeme = ft_strndup(line + *i, len - *i);
-	actual_token->lexeme = ft_strjoin(actual_token->lexeme, get_word(&len));
+	actual_token->lexeme = ft_strjoin_free(actual_token->lexeme, get_word(&len), 3);
 	*i = len;
 	return (1);
 }

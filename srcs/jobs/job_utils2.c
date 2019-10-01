@@ -73,3 +73,14 @@ unsigned int	create_job_id(unsigned int start)
 	}
 	return (id);
 }
+
+char			*arg_join(char *s1, char *s2, char *s3)
+{
+	char			*output;
+
+	if (!(output = ft_strjoin_free(s1, s2, 1)))
+		to_exit(ER_MALLOC);
+	if (!(output = ft_strjoin_free(output, s3, 1)))
+		to_exit(ER_MALLOC);
+	return (output);
+}
