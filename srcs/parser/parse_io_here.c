@@ -66,7 +66,7 @@ void			io_here(t_edit *line_e)
 	if (token_cmp(last_token(0), T_DLESSDASH, T_DLESS, -1)\
 			&& g_shell.errorno != ER_SYNTAX)
 	{
-		a.heredoc = get_next_token(&(line_e->line), &(line_e->ofst));//leaks?
+		a.heredoc = get_next_token(&(line_e->line), &(line_e->ofst));
 		assign_to_word();
 		(a.heredoc->tokind == T_ASGMT_WRD) ? a.heredoc->tokind = T_WORD : 0;
 		if (a.heredoc->tokind == T_WORD)
