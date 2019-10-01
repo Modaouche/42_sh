@@ -65,19 +65,16 @@ DIR			*test_opendir(char *s)
 }
 
 char		test_get_stat(char *path, char *name,
-		struct stat *tmp, DIR *dir)
+		struct stat *buf, DIR *dir)
 {
 	struct dirent	*rep;
-	struct stat		buf;
 
-	buf = *tmp;
 	while ((rep = readdir(dir)))
 		if (!(ft_strcmp(rep->d_name, name)))
 			break ;
-	if ((stat(path, &buf)))
-		if ((lstat(path, &buf)))
+	if ((stat(path, buf)))
+		if ((lstat(path, buf)))
 			return (FALSE);
-	*tmp = buf;
 	return (TRUE);
 }
 
