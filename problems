@@ -84,6 +84,9 @@ builtin cd a changer avec le miens.
 
 bug heredoc , jsp c'etait quoi...
 
+------------------------------------------
+
+builtin jobs renvoie des mauvais messages d'erreur apres avoir suspendu un process.
 
 ------------------------------------------
 
