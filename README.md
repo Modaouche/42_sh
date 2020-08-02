@@ -18,19 +18,17 @@
  ### 2 - Par la suite il y a la partie modulaire qui nous demande d'ajouter des fonctionnalité plus avancé:
         - Les inhibiteurs ” (double quote), ’ (simple quote) et \ (backslash)
         - La gestion complète de l’historique
+        - Built-in test
+        - Autocompletion + completion avancée.
+        - Built-in alias
         - (d'autres a ajouter en fonction de l'avancement)...
         
-        
- ### 3 - Bonus :
-        - Nous avons décidé en plus d'ajouter le fait de pouvoir faire des scripts shell.
-        - (d'autres a ajouter en fonction de l'avancement)...
-
 
 #### Remarque :
       Nous avons  implémenté un simple Parser LL(1) à partir de la grammaire du shell 
       (LR que nous avons converti en LL, Cf. Wiki).
       Ce dernier nous génére un AST qui permet d'éxecuter la commande de l'utilisateur proprement, avec
-      les ordres de priorité
+      les ordres de priorités
 
 
 ## Compétences :
