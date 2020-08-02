@@ -21,7 +21,6 @@
         - Built-in test
         - Autocompletion + completion avancée.
         - Built-in alias
-        - Param expansion.
         - (d'autres a ajouter en fonction de l'avancement)...
         
 
