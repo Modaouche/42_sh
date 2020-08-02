@@ -72,7 +72,7 @@ void	io_greatand(t_ast *ast, t_job *j)
 	prev_tok = ast->left->token;
 	if ((fd = get_redir_fd(ast_get_lexeme(ast)->lexeme, 1)) == -1)
 	{
-		ft_printf_fd(STDERR_FILENO, "./42sh : Bad file descriptor.");
+		ft_printf_fd(STDERR_FILENO, "./42sh : Bad file descriptor.\n");
 		return ;
 	}
 	if (is_redir_exec(prev_tok->tokind))
@@ -91,7 +91,7 @@ void	io_lessgreat(t_ast *ast, t_job *j)
 {
 	(void)ast;
 	(void)j;
-	ft_printf_fd(STDERR_FILENO, "./42sh: This feature is not supported.");
+	ft_printf_fd(STDERR_FILENO, "./42sh: This feature is not supported.\n");
 	g_shell.errorno = ER_UNKNOW;
 }
 
@@ -99,6 +99,6 @@ void	io_clobber(t_ast *ast, t_job *j)
 {
 	(void)ast;
 	(void)j;
-	ft_printf_fd(STDERR_FILENO, "./42sh: This feature is not supported.");
+	ft_printf_fd(STDERR_FILENO, "./42sh: This feature is not supported.\n");
 	g_shell.errorno = ER_UNKNOW;
 }

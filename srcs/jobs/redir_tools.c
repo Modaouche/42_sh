@@ -58,9 +58,9 @@ int		get_redir_fd(char *lex, int check)
 		i++;
 	if ((fstat(ft_atoi(lex), &tmp) == -1))
 		return (-1);
-	else if (check == 0 && (read(ft_atoi(lex), "", 0) != -1))
+	else if (check == 0 && (read(ft_atoi(lex), "", 0) == -1))
 		return (-1);
-	else if (check == 1 && (write(ft_atoi(lex), "", 0) != -1))
+	else if (check == 1 && (write(ft_atoi(lex), "", 0) == -1))
 		return (-1);
 	if (!lex[i] || (lex[i] == '-' && !lex[i + 1]))
 		return (ft_atoi(lex));

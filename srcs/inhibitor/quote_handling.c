@@ -14,7 +14,7 @@
 
 int			quote_parser(const char *line, char **word, unsigned int qt)
 {
-	if (qt == 2 || !qt)
+	if (qt == 2)
 		qt = 0;
 	if (!*word)
 	{
@@ -31,5 +31,5 @@ int			quote_parser(const char *line, char **word, unsigned int qt)
 		*word = (!*word) ? ft_strdup("\n") : ft_strjoin_free(*word, "\n", 1);
 		return (0);
 	}
-	return (ft_strclen(line + qt, '\'') + 2);
+	return (ft_strclen(line + qt, '\'') + 1);
 }
