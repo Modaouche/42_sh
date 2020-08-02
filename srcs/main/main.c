@@ -12,6 +12,8 @@
 
 #include "shell.h"
 
+t_sh					g_shell;
+
 static int	fd_verif(void)
 {
 	struct stat tmp;

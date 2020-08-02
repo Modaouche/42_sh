@@ -105,6 +105,7 @@ typedef struct			s_edit
 ** tc_onoff = for termcap like "dumb",to have a usable shell
 **	in_bg = in proc struct
 */
+
 typedef struct			s_sh
 {
 	struct termios		*termiold;
@@ -131,7 +132,7 @@ typedef struct			s_sh
 	t_fptr				*fptr;
 }						t_sh;
 
-t_sh					g_shell;
+extern t_sh					g_shell;
 
 typedef struct			s_cmd_verif_prime
 {
